@@ -1,49 +1,58 @@
-# ðŸŒ€ Memory Loop - Cognitive Pure State-Graph Multi-Agent Engine (mLoop)
+# 🌀 Memory Loop — Cognitive Pure State-Graph Multi-Agent Engine (mLoop)
 
 Bienvenue dans l'espace de travail de **Memory Loop (mLoop)**. Cet écosystème implémente une architecture **Kernel-Pipeline** modulaire, orchestrée par un swarm d'agents cognitifs Système 2 et Système 1.
 
+---
 
-Les outils et scripts utilitaires transverses mis à disposition des humains et des agents IA sont centralisés et indexés sous :
+## 🧭 Architecture & Piliers Fondateurs
 
-*   ðŸ§° **[Catalogue de la Boîte à Outils (tools/README.md)](tools/README.md)** : Index central de nos utilitaires d'ingénierie.
-    *   ðŸ’³ **[Suivi du Budget IA LiteLLM (tools/budget/README.md)](tools/budget/README.md)** : Diagnostic et solde en temps réel de votre clé de calcul Nmédia Cloud.
+mLoop structure le cycle de vie de développement piloté par les spécifications à travers 6 phases souveraines :
+
+1. **Phase 0 — Inception & SOW** : T-Shirt sizing, estimation d'effort et scoping initial.
+2. **Phase 1 — Spec & Ingestion** : Ingestion documentaire MarkItDown, analyse sémantique et extraction de modèles.
+3. **Phase 2 — Plan & Architecture** : Découpage vertical de récits (INVEST), arbitrage contradictoire *Grill-with-Docs* et formalisation d'ADRs.
+4. **Phase 3 — Build & Stories** : Rédaction des récits verticaux selon le Gold Standard (Gherkin 4 Piliers, profilage API, EvidencePacks autonomes).
+5. **Phase 4 — Validate & QA** : Contrôles pré-vol Vibe-Check (9 contrôles déterministes), Sentinel / Rubber-Duck contradictoire, et audit WikiFix.
+6. **Phase 5 — Ship & Sync** : Synchronisation tripartite (Dépôt Git, Jira Cloud, Index Graphify/SQLite FTS5).
 
 ---
 
-## ðŸ—‚ï¸ Index des Projets Actifs
+## 🧰 Boîte à Outils & Standards
 
-L'ensemble des projets industriels pilotés par le moteur réside sous le répertoire `/Projects` :
+Les outils et scripts utilitaires transverses mis à disposition des humains et des agents IA sont centralisés et indexés sous :
 
-*   ðŸª **[commerce-react](Projects/commerce-react/README.md)** : Migration de l'application mobile Metro (Jean Coutu & Brunet) de .NET MAUI vers React Native (Expo).
-*   â˜ï¸ **ReviewSenseCloud** : Solution d'extraction et de monitoring automatique d'avis clients sur les stores.
-
-Chaque projet possède sa propre structure standardisée (ADR-0015) comprenant ses `directives/`, son `journal/` d'architecture, son `backlog/` et ses spécifications `openspec/`.
+* 🧰 **[Catalogue de la Boîte à Outils (`tools/README.md`)](tools/README.md)** : Index central de nos utilitaires d'ingénierie (Archify, drawDB, Office, Jira, Git Hooks).
+* 💳 **[Suivi du Budget IA LiteLLM (`tools/budget/README.md`)](tools/budget/README.md)** : Diagnostic et solde en temps réel de votre clé de calcul Nmédia Cloud.
+* 🏛️ **[Système de Décisions d'Architecture (`standards/adr-system/README.md`)](standards/adr-system/README.md)** : Catalogue des 58 décisions d'architecture souveraines mLoop.
+* 📖 **[Guide Exhaustif du Pipeline CLI (`standards/protocols/CLI_PIPELINE_GUIDE.md`)](standards/protocols/CLI_PIPELINE_GUIDE.md)** : Matrice complète des 58 commandes CLI regroupées par phase.
 
 ---
 
 ## 🚀 Démarrer le Moteur `src/swarm.py`
 
-Le moteur `src/swarm.py` pilote le cycle mLoop via des pipelines modulaires. Les anciennes commandes `loop.py` ont été dépréciées et retirées.
+Le moteur `src/swarm.py` pilote le cycle mLoop via des pipelines modulaires.
 
 ```bash
-# 1. Ingestion & construction initiale du graphe (System 1 Graphify)
+# 1. Boot Sequence Obligatoire (Anti-amnésie, Vibe-Check, Focus)
+python src/swarm.py resume --project <nom-du-projet>
+python src/swarm.py vibe-check --project <nom-du-projet>
+python src/swarm.py focus --project <nom-du-projet> --story <chemin_ou_id>
+
+# 2. Ingestion & construction initiale du graphe (System 1 Graphify)
 python src/swarm.py ingest --project <nom-du-projet>
 
-# 2. Entrevue interactive Drill Me (Alignement fonctionnel / DDD)
+# 3. Entrevue interactive Drill / Grill (Alignement fonctionnel & DDD)
 python src/swarm.py drill --project <nom-du-projet>
 
-# 3. Synchronisation globale (WikiFix sémantique + mise à jour du graphe Graphify)
+# 4. Synchronisation globale (WikiFix sémantique + mise à jour du graphe Graphify)
 python src/swarm.py sync --project <nom-du-projet>
 
-# 4. Exécuter un audit sémantique WikiFix indépendant
+# 5. Exécuter un audit sémantique WikiFix indépendant
 python src/swarm.py wikifix --project <nom-du-projet>
 
-# 5. Synchroniser le backlog de stories vers Jira Cloud
+# 6. Synchroniser le backlog de stories vers Jira Cloud
 python src/swarm.py jira_sync --project <nom-du-projet>
 
-# 6. Optimisation Rétrospective du Harnais (Génération de règles RHO)
+# 7. Optimisation Rétrospective du Harnais (Génération de règles RHO)
 python src/swarm.py optimize --project <nom-du-projet> --keyword "mot-cle" --msg "explication" --scope <project|global>
 ```
-
-
-

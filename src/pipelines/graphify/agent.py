@@ -28,12 +28,12 @@ class GraphifyAgent:
         )
         project_path = Path("Projects") / state.project_name
 
-        # --- 1. DÃ©lÃ©guÃ© au paquet officiel graphify ---
+        # --- 1. Délégué au paquet officiel graphify ---
         ZeroFluffConsole.info(
-            "[Graphify] Lancement du moteur officiel graphify pour la gÃ©nÃ©ration HTML/Obsidian..."
+            "[Graphify] Lancement du moteur officiel graphify pour la génération HTML/Obsidian..."
         )
         try:
-            # Assure la crÃ©ation du dossier obsidian et html via le CLI officiel
+            # Assure la création du dossier obsidian et html via le CLI officiel
             subprocess.run(
                 ["graphify", "update", "."],
                 cwd=str(project_path),
@@ -42,11 +42,11 @@ class GraphifyAgent:
                 shell=True,
             )
             ZeroFluffConsole.success(
-                "[Graphify] Exports interactifs (HTML/Obsidian) mis Ã  jour avec succÃ¨s."
+                "[Graphify] Exports interactifs (HTML/Obsidian) mis à jour avec succès."
             )
         except Exception as e:
             ZeroFluffConsole.warning(
-                f"[Graphify] Erreur lors de l'exÃ©cution de graphify: {e}"
+                f"[Graphify] Erreur lors de l'exécution de graphify: {e}"
             )
 
         # --- 2. Enrichissement mLoop Custom ---
@@ -289,7 +289,7 @@ class GraphifyAgent:
 
         self.builder.add_text_nodes(text_sources)
 
-        # Ingestion des donnÃ©es de session (loop-mem)
+        # Ingestion des données de session (loop-mem)
         try:
             from src.loop_mem.db import get_session_timeline
 
@@ -334,7 +334,7 @@ class GraphifyAgent:
                 self.builder.g.add_node(
                     "ContextJournal",
                     category="Governance",
-                    description="MÃ©moire vive",
+                    description="Mémoire vive",
                     text_chunk=journal_text[:800],
                 )
                 self.builder.g.add_edge(
@@ -352,7 +352,7 @@ class GraphifyAgent:
             except Exception:
                 pass
 
-        # --- 4. SÃ©rialisation ---
+        # --- 4. Sérialisation ---
         nodes_list, edges_list = self.builder.merge_and_serialize(
             physical_nodes, physical_edges, graph_file
         )
