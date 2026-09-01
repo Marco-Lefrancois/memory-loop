@@ -1,0 +1,7 @@
+name: validate
+description: "Phase [QA] Validate - Audit fonctionnel local et calcul de l'INVEST Score."
+module: "src.pipelines.sync"
+function: "run_sync"
+hooks:
+  - event: pre_run
+    handler: story_guard

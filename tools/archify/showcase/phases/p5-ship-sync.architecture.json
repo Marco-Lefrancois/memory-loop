@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Phase 5 : SHIP / SYNC — La Matrice des 3 Synchronisations mLoop",
+    "output": "tools/archify/showcase/phases/p5-ship-sync.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-p5-full",
+        "label": "Workflow Complet Phase 5 (SHIP / SYNC)",
+        "focus": [
+          "p5_input_package",
+          "p5_ship_orchestrator",
+          "p5_git_sync",
+          "p5_jira_sync",
+          "p5_graph_sync",
+          "p5_remote_repo",
+          "p5_jira_cloud",
+          "p5_knowledge_base",
+          "p5_dev_handoff"
+        ],
+        "note": "Anatomie de la Phase 5 : Orchestration du shipping, exécution des 3 synchronisations mLoop et Universal Dev Handoff."
+      },
+      {
+        "id": "view-p5-matrix",
+        "label": "La Matrice des 3 Synchronisations",
+        "focus": [
+          "p5_ship_orchestrator",
+          "p5_git_sync",
+          "p5_jira_sync",
+          "p5_graph_sync",
+          "p5_remote_repo",
+          "p5_jira_cloud",
+          "p5_knowledge_base"
+        ],
+        "note": "Synchronisation triple : 1. Git Distant (Markdown & Evidence), 2. Jira Cloud (Tickets INVEST), 3. Base Sémantique (Graphe & FTS5)."
+      },
+      {
+        "id": "view-p5-handoff",
+        "label": "Universal Dev Handoff",
+        "focus": [
+          "p5_remote_repo",
+          "p5_jira_cloud",
+          "p5_knowledge_base",
+          "p5_dev_handoff"
+        ],
+        "note": "Transmission universelle et sans pollution de code pour développeurs humains, Cursor, Copilot et OpenSpec."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "p5_input_package",
+      "type": "external",
+      "label": "READY_FOR_DEV",
+      "sublabel": "Stories certifiées DoR",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "INPUT: PHASE 4"
+    },
+    {
+      "id": "p5_ship_orchestrator",
+      "type": "backend",
+      "label": "Orchestrateur Ship",
+      "sublabel": "swarm.py ship",
+      "pos": [
+        270,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "ENGINE: SHIP"
+    },
+    {
+      "id": "p5_git_sync",
+      "type": "backend",
+      "label": "1. Git Sync",
+      "sublabel": "git push origin",
+      "pos": [
+        540,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SYNC: GIT"
+    },
+    {
+      "id": "p5_jira_sync",
+      "type": "backend",
+      "label": "2. Jira Sync",
+      "sublabel": "swarm.py jira_sync",
+      "pos": [
+        540,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SYNC: JIRA"
+    },
+    {
+      "id": "p5_graph_sync",
+      "type": "backend",
+      "label": "3. Graphe Sync",
+      "sublabel": "swarm.py sync",
+      "pos": [
+        540,
+        430
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SYNC: GRAPH"
+    },
+    {
+      "id": "p5_remote_repo",
+      "type": "database",
+      "label": "Git Distant",
+      "sublabel": "Stories & Evidence",
+      "pos": [
+        810,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "REMOTE: GIT"
+    },
+    {
+      "id": "p5_jira_cloud",
+      "type": "database",
+      "label": "Jira Cloud",
+      "sublabel": "Tickets & INVEST",
+      "pos": [
+        810,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "REMOTE: JIRA"
+    },
+    {
+      "id": "p5_knowledge_base",
+      "type": "database",
+      "label": "Index Sémantique",
+      "sublabel": "FTS5 & Graphify",
+      "pos": [
+        810,
+        430
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "LOCAL: MEMORY"
+    },
+    {
+      "id": "p5_dev_handoff",
+      "type": "frontend",
+      "label": "Dev Handoff",
+      "sublabel": "Universal Ready",
+      "pos": [
+        1080,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "READY: PROD"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "1. Réception Phase 4 (DoR)",
+      "wraps": [
+        "p5_input_package"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "2. Orchestrateur Ship",
+      "wraps": [
+        "p5_ship_orchestrator"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "3. Matrice des 3 Synchronisations",
+      "wraps": [
+        "p5_git_sync",
+        "p5_jira_sync",
+        "p5_graph_sync"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "4. Cibles Distantes & Graphe",
+      "wraps": [
+        "p5_remote_repo",
+        "p5_jira_cloud",
+        "p5_knowledge_base"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "5. Universal Dev Handoff (Final)",
+      "wraps": [
+        "p5_dev_handoff"
+      ],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "from": "p5_input_package",
+      "to": "p5_ship_orchestrator",
+      "label": "déclenchement",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        230,
+        302
+      ]
+    },
+    {
+      "from": "p5_ship_orchestrator",
+      "to": "p5_git_sync",
+      "label": "sync Git",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        500,
+        142
+      ]
+    },
+    {
+      "from": "p5_ship_orchestrator",
+      "to": "p5_jira_sync",
+      "label": "sync Jira",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        512,
+        302
+      ]
+    },
+    {
+      "from": "p5_ship_orchestrator",
+      "to": "p5_graph_sync",
+      "label": "sync graphe",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        500,
+        462
+      ]
+    },
+    {
+      "from": "p5_git_sync",
+      "to": "p5_remote_repo",
+      "label": "git push",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        750,
+        142
+      ]
+    },
+    {
+      "from": "p5_jira_sync",
+      "to": "p5_jira_cloud",
+      "label": "REST API",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        750,
+        302
+      ]
+    },
+    {
+      "from": "p5_graph_sync",
+      "to": "p5_knowledge_base",
+      "label": "indexation",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        750,
+        462
+      ]
+    },
+    {
+      "from": "p5_remote_repo",
+      "to": "p5_dev_handoff",
+      "label": "fichiers .md",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        1020,
+        142
+      ]
+    },
+    {
+      "from": "p5_jira_cloud",
+      "to": "p5_dev_handoff",
+      "label": "tickets",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [
+        990,
+        302
+      ]
+    },
+    {
+      "from": "p5_knowledge_base",
+      "to": "p5_dev_handoff",
+      "label": "contexte IA",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        1020,
+        462
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1. Dépôt Git Distant (Fichiers Physiques)",
+      "items": [
+        "Commit & push automatisé de l'ensemble des fichiers physiques",
+        "Synchronisation des Stories .md, ADRs .md et EvidencePacks .json",
+        "Traçabilité immuable et versionnée dans la branche main distante"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2. Plateforme Agile Jira Cloud (Tickets & INVEST)",
+      "items": [
+        "Synchronisation des tickets, épics et champs personnalisés",
+        "Remplacement des clés temporaires par les clés officielles Jira",
+        "Publication des critères d'acceptation 4 piliers Gherkin"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "3. Base Sémantique & Universal Dev Handoff",
+      "items": [
+        "Mise à jour de l'index Graphify et SQLite FTS5 (WikiFix + Sync)",
+        "Spécifications prêtes pour développeurs humains, Cursor, Copilot",
+        "Zéro pollution de code, pureté fonctionnelle et clarté totale"
+      ]
+    }
+  ]
+}

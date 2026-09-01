@@ -1,0 +1,454 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Phase 1 : SPEC / INGEST — Normalisation MarkItDown & 4 Extracteurs YAML",
+    "output": "tools/archify/showcase/phases/p1-spec-ingest.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-p1-full",
+        "label": "Workflow Complet Phase 1 (SPEC / INGEST)",
+        "focus": [
+          "p1_input_package",
+          "p1_markitdown_core",
+          "p1_ingested_docs",
+          "p1_extracted_assets",
+          "p1_ext_business_rules",
+          "p1_ext_data_models",
+          "p1_ext_api_contracts",
+          "p1_ext_ui_matrix",
+          "p1_fts5_index",
+          "p1_graphify_graph",
+          "p1_handoff_p2"
+        ],
+        "note": "Anatomie de la Phase 1 : Ingestion MarkItDown, distillation des 4 extracteurs YAML, indexation FTS5 et sas Phase 2."
+      },
+      {
+        "id": "view-p1-extractors",
+        "label": "Les 4 Extracteurs YAML (ADR-0342)",
+        "focus": [
+          "p1_ingested_docs",
+          "p1_extracted_assets",
+          "p1_ext_business_rules",
+          "p1_ext_data_models",
+          "p1_ext_api_contracts",
+          "p1_ext_ui_matrix"
+        ],
+        "note": "Distillation déclarative en métadonnées YAML typées : Règles Métier, Modèles DDD, Contrats APIs et Matrices UI."
+      },
+      {
+        "id": "view-p1-indexing",
+        "label": "Indexation Immédiate (FTS5 & Graphify)",
+        "focus": [
+          "p1_ext_business_rules",
+          "p1_ext_data_models",
+          "p1_ext_api_contracts",
+          "p1_ext_ui_matrix",
+          "p1_fts5_index",
+          "p1_graphify_graph",
+          "p1_handoff_p2"
+        ],
+        "note": "Indexation plein texte SQLite BM25 et construction du graphe conceptuel pour armer le Fact-Search et le Grill-Me."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "p1_input_package",
+      "type": "external",
+      "label": "Hub de Tri (P0)",
+      "sublabel": "Matière consolidée",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "INPUT: PHASE 0"
+    },
+    {
+      "id": "p1_markitdown_core",
+      "type": "backend",
+      "label": "Moteur MarkItDown",
+      "sublabel": "markitdown_convert",
+      "pos": [
+        250,
+        270
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "ENGINE: INGEST"
+    },
+    {
+      "id": "p1_ingested_docs",
+      "type": "database",
+      "label": "docs/00-ingested/",
+      "sublabel": "Markdown normalisé",
+      "pos": [
+        460,
+        130
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "SSOT: TEXTE"
+    },
+    {
+      "id": "p1_extracted_assets",
+      "type": "database",
+      "label": "docs/05-assets/",
+      "sublabel": "Maquettes & Visuels",
+      "pos": [
+        460,
+        410
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "SSOT: VISUELS"
+    },
+    {
+      "id": "p1_ext_business_rules",
+      "type": "backend",
+      "label": "Règles Métier",
+      "sublabel": "BR-XXX ➔ docs/02/",
+      "pos": [
+        680,
+        80
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "EXT: RÈGLES"
+    },
+    {
+      "id": "p1_ext_data_models",
+      "type": "backend",
+      "label": "Modèles Données",
+      "sublabel": "MDL-XXX ➔ docs/03/",
+      "pos": [
+        680,
+        200
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "EXT: MODÈLES"
+    },
+    {
+      "id": "p1_ext_api_contracts",
+      "type": "backend",
+      "label": "Contrats d'APIs",
+      "sublabel": "API-XXX ➔ docs/01/",
+      "pos": [
+        680,
+        320
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "EXT: APIS"
+    },
+    {
+      "id": "p1_ext_ui_matrix",
+      "type": "backend",
+      "label": "Matrices Interface",
+      "sublabel": "UI-XXX ➔ docs/05/",
+      "pos": [
+        680,
+        440
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "EXT: UI"
+    },
+    {
+      "id": "p1_fts5_index",
+      "type": "database",
+      "label": "SQLite FTS5",
+      "sublabel": "Socle Fact-Search",
+      "pos": [
+        900,
+        140
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "SOCLE: FTS5"
+    },
+    {
+      "id": "p1_graphify_graph",
+      "type": "database",
+      "label": "Index Graphify",
+      "sublabel": "Graphe Conceptuel",
+      "pos": [
+        900,
+        380
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "SOCLE: GRAPH"
+    },
+    {
+      "id": "p1_handoff_p2",
+      "type": "frontend",
+      "label": "Sas vers Phase 2",
+      "sublabel": "Découpage & Grill-Me",
+      "pos": [
+        1120,
+        270
+      ],
+      "size": [
+        140,
+        64
+      ],
+      "tag": "NEXT: PHASE 2"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "1. Réception Phase 0",
+      "wraps": [
+        "p1_input_package"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "2. Moteur MarkItDown",
+      "wraps": [
+        "p1_markitdown_core"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "3. Docs Ingestées & Assets",
+      "wraps": [
+        "p1_ingested_docs",
+        "p1_extracted_assets"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "4. Extracteurs YAML (ADR-0342)",
+      "wraps": [
+        "p1_ext_business_rules",
+        "p1_ext_data_models",
+        "p1_ext_api_contracts",
+        "p1_ext_ui_matrix"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "5. Indexation (Socle Fact-Search)",
+      "wraps": [
+        "p1_fts5_index",
+        "p1_graphify_graph"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "6. Sas vers Phase 2 (PLAN & ARCHI)",
+      "wraps": [
+        "p1_handoff_p2"
+      ],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "from": "p1_input_package",
+      "to": "p1_markitdown_core",
+      "label": "matière brute",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        215,
+        302
+      ]
+    },
+    {
+      "from": "p1_markitdown_core",
+      "to": "p1_ingested_docs",
+      "label": "prose texte",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        425,
+        180
+      ]
+    },
+    {
+      "from": "p1_markitdown_core",
+      "to": "p1_extracted_assets",
+      "label": "visuels",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        425,
+        380
+      ]
+    },
+    {
+      "from": "p1_ingested_docs",
+      "to": "p1_ext_business_rules",
+      "label": "BR",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        660,
+        112
+      ]
+    },
+    {
+      "from": "p1_ingested_docs",
+      "to": "p1_ext_data_models",
+      "label": "MDL",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        660,
+        232
+      ]
+    },
+    {
+      "from": "p1_ingested_docs",
+      "to": "p1_ext_api_contracts",
+      "label": "API",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        660,
+        352
+      ]
+    },
+    {
+      "from": "p1_extracted_assets",
+      "to": "p1_ext_ui_matrix",
+      "label": "UI",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        660,
+        472
+      ]
+    },
+    {
+      "from": "p1_ext_business_rules",
+      "to": "p1_fts5_index",
+      "label": "index BR",
+      "variant": "dashed",
+      "route": "orthogonal-h",
+      "labelAt": [
+        865,
+        112
+      ]
+    },
+    {
+      "from": "p1_ext_data_models",
+      "to": "p1_fts5_index",
+      "label": "index MDL",
+      "variant": "dashed",
+      "route": "orthogonal-h",
+      "labelAt": [
+        865,
+        200
+      ]
+    },
+    {
+      "from": "p1_ext_api_contracts",
+      "to": "p1_graphify_graph",
+      "label": "graphe API",
+      "variant": "dashed",
+      "route": "orthogonal-h",
+      "labelAt": [
+        865,
+        350
+      ]
+    },
+    {
+      "from": "p1_ext_ui_matrix",
+      "to": "p1_graphify_graph",
+      "label": "graphe UI",
+      "variant": "dashed",
+      "route": "orthogonal-h",
+      "labelAt": [
+        865,
+        442
+      ]
+    },
+    {
+      "from": "p1_fts5_index",
+      "to": "p1_handoff_p2",
+      "label": "faits indexés",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        1085,
+        210
+      ]
+    },
+    {
+      "from": "p1_graphify_graph",
+      "to": "p1_handoff_p2",
+      "label": "graphe relié",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        1085,
+        340
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1. Moteur MarkItDown & Normalisation",
+      "items": [
+        "Conversion des PDF, Word, Excel vers docs/00-ingested/*.md",
+        "Extraction et vectorisation des maquettes vers docs/05-assets/",
+        "Suppression des binaires lourds et standardisation Markdown"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2. Les 4 Extracteurs YAML (ADR-0342)",
+      "items": [
+        "Règles Métier (BR-XXX) avec conditions SI/ALORS et sévérité",
+        "Modèles de Données (MDL-XXX) avec entités et contraintes DDD",
+        "Contrats APIs (API-XXX) et Matrices d'Interface (UI-XXX)"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "3. Triade Documentaire & Sas Phase 2",
+      "items": [
+        "Indexation plein texte instantanée SQLite FTS5 (BM25)",
+        "Graphe sémantique Graphify reliant règles, modèles et APIs",
+        "Matière typée certifiée transmise au Découpage et au Grill-Me"
+      ]
+    }
+  ]
+}

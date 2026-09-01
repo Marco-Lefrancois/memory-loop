@@ -1,0 +1,602 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Memory Loop (mLoop) — Pipeline Séquentiel & Triade d'Indexation Sémantique",
+    "output": "tools/archify/showcase/mloop-analysis-pipeline.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-pipeline",
+        "label": "Pipeline Séquentiel Stage-Gate (6 Phases)",
+        "focus": [
+          "p0_raw_briefs",
+          "p0_research",
+          "p1_markitdown",
+          "p1_yaml_extractors",
+          "p2_slicing",
+          "p2_grill_me",
+          "p3_cli_swarm",
+          "p3_worker_spawn",
+          "p4_struct_check",
+          "p4_sentinel_duck",
+          "p5_backlog_stories",
+          "p5_obsidian_handoff"
+        ],
+        "note": "Le flux séquentiel des 6 phases : de l'ingestion brute jusqu'au découpage, au dev et au Universal Dev Handoff."
+      },
+      {
+        "id": "view-transverse",
+        "label": "Triade Transverse : FTS5, Graphify & CodeGraph",
+        "focus": [
+          "srv_fts5_index",
+          "srv_fact_search",
+          "srv_codegraph_ast",
+          "srv_oracles_reverify",
+          "srv_hypergraph",
+          "p1_yaml_extractors",
+          "p2_grill_me",
+          "p3_worker_spawn",
+          "p4_sentinel_duck"
+        ],
+        "note": "La Triade d'Indexation : FTS5 (texte), Graphify (graphe docs), CodeGraph (AST code), Fact-Search et Oracles SHA-256."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "p0_raw_briefs",
+      "type": "external",
+      "label": "Briefs & Raw Docs",
+      "sublabel": "reference/ staging",
+      "pos": [
+        40,
+        110
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P0: BRIEFS"
+    },
+    {
+      "id": "p0_research",
+      "type": "backend",
+      "label": "Research Crawler",
+      "sublabel": "swarm.py research",
+      "pos": [
+        40,
+        280
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P0: RESEARCH"
+    },
+    {
+      "id": "p1_markitdown",
+      "type": "backend",
+      "label": "MarkItDown Ingest",
+      "sublabel": "docs/00-ingested/*.md",
+      "pos": [
+        245,
+        110
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P1: INGEST"
+    },
+    {
+      "id": "p1_yaml_extractors",
+      "type": "backend",
+      "label": "Extracteurs YAML",
+      "sublabel": "(Métadonnées) ADR-0342",
+      "pos": [
+        245,
+        280
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P1: SPEC"
+    },
+    {
+      "id": "p2_slicing",
+      "type": "backend",
+      "label": "Découpage Backlog",
+      "sublabel": "to-tickets & Stories",
+      "pos": [
+        450,
+        110
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P2: SLICING"
+    },
+    {
+      "id": "p2_grill_me",
+      "type": "frontend",
+      "label": "Grill-Me & ADRs",
+      "sublabel": "Arbitrage & docs/01/",
+      "pos": [
+        450,
+        280
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P2: ADRS"
+    },
+    {
+      "id": "p3_cli_swarm",
+      "type": "frontend",
+      "label": "CLI Swarm Core",
+      "sublabel": "swarm.py gates / dev",
+      "pos": [
+        655,
+        110
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P3: PILOTE"
+    },
+    {
+      "id": "p3_worker_spawn",
+      "type": "backend",
+      "label": "Workers Herdr",
+      "sublabel": "Sous-sessions PTY",
+      "pos": [
+        655,
+        280
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P3: WORKERS"
+    },
+    {
+      "id": "p4_struct_check",
+      "type": "backend",
+      "label": "Gatekeeper Struct",
+      "sublabel": "struct-check --strict",
+      "pos": [
+        860,
+        110
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P4: LINTER"
+    },
+    {
+      "id": "p4_sentinel_duck",
+      "type": "backend",
+      "label": "Sentinel QA",
+      "sublabel": "Audit 4 Piliers Gherkin",
+      "pos": [
+        860,
+        280
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P4: SENTINEL"
+    },
+    {
+      "id": "p5_backlog_stories",
+      "type": "database",
+      "label": "Récits 4 Piliers",
+      "sublabel": "backlog/stories/*.md",
+      "pos": [
+        1065,
+        110
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P5: STORIES"
+    },
+    {
+      "id": "p5_obsidian_handoff",
+      "type": "frontend",
+      "label": "Obsidian & Sync",
+      "sublabel": "Jira / Git / Dev Handoff",
+      "pos": [
+        1065,
+        280
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "P5: SHIP"
+    },
+    {
+      "id": "srv_fts5_index",
+      "type": "database",
+      "label": "FTS5 & Graphify",
+      "sublabel": "SQLite FTS5 & Graphe",
+      "pos": [
+        245,
+        480
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "SOCLE: DOCS"
+    },
+    {
+      "id": "srv_fact_search",
+      "type": "database",
+      "label": "Fact-Search",
+      "sublabel": "Preuves & Search-Ask",
+      "pos": [
+        450,
+        480
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "SOCLE: SEARCH"
+    },
+    {
+      "id": "srv_codegraph_ast",
+      "type": "security",
+      "label": "CodeGraph AST",
+      "sublabel": "Impacts AST & Locks",
+      "pos": [
+        655,
+        480
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "SOCLE: CODE"
+    },
+    {
+      "id": "srv_oracles_reverify",
+      "type": "security",
+      "label": "Oracles Reverify",
+      "sublabel": "EvidencePack SHA-256",
+      "pos": [
+        860,
+        480
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "SOCLE: ORACLES"
+    },
+    {
+      "id": "srv_hypergraph",
+      "type": "database",
+      "label": "Hypergraphe",
+      "sublabel": "Vault Obsidian & Sync",
+      "pos": [
+        1065,
+        480
+      ],
+      "size": [
+        134,
+        64
+      ],
+      "tag": "SOCLE: GRAPH"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Phase 0 : INCEPTION",
+      "wraps": [
+        "p0_raw_briefs",
+        "p0_research"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Phase 1 : SPEC / INGEST",
+      "wraps": [
+        "p1_markitdown",
+        "p1_yaml_extractors"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "Phase 2 : PLAN & ARCHI",
+      "wraps": [
+        "p2_slicing",
+        "p2_grill_me"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Phase 3 : BUILD / DEV",
+      "wraps": [
+        "p3_cli_swarm",
+        "p3_worker_spawn"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "Phase 4 : VALIDATE / QA",
+      "wraps": [
+        "p4_struct_check",
+        "p4_sentinel_duck"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Phase 5 : SHIP & SYNC",
+      "wraps": [
+        "p5_backlog_stories",
+        "p5_obsidian_handoff"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "Socle Transverse : Triade Sémantique (FTS5, Graphify, CodeGraph) & Preuves",
+      "wraps": [
+        "srv_fts5_index",
+        "srv_fact_search",
+        "srv_codegraph_ast",
+        "srv_oracles_reverify",
+        "srv_hypergraph"
+      ],
+      "pad": 18
+    }
+  ],
+  "connections": [
+    {
+      "from": "p0_raw_briefs",
+      "to": "p0_research",
+      "label": "analyse",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        107,
+        227
+      ]
+    },
+    {
+      "from": "p0_research",
+      "to": "p1_markitdown",
+      "label": "gathering",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        209,
+        227
+      ]
+    },
+    {
+      "from": "p1_markitdown",
+      "to": "p1_yaml_extractors",
+      "label": "distillation",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        312,
+        227
+      ]
+    },
+    {
+      "from": "p1_yaml_extractors",
+      "to": "p2_slicing",
+      "label": "spécification",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        414,
+        227
+      ]
+    },
+    {
+      "from": "p2_slicing",
+      "to": "p2_grill_me",
+      "label": "pré-grill",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        517,
+        227
+      ]
+    },
+    {
+      "from": "p2_grill_me",
+      "to": "p3_cli_swarm",
+      "label": "stories prêtes",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        619,
+        227
+      ]
+    },
+    {
+      "from": "p3_cli_swarm",
+      "to": "p3_worker_spawn",
+      "label": "spawn",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        722,
+        227
+      ]
+    },
+    {
+      "from": "p3_worker_spawn",
+      "to": "p4_struct_check",
+      "label": "harvest code",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        824,
+        227
+      ]
+    },
+    {
+      "from": "p4_struct_check",
+      "to": "p4_sentinel_duck",
+      "label": "gatekeeper",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        927,
+        227
+      ]
+    },
+    {
+      "from": "p4_sentinel_duck",
+      "to": "p5_backlog_stories",
+      "label": "ready dev",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        1029,
+        227
+      ]
+    },
+    {
+      "from": "p5_backlog_stories",
+      "to": "p5_obsidian_handoff",
+      "label": "vault sync",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        1132,
+        227
+      ]
+    },
+    {
+      "from": "p1_yaml_extractors",
+      "to": "srv_fts5_index",
+      "label": "indexation",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [
+        312,
+        412
+      ]
+    },
+    {
+      "from": "srv_fts5_index",
+      "to": "srv_fact_search",
+      "label": "faits",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        414,
+        512
+      ]
+    },
+    {
+      "from": "srv_fact_search",
+      "to": "p2_grill_me",
+      "label": "search-before-ask",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        517,
+        412
+      ]
+    },
+    {
+      "from": "p3_worker_spawn",
+      "to": "srv_codegraph_ast",
+      "label": "ast & locks",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [
+        722,
+        412
+      ]
+    },
+    {
+      "from": "srv_codegraph_ast",
+      "to": "srv_oracles_reverify",
+      "label": "oracles",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [
+        824,
+        512
+      ]
+    },
+    {
+      "from": "srv_oracles_reverify",
+      "to": "p4_sentinel_duck",
+      "label": "preuves sha",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [
+        927,
+        412
+      ]
+    },
+    {
+      "from": "p5_obsidian_handoff",
+      "to": "srv_hypergraph",
+      "label": "hyper-edges",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [
+        1132,
+        412
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Pipeline Séquentiel (Phases 0 à 5)",
+      "items": [
+        "Inception & Gathering double source (Briefs et Crawl web)",
+        "Spécification MarkItDown et distillation YAML (ADR-0342)",
+        "Découpage vertical, Grill-Me & ADRs, Workers Herdr et QA Sentinel"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Triade d'Indexation Sémantique & Fact-Search",
+      "items": [
+        "FTS5 (plein texte BM25) et Graphify (graphe conceptuel docs/)",
+        "CodeGraph AST pour les dépendances et le Blast Radius du code",
+        "Extraction dynamique d'extraits textuels et Search-Before-Ask"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Gouvernance d'État & Traçabilité SHA-256",
+      "items": [
+        "Baux de verrous exclusifs OWNS: et EvidencePacks certifiés",
+        "Oracles Reverify de moissonnage synchrone Fork & Harvest",
+        "Synchronisation triple (Git/Jira/Graph) et export Obsidian"
+      ]
+    }
+  ]
+}

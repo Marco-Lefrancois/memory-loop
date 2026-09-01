@@ -1,0 +1,590 @@
+{
+  "data": [
+    {
+      "id": "Recommand\u00e9",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "\u00c9conomique",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "Recherche web",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "Recherche web avanc\u00e9e",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "Anthropic",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "Canada (Azure)",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "Canada (Azure) \u00e9conomique",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "claude-opus-4-6",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1000000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "claude-opus-4-7",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1000000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "claude-opus-4-8",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1000000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "claude-sonnet-4-6",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1000000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-haiku-4-5",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-sonnet-4-5-20250929",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-haiku-4-5-20251001",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "gpt-4.1-nano",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1047576,
+      "max_output_tokens": 32768
+    },
+    {
+      "id": "gpt-5.2",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 272000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.2-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-5.2-codex",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 272000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.3-codex",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 272000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.4",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1050000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.4-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-5.5",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1050000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.5-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-5.6-sol",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1050000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.6-terra",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1050000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.6-terra-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1050000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.6-luna-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-5-mini",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 272000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5-nano",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 272000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.4-mini",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 272000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-5.4-nano",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 272000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "gpt-4o-transcribe",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 16000,
+      "max_output_tokens": 2000
+    },
+    {
+      "id": "gpt-4o-mini-transcribe",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 16000,
+      "max_output_tokens": 2000
+    },
+    {
+      "id": "gpt-4o-transcribe-diarize",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 16000,
+      "max_output_tokens": 2000
+    },
+    {
+      "id": "text-embedding-3-small",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 8191
+    },
+    {
+      "id": "whisper-1",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "elevenlabs-scribe-v2",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "mistral-voxtral-mini-2602",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "tts-1",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "perplexity-sonar-deep-research",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "perplexity-sonar-reasoning-pro",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "perplexity-sonar-pro",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gemini-2.5-pro",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 65535
+    },
+    {
+      "id": "gemini-2.5-flash",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 65535
+    },
+    {
+      "id": "gemini-2.5-flash-image",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 32768,
+      "max_output_tokens": 32768
+    },
+    {
+      "id": "gemini-3-pro-image-preview",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 65536,
+      "max_output_tokens": 32768
+    },
+    {
+      "id": "gemini-3.1-pro-preview",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 65536
+    },
+    {
+      "id": "gemini-3.1-pro-preview-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gemini-3.1-flash-lite",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 65536
+    },
+    {
+      "id": "gemini-3.1-flash-lite-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gemini-3-flash-preview",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 65535
+    },
+    {
+      "id": "gemini-3-flash-preview-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gemini-3.6-flash",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 65536
+    },
+    {
+      "id": "gemini-3.5-flash-lite",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 65536
+    },
+    {
+      "id": "gpt-image-2",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "claude-opus-4.6",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-opus-4.6-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-opus-4.7",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-opus-4.7-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-opus-4.8",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-opus-4.8-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-opus-5",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1000000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "claude-sonnet-4.5",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-sonnet-4.5-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-sonnet-4.6",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-sonnet-4.6-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-sonnet-5",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1000000,
+      "max_output_tokens": 128000
+    },
+    {
+      "id": "claude-sonnet-5-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "claude-haiku-4.5-thinking",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 200000,
+      "max_output_tokens": 64000
+    },
+    {
+      "id": "gpt-5.2-azure-canada",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-5-mini-azure-canada",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "mistral-ocr",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "Automatique",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "claude-3-5-sonnet-v2",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-4o",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 128000,
+      "max_output_tokens": 16384
+    },
+    {
+      "id": "deepseek-r1",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "claude-3-7-sonnet",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gemini-2.0-flash",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 1048576,
+      "max_output_tokens": 8192
+    },
+    {
+      "id": "codestral-2501",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    }
+  ],
+  "object": "list"
+}

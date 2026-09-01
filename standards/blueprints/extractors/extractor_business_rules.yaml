@@ -1,0 +1,71 @@
+# Blueprint d'Extraction Déclarative YAML — Règles Métier (BR)
+# Standard : ADR-0342
+# Format : Knowledge Abstract (KA) pour docs/02-business-rules/
+
+schema_version: "1.0"
+extractor_id: "business_rules"
+title: "Extracteur de Règles Métier & Contraintes d'Intégrité"
+target_directory: "docs/02-business-rules/"
+id_prefix: "BR-"
+id_padding: 3
+
+schema:
+  fields:
+    - name: "id"
+      type: "string"
+      required: true
+      description: "Identifiant stable et unique de la règle (ex: BR-001)"
+    - name: "name"
+      type: "string"
+      required: true
+      description: "Titre métier concis et univoque de la règle"
+    - name: "category"
+      type: "enum"
+      values: ["CALCULATION", "VALIDATION", "AUTHORIZATION", "INTEGRITY", "WORKFLOW", "COMPLIANCE"]
+      required: true
+      description: "Catégorie fonctionnelle de la règle"
+    - name: "condition"
+      type: "string"
+      required: true
+      description: "Condition logique d'activation (SI ... / GIVEN ...)"
+    - name: "action"
+      type: "string"
+      required: true
+      description: "Conséquence déterministe ou calcul exécuté (ALORS ... / THEN ...)"
+    - name: "error_code"
+      type: "string"
+      required: false
+      description: "Code d'erreur fonctionnel retourné en cas de violation (ex: ERR_VAL_001)"
+    - name: "severity"
+      type: "enum"
+      values: ["BLOCKING", "WARNING", "INFO"]
+      default: "BLOCKING"
+      description: "Niveau de sévérité en cas de non-respect"
+    - name: "source_anchor"
+      type: "string"
+      required: true
+      description: "Référence ou citation exacte issue du document source"
+
+patterns:
+  keywords:
+    - "règle métier"
+    - "business rule"
+    - "doit obligatoirement"
+    - "ne peut pas"
+    - "condition de calcul"
+    - "formule"
+    - "si et seulement si"
+    - "contrainte d'intégrité"
+
+output_templates:
+  markdown: |
+    # {name} (`{id}`)
+
+    **Catégorie :** `{category}` | **Sévérité :** `{severity}` {error_code_badge}
+
+    ## 🎯 Définition Fonctionnelle
+    * **Condition d'activation :** {condition}
+    * **Comportement attendu :** {action}
+
+    ## 🔍 Source d'Origine
+    > {source_anchor}

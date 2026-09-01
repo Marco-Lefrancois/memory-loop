@@ -1,0 +1,4 @@
+name: "Graphify Auto-Healing"
+type: "command"
+command: "python src/swarm.py sync --project {project_name}"
+description: "Mise à jour silencieuse de l'index du Graphe de Connaissance pour garantir la synchronisation SSOT après une phase de planification."

@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "PostgreSQL",
+      "category": "Database",
+      "properties": {
+        "description": "Systeme de gestion de base de donnees relationnelle PostgreSQL.",
+        "text_chunk": "com/product/business-intelligence)       - [application development          quickly build secure data and ai apps](/product/databricks-apps)       - [database          postgres for data apps and ai agents](/product/lakebase)       - [security          open agentic siem built for the ai era](/pro..."
+      }
+    },
+    {
+      "id": "Redis",
+      "category": "Cache",
+      "properties": {
+        "description": "Systeme de stockage de donnees en memoire ultra-rapide utilise comme cache.",
+        "text_chunk": "com/bnjmn_marie) rediscovered the issue last week."
+      }
+    },
+    {
+      "id": "Python",
+      "category": "Programming Language",
+      "properties": {
+        "description": "Langage de programmation oriente objet dynamique et polyvalent.",
+        "text_chunk": "md rempli, lancez impérativement la commande suivante dans le terminal :    `python src/swarm."
+      }
+    },
+    {
+      "id": "Docker",
+      "category": "DevOps tool",
+      "properties": {
+        "description": "Plateforme de conteneurisation d'applications.",
+        "text_chunk": "one `docker compose up` runs the server on any host you have (a vps, a home server); render deploys with one click; fly."
+      }
+    },
+    {
+      "id": "Kubernetes",
+      "category": "DevOps tool",
+      "properties": {
+        "description": "Plateforme d'orchestration de conteneurs open-source.",
+        "text_chunk": "## **a new layer for working with agents**  many of the biggest shifts in our industry came from moving to a new layer of abstraction: for example, while engineers used to manage individual processes and servers, they can now manage a whole fleet via cloud systems like kubernetes and terraform."
+      }
+    },
+    {
+      "id": "Rich",
+      "category": "CLI Styling",
+      "properties": {
+        "description": "Bibliotheque Python pour l'affichage de texte enrichi et de styles dans le terminal.",
+        "text_chunk": "so we built **omnigent**: a meta-harness that sits above the agents you already use (claude code, codex, pi, or custom agents) and makes them interoperable parts of a richer system."
+      }
+    }
+  ],
+  "edges": []
+}

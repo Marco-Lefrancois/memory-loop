@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Phase 4 : VALIDATE — Linters, Juge Sémantique LLM & Certification DoR",
+    "output": "tools/archify/showcase/phases/p4-validate.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-p4-full",
+        "label": "Workflow Complet Phase 4 (VALIDATE)",
+        "focus": [
+          "p4_input_package",
+          "p4_struct_check",
+          "p4_wikifix_audit",
+          "p4_sentinel_llm",
+          "p4_memory_health",
+          "p4_wikifix_report",
+          "p4_handoff_p5"
+        ],
+        "note": "Anatomie de la Phase 4 : Linters mécaniques, jugement sémantique LLM (Avocat du Diable), rapports de santé et DoR."
+      },
+      {
+        "id": "view-p4-llm-judgment",
+        "label": "Couche de Jugement Sémantique LLM",
+        "focus": [
+          "p4_struct_check",
+          "p4_wikifix_audit",
+          "p4_sentinel_llm",
+          "p4_wikifix_report"
+        ],
+        "note": "Jugement qualitatif de fond (4 axes) : Cohérence métier, 4 piliers Gherkin, confrontation Fact-Search et avis critique sans complaisance."
+      },
+      {
+        "id": "view-p4-dor",
+        "label": "Certification Definition of Ready",
+        "focus": [
+          "p4_sentinel_llm",
+          "p4_memory_health",
+          "p4_wikifix_report",
+          "p4_handoff_p5"
+        ],
+        "note": "Attribution du statut READY_FOR_DEV et scellement des rapports de conformité avant synchronisation."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "p4_input_package",
+      "type": "external",
+      "label": "Story & EvidencePack",
+      "sublabel": "Markdown & Preuves JSON",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "INPUT: PHASE 3"
+    },
+    {
+      "id": "p4_struct_check",
+      "type": "backend",
+      "label": "Linter Structural",
+      "sublabel": "Gabarit & INVEST",
+      "pos": [
+        270,
+        180
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "LINTER: MÉCANIQUE"
+    },
+    {
+      "id": "p4_wikifix_audit",
+      "type": "backend",
+      "label": "Audit WikiFix",
+      "sublabel": "Isolation & Permalinks",
+      "pos": [
+        270,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "AUDIT: TECHNIQUE"
+    },
+    {
+      "id": "p4_sentinel_llm",
+      "type": "backend",
+      "label": "Juge Sémantique LLM",
+      "sublabel": "Avocat du Diable (4 Axes)",
+      "pos": [
+        540,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "LLM: JUGEMENT FOND"
+    },
+    {
+      "id": "p4_memory_health",
+      "type": "database",
+      "label": "Santé Session",
+      "sublabel": "SESSION_MEMORY_HEALTH",
+      "pos": [
+        810,
+        180
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "MEMORY: HEALTH"
+    },
+    {
+      "id": "p4_wikifix_report",
+      "type": "database",
+      "label": "Avis d'Audit DoR",
+      "sublabel": "wikifix_report.md",
+      "pos": [
+        810,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SSOT: RAPPORT DoR"
+    },
+    {
+      "id": "p4_handoff_p5",
+      "type": "frontend",
+      "label": "Sas vers Phase 5",
+      "sublabel": "READY_FOR_DEV",
+      "pos": [
+        1080,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "NEXT: PHASE 5"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "1. Réception Story & EvidencePack",
+      "wraps": [
+        "p4_input_package"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "2. Linters Mécaniques (Forme & Liens)",
+      "wraps": [
+        "p4_struct_check",
+        "p4_wikifix_audit"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "3. Juge Sémantique LLM (Fond & Métier)",
+      "wraps": [
+        "p4_sentinel_llm"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "4. Rapports de Certification & DoR",
+      "wraps": [
+        "p4_memory_health",
+        "p4_wikifix_report"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "5. Sas vers Phase 5 (SHIP / SYNC)",
+      "wraps": [
+        "p4_handoff_p5"
+      ],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "from": "p4_input_package",
+      "to": "p4_struct_check",
+      "label": "forme",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        230,
+        212
+      ]
+    },
+    {
+      "from": "p4_input_package",
+      "to": "p4_wikifix_audit",
+      "label": "liens",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        230,
+        392
+      ]
+    },
+    {
+      "from": "p4_struct_check",
+      "to": "p4_sentinel_llm",
+      "label": "structure OK",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        500,
+        212
+      ]
+    },
+    {
+      "from": "p4_wikifix_audit",
+      "to": "p4_sentinel_llm",
+      "label": "isolation OK",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        500,
+        392
+      ]
+    },
+    {
+      "from": "p4_sentinel_llm",
+      "to": "p4_memory_health",
+      "label": "santé",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        770,
+        212
+      ]
+    },
+    {
+      "from": "p4_sentinel_llm",
+      "to": "p4_wikifix_report",
+      "label": "avis de fond",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        770,
+        392
+      ]
+    },
+    {
+      "from": "p4_memory_health",
+      "to": "p4_handoff_p5",
+      "label": "certifié",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        1040,
+        212
+      ]
+    },
+    {
+      "from": "p4_wikifix_report",
+      "to": "p4_handoff_p5",
+      "label": "DoR accordée",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        1040,
+        392
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1. Linters Mécaniques (Forme & Liens)",
+      "items": [
+        "Audit automatique du gabarit unique story_template.md",
+        "Calcul du score INVEST et conformité des 4 piliers Gherkin",
+        "Vérification de l'isolation technique et des permalinks Azure DevOps"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2. Juge Sémantique LLM (Avocat du Diable)",
+      "items": [
+        "Revue qualitative de fond par intelligence LLM (zéro score mécanique)",
+        "Évaluation sur 4 axes : Cohérence métier, 4 piliers, confrontation faits, conseils",
+        "Dénonciation franche et argumentée des angles morts et faiblesses de design"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "3. Certification Definition of Ready (DoR)",
+      "items": [
+        "Mise à jour du journal de santé memory/SESSION_MEMORY_HEALTH.md",
+        "Publication de l'avis critique complet dans memory/wikifix_report.md",
+        "Passage au statut officiel READY_FOR_DEV autorisant la synchronisation"
+      ]
+    }
+  ]
+}

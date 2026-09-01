@@ -1,0 +1,80 @@
+# Manifeste Déclaratif mLoop MCP Tools & Sources (ADR-0309 - Google MCP Toolbox Alignment)
+version: "1.0"
+
+sources:
+  - kind: source
+    name: mloop-sqlite-fts
+    type: sqlite
+    database: memory/observation_memory.db
+    description: Base de connaissances FTS5 et mémoire persistante de session mLoop
+
+  - kind: source
+    name: mloop-graphify
+    type: json
+    file: graphify-out/graph.json
+    description: Graphe de connaissances d'architecture Graphify
+
+  - kind: source
+    name: mloop-markitdown-ingest
+    type: markdown
+    directory: docs/00-ingested
+    description: Ingestion documentaire locale MarkItDown et base sémantique Markdown
+
+toolsets:
+  - kind: toolset
+    name: SPEC
+    description: Outils autorisés pour la Phase 1 (Spec & Ingest)
+    tools:
+      - mcp_crawler
+      - markitdown_convert
+      - office_read
+      - loop_mem_search
+      - loop_mem_get_observations
+      - archify
+
+  - kind: toolset
+    name: PLAN
+    description: Outils autorisés pour la Phase 2 (Plan & Archi)
+    tools:
+      - loop_mem_search
+      - loop_mem_preload_context
+      - loop_mem_timeline
+      - graph_query
+      - graph_path
+      - graph_explain
+      - wayfinder
+      - grill
+      - session_resume
+      - vibe_check
+      - archify
+
+  - kind: toolset
+    name: BUILD
+    description: Outils autorisés pour la Phase 3 (Build & Dev)
+    tools:
+      - loop_mem_code_rag
+      - loop_mem_preload_context
+      - confidence_gate
+      - story_guard
+      - self_dev
+
+  - kind: toolset
+    name: VALIDATE
+    description: Outils autorisés pour la Phase 4 (Validate & QA)
+    tools:
+      - loop_mem_search
+      - loop_mem_rho_search
+      - check_story_compliance
+      - wikifix
+      - rubber_duck
+      - aoep
+      - vibe_check
+
+  - kind: toolset
+    name: SHIP
+    description: Outils autorisés pour la Phase 5 (Ship & Sync)
+    tools:
+      - loop_mem_search
+      - sync_engine
+      - jira_sync
+      - calibrate

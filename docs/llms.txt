@@ -1,0 +1,21 @@
+# Memory Loop (mLoop) — AI Framework Documentation Map
+
+> Memory Loop is an autonomous agentic framework focused on Functional Analysis, Software Architecture, and Deterministic Validation using Graph Loops (Graphify + CodeGraph) and DAG Diamond topologies.
+
+## Core Architecture & Standards (SSOT)
+- [ADR Index (57 Architectural Decision Records)](standards/adr-system/README.md): Canonical standards governing the state engine, pipelines, and AI agents.
+- [Dual-Engine Graph Architecture (ADR-0204)](standards/adr-system/0204-dual-engine-graph-architecture-graphify-codegraph.md): Separation between semantic graph (Graphify) and AST code graph (CodeGraph).
+- [Zero-Blindspot Policy (ADR-0334)](standards/adr-system/0334-definition-semantique-des-angles-morts.md): Strict protocol tracking 5 vectors of architectural flaws.
+- [Multi-Tenant Isolation (ADR-0322)](standards/adr-system/0322-sequential-cli-boot-multi-tenant-isolation.md): Strict isolation between clients and projects.
+- [Gherkin 4 Pillars Standard (ADR-0301)](standards/adr-system/0301-standard-gherkin-outlines-4-piliers.md): Mandatory 4 pillars for user stories (Nominal, Exceptions, Resilience, UX).
+
+## Knowledge Vault (Atomic Concept Cards)
+- [Diamond DAG Topology (KN-001)](docs/06-knowledge/01-agentic-patterns/KN-001_diamond_dag_topology.md): Parallel execution with barrier and Python reducer node.
+- [Herdr PTY Multiplexing (KN-002)](docs/06-knowledge/01-agentic-patterns/KN-002_herdr_pty_multiplexing.md): Subagent lifecycle and clean-slate context isolation.
+- [LLM-Wiki v2 & OKF (KN-010)](docs/06-knowledge/02-memory-epistemic/KN-010_llm_wiki_v2_okf_standard.md): 4-tier memory lifecycle and selective retention.
+- [Epistemic Grounding (KN-011)](docs/06-knowledge/02-memory-epistemic/KN-011_epistemic_grounding_deeppapernote.md): Decoupling proven facts from hypotheses (DeepPaperNote).
+- [LiteLLM Governance (KN-030)](docs/06-knowledge/04-model-governance/KN-030_litellm_model_routing_pricing.md): Cost forensics and anti-sycophancy model selection.
+
+## Protocols & Blueprints
+- [Universal Story Template](standards/blueprints/story_template.md): Gold standard for vertical slicing and no-code declarative specs.
+- [CLI Pipeline Guide](standards/protocols/CLI_PIPELINE_GUIDE.md): Complete matrix of the 58 CLI lifecycle commands.

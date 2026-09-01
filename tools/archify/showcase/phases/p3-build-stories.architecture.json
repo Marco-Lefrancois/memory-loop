@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Phase 3 : BUILD / STORIES — Rédaction Gabarit Unique, 4 Piliers & EvidencePacks",
+    "output": "tools/archify/showcase/phases/p3-build-stories.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-p3-full",
+        "label": "Workflow Complet Phase 3 (BUILD / STORIES)",
+        "focus": [
+          "p3_input_package",
+          "p3_first_principles",
+          "p3_story_writer",
+          "p3_story_markdown",
+          "p3_evidence_pack",
+          "p3_handoff_p4"
+        ],
+        "note": "Anatomie de la Phase 3 : Déconstruction critique, rédaction au gabarit unique, génération des 4 piliers et de l'EvidencePack JSON."
+      },
+      {
+        "id": "view-p3-twin-deliverables",
+        "label": "Story & EvidencePack",
+        "focus": [
+          "p3_story_writer",
+          "p3_story_markdown",
+          "p3_evidence_pack",
+          "p3_handoff_p4"
+        ],
+        "note": "Séparation stricte : Récit Markdown 100% no-code (sans métadonnées IA) et EvidencePack sidecar JSON autonome."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "p3_input_package",
+      "type": "external",
+      "label": "Récits Cadrés (P2)",
+      "sublabel": "Backlog & ADRs scellés",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "INPUT: PHASE 2"
+    },
+    {
+      "id": "p3_first_principles",
+      "type": "backend",
+      "label": "Analyse Critique",
+      "sublabel": "Anti-Sycophancy Gate",
+      "pos": [
+        260,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "GATE: ROAST"
+    },
+    {
+      "id": "p3_story_writer",
+      "type": "backend",
+      "label": "Moteur Rédaction",
+      "sublabel": "story_template.md",
+      "pos": [
+        490,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "ENGINE: WRITER"
+    },
+    {
+      "id": "p3_story_markdown",
+      "type": "database",
+      "label": "Récit Markdown",
+      "sublabel": "backlog/stories/*.md",
+      "pos": [
+        720,
+        180
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SSOT: STORY"
+    },
+    {
+      "id": "p3_evidence_pack",
+      "type": "database",
+      "label": "EvidencePack JSON",
+      "sublabel": "memory/evidence/*.json",
+      "pos": [
+        720,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SSOT: EVIDENCE"
+    },
+    {
+      "id": "p3_handoff_p4",
+      "type": "frontend",
+      "label": "Sas vers Phase 4",
+      "sublabel": "Sentinel & WikiFix",
+      "pos": [
+        950,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "NEXT: PHASE 4"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "1. Réception Phase 2",
+      "wraps": [
+        "p3_input_package"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "2. Déconstruction à Froid",
+      "wraps": [
+        "p3_first_principles"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "3. Moteur de Rédaction (Gabarit Unique)",
+      "wraps": [
+        "p3_story_writer"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "4. Story & EvidencePack (SSOT)",
+      "wraps": [
+        "p3_story_markdown",
+        "p3_evidence_pack"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "5. Sas vers Phase 4 (VALIDATE)",
+      "wraps": [
+        "p3_handoff_p4"
+      ],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "from": "p3_input_package",
+      "to": "p3_first_principles",
+      "label": "récit cadré",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        225,
+        302
+      ]
+    },
+    {
+      "from": "p3_first_principles",
+      "to": "p3_story_writer",
+      "label": "faits validés",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        455,
+        302
+      ]
+    },
+    {
+      "from": "p3_story_writer",
+      "to": "p3_story_markdown",
+      "label": "4 piliers",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        680,
+        212
+      ]
+    },
+    {
+      "from": "p3_story_writer",
+      "to": "p3_evidence_pack",
+      "label": "sidecar JSON",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        680,
+        392
+      ]
+    },
+    {
+      "from": "p3_story_markdown",
+      "to": "p3_handoff_p4",
+      "label": "story no-code",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        915,
+        212
+      ]
+    },
+    {
+      "from": "p3_evidence_pack",
+      "to": "p3_handoff_p4",
+      "label": "preuves JSON",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        915,
+        392
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1. Déconstruction Critique & Anti-Sycophancy",
+      "items": [
+        "Obligation formelle de déconstruire le récit à froid avant rédaction",
+        "Confrontation systématique aux SDKs réels (zéro fausse route API)",
+        "Refus de toute complaisance ou sur-ingénierie artificielle"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2. Gabarit Unique & Les 4 Piliers Gherkin",
+      "items": [
+        "Frontmatter YAML complet avec Titre Métier Pur (# Titre)",
+        "Pilier 1 (Nominal), Pilier 2 (Exceptions & Codes Erreurs)",
+        "Pilier 3 (Résilience & Timeouts), Pilier 4 (UX & États Visuels)"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "3. Pureté No-Code & EvidencePacks Autonomes",
+      "items": [
+        "Le récit .md se termine STRICTEMENT après ## Scénarios de test",
+        "Zéro trace d'IA ni métadonnées synthétiques dans le Markdown",
+        "EvidencePack JSON sidecar synchrone (<STORY_ID>_evidence.json)"
+      ]
+    }
+  ]
+}

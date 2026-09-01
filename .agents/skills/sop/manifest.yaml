@@ -1,0 +1,5 @@
+name: sop
+description: Standard Operating Procedure (SOP) pour le Memory Loop Autonomous Engine.
+skill:
+  name: sop
+  phase: all

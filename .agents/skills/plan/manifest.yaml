@@ -1,0 +1,7 @@
+name: plan
+description: "Phase [P] Plan - Raisonnement stratégique, DDD et cristallisation du SCC."
+module: "src.pipelines.drill"
+function: "run_drill"
+hooks:
+  - event: pre_run
+    handler: story_guard

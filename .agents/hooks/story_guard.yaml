@@ -1,0 +1,4 @@
+name: "Story Drift Guard"
+type: "command"
+command: "python src/bridges/story_guard.py --project {project_name}"
+description: "Vérifie l'intégrité de la story active et prévient les dérives d'état pendant l'analyse fonctionnelle."

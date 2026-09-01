@@ -1,0 +1,61 @@
+# Blueprint d'Extraction Déclarative YAML — Matrice UI & Macrostructures
+# Standard : ADR-0340 (Hallmark) & ADR-0342
+# Format : Knowledge Abstract (KA) pour docs/05-assets/ & UX Specs
+
+schema_version: "1.0"
+extractor_id: "ui_matrix"
+title: "Extracteur de Matrice UI & États Hallmark"
+target_directory: "docs/01-architecture/ui/"
+id_prefix: "UI-"
+id_padding: 3
+
+schema:
+  fields:
+    - name: "id"
+      type: "string"
+      required: true
+      description: "Identifiant du composant ou de la vue (ex: UI-001)"
+    - name: "screen_name"
+      type: "string"
+      required: true
+      description: "Nom de l'écran ou composant UI (ex: CheckoutModal)"
+    - name: "macrostructure_type"
+      type: "string"
+      required: true
+      description: "Macrostructure Hallmark (ex: Form Layout, Data Table, Modal Dialog)"
+    - name: "primary_cta"
+      type: "string"
+      required: true
+      description: "Intitulé et action de l'action principale (Call to Action)"
+    - name: "states"
+      type: "list_of_objects"
+      required: true
+      item_schema:
+        state_name: "enum[DEFAULT, HOVER, ACTIVE, FOCUS, DISABLED, LOADING, ERROR, SUCCESS]"
+        visual_behavior: "string"
+    - name: "accessibility_notes"
+      type: "string"
+      required: false
+      description: "Contraintes d'accessibilité WCAG / ARIA"
+    - name: "source_anchor"
+      type: "string"
+      required: true
+      description: "Référence exacte issue de la maquette ou de la spec"
+
+output_templates:
+  markdown: |
+    # Écran / Composant : `{screen_name}` (`{id}`)
+
+    **Macrostructure :** `{macrostructure_type}`  
+    **CTA Primaire :** `{primary_cta}`
+
+    ## 🎨 Matrice des 8 États Hallmark
+    | État | Comportement Visuel / Interaction |
+    | :--- | :--- |
+    {states_table}
+
+    ## ♿ Accessibilité (A11y)
+    {accessibility_notes}
+
+    ## 🔍 Source d'Origine
+    > {source_anchor}

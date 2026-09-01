@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Phase 0 : INCEPTION — Les 5 Piliers Microscopiques du Gathering",
+    "output": "tools/archify/showcase/phases/p0-inception.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-p0-full",
+        "label": "Les 5 Piliers Microscopiques de la Phase 0",
+        "focus": [
+          "src_local_briefs",
+          "src_local_tickets",
+          "src_web_docs",
+          "p0_staging_gate",
+          "p0_crawler",
+          "p0_twin_cache",
+          "p0_gathering_hub",
+          "p0_tshirt_sizing",
+          "p0_to_sow",
+          "p0_sow_deliverable",
+          "p1_markitdown_target"
+        ],
+        "note": "Anatomie intégrale des 5 piliers : Collecte, Staging étanche, Crawler Twin, Gathering Hub, et Cadrage SOW."
+      },
+      {
+        "id": "view-p0-security",
+        "label": "Sécurité Git & Confinement",
+        "focus": [
+          "src_local_briefs",
+          "src_local_tickets",
+          "p0_staging_gate",
+          "p0_gathering_hub"
+        ],
+        "note": "Gouvernance de reference/ strictement exclu de Git (.gitignore) avec interdiction de lecture brute."
+      },
+      {
+        "id": "view-p0-scoping",
+        "label": "Cadrage Macroscopique & SOW",
+        "focus": [
+          "p0_gathering_hub",
+          "p0_tshirt_sizing",
+          "p0_to_sow",
+          "p0_sow_deliverable",
+          "p1_markitdown_target"
+        ],
+        "note": "Production optionnelle de l'Énoncé des Travaux (SOW_<PROJET>.md selon ADR-0331)."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "src_local_briefs",
+      "type": "external",
+      "label": "Briefs & Cahiers",
+      "sublabel": "PDF, Word, Excel",
+      "pos": [
+        40,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "INPUT: BRIEFS"
+    },
+    {
+      "id": "src_local_tickets",
+      "type": "external",
+      "label": "Tickets & Mails",
+      "sublabel": "Jira, ADO, Mails",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "INPUT: TICKETS"
+    },
+    {
+      "id": "src_web_docs",
+      "type": "external",
+      "label": "Docs Web & APIs",
+      "sublabel": "Wikis & SDKs Web",
+      "pos": [
+        40,
+        430
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "INPUT: WEB"
+    },
+    {
+      "id": "p0_staging_gate",
+      "type": "security",
+      "label": "Confinement .gitignore",
+      "sublabel": "Dossier reference/",
+      "pos": [
+        250,
+        190
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SECURITY: GIT"
+    },
+    {
+      "id": "p0_crawler",
+      "type": "backend",
+      "label": "Research Crawler",
+      "sublabel": "swarm.py crawl",
+      "pos": [
+        480,
+        350
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "P3: CRAWLER"
+    },
+    {
+      "id": "p0_twin_cache",
+      "type": "database",
+      "label": "Docs Web Épurées",
+      "sublabel": "Markdown épuré",
+      "pos": [
+        480,
+        510
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "P3: CACHE"
+    },
+    {
+      "id": "p0_gathering_hub",
+      "type": "frontend",
+      "label": "Hub de Tri",
+      "sublabel": "Consolidation",
+      "pos": [
+        710,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "HUB: TRI"
+    },
+    {
+      "id": "p0_tshirt_sizing",
+      "type": "frontend",
+      "label": "T-Shirt Sizing",
+      "sublabel": "Effort XS à XL",
+      "pos": [
+        940,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "P5: ESTIMATION"
+    },
+    {
+      "id": "p0_to_sow",
+      "type": "backend",
+      "label": "Générateur SOW",
+      "sublabel": "swarm.py to-sow",
+      "pos": [
+        940,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "P5: TO-SOW"
+    },
+    {
+      "id": "p0_sow_deliverable",
+      "type": "database",
+      "label": "SOW_<PROJET>.md",
+      "sublabel": "docs/01/ (Optionnel)",
+      "pos": [
+        940,
+        430
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "P5: LIVRABLE"
+    },
+    {
+      "id": "p1_markitdown_target",
+      "type": "backend",
+      "label": "Sas vers Phase 1",
+      "sublabel": "markitdown_convert",
+      "pos": [
+        1170,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "NEXT: PHASE 1"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "1. Gestion des fichiers bruts",
+      "wraps": [
+        "src_local_briefs",
+        "src_local_tickets",
+        "src_web_docs",
+        "p0_staging_gate"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "region",
+      "label": "2. Crawler Web & Docs Épurées",
+      "wraps": [
+        "p0_crawler",
+        "p0_twin_cache"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "3. Hub de Tri (Consolidation)",
+      "wraps": [
+        "p0_gathering_hub"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "4. Cadrage & SOW (Optionnel)",
+      "wraps": [
+        "p0_tshirt_sizing",
+        "p0_to_sow",
+        "p0_sow_deliverable"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "5. Sas vers Phase 1 (SPEC / INGEST)",
+      "wraps": [
+        "p1_markitdown_target"
+      ],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "from": "src_local_briefs",
+      "to": "p0_staging_gate",
+      "label": "briefs",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        220,
+        142
+      ]
+    },
+    {
+      "from": "src_local_tickets",
+      "to": "p0_staging_gate",
+      "label": "tickets",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        220,
+        270
+      ]
+    },
+    {
+      "from": "src_web_docs",
+      "to": "p0_crawler",
+      "label": "crawl web",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        260,
+        430
+      ]
+    },
+    {
+      "from": "p0_staging_gate",
+      "to": "p0_crawler",
+      "label": "liens refs",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        450,
+        280
+      ]
+    },
+    {
+      "from": "p0_crawler",
+      "to": "p0_twin_cache",
+      "label": "twin clean",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        555,
+        457
+      ]
+    },
+    {
+      "from": "p0_staging_gate",
+      "to": "p0_gathering_hub",
+      "label": "fichiers bruts",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        485,
+        150
+      ]
+    },
+    {
+      "from": "p0_twin_cache",
+      "to": "p0_gathering_hub",
+      "label": "docs épurées",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        670,
+        470
+      ]
+    },
+    {
+      "from": "p0_gathering_hub",
+      "to": "p0_tshirt_sizing",
+      "label": "cadrage macro",
+      "variant": "dashed",
+      "route": "orthogonal-h",
+      "labelAt": [
+        830,
+        180
+      ]
+    },
+    {
+      "from": "p0_tshirt_sizing",
+      "to": "p0_to_sow",
+      "label": "chiffrage",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [
+        1015,
+        217
+      ]
+    },
+    {
+      "from": "p0_to_sow",
+      "to": "p0_sow_deliverable",
+      "label": "génération",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [
+        1015,
+        377
+      ]
+    },
+    {
+      "from": "p0_to_sow",
+      "to": "p1_markitdown_target",
+      "label": "sas P1",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [
+        1130,
+        302
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1. Gestion des Fichiers Bruts (reference/)",
+      "items": [
+        "Réception des fichiers clients bruts (PDF, Word, Excel, Mails)",
+        "Confinement strict dans reference/ exclu de Git (.gitignore)",
+        "Interdiction de lecture brute sans normalisation MarkItDown"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2. Veille Web & Crawler (Docs Épurées)",
+      "items": [
+        "Téléchargement automatisé des documentations et wikis web",
+        "Extraction du texte Markdown épuré pour zéro bruit",
+        "Archivage dans le cache de recherche brut pour traçabilité"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "3. Hub de Tri & Cadrage SOW Optionnel",
+      "items": [
+        "Consolidation de l'inventaire et contrôle de complétude",
+        "Estimation macroscopique T-Shirt Sizing (XS à XL)",
+        "Génération de l'Énoncé des Travaux via swarm.py to-sow"
+      ]
+    }
+  ]
+}

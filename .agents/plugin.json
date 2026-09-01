@@ -1,0 +1,29 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "mloop-framework",
+  "version": "1.0.0",
+  "description": "Memory Loop — Agent orchestration framework with persistent memory, knowledge graphs, and multi-agent pipeline for vertical slicing, evidence-driven QA, and self-healing development.",
+  "author": {
+    "name": "nMedia Solutions",
+    "url": "https://nmedia.ca"
+  },
+  "license": "MIT",
+  "keywords": [
+    "agent",
+    "orchestration",
+    "memory",
+    "knowledge-graph",
+    "mcp",
+    "vertical-slicing",
+    "evidence-pack",
+    "multi-agent",
+    "pipeline"
+  ],
+  "extensions": {
+    "com.nmedia.opencode": {
+      "agents": ["orchestrator", "plan", "build", "sentinel"],
+      "commandCount": 28,
+      "defaultModel": "gemini-3.1-pro-preview-thinking"
+    }
+  }
+}

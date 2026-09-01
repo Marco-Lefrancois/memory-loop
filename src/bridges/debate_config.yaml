@@ -1,0 +1,26 @@
+# debate_config.yaml - Configuration des castings du Multi-Agent Debate
+# Chaque stratégie définit 3 rôles :
+# - proposer : Génère l'architecture/solution initiale.
+# - challenger (Red Team) : Critique la solution et trouve les failles.
+# - synthesizer (Juge/Architecte) : Analyse la proposition et la critique, et rédige la décision finale.
+
+strategies:
+  # Le casting "Deep Architecture" (Le standard recommandé pour la phase Plan)
+  deep_architecture:
+    proposer: "gpt-5.5"
+    challenger: "deepseek-r1" 
+    synthesizer: "claude-opus-4.7"
+
+  # Le casting "Titan" (100% Qualité / Pas de budget limite)
+  titans:
+    proposer: "claude-opus-4.7"
+    challenger: "gpt-5.5-thinking"
+    synthesizer: "claude-opus-4.7"
+
+  # Le casting "Agile / Budget" (Tâches rapides)
+  agile:
+    proposer: "gemini-3-flash-preview"
+    challenger: "claude-haiku-4.5"
+    synthesizer: "gpt-5-mini"
+
+default_strategy: "deep_architecture"

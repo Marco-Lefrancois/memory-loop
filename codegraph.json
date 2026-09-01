@@ -1,0 +1,7 @@
+{
+  "include": [
+    "Projects/Metro_FOOD/reference/codebase/",
+    "Projects/Metro_COMMERCE/reference/codebase/",
+    "Projects/Metro_SANTE/reference/codebase/"
+  ]
+}

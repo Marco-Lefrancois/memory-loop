@@ -1,0 +1,133 @@
+"""Handlers Tooling : optimize, svg-optimize, hill-climb, drawdb."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from src.cli import ZeroFluffConsole
+
+if TYPE_CHECKING:
+    import argparse
+    from src.state import LoopState
+
+
+def handle_drawdb(args: argparse.Namespace, state: LoopState | None, project_path: Path | None) -> int:
+    """Pipeline DrawDB (serveur, export, import, sync)."""
+    from src.pipelines.drawdb_pipeline import run_drawdb_pipeline
+    run_drawdb_pipeline(args.action, args.input, args.output, args.port, args.project)
+    return 0
+
+
+def handle_optimize(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Optimisation RHO."""
+    from src.pipelines.rho_optimizer import optimize_rho
+    optimize_rho(args.project, args.keyword, args.msg, args.scope)
+    return 0
+
+
+def handle_svg_optimize(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Optimisation et minification des fichiers SVG."""
+    from src.pipelines.svg_optimizer import SVGOptimizerEngine
+
+    engine = SVGOptimizerEngine(project_path)
+    input_val = getattr(args, "input", None)
+
+    if not input_val:
+        target_path = project_path / "reference"
+        ZeroFluffConsole.info(f"Optimisation des fichiers SVG sous : {target_path}")
+        res = engine.optimize_directory(target_path)
+    elif "*" in input_val or "?" in input_val:
+        p = Path(input_val)
+        if p.is_absolute():
+            search_dir = p.parent
+            pattern = p.name
+        else:
+            search_dir = project_path
+            pattern = input_val
+        matched_files = list(search_dir.glob(pattern)) if search_dir.exists() else list(project_path.glob(input_val))
+        ZeroFluffConsole.info(f"Optimisation de {len(matched_files)} fichier(s) correspondant au motif : {input_val}")
+        res = engine.optimize_files(matched_files)
+    else:
+        target_path = Path(input_val) if Path(input_val).is_absolute() else (project_path / input_val)
+        ZeroFluffConsole.info(f"Optimisation des fichiers SVG sous : {target_path}")
+        if target_path.is_file():
+            res = engine.optimize_file(target_path)
+        else:
+            res = engine.optimize_directory(target_path)
+
+    print(json.dumps(res, indent=2, ensure_ascii=False))
+    return 0 if res.get("success") else 1
+
+
+def handle_hill_climb(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Test Hill-Climbing (mutation-évaluation)."""
+    from src.pipelines.test_hillclimbing import TestHillClimbingEngine
+
+    thc = TestHillClimbingEngine(args.project)
+    initial_score = thc.evaluate_state()
+    ZeroFluffConsole.info(f"Score de départ: {initial_score:.2f}")
+    mutation = thc.propose_mutation()
+    ZeroFluffConsole.info(f"Mutation proposée: {mutation}")
+    thc.apply_mutation(mutation)
+    new_score = thc.evaluate_state()
+    if new_score > initial_score:
+        ZeroFluffConsole.success(f"Amélioration validée : {new_score:.2f} > {initial_score:.2f}. Mutation conservée.")
+    else:
+        ZeroFluffConsole.warning(f"Régression ou statut quo : {new_score:.2f} <= {initial_score:.2f}. Rollback.")
+        thc.rollback_mutation(mutation)
+    return 0
+
+
+def handle_archify(args: argparse.Namespace, state: LoopState | None, project_path: Path | None) -> int:
+    """Validation et rendu de diagrammes d'architecture interactifs Archify."""
+    from tools.archify.archify_runner import run_archify_command, find_archify_bin
+    import os
+
+    input_file = args.file
+    if not input_file:
+        ZeroFluffConsole.error("L'argument --file <chemin_json> est obligatoire.")
+        return 1
+
+    input_path = Path(input_file)
+    if not input_path.is_absolute() and project_path:
+        input_path = project_path / input_file
+
+    if not input_path.exists():
+        ZeroFluffConsole.error(f"Fichier de spécification introuvable : {input_path}")
+        return 1
+
+    if args.validate_only:
+        ZeroFluffConsole.info(f"Validation Showcase de la spécification Archify : {input_path}")
+        return run_archify_command("validate", args.type, str(input_path), quality=args.quality)
+
+    output_file = args.output
+    if not output_file:
+        output_file = str(input_path).replace(".json", ".html")
+
+    output_path = Path(output_file)
+    if not output_path.is_absolute() and project_path:
+        output_path = project_path / output_file
+
+    ZeroFluffConsole.info(f"Compilation Archify Showcase : {input_path} -> {output_path}")
+    code = run_archify_command("deliver", args.type, str(input_path), output_path=str(output_path), quality=args.quality)
+    if code == 0:
+        ZeroFluffConsole.success(f"Artefact HTML généré avec succès : {output_path}")
+        if getattr(args, "open", False):
+            import sys
+            if sys.platform == "win32":
+                os.startfile(output_path.resolve())
+    return code
+
+
+def handle_drawdb(args: argparse.Namespace, state: LoopState | None, project_path: Path | None) -> int:
+    """Lancement du hub souverain de visualisation des schémas de base de données (drawDB / ERD)."""
+    from tools.drawdb.runner import serve_drawdb
+    port = getattr(args, "port", 8080)
+    auto_open = not getattr(args, "no_open", False)
+    ZeroFluffConsole.info(f"Démarrage du visualiseur relationnel de base de données sur le port {port}...")
+    serve_drawdb(port=port, auto_open=auto_open)
+    return 0
+
+
+

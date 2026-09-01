@@ -1,0 +1,78 @@
+# Blueprint d'Extraction Déclarative YAML — Contrats d'API & Routes
+# Standard : ADR-0342
+# Format : Knowledge Abstract (KA) pour docs/01-architecture/ ou Profils B
+
+schema_version: "1.0"
+extractor_id: "api_contracts"
+title: "Extracteur de Contrats d'API Déclaratifs"
+target_directory: "docs/01-architecture/api/"
+id_prefix: "API-"
+id_padding: 3
+
+schema:
+  fields:
+    - name: "id"
+      type: "string"
+      required: true
+      description: "Identifiant de la route (ex: API-001)"
+    - name: "route_path"
+      type: "string"
+      required: true
+      description: "Chemin URL relatif normalisé (ex: /api/v1/auth/login)"
+    - name: "http_method"
+      type: "enum"
+      values: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
+      required: true
+      description: "Verbe HTTP standard"
+    - name: "summary"
+      type: "string"
+      required: true
+      description: "Résumé fonctionnel de l'opération"
+    - name: "auth_required"
+      type: "boolean"
+      default: true
+      description: "Indique si l'authentification est requise"
+    - name: "request_payload_schema"
+      type: "object"
+      required: false
+      description: "Schéma déclaratif du body JSON attendu"
+    - name: "response_statuses"
+      type: "list_of_objects"
+      required: true
+      item_schema:
+        status_code: "integer"
+        description: "string"
+        schema_summary: "string"
+    - name: "source_anchor"
+      type: "string"
+      required: true
+      description: "Référence exacte issue du document source ou OpenAPI"
+
+patterns:
+  keywords:
+    - "endpoint"
+    - "route api"
+    - "http method"
+    - "status code"
+    - "request body"
+    - "response payload"
+
+output_templates:
+  markdown: |
+    # Route : `{http_method} {route_path}` (`{id}`)
+
+    **Authentification requise :** `{auth_required}`  
+    **Résumé :** {summary}
+
+    ## 📥 Corps de Requête
+    ```json
+    {request_payload_json}
+    ```
+
+    ## 📤 Statuts de Réponse & Réponses Types
+    | Code HTTP | Description | Schéma |
+    | :--- | :--- | :--- |
+    {responses_table}
+
+    ## 🔍 Source d'Origine
+    > {source_anchor}

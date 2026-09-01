@@ -1,0 +1,44 @@
+# Herdr Plugin Manifest for mLoop (Memory Loop)
+# Conforming to Herdr v0.8+ plugin specification (https://herdr.dev/plugins/)
+
+id = "memory-loop"
+name = "mLoop Orchestrator"
+version = "2.4.0"
+minHerdrVersion = "0.8.0"
+description = "Autonomous Loop Graph, DAG Engineering & Multi-Agent Swarm Orchestrator for Antigravity & OpenCode."
+author = "mLoop Team"
+license = "MIT"
+platforms = ["windows", "linux", "macos"]
+
+[entrypoint]
+command = "python src/swarm.py"
+
+[[actions]]
+id = "vibe-check"
+title = "Run Safety Vibe Check"
+description = "Executes 9 pre-flight sanity checks on project state and SSOT integrity."
+command = "python src/swarm.py vibe-check"
+
+[[actions]]
+id = "dag-status"
+title = "Inspect Live DAG Topology"
+description = "Displays the current DAG dependency graph, node states, and evidence flow."
+command = "python src/swarm.py graph-run --dry-run"
+
+[[actions]]
+id = "worker-spawn"
+title = "Spawn Clean Slate Worker"
+description = "Spawns an isolated PTY subagent worker in Herdr multiplexer."
+command = "python src/swarm.py worker-spawn --role worker"
+
+[[actions]]
+id = "dream-collector"
+title = "Run RHO Memory Hygiene (Dream)"
+description = "Cleanses obsolete rules and synchronizes ADR tombstone markers."
+command = "python src/swarm.py dream"
+
+[[actions]]
+id = "calibrate"
+title = "Auto-Calibrate Ecosystem"
+description = "Runs the 8-axis calibration audit across CLI, opencode.json, skills, and guardrails."
+command = "python src/swarm.py calibrate"

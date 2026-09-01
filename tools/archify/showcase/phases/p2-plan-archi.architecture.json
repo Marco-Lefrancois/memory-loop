@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Phase 2 : PLAN & ARCHI — Découpage Backlog, Fact-Search & Grill-Me",
+    "output": "tools/archify/showcase/phases/p2-plan-archi.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-p2-full",
+        "label": "Workflow Complet Phase 2 (PLAN & ARCHI)",
+        "focus": [
+          "p2_input_package",
+          "p2_triage_clustering",
+          "p2_sprint_backlog",
+          "p2_fact_search_engine",
+          "p2_proof_register",
+          "p2_grill_interactive",
+          "p2_adr_system",
+          "p2_handoff_p3"
+        ],
+        "note": "Anatomie de la Phase 2 : Découpage vertical, validation Fact-Search, entrevue interactive Grill-Me 1:1, scellement des ADRs et handoff."
+      },
+      {
+        "id": "view-p2-factsearch",
+        "label": "Gouvernance Fact-Search & Search-Before-Ask",
+        "focus": [
+          "p2_triage_clustering",
+          "p2_fact_search_engine",
+          "p2_proof_register",
+          "p2_grill_interactive"
+        ],
+        "note": "Audit automatique des faits avant toute question PO : interdiction des questions triviales et logging des preuves textuelles."
+      },
+      {
+        "id": "view-p2-grill",
+        "label": "Grill-Me 1:1 & Décisions ADRs",
+        "focus": [
+          "p2_fact_search_engine",
+          "p2_grill_interactive",
+          "p2_adr_system",
+          "p2_handoff_p3"
+        ],
+        "note": "Interrogatoire ciblé (1 question par tour) pour lever les ambiguïtés résiduelles et sceller les ADRs d'architecture."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "p2_input_package",
+      "type": "external",
+      "label": "Socle Indexé (P1)",
+      "sublabel": "docs/ & YAML typés",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "INPUT: PHASE 1"
+    },
+    {
+      "id": "p2_triage_clustering",
+      "type": "backend",
+      "label": "Découpage Vertical",
+      "sublabel": "Vertical Slicing SSOT",
+      "pos": [
+        260,
+        180
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "TRIAGE: STORIES"
+    },
+    {
+      "id": "p2_sprint_backlog",
+      "type": "database",
+      "label": "sprint_backlog.md",
+      "sublabel": "DAG & Priorisation",
+      "pos": [
+        260,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SSOT: BACKLOG"
+    },
+    {
+      "id": "p2_fact_search_engine",
+      "type": "backend",
+      "label": "Moteur Fact-Search",
+      "sublabel": "Search-Before-Ask",
+      "pos": [
+        490,
+        180
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "ENGINE: PROOF"
+    },
+    {
+      "id": "p2_proof_register",
+      "type": "database",
+      "label": "Journal de Preuves",
+      "sublabel": "fact_search_log.jsonl",
+      "pos": [
+        490,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "MEMORY: LOG"
+    },
+    {
+      "id": "p2_grill_interactive",
+      "type": "frontend",
+      "label": "Grill-Me 1:1",
+      "sublabel": "1 Question par Tour",
+      "pos": [
+        720,
+        180
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "GRILL: PO"
+    },
+    {
+      "id": "p2_adr_system",
+      "type": "database",
+      "label": "ADRs Système",
+      "sublabel": "docs/01/ (ADR-XXX)",
+      "pos": [
+        720,
+        360
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "SSOT: ADR"
+    },
+    {
+      "id": "p2_handoff_p3",
+      "type": "frontend",
+      "label": "Sas vers Phase 3",
+      "sublabel": "Rédaction 4 Piliers",
+      "pos": [
+        950,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "NEXT: PHASE 3"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "1. Réception Phase 1",
+      "wraps": [
+        "p2_input_package"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "2. Découpage Vertical du Backlog",
+      "wraps": [
+        "p2_triage_clustering",
+        "p2_sprint_backlog"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "3. Moteur Fact-Search (Search-Before-Ask)",
+      "wraps": [
+        "p2_fact_search_engine",
+        "p2_proof_register"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "4. Grill-Me 1:1 & Arbitrage ADRs",
+      "wraps": [
+        "p2_grill_interactive",
+        "p2_adr_system"
+      ],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "5. Sas vers Phase 3 (BUILD / STORIES)",
+      "wraps": [
+        "p2_handoff_p3"
+      ],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "from": "p2_input_package",
+      "to": "p2_triage_clustering",
+      "label": "socle docs",
+      "variant": "emphasis",
+      "route": "orthogonal-h",
+      "labelAt": [
+        225,
+        212
+      ]
+    },
+    {
+      "from": "p2_triage_clustering",
+      "to": "p2_sprint_backlog",
+      "label": "slicing SSOT",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        335,
+        287
+      ]
+    },
+    {
+      "from": "p2_triage_clustering",
+      "to": "p2_fact_search_engine",
+      "label": "récits prélim",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        455,
+        212
+      ]
+    },
+    {
+      "from": "p2_fact_search_engine",
+      "to": "p2_proof_register",
+      "label": "citations",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        565,
+        287
+      ]
+    },
+    {
+      "from": "p2_fact_search_engine",
+      "to": "p2_grill_interactive",
+      "label": "zones d'ombre",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        685,
+        212
+      ]
+    },
+    {
+      "from": "p2_grill_interactive",
+      "to": "p2_adr_system",
+      "label": "arbitrages",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        795,
+        287
+      ]
+    },
+    {
+      "from": "p2_grill_interactive",
+      "to": "p2_handoff_p3",
+      "label": "récits alignés",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        915,
+        212
+      ]
+    },
+    {
+      "from": "p2_adr_system",
+      "to": "p2_handoff_p3",
+      "label": "ADRs scellés",
+      "variant": "security",
+      "route": "orthogonal-h",
+      "labelAt": [
+        915,
+        360
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1. Découpage Vertical du Backlog",
+      "items": [
+        "Clustering des règles et modèles par valeur métier livrable",
+        "Structure en tranches verticales indépendantes (INVEST)",
+        "Génération de sprint_backlog.md et de l'arbre de dépendances"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2. Moteur Fact-Search Actif (Search-Before-Ask)",
+      "items": [
+        "Audit automatique des faits dans SQLite FTS5 et Graphify",
+        "Interdiction absolue de poser une question déjà documentée",
+        "Consignation des extraits probants dans fact_search_log.jsonl"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "3. Grill-Me 1:1 & Arbitrage des ADRs",
+      "items": [
+        "Entrevue interactive rythmée à 1 question ciblée par tour",
+        "Résolution des zones d'ombre et décisions d'architecture",
+        "Scellement formel des décisions dans docs/01/ (ADR-XXX)"
+      ]
+    }
+  ]
+}

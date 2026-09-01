@@ -1,0 +1,61 @@
+{
+  "$comment": "CLI commands specific to nMedia OpenCode. Ignored by other AP 1.0 clients.",
+  "commands": {
+    "loop-select": {
+      "description": "Selectionner et verrouiller un projet actif",
+      "template": "echo \"Projet selectionne : $ARGUMENTS\""
+    },
+    "loop-new-project": {
+      "description": "Initialiser un nouveau projet Memory Loop",
+      "template": "python src/swarm.py sync --project $ARGUMENTS"
+    },
+    "loop-analyze": {
+      "description": "Ingerer les sources et lancer Graphify",
+      "template": "python src/swarm.py ingest --project $ARGUMENTS"
+    },
+    "loop-grill": {
+      "description": "Session Grill-with-Docs interactive",
+      "template": "python src/swarm.py grill --project $ARGUMENTS"
+    },
+    "loop-validate": {
+      "description": "Validation semantique WikiFix",
+      "template": "python src/swarm.py wikifix --project $ARGUMENTS"
+    },
+    "loop-sync": {
+      "description": "Synchronisation complete SQLite et Graphify",
+      "template": "python src/swarm.py sync --project $ARGUMENTS"
+    },
+    "loop-resume": {
+      "description": "Restauration de session anti-amnesie",
+      "template": "python src/swarm.py resume --project $ARGUMENTS"
+    },
+    "loop-vibe-check": {
+      "description": "Validation pre-vol des guardrails",
+      "template": "python src/swarm.py vibe-check --project $ARGUMENTS"
+    },
+    "loop-calibrate": {
+      "description": "Auto-etalonnage continu de l'ecosysteme mLoop",
+      "template": "python src/swarm.py calibrate --project $ARGUMENTS"
+    },
+    "loop-rubber-duck": {
+      "description": "Audit contradictoire Rubber Duck en Read-Only",
+      "template": "python src/swarm.py rubber-duck --project $ARGUMENTS"
+    },
+    "loop-audit": {
+      "description": "Validation deterministe globale des 3 couches de guardrails",
+      "template": "python src/swarm.py audit-loop --project $ARGUMENTS"
+    },
+    "loop-cycle": {
+      "description": "Diagnostic et suivi des 5 phases du cycle",
+      "template": "python src/swarm.py cycle-status --project $ARGUMENTS"
+    },
+    "loop-self-dev": {
+      "description": "Auto-evolution mLoop",
+      "template": "python src/swarm.py self-dev --project mLoop $ARGUMENTS"
+    },
+    "loop-research": {
+      "description": "Deep Research Pipeline",
+      "template": "python src/swarm.py research --project mLoop $ARGUMENTS"
+    }
+  }
+}

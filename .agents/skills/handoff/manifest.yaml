@@ -1,0 +1,9 @@
+name: handoff
+version: 1.0.0
+description: Skill de handoff et compression sémantique pour session recall.
+module: "src.pipelines.handoff"
+function: "run_handoff"
+tools:
+  - name: handoff_agent
+    type: "class"
+    class_path: "src.agents.system1.handoff.HandoffAgent"

@@ -1,0 +1,7 @@
+name: analyze
+description: "Phase [A] Analyze - Ingestion et construction du graphe de connaissances."
+module: "src.pipelines.ingest"
+function: "run_ingest"
+hooks:
+  - event: post_run
+    handler: synapse

@@ -1,0 +1,46 @@
+{
+  "$comment": "Agent definitions specific to nMedia OpenCode. Ignored by other AP 1.0 clients.",
+  "agents": {
+    "orchestrator": {
+      "description": "Orchestrateur principal | Coordonne les phases du cycle P-A-V et pilote les transitions d'etats.",
+      "mode": "primary",
+      "model": "nmedia_cloud/gemini-3.1-pro-preview-thinking",
+      "temperature": 0.1,
+      "steps": 100
+    },
+    "plan": {
+      "description": "Expert Planification & Architecture | Gere l'analyse d'affaires, le Grilling DDD et la structure des ADR / Backlogs.",
+      "mode": "primary",
+      "model": "nmedia_cloud/gemini-3.1-pro-preview-thinking",
+      "temperature": 0.0,
+      "permission": {
+        "edit": "ask",
+        "bash": "allow",
+        "read": "allow"
+      },
+      "steps": 100
+    },
+    "build": {
+      "description": "Expert Code & Developpement | Ecrit le code physique (TS, Python) et applique le self-healing reactif.",
+      "mode": "primary",
+      "model": "nmedia_cloud/claude-sonnet-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "read": "allow"
+      },
+      "steps": 100
+    },
+    "sentinel": {
+      "description": "Expert Validation & Audit | Execute la revue contradictoire Rubber Duck en Read-Only.",
+      "mode": "primary",
+      "model": "nmedia_cloud/claude-sonnet-4.6",
+      "temperature": 0.1,
+      "tools": {
+        "edit": false,
+        "write": false
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "description": "Contrats machine dérivés des ADRs série 01xx. NE PAS MODIFIER MANUELLEMENT sans mettre à jour l'ADR source correspondante.",
+    "maintainer": "Agent mLoop (règle ADR-Sync — AGENTS.md §Règle ADR-Sync)",
+    "last_updated": "2026-08-17",
+    "source_adrs": ["ADR-0100", "ADR-0102", "ADR-0103"],
+    "adr_paths": {
+      "ADR-0100": "standards/adr-system/0100-structure-repertoire-projet-client.md",
+      "ADR-0102": "standards/adr-system/0102-structure-ssot-dossier-docs.md",
+      "ADR-0103": "standards/adr-system/0103-segmentation-memory-loop-openspec.md"
+    }
+  },
+  "ADR-0100": {
+    "title": "Loi des 3 Piliers — Structure canonique projet CLIENT",
+    "client_layout": ["reference", "docs", "backlog", "memory", "graphify-out"],
+    "required_root_files": ["README.md", "AGENTS.md", "opencode.json", ".gitignore"],
+    "forbidden_subreadmes": true,
+    "git_ignored_dirs": ["reference", "graphify-out", ".codegraph"],
+    "memory_subdirs": ["sessions", "debates", "sync", "reports", "cache", "tmp"],
+    "forbidden_in_client": ["src", "openspec"]
+  },
+  "ADR-0102": {
+    "title": "Arborescence canonique SSOT du dossier docs/",
+    "docs_subdirs": [
+      "00-ingested",
+      "01-architecture",
+      "02-business-rules",
+      "03-models",
+      "04-transverse",
+      "05-assets/maquettes",
+      "05-assets/diagrams",
+      "05-assets/images"
+    ],
+    "required_files_in_docs": ["index.md"],
+    "ssot_files": {
+      "sprint_backlog": "sprint_backlog.md",
+      "story_mapping": "STORY_MAPPING.md",
+      "open_questions_client": "00-questions-ouvertes-client.md",
+      "open_questions_devteam": "00-questions-ouvertes-devteam.md"
+    }
+  },
+  "ADR-0103": {
+    "title": "Segmentation Memory Loop / OpenSpec — src/ et openspec/ INTERDITS en mode CLIENT",
+    "mloop_only_dirs": ["directives", "journal", "src", "openspec"],
+    "mloop_layout": [
+      "reference",
+      "docs",
+      "backlog",
+      "memory",
+      "graphify-out",
+      "directives",
+      "journal",
+      "src",
+      "openspec"
+    ]
+  }
+}

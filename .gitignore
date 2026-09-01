@@ -1,0 +1,88 @@
+# =============================================================================
+# MEMORY LOOP (mLoop) — SOVEREIGN FRAMEWORK GITIGNORE
+# Zero-Leak & Client Confidentiality Boundary Protection
+# =============================================================================
+
+# --- 1. CLIENT DATA & CONFIDENTIAL PROJECTS (STRICT EXCLUSION) ---
+Projects/
+**/Projects/
+reference/
+**/reference/
+plannotator/
+**/plannotator/
+storage/
+**/storage/
+
+# Client ingested documents & specific assets
+docs/00-ingested/
+docs/05-assets/htc_*
+
+# One-off client scripts & migration scripts
+scripts/backup_wiki.py
+scripts/migrations/
+
+# Client specific visualizers & DB schemas in tools/
+tools/drawdb/static/
+tools/drawdb/setup_erd_visualizer.py
+tools/drawdb/setup_dual_visualizer.py
+tools/drawdb/update_visualizer.py
+tools/archify/showcase/boirefrere-*
+tools/archify/showcase/metro-*
+
+# --- 2. MEMORY LOOP RUNTIME STATE & DATABASES (STRICT EXCLUSION) ---
+memory/*.db
+memory/*.jsonl
+memory/loop_mem.db
+memory/active_project.json
+memory/global_execution_traces.json
+memory/SESSION_MEMORY_HEALTH.md
+memory/HANDOFF.md
+memory/cache/
+memory/crawler/
+memory/tmp/
+memory/sessions/
+memory/evidence/
+memory/plan/
+memory/reports/
+memory/audit/
+memory/memo_archive/
+
+# --- 3. ENVIRONMENTS, CREDENTIALS & SECRETS ---
+.env
+*.env
+.env.*
+.secrets/
+**/.secrets/
+
+# --- 4. PYTHON & BUILD CACHES ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+ENV/
+env/
+dist/
+build/
+*.egg-info/
+
+# --- 5. GRAPH & SEARCH CACHES ---
+graphify-out/
+.graphify_detect.json
+.codegraph/
+**/.codegraph/
+output/
+scratch/
+
+# --- 6. IDE, EDITORS & OS ARTIFACTS ---
+.antigravitycli/
+.obsidian/
+.omp/
+.vscode/
+.opencode/node_modules/
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp

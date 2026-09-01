@@ -1,0 +1,53 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "loop_mem": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["${PLUGIN_ROOT}/../src/bridges/mcp_loop_mem.py"],
+      "cwd": "${PLUGIN_ROOT}"
+    },
+    "graphify": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["${PLUGIN_ROOT}/../src/bridges/mcp_graphify.py"],
+      "cwd": "${PLUGIN_ROOT}"
+    },
+    "crawler": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["${PLUGIN_ROOT}/../src/bridges/mcp_crawler.py"],
+      "cwd": "${PLUGIN_ROOT}"
+    },
+    "proxy_router": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["${PLUGIN_ROOT}/../src/bridges/mcp_proxy_router.py"],
+      "cwd": "${PLUGIN_ROOT}"
+    },
+    "herdr": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["${PLUGIN_ROOT}/../src/bridges/mcp_herdr.py"],
+      "cwd": "${PLUGIN_ROOT}"
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "codegraph": {
+      "type": "stdio",
+      "command": "codegraph",
+      "args": ["serve", "--mcp"]
+    }
+  }
+}

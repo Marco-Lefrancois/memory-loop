@@ -1,0 +1,3 @@
+rules:
+- keyword: print
+  msg: '[RHO] Utilisez ZeroFluffConsole'

@@ -1,0 +1,7 @@
+# 🧠 RHO (Mémoire d'Erreurs) - Règles de Self-Correction
+version: "1.0"
+description: "Règles d'apprentissage continu et de self-correction pour l'agent mLoop."
+rules:
+  - id: "RHO-001"
+    trigger: "Error: No active story identified in IN_ANALYZE status"
+    action: "Avertir l'utilisateur ou verrouiller le contexte sur une Story existante (Focus Lock)."

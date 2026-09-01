@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Memory Loop (mLoop) — Architecture du Framework",
+    "output": "scratch/mloop-framework.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "orchestration-flow",
+        "label": "Boot Sequence & Orchestration Agentique",
+        "focus": ["ide_cli", "swarm_core", "worker_herdr", "memory_state", "git_remote"],
+        "note": "Cycle de vie d'une session mLoop : amorçage anti-amnésie, vibe-check, délégation workers et synchronisation Git."
+      },
+      {
+        "id": "knowledge-engines",
+        "label": "Double Moteur Sémantique & Base SSOT",
+        "focus": ["raw_ref", "ingest_engine", "graphify_engine", "ssot_docs", "jira_cloud"],
+        "note": "Ingestion MarkItDown depuis reference/ vers docs/ SSOT, indexation dans Graphify et synchronisation Jira."
+      },
+      {
+        "id": "story-factory-sync",
+        "label": "Analyse Code & Universal Handoff",
+        "focus": ["client_repo", "codegraph_engine", "backlog_factory", "dev_agents"],
+        "note": "Exploration AST du code client physique via CodeGraph et livraison des spécifications no-code aux agents de dev."
+      }
+    ]
+  },
+  "components": [
+    { "id": "ide_cli", "type": "frontend", "label": "IDE & CLI mLoop", "sublabel": "Antigravity / Swarm CLI", "pos": [38, 100], "size": [140, 62], "tag": "pilote" },
+    { "id": "raw_ref", "type": "external", "label": "Staging reference/", "sublabel": "Docs clients bruts", "pos": [38, 300], "size": [140, 62], "tag": "staging" },
+    { "id": "client_repo", "type": "external", "label": "Dépôt Code Client", "sublabel": "Sources physiques AST", "pos": [38, 500], "size": [140, 62], "tag": "codebase" },
+    { "id": "swarm_core", "type": "backend", "label": "Swarm Orchestrateur", "sublabel": "src/swarm.py & Pipelines", "pos": [260, 100], "size": [150, 62], "tag": "cerveau" },
+    { "id": "ingest_engine", "type": "backend", "label": "Ingestion MarkItDown", "sublabel": "docs/00-ingested", "pos": [260, 300], "size": [150, 62], "tag": "ingest" },
+    { "id": "worker_herdr", "type": "backend", "label": "Fork & Harvest Herdr", "sublabel": "Sessions PTY isolées", "pos": [520, 100], "size": [150, 62], "tag": "workers" },
+    { "id": "graphify_engine", "type": "backend", "label": "Moteur Graphify", "sublabel": "Graphe docs & FTS5", "pos": [520, 300], "size": [150, 62], "tag": "sémantique" },
+    { "id": "codegraph_engine", "type": "backend", "label": "Moteur CodeGraph", "sublabel": "Exploration AST code", "pos": [520, 500], "size": [150, 62], "tag": "code" },
+    { "id": "memory_state", "type": "database", "label": "Mémoire & Evidence", "sublabel": "memory/evidence/*.json", "pos": [780, 100], "size": [146, 62], "tag": "anti-amnésie" },
+    { "id": "ssot_docs", "type": "database", "label": "SSOT Docs & Standards", "sublabel": "docs/ · 57 ADRs", "pos": [780, 300], "size": [146, 62], "tag": "SSOT" },
+    { "id": "backlog_factory", "type": "database", "label": "Usine à Récits", "sublabel": "4 Piliers Gherkin", "pos": [780, 500], "size": [146, 62], "tag": "backlog" },
+    { "id": "git_remote", "type": "cloud", "label": "Dépôt Git Distant", "sublabel": "Versionnage récits & ADRs", "pos": [1040, 100], "size": [136, 62], "tag": "sync-1" },
+    { "id": "jira_cloud", "type": "cloud", "label": "Jira Cloud Platform", "sublabel": "Tickets, INVEST & Epics", "pos": [1040, 300], "size": [136, 62], "tag": "sync-2" },
+    { "id": "dev_agents", "type": "external", "label": "Universal Dev Handoff", "sublabel": "Renaud / Copilot / Cursor", "pos": [1040, 500], "size": [136, 62], "tag": "consommateurs" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Cœur Framework mLoop (Backend & Orchestration)", "wraps": ["swarm_core", "ingest_engine", "worker_herdr", "graphify_engine", "codegraph_engine", "memory_state", "ssot_docs", "backlog_factory"], "pad": 22 },
+    { "kind": "security-group", "label": "Double Moteur d'Analyse (Graphify / CodeGraph)", "wraps": ["graphify_engine", "codegraph_engine"], "pad": 14 },
+    { "kind": "region", "label": "Matrice de Synchronisation & Handoff", "wraps": ["git_remote", "jira_cloud", "dev_agents"], "pad": 20 }
+  ],
+  "connections": [
+    { "from": "ide_cli", "to": "swarm_core", "label": "boot sequence", "variant": "emphasis", "route": "straight" },
+    { "from": "raw_ref", "to": "ingest_engine", "label": "convert", "variant": "emphasis", "route": "straight" },
+    { "from": "client_repo", "to": "codegraph_engine", "label": "ast scan", "variant": "dashed", "route": "straight" },
+    { "from": "swarm_core", "to": "worker_herdr", "label": "worker-spawn", "variant": "emphasis", "route": "straight" },
+    { "from": "ingest_engine", "to": "graphify_engine", "label": "indexation", "variant": "emphasis", "route": "straight" },
+    { "from": "worker_herdr", "to": "memory_state", "label": "evidence pack", "variant": "emphasis", "route": "straight" },
+    { "from": "graphify_engine", "to": "ssot_docs", "label": "graphe de savoir", "variant": "security", "route": "straight" },
+    { "from": "codegraph_engine", "to": "backlog_factory", "label": "spécifications", "variant": "emphasis", "route": "straight" },
+    { "from": "memory_state", "to": "git_remote", "label": "git push", "variant": "dashed", "route": "straight" },
+    { "from": "ssot_docs", "to": "jira_cloud", "label": "jira_sync", "variant": "emphasis", "route": "straight" },
+    { "from": "backlog_factory", "to": "dev_agents", "label": "handoff no-code", "variant": "emphasis", "route": "straight" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "La Loi des 3 Piliers", "items": ["reference/ : staging brut non versionné, jamais lu brut", "docs/ : SSOT architectural et bibliothèque de connaissances", "backlog/ : récits verticaux 4 piliers Gherkin sans code physique"] },
+    { "dot": "emerald", "title": "Double Moteur d'Analyse", "items": ["Graphify : indexation sémantique des documents et règles métier", "CodeGraph : analyse d'impact AST et dépendances code", "Zéro hallucination grâce à la recherche documentaire systématique"] },
+    { "dot": "rose", "title": "Matrice des 3 Synchronisations", "items": ["1. Git Distant : versionnage Markdown des stories et ADRs", "2. Jira Cloud : synchronisation des clés, statuts et critères", "3. Base Locale : mise à jour SQLite FTS5 et graphe Graphify"] }
+  ]
+}

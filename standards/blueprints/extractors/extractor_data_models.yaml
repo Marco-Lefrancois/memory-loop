@@ -1,0 +1,77 @@
+# Blueprint d'Extraction Déclarative YAML — Modèles de Données & Entités DDD
+# Standard : ADR-0342
+# Format : Knowledge Abstract (KA) pour docs/03-models/
+
+schema_version: "1.0"
+extractor_id: "data_models"
+title: "Extracteur d'Entités DDD & Modèles de Données"
+target_directory: "docs/03-models/"
+id_prefix: "MDL-"
+id_padding: 3
+
+schema:
+  fields:
+    - name: "id"
+      type: "string"
+      required: true
+      description: "Identifiant du modèle (ex: MDL-001)"
+    - name: "entity_name"
+      type: "string"
+      required: true
+      description: "Nom de l'entité en PascalCase (ex: UserProfile, Transaction)"
+    - name: "aggregate_root"
+      type: "boolean"
+      default: false
+      description: "Indique si l'entité est une Racine d'Agrégat DDD"
+    - name: "description"
+      type: "string"
+      required: true
+      description: "Rôle métier de l'entité dans le domaine"
+    - name: "attributes"
+      type: "list_of_objects"
+      required: true
+      item_schema:
+        name: "string"
+        type: "string"
+        required: "boolean"
+        description: "string"
+        constraints: "string"
+    - name: "relations"
+      type: "list_of_objects"
+      required: false
+      item_schema:
+        target_entity: "string"
+        cardinality: "enum[1:1, 1:N, N:M]"
+        relation_type: "enum[COMPOSITION, AGGREGATION, ASSOCIATION]"
+    - name: "source_anchor"
+      type: "string"
+      required: true
+      description: "Référence exacte issue du document source"
+
+patterns:
+  keywords:
+    - "modèle de données"
+    - "data model"
+    - "entité"
+    - "entity"
+    - "schéma de table"
+    - "structure de données"
+    - "champs obligatoires"
+
+output_templates:
+  markdown: |
+    # Entité : `{entity_name}` (`{id}`)
+
+    **Racine d'Agrégat :** `{aggregate_root}`  
+    **Description :** {description}
+
+    ## 📊 Attributs & Typage
+    | Champ | Type | Obligatoire | Contraintes | Description |
+    | :--- | :--- | :--- | :--- | :--- |
+    {attributes_table}
+
+    ## 🔗 Relations de Domaine
+    {relations_list}
+
+    ## 🔍 Source d'Origine
+    > {source_anchor}
