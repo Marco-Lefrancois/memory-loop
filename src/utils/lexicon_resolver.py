@@ -274,6 +274,16 @@ class SemanticLexiconResolver:
         num_matches = re.findall(r"\d+", query)
         target_num = int(num_matches[0]) if num_matches else None
 
+        # Préfixe alphabétique explicite de la requête (ex: "INC" dans
+        # "INC-004-BE"). Deux familles d'identifiants mLoop (ex: INC-xxx pour
+        # Incubation, REC-xxx pour Réception) ne doivent JAMAIS se confondre
+        # uniquement parce qu'elles partagent un même suffixe numérique — bug
+        # constaté en session réelle (INC-004-BE résolu à tort vers
+        # REC-004-BE.md). `None` si la requête ne porte pas de préfixe alpha
+        # explicite (ex: requête purement numérique "14").
+        prefix_match = re.match(r"^([A-Za-z]{2,})[-_]", query.strip())
+        query_prefix = prefix_match.group(1).upper() if prefix_match else None
+
         candidates: List[Tuple[int, Path]] = []
 
         for f in stories_dir.rglob("*.md"):
@@ -309,14 +319,32 @@ class SemanticLexiconResolver:
                     score += 100
 
                 # 2. Correspondance numérique stricte (ex: "14" -> REC-014 ou COUVBOIRE-975)
+                # Si la requête porte un préfixe alphabétique explicite (ex: "INC"
+                # dans "INC-004-BE"), ce préfixe DOIT être retrouvé dans l'ID ou le
+                # nom de fichier du candidat pour que le bonus numérique s'applique
+                # — sinon deux familles d'IDs distinctes partageant un même suffixe
+                # numérique (INC-004 vs REC-004) se confondraient à tort.
                 if target_num is not None:
-                    # Vérifier si le numéro apparaît dans le nom de fichier ou l'ID
-                    num_in_id = re.findall(r"\d+", story_id)
-                    num_in_jira = re.findall(r"\d+", jira_key)
-                    num_in_file = re.findall(r"\d+", f.name)
-                    all_nums = [int(n) for n in (num_in_id + num_in_jira + num_in_file)]
-                    if target_num in all_nums:
-                        score += 80
+                    prefix_ok = True
+                    if query_prefix is not None:
+                        candidate_prefixes = {
+                            m.group(0).upper()
+                            for m in re.finditer(
+                                r"[A-Za-z]{2,}", f"{story_id} {f.name}"
+                            )
+                        }
+                        prefix_ok = query_prefix in candidate_prefixes
+
+                    if prefix_ok:
+                        # Vérifier si le numéro apparaît dans le nom de fichier ou l'ID
+                        num_in_id = re.findall(r"\d+", story_id)
+                        num_in_jira = re.findall(r"\d+", jira_key)
+                        num_in_file = re.findall(r"\d+", f.name)
+                        all_nums = [
+                            int(n) for n in (num_in_id + num_in_jira + num_in_file)
+                        ]
+                        if target_num in all_nums:
+                            score += 80
 
                 # 3. Correspondance sémantique sur le Titre Métier & H1
                 title_tokens = set(cls.tokenize(title_text))
