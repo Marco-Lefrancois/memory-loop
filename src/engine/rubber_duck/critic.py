@@ -29,14 +29,15 @@ logger = get_logger("rubber_duck.critic")
 @dataclass
 class DevilAdvocateCritique:
     """Rapport d'audit complet de l'Avocat du Diable."""
+
     story_id: str
     project_name: str
     timestamp: str
     status: str  # "APPROVED", "ACTION_REQUIRED", "REJECTED"
     business_discernment_score: float  # 0-100
-    ecosystem_coherence_score: float   # 0-100
-    technical_rigor_score: float       # 0-100
-    overall_trust_score: float         # 0-100
+    ecosystem_coherence_score: float  # 0-100
+    technical_rigor_score: float  # 0-100
+    overall_trust_score: float  # 0-100
     critical_flaws: List[str] = field(default_factory=list)
     silent_failures: List[str] = field(default_factory=list)
     coherence_issues: List[CoherenceIssue] = field(default_factory=list)
@@ -84,7 +85,7 @@ class DevilAdvocateCritic:
         story_id = target_path.stem
 
         # Extraire l'ID YAML si présent
-        fm_id_match = re.search(r'^id:\s*([A-Za-z0-9_-]+)', content, re.MULTILINE)
+        fm_id_match = re.search(r"^id:\s*([A-Za-z0-9_-]+)", content, re.MULTILINE)
         if fm_id_match:
             story_id = fm_id_match.group(1).strip()
 
@@ -94,11 +95,17 @@ class DevilAdvocateCritic:
 
         # ── 1. AXE 1 : DISCERNEMENT MÉTIER ─────────────────────────────────────
         business_score = 100.0
-        
+
         # A. Détection des exigences creuses ou floues (excluant expressions techniques comme double-clic rapide)
         vague_patterns = [
-            (r"(?<!double-clic\s)(?<!clic\s)\b(?:rapide|facile|approprié|performant|si possible|éventuellement)\b", "Présence de termes d'évaluation subjectifs sans métrique chiffrée."),
-            (r"\b(?:interface moderne|bel écran|affichage clair|intuitif)\b", "Formulations vagues sur l'UX. Exiger la spécification des composants et interactions."),
+            (
+                r"(?<!double-clic\s)(?<!clic\s)\b(?:rapide|facile|approprié|performant|si possible|éventuellement)\b",
+                "Présence de termes d'évaluation subjectifs sans métrique chiffrée.",
+            ),
+            (
+                r"\b(?:interface moderne|bel écran|affichage clair|intuitif)\b",
+                "Formulations vagues sur l'UX. Exiger la spécification des composants et interactions.",
+            ),
         ]
         for pat, desc in vague_patterns:
             matches = re.findall(pat, content, re.IGNORECASE)
@@ -107,8 +114,13 @@ class DevilAdvocateCritic:
                 business_score -= 15.0
 
         # B. Vérification de la complétude INVEST (Dépendance et Testabilité)
-        if "## Critères d'acceptation" not in content and "## Contexte métier" not in content:
-            critical_flaws.append("Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.")
+        if (
+            "## Critères d'acceptation" not in content
+            and "## Contexte métier" not in content
+        ):
+            critical_flaws.append(
+                "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés."
+            )
             business_score -= 30.0
 
         # ── 2. AXE 2 : COHÉRENCE ÉCOSYSTÈME & SSOT ────────────────────────────
@@ -123,10 +135,22 @@ class DevilAdvocateCritic:
 
         # Traque des cas limites méchants (Silent Failure Modes)
         failure_modes = [
-            (r"(?:timeout|délai d'attente|503|408|coupure réseau|offline)", "Absence de scénario en cas de timeout API ou de coupure réseau inopinée."),
-            (r"(?:double-clic|double clic|soumission multiple|anti-rebond|concurren)", "Absence de protection contre la soumission multiple rapide (anti-rebond)."),
-            (r"(?:session expirée|token expiré|401|non authentifié)", "Absence de gestion de l'expiration de session en cours de formulaire."),
-            (r"(?:données partielles|champ vide|valeur null|caractère spécial)", "Absence de validation des saisies extrêmes ou champs incomplets."),
+            (
+                r"(?:timeout|délai d'attente|503|408|coupure réseau|offline)",
+                "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+            ),
+            (
+                r"(?:double-clic|double clic|soumission multiple|anti-rebond|concurren)",
+                "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+            ),
+            (
+                r"(?:session expirée|token expiré|401|non authentifié)",
+                "Absence de gestion de l'expiration de session en cours de formulaire.",
+            ),
+            (
+                r"(?:données partielles|champ vide|valeur null|caractère spécial)",
+                "Absence de validation des saisies extrêmes ou champs incomplets.",
+            ),
         ]
 
         for pat, desc in failure_modes:
@@ -135,21 +159,48 @@ class DevilAdvocateCritic:
                 tech_score -= 12.0
 
         # ── 4. AXE 4 : CHALLENGE DES 4 PILIERS GHERKIN & REMÉDIATION ──────────
-        scenarios = re.findall(r"(?:###\s*(?:Pilier\s*\d+|Scénario|1\.|2\.|3\.|4\.))", content, re.IGNORECASE)
-        has_nominal = bool(re.search(r"(?:nominal|succès|nominal)", content, re.IGNORECASE))
-        has_exception = bool(re.search(r"(?:exception|erreur|rejet)", content, re.IGNORECASE))
-        has_resilience = bool(re.search(r"(?:résilience|resilience|timeout|dégradé)", content, re.IGNORECASE))
-        has_ux = bool(re.search(r"(?:ux|accessibilité|clavier|focus|aria)", content, re.IGNORECASE))
+        scenarios = re.findall(
+            r"(?:###\s*(?:Pilier\s*\d+|Scénario|1\.|2\.|3\.|4\.))",
+            content,
+            re.IGNORECASE,
+        )
+        has_nominal = bool(
+            re.search(r"(?:nominal|succès|nominal)", content, re.IGNORECASE)
+        )
+        has_exception = bool(
+            re.search(r"(?:exception|erreur|rejet)", content, re.IGNORECASE)
+        )
+        has_resilience = bool(
+            re.search(
+                r"(?:résilience|resilience|timeout|dégradé)", content, re.IGNORECASE
+            )
+        )
+        has_ux = bool(
+            re.search(
+                r"(?:ux|accessibilité|clavier|focus|aria)", content, re.IGNORECASE
+            )
+        )
 
         missing_pillars = []
-        if not has_nominal: missing_pillars.append("Pilier 1 (Nominal)")
-        if not has_exception: missing_pillars.append("Pilier 2 (Exceptions)")
-        if not has_resilience: missing_pillars.append("Pilier 3 (Résilience)")
-        if not has_ux: missing_pillars.append("Pilier 4 (UX / Accessibilité)")
+        if not has_nominal:
+            missing_pillars.append("Pilier 1 (Nominal)")
+        if not has_exception:
+            missing_pillars.append("Pilier 2 (Exceptions)")
+        if not has_resilience:
+            missing_pillars.append("Pilier 3 (Résilience)")
+        if not has_ux:
+            missing_pillars.append("Pilier 4 (UX / Accessibilité)")
 
         if missing_pillars:
-            critical_flaws.append(f"Gherkin 4-Piliers incomplet. Piliers manquants : {', '.join(missing_pillars)}.")
+            critical_flaws.append(
+                f"Gherkin 4-Piliers incomplet. Piliers manquants : {', '.join(missing_pillars)}."
+            )
             tech_score -= len(missing_pillars) * 10.0
+
+        # ── 4b. AXE 4b : CHECKS F/G — TRAÇABILITÉ API & ANTI-INVENTION DE ROUTES
+        # (AGENTS.md « Zéro Fausse Route ni Payload Synthétique » — testé sous le
+        # label conventionnel ADR-0319 par tests/test_rubber_duck_api_routes.py).
+        cls._run_api_traceability_checks(content, critical_flaws, silent_failures)
 
         # ── 5. GÉNÉRATION DES PATCHS DE REMÉDIATION CHIRURGICALE ───────────────
         all_flaws_for_remediation = critical_flaws + silent_failures
@@ -163,20 +214,28 @@ class DevilAdvocateCritic:
         business_score = max(0.0, min(100.0, business_score))
         coherence_score = max(0.0, min(100.0, coherence_score))
         tech_score = max(0.0, min(100.0, tech_score))
-        overall_score = round((business_score * 0.35) + (coherence_score * 0.30) + (tech_score * 0.35), 1)
+        overall_score = round(
+            (business_score * 0.35) + (coherence_score * 0.30) + (tech_score * 0.35), 1
+        )
 
         blocking_count = len([c for c in coherence_issues if c.severity == "BLOCKING"])
         if blocking_count > 0 or len(critical_flaws) >= 3 or overall_score < 50.0:
             status = "REJECTED"
-        elif len(critical_flaws) > 0 or len(silent_failures) >= 2 or overall_score < 75.0:
+        elif (
+            len(critical_flaws) > 0 or len(silent_failures) >= 2 or overall_score < 75.0
+        ):
             status = "ACTION_REQUIRED"
         else:
             status = "APPROVED"
 
         if silent_failures:
-            recommendations.append("Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.")
+            recommendations.append(
+                "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+            )
         if coherence_issues:
-            recommendations.append("Vérifier les frontières de périmètre avec les récits voisins du sprint backlog.")
+            recommendations.append(
+                "Vérifier les frontières de périmètre avec les récits voisins du sprint backlog."
+            )
 
         critique = DevilAdvocateCritique(
             story_id=story_id,
@@ -200,8 +259,116 @@ class DevilAdvocateCritic:
 
         return critique
 
+    # ── Checks F (Traçabilité Conditionnelle) & G (Anti-Invention de Routes) ──
+    # AGENTS.md « Zéro Fausse Route ni Payload Synthétique » : pas de JSON
+    # fictif pour les SDKs locaux ; toute route API inconnue doit être
+    # consignée en question ouverte (OQ-XXX) + mention déclarative
+    # `[API de soumission à définir]`, jamais inventée silencieusement.
+
+    _PHANTOM_ROUTE_TOKENS = (
+        "dummy",
+        "placeholder",
+        "test",
+        "fake",
+        "todo",
+        "tbd",
+        "example",
+    )
+
     @classmethod
-    def _persist_critique_to_evidence(cls, critique: DevilAdvocateCritique, project_dir: Path):
+    def _extract_layer(cls, content: str) -> Optional[str]:
+        m = re.search(r"^layer:\s*([A-Za-z_-]+)\s*$", content, re.MULTILINE)
+        return m.group(1).strip().lower() if m else None
+
+    @classmethod
+    def _extract_api_routes(cls, content: str) -> List[str]:
+        """Extrait les routes API mentionnées (Markdown table, liste, inline code)."""
+        routes = set()
+        # Table markdown : | `METHOD` | `/route` | ...
+        for m in re.finditer(
+            r"`(GET|POST|PUT|PATCH|DELETE)`\s*\|\s*`(/[^\s`]+)`", content
+        ):
+            routes.add(f"{m.group(1)} {m.group(2)}")
+        # Liste / inline : `GET /api/...` ou **Endpoint** : `POST /api/dummy`
+        for m in re.finditer(r"`(GET|POST|PUT|PATCH|DELETE)\s+(/[^\s`]+)`", content):
+            routes.add(f"{m.group(1)} {m.group(2)}")
+        return sorted(routes)
+
+    @classmethod
+    def _has_contract_matrix(cls, content: str) -> bool:
+        """Une Matrice des Contrats API est présente si un tableau de routes existe."""
+        return bool(cls._extract_api_routes(content))
+
+    @classmethod
+    def _has_oq_exemption(cls, content: str) -> bool:
+        """Clause d'exemption : question ouverte OQ-XXX + mention déclarative de route à définir."""
+        has_oq = bool(re.search(r"\bOQ-\d{3}\b", content))
+        has_deferred_marker = "[API de soumission à définir]" in content or bool(
+            re.search(r"à confirmer|à définir", content, re.IGNORECASE)
+        )
+        return has_oq and has_deferred_marker
+
+    @classmethod
+    def _run_api_traceability_checks(
+        cls, content: str, critical_flaws: List[str], silent_failures: List[str]
+    ) -> None:
+        """
+        Check F (Traçabilité Conditionnelle Backend/Fullstack) & Check G
+        (Anti-Invention de Routes). Se déclenche uniquement si le frontmatter
+        porte un champ `layer:` (F5 : absence de layer = hors périmètre).
+        """
+        layer = cls._extract_layer(content)
+        if layer is None:
+            return
+
+        routes = cls._extract_api_routes(content)
+        phantom_routes = [
+            r
+            for r in routes
+            if any(tok in r.lower() for tok in cls._PHANTOM_ROUTE_TOKENS)
+        ]
+
+        # Check G : Anti-Invention de Routes (toute couche confondue) — priorité
+        # sur le Check F : une route fictive est toujours BLOCKING, peu importe
+        # qu'une matrice existe par ailleurs.
+        if phantom_routes:
+            critical_flaws.append(
+                f"[ADR-0319] Route(s) API fictive(s)/placeholder détectée(s) : "
+                f"{', '.join(phantom_routes)}. Zéro Fausse Route (AGENTS.md) : "
+                f"toute route API inconnue doit être consignée en question ouverte "
+                f"(OQ-XXX) avec la mention déclarative '[API de soumission à définir]', "
+                f"jamais inventée."
+            )
+            return
+
+        # Check F : Traçabilité Conditionnelle (uniquement backend/fullstack)
+        if layer not in ("backend", "fullstack"):
+            return
+
+        if cls._has_contract_matrix(content):
+            return  # F2 / F4 : matrice présente, rien à signaler.
+
+        if cls._has_oq_exemption(content):
+            # F3 : clause OQ exemptante -> déclassé en NON_BLOCKING uniquement.
+            silent_failures.append(
+                f"[ADR-0319] Récit layer:{layer} sans Matrice des Contrats API, "
+                f"mais couvert par une question ouverte de traçabilité — route à "
+                f"confirmer avant passage en développement."
+            )
+            return
+
+        # F1 : ni matrice, ni exemption OQ -> BLOCKING.
+        critical_flaws.append(
+            f"[ADR-0319] Récit layer:{layer} sans Matrice des Contrats API "
+            f"(section '#### Matrice des Contrats API') ni clause d'exemption "
+            f"OQ-XXX. Toute route API doit être déclarée explicitement ou "
+            f"consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+        )
+
+    @classmethod
+    def _persist_critique_to_evidence(
+        cls, critique: DevilAdvocateCritique, project_dir: Path
+    ):
         """Injecte le rapport de l'Avocat du Diable dans l'EvidencePack du récit."""
         evidence_dir = project_dir / "memory" / "evidence"
         evidence_dir.mkdir(parents=True, exist_ok=True)
@@ -219,5 +386,7 @@ class DevilAdvocateCritic:
         evidence_data["last_updated"] = critique.timestamp
         evidence_data["devil_advocate_review"] = critique.to_dict()
 
-        evidence_file.write_text(json.dumps(evidence_data, indent=2, ensure_ascii=False), encoding="utf-8")
+        evidence_file.write_text(
+            json.dumps(evidence_data, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
         logger.info(f"Rapport Avocat du Diable consigné dans {evidence_file}")

@@ -9,6 +9,7 @@ from src.utils.logger import get_logger
 
 logger = get_logger("lexicon_resolver")
 
+
 class SemanticLexiconResolver:
     """
     Moteur de résolution sémantique DYNAMIQUE et AGNOSTIQUE (mLoop Core - ADR-0327).
@@ -21,9 +22,9 @@ class SemanticLexiconResolver:
         """Supprime accents, ponctuation et espaces pour comparaison floue uniforme."""
         if not text:
             return ""
-        normalized = unicodedata.normalize('NFD', str(text))
-        clean = ''.join(c for c in normalized if unicodedata.category(c) != 'Mn')
-        return re.sub(r'[^a-zA-Z0-9]', '', clean).lower()
+        normalized = unicodedata.normalize("NFD", str(text))
+        clean = "".join(c for c in normalized if unicodedata.category(c) != "Mn")
+        return re.sub(r"[^a-zA-Z0-9]", "", clean).lower()
 
     @classmethod
     def tokenize(cls, text: str) -> List[str]:
@@ -32,18 +33,38 @@ class SemanticLexiconResolver:
             return []
         # 1. Découpage CamelCase (ex: BoireEtFrere -> Boire Et Frere, MetroFoodOffers -> Metro Food Offers)
         text_str = str(text)
-        spaced = re.sub(r'([a-z0-9])([A-Z])', r'\1 \2', text_str)
-        spaced = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1 \2', spaced)
-        
+        spaced = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text_str)
+        spaced = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1 \2", spaced)
+
         # 2. Normalisation accents & minuscules
-        normalized = unicodedata.normalize('NFD', spaced)
-        clean = ''.join(c for c in normalized if unicodedata.category(c) != 'Mn')
-        
+        normalized = unicodedata.normalize("NFD", spaced)
+        clean = "".join(c for c in normalized if unicodedata.category(c) != "Mn")
+
         # 3. Extraction des tokens alphanumériques
-        tokens = re.findall(r'[a-zA-Z0-9]+', clean.lower())
+        tokens = re.findall(r"[a-zA-Z0-9]+", clean.lower())
         stopwords = {
-            "de", "la", "le", "les", "du", "des", "et", "un", "une", "en", "pour", "au", "aux",
-            "and", "the", "of", "in", "for", "to", "with", "a", "an"
+            "de",
+            "la",
+            "le",
+            "les",
+            "du",
+            "des",
+            "et",
+            "un",
+            "une",
+            "en",
+            "pour",
+            "au",
+            "aux",
+            "and",
+            "the",
+            "of",
+            "in",
+            "for",
+            "to",
+            "with",
+            "a",
+            "an",
         }
         return [t for t in tokens if len(t) > 1 and t not in stopwords]
 
@@ -51,7 +72,9 @@ class SemanticLexiconResolver:
     # 1. RÉSOLUTION DYNAMIQUE DU PROJET (Zéro Hardcoding & Support Lexique)
     # ──────────────────────────────────────────────────────────────────────────
     @classmethod
-    def resolve_project_alias(cls, raw_name: str, base_dir: str = "Projects") -> Optional[str]:
+    def resolve_project_alias(
+        cls, raw_name: str, base_dir: str = "Projects"
+    ) -> Optional[str]:
         """
         Découvre dynamiquement les projets sous Projects/ et analyse leurs métadonnées
         (nom de dossier, CONTEXT.md, lexique FTS5, sprint_backlog.md, README.md, jira_config.json)
@@ -80,6 +103,7 @@ class SemanticLexiconResolver:
         fts_hits_by_project = {}
         try:
             from src.loop_mem.db import search_lexicon_terms
+
             db_hits = search_lexicon_terms(raw_name, limit=10)
             for hit in db_hits:
                 p_name = hit.get("project_name")
@@ -115,7 +139,11 @@ class SemanticLexiconResolver:
             # 3. Correspondance par sous-chaîne
             if clean_query in norm_folder:
                 score += 40
-            elif norm_folder in clean_query and len(norm_folder) >= 4 and len(norm_folder) >= 0.7 * len(clean_query):
+            elif (
+                norm_folder in clean_query
+                and len(norm_folder) >= 4
+                and len(norm_folder) >= 0.7 * len(clean_query)
+            ):
                 score += 20
 
             # 4. Bonus Dictionnaire de Lexique FTS5 (ADR-0327)
@@ -153,8 +181,36 @@ class SemanticLexiconResolver:
                 except Exception as e:
                     logger.debug(f"Lecture readme {readme_file} ignorée: {e}")
 
+            # 6b. Inspection des documents ingérés (docs/00-ingested/) — comble
+            # l'angle mort de désambiguïsation entre sous-projets modulaires
+            # (ex: Metro_COMMERCE/FOOD/SANTE partageant le token "metro" mais
+            # portant des SDKs/contenus distincts comme "OneTrust"). Chaque
+            # token de requête réellement couvert par le contenu ingéré pèse
+            # plus qu'une simple correspondance de nom de dossier tronqué.
+            ingested_dir = p / "docs" / "00-ingested"
+            if ingested_dir.exists() and query_tokens:
+                try:
+                    ingested_overlap: set = set()
+                    for md_file in ingested_dir.glob("*.md"):
+                        try:
+                            head = md_file.read_text(encoding="utf-8", errors="ignore")[
+                                :2000
+                            ]
+                        except Exception:
+                            continue
+                        ingested_overlap |= query_tokens.intersection(
+                            cls.tokenize(head)
+                        )
+                        if ingested_overlap == query_tokens:
+                            break  # Couverture totale déjà atteinte, inutile de continuer.
+                    score += len(ingested_overlap) * 18
+                except Exception as e:
+                    logger.debug(f"Inspection ingested {ingested_dir} ignorée: {e}")
+
             # 7. Bonus de Viabilité SSOT & Pénalité Coquille Vide
-            has_backlog = (p / "backlog" / "sprint_backlog.md").exists() or (p / "backlog" / "stories").is_dir()
+            has_backlog = (p / "backlog" / "sprint_backlog.md").exists() or (
+                p / "backlog" / "stories"
+            ).is_dir()
             has_docs = (p / "docs").is_dir()
             has_agents = (p / "AGENTS.md").exists()
 
@@ -164,14 +220,22 @@ class SemanticLexiconResolver:
                 score += 15
 
             # Pénalité sévère si dossier fantôme (aucun pilier SSOT)
-            if not has_backlog and not has_docs and not has_agents and not context_file.exists():
+            if (
+                not has_backlog
+                and not has_docs
+                and not has_agents
+                and not context_file.exists()
+            ):
                 score -= 50
 
             if score > 0:
                 candidates.append((score, folder_name))
 
         if candidates:
-            candidates.sort(key=lambda x: x[0], reverse=True)
+            # Tri déterministe : score décroissant, puis nom de dossier croissant
+            # (alphabétique) en cas d'égalité stricte — élimine toute dépendance
+            # à l'ordre non garanti de Path.iterdir() sur le filesystem.
+            candidates.sort(key=lambda x: (-x[0], x[1]))
             best_score, best_project = candidates[0]
             if best_score >= 30:
                 return best_project
@@ -193,6 +257,7 @@ class SemanticLexiconResolver:
         # 0. Recherche ultra-rapide dans la base de données SQLite FTS5 (Indexée)
         try:
             from src.loop_mem.db import search_lexicon_terms
+
             project_name = stories_dir.parent.parent.name
             db_hits = search_lexicon_terms(query, project_name=project_name, limit=3)
             if db_hits:
@@ -206,7 +271,7 @@ class SemanticLexiconResolver:
 
         clean_query = cls.normalize_string(query)
         query_tokens = set(cls.tokenize(query))
-        num_matches = re.findall(r'\d+', query)
+        num_matches = re.findall(r"\d+", query)
         target_num = int(num_matches[0]) if num_matches else None
 
         candidates: List[Tuple[int, Path]] = []
@@ -220,15 +285,15 @@ class SemanticLexiconResolver:
                 # Extraction du Frontmatter YAML et Titre H1
                 frontmatter = {}
                 h1_title = ""
-                
-                fm_match = re.search(r'^---(.*?)---', content, re.DOTALL | re.MULTILINE)
+
+                fm_match = re.search(r"^---(.*?)---", content, re.DOTALL | re.MULTILINE)
                 if fm_match:
                     try:
                         frontmatter = yaml.safe_load(fm_match.group(1)) or {}
                     except Exception:
                         pass
 
-                h1_match = re.search(r'^#\s*(.*)$', content, re.MULTILINE)
+                h1_match = re.search(r"^#\s*(.*)$", content, re.MULTILINE)
                 if h1_match:
                     h1_title = h1_match.group(1).strip()
 
@@ -238,15 +303,17 @@ class SemanticLexiconResolver:
                 tags = [str(t) for t in frontmatter.get("tags", [])]
 
                 # 1. Correspondance exacte sur ID logique ou Clé Jira
-                if clean_query in cls.normalize_string(story_id) or clean_query in cls.normalize_string(jira_key):
+                if clean_query in cls.normalize_string(
+                    story_id
+                ) or clean_query in cls.normalize_string(jira_key):
                     score += 100
 
                 # 2. Correspondance numérique stricte (ex: "14" -> REC-014 ou COUVBOIRE-975)
                 if target_num is not None:
                     # Vérifier si le numéro apparaît dans le nom de fichier ou l'ID
-                    num_in_id = re.findall(r'\d+', story_id)
-                    num_in_jira = re.findall(r'\d+', jira_key)
-                    num_in_file = re.findall(r'\d+', f.name)
+                    num_in_id = re.findall(r"\d+", story_id)
+                    num_in_jira = re.findall(r"\d+", jira_key)
+                    num_in_file = re.findall(r"\d+", f.name)
                     all_nums = [int(n) for n in (num_in_id + num_in_jira + num_in_file)]
                     if target_num in all_nums:
                         score += 80
@@ -264,7 +331,9 @@ class SemanticLexiconResolver:
                 score += len(tag_overlap) * 20
 
                 # 5. Recherche textuelle dans la Description
-                desc_match = re.search(r'## Description(.*?)(?:---|\Z)', content, re.DOTALL)
+                desc_match = re.search(
+                    r"## Description(.*?)(?:---|\Z)", content, re.DOTALL
+                )
                 if desc_match:
                     desc_tokens = set(cls.tokenize(desc_match.group(1)))
                     desc_overlap = query_tokens.intersection(desc_tokens)

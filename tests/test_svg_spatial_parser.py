@@ -1,6 +1,13 @@
 import pytest
 from pathlib import Path
-from src.converters.svg_to_md import SvgSpatialParser, generate_ascii_wireframe, parse_svg_to_md_text, convert_svg_file_to_md
+from unittest.mock import patch
+from src.converters.svg_to_md import (
+    SvgSpatialParser,
+    generate_ascii_wireframe,
+    parse_svg_to_md_text,
+    convert_svg_file_to_md,
+)
+
 
 def test_svg_spatial_sorting_and_classification():
     # SVG avec éléments volontairement désordonnés dans le code XML
@@ -30,7 +37,10 @@ def test_svg_spatial_sorting_and_classification():
     assert elements[0].elem_type == "heading"
 
     # Le dernier élément doit être le bouton de validation (Y ≈ 760)
-    assert any(e.text == "Valider la saisie" and e.elem_type == "button" for e in elements)
+    assert any(
+        e.text == "Valider la saisie" and e.elem_type == "button" for e in elements
+    )
+
 
 def test_ascii_wireframe_generation():
     sample_svg = """<svg width="390" height="844" viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg">
@@ -46,17 +56,95 @@ def test_ascii_wireframe_generation():
     assert "## 🎛️ Matrice des Call-to-Actions (CTA)" in md_output
     assert "Enregistrer" in md_output
 
+
 def test_convert_svg_file_to_md(tmp_path):
     svg_file = tmp_path / "test_screen.svg"
-    svg_file.write_text("""<svg width="390" height="844" xmlns="http://www.w3.org/2000/svg">
+    svg_file.write_text(
+        """<svg width="390" height="844" xmlns="http://www.w3.org/2000/svg">
       <text x="20" y="50" font-size="18">Ecran Paramètres</text>
-    </svg>""", encoding="utf-8")
+    </svg>""",
+        encoding="utf-8",
+    )
 
     out_md = tmp_path / "docs" / "00-ingested" / "test_screen.md"
     success = convert_svg_file_to_md(svg_file, out_md)
     assert success
     assert out_md.exists()
-    
+
     content = out_md.read_text(encoding="utf-8")
     assert "Ecran Paramètres" in content
     assert "Spécification UI" in content
+
+
+def test_mode1_svg_with_text_is_not_flagged_vectorized():
+    """Un SVG avec balises <text> (Mode 1) ne doit jamais déclencher l'OCR ni être marqué vectorisé."""
+    sample_svg = """<svg width="390" height="844" xmlns="http://www.w3.org/2000/svg">
+      <text x="20" y="50" font-size="18">Champ Texte</text>
+    </svg>"""
+    parser = SvgSpatialParser(sample_svg, "with_text.svg")
+    parser.parse()
+    assert parser.is_vectorized is False
+
+
+def test_mode2_outlined_svg_is_flagged_vectorized():
+    """Un SVG sans <text> (Mode 2, paths uniquement) doit être marqué vectorisé (is_vectorized)."""
+    sample_svg = """<svg width="390" height="844" viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="40" width="350" height="120" rx="8" fill="#F2F2F7" />
+      <path d="M20 200 L100 200 L100 250 L20 250 Z" fill="#007AFF" />
+    </svg>"""
+    parser = SvgSpatialParser(sample_svg, "outlined.svg")
+    parser.parse()
+    assert parser.is_vectorized is True
+
+
+def test_convert_svg_vectorized_injects_ocr_text_when_available(tmp_path):
+    """Mode 2 (vectorisé) + OCR disponible -> le texte OCR est injecté dans le .md (plus de placeholder muet)."""
+    svg_file = tmp_path / "vectorized_screen.svg"
+    svg_file.write_text(
+        """<svg width="390" height="844" viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="40" width="350" height="120" rx="8" fill="#F2F2F7" />
+      <path d="M20 200 L100 200 L100 250 L20 250 Z" fill="#007AFF" />
+    </svg>""",
+        encoding="utf-8",
+    )
+
+    out_md = tmp_path / "docs" / "00-ingested" / "vectorized_screen.md"
+
+    with patch(
+        "src.converters.svg_to_md.ocr_vectorized_svg",
+        return_value="Heure réelle\nConfirmer la mise en incubation",
+    ) as mock_ocr:
+        success = convert_svg_file_to_md(svg_file, out_md)
+
+    assert success
+    mock_ocr.assert_called_once()
+    content = out_md.read_text(encoding="utf-8")
+    assert "Confirmer la mise en incubation" in content
+    assert 'ocr_status: "DONE"' in content
+
+
+def test_convert_svg_vectorized_falls_back_to_placeholder_when_ocr_unavailable(
+    tmp_path,
+):
+    """Mode 2 (vectorisé) + OCR indisponible (None) -> comportement historique préservé (placeholder) + flag FAILED."""
+    svg_file = tmp_path / "vectorized_screen2.svg"
+    svg_file.write_text(
+        """<svg width="390" height="844" viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="40" width="350" height="120" rx="8" fill="#F2F2F7" />
+      <path d="M20 200 L100 200 L100 250 L20 250 Z" fill="#007AFF" />
+    </svg>""",
+        encoding="utf-8",
+    )
+
+    out_md = tmp_path / "docs" / "00-ingested" / "vectorized_screen2.md"
+
+    with patch(
+        "src.converters.svg_to_md.ocr_vectorized_svg", return_value=None
+    ) as mock_ocr:
+        success = convert_svg_file_to_md(svg_file, out_md)
+
+    assert success
+    mock_ocr.assert_called_once()
+    content = out_md.read_text(encoding="utf-8")
+    assert 'ocr_status: "UNAVAILABLE"' in content
+    assert "OCR indisponible" in content

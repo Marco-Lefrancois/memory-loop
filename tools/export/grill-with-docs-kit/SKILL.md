@@ -43,12 +43,12 @@ Ce skill régit la discipline d'interrogatoire sans concession (*Relentless Inte
   - **Dans l'environnement Herdr** : L'agent consigne le Dossier de Preuves complet dans `memory/evidence/<STORY_ID>_fact_dossier.md` (nom canonique unique — cf. `DOSSIER_DE_PREUVES_PROTOCOL.md` §4) ou ouvre le volet split latéral droit (`herdr plugin pane open --plugin org.mloop.orchestrator --entrypoint evidence`). Dans le terminal principal de conversation (`p1`), l'agent n'affiche que la synthèse concise des faits et l'unique question d'arbitrage ciblée.
   - **Hors de Herdr (Dégradation Gracieuse / Mode Inline Classique)** : Si l'agent tourne dans un terminal standard (PowerShell, terminal VS Code, Cursor, CI/CD sans multiplexeur), il bascule automatiquement en mode **Inline complet** : l'intégralité du Dossier de Preuves Documentaires (Maquette, Extraits verbatim sourcés, Structure DBML) et la Question d'arbitrage sont affichées directement dans le corps de la réponse textuelle, garantissant zéro perte d'information.
 
-- **Standard Visuel du Dossier de Preuves Documentaires (Passage-Level Grounding — Restitution Inconditionnelle)** :
+- **Standard Visuel du Dossier de Preuves Documentaires (Passage-Level Grounding)** :
 
-  Avant de poser une question d'arbitrage au PO **OU** avant de rédiger le récit physique si aucun arbitrage n'est requis (frontière vide), l'agent a l'obligation formelle de structurer son intervention selon le **Gabarit Standard du Dossier de Preuves** :
+  Avant de poser une question d'arbitrage au PO, l'agent a l'obligation formelle de structurer son intervention selon le **Gabarit Standard du Dossier de Preuves** :
 
 ```markdown
-# 🐣 Dossier de Preuves Documentaires & Cadrage — `<STORY_ID>` (<Titre Fonctionnel Pur>)
+# 🐣 Session *Grill with Docs* — `<STORY_ID>` (<Titre Fonctionnel Pur>)
 
 ---
 
@@ -92,21 +92,18 @@ Source : [`docs/00-ingested/.../<doc>.md`](file:///chemin/vers/doc.md)
 
 ---
 
-### 🏁 Évaluation de la Frontière Active (Issue A ou B) :
+### ❓ Question d'Arbitrage #N pour `<STORY_ID>` (Règle d'Or de l'Interview)
 
-#### [CAS A — Si Arbitrage Requis] ❓ Question d'Arbitrage #N pour `<STORY_ID>`
 <Contexte précis de l'arbitrage adossé aux faits vérifiés ci-dessus>.
+
 * **Option A (Recommandée — <Motivation Technique>)** : <Description claire de l'option recommandée>.
 * **Option B** : <Description de l'alternative>.
-👉 **<Question fermée d'arbitrage / validation> ?**
+* **Option C** : <Description de l'alternative>.
 
-#### [CAS B — Si Zéro Arbitrage Requis] ✅ Constat de Frontière Vide
-*Tous les faits nécessaires à la spécification sont documentés, vérifiés et sans ambiguïté résiduelle.*
-👉 **Validation du socle factuel demandée à l'humain avant d'enclencher la rédaction formelle de la story.**
+👉 **<Question fermée d'arbitrage / validation> ?**
 ```
 
 - **Décisions (Ask the PO)** : Les arbitrages métier, de priorités (`RM-XXX`) et de compromis appartiennent au PO. Chaque question posée au PO est obligatoirement adossée à ce dossier de preuves documentaires.
-- **Transparence Inconditionnelle** : Même si le besoin paraît trivial ou sans ambiguïté, l'agent ne saute jamais directement à la rédaction sans avoir d'abord affiché le dossier de faits et obtenu l'assentiment humain sur le socle factuel découvert.
 - **Journalisation Persistante** : Toute requête Fact-Search est consignée dans `memory/fact_search_log.jsonl`.
 
 
@@ -137,7 +134,6 @@ Lors de l'analyse d'un composant ou d'une User Story logicielle, l'agent audite 
   2. *Body / Read Model* (Résumés, visualisations, listes).
   3. *Footer / Write Model* (Actions, triggers, modales de confirmation).
   4. *Matrice des 4 États* (Empty, Loading, Error, Success).
-  5. *Lecture Effective du Contrat Visuel* : avant de citer une maquette dans le Dossier de Preuves, vérifier que son Markdown ingéré (`docs/00-ingested/maquettes/<nom>.md`) porte `ocr_status: "DONE"` (ou `is_vectorized: false`). Si `ocr_status: "UNAVAILABLE"`, invoquer manuellement le skill `.agents/skills/svg-ocr/` avant de considérer la maquette comme lue — ne jamais décrire un composant vectorisé non lu par OCR.
 
 ---
 

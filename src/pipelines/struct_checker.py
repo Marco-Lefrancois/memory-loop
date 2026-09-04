@@ -31,11 +31,13 @@ from typing import Optional
 
 # ─── Dataclasses ──────────────────────────────────────────────────────────────
 
+
 @dataclass
 class StructViolation:
     """Représente un écart structurel détecté."""
-    check_id: str           # ex: "C2"
-    severity: str           # "BLOCKING" | "WARNING"
+
+    check_id: str  # ex: "C2"
+    severity: str  # "BLOCKING" | "WARNING"
     message: str
     line_hint: Optional[int] = None  # numéro de ligne approximatif (1-indexed)
 
@@ -46,6 +48,7 @@ class StructViolation:
 @dataclass
 class StructCheckReport:
     """Résultat complet d'un audit structurel sur un fichier."""
+
     file: Path
     gold_standard: Optional[Path]
     passed: bool
@@ -93,6 +96,7 @@ _NEXT_H2_OR_H3 = re.compile(r"^(?:##|###)\s+", re.MULTILINE)
 
 # ─── Moteur Principal ─────────────────────────────────────────────────────────
 
+
 class StructCheckEngine:
     """
     Gatekeeper structurel Read-Only pour les récits mLoop.
@@ -121,12 +125,16 @@ class StructCheckEngine:
         try:
             content = target_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as e:
-            violation = StructViolation("C6", "BLOCKING", f"Impossible de lire le fichier : {e}")
+            violation = StructViolation(
+                "C6", "BLOCKING", f"Impossible de lire le fichier : {e}"
+            )
             return StructCheckReport(target_file, None, False, [violation])
 
         fm_data = self._parse_frontmatter(content)
         gold_std_path = self._resolve_gold_standard(fm_data, strict)
-        gold_content = gold_std_path.read_text(encoding="utf-8") if gold_std_path else None
+        gold_content = (
+            gold_std_path.read_text(encoding="utf-8") if gold_std_path else None
+        )
 
         violations: list[StructViolation] = []
         violations += self._check_c1_heading_hierarchy(content)
@@ -137,6 +145,11 @@ class StructCheckEngine:
         violations += self._check_c6_frontmatter_completeness(fm_data)
         violations += self._check_c7_h1_format(content)
         violations += self._check_c8_anti_goodhart_scenarios(content)
+        violations += self._check_c9_fact_dossier_presence(
+            target_file, fm_data, content, strict
+        )
+        violations += self._check_c10_anti_ephemeral_rules(content)
+        violations += self._check_c11_rule_engine_integration(content)
 
         passed = all(v.severity != "BLOCKING" for v in violations)
         return StructCheckReport(target_file, gold_std_path, passed, violations)
@@ -209,15 +222,17 @@ class StructCheckEngine:
             level = len(hashes)
             # On ignore le H1 initial et les retours à des niveaux supérieurs
             if level > prev_level + 1:
-                violations.append(StructViolation(
-                    check_id="C1",
-                    severity="BLOCKING",
-                    message=(
-                        f"Saut de niveau de titre détecté : H{prev_level} → H{level} "
-                        f"(titre : '{title.strip()}') sans niveau intermédiaire H{prev_level + 1}. "
-                        "La hiérarchie doit être continue."
-                    ),
-                ))
+                violations.append(
+                    StructViolation(
+                        check_id="C1",
+                        severity="BLOCKING",
+                        message=(
+                            f"Saut de niveau de titre détecté : H{prev_level} → H{level} "
+                            f"(titre : '{title.strip()}') sans niveau intermédiaire H{prev_level + 1}. "
+                            "La hiérarchie doit être continue."
+                        ),
+                    )
+                )
             prev_level = level
         return violations
 
@@ -240,27 +255,35 @@ class StructCheckEngine:
         # soit le prochain H2 (##), soit le prochain H3 (###) qui n'est pas "Interface et UX"
         # On cherche dans le reste du contenu après la ligne de début de section UX
         search_from = ux_start + len(ux_match.group())
-        next_section_match = re.search(r"(?m)^(?:##\s+|###\s+(?!Interface\s+et\s+UX))", content[search_from:])
-        ux_end = (search_from + next_section_match.start()) if next_section_match else len(content)
+        next_section_match = re.search(
+            r"(?m)^(?:##\s+|###\s+(?!Interface\s+et\s+UX))", content[search_from:]
+        )
+        ux_end = (
+            (search_from + next_section_match.start())
+            if next_section_match
+            else len(content)
+        )
         ux_content = content[ux_start:ux_end]
 
         # Détecter les listes avec '*' ou '+' dans la section UX
         invalid_matches = _INVALID_LIST_PATTERN.finditer(ux_content)
         for match in invalid_matches:
             # Calculer le numéro de ligne approximatif dans le fichier original
-            line_in_ux = ux_content[:match.start()].count("\n") + 1
+            line_in_ux = ux_content[: match.start()].count("\n") + 1
             line_in_file = content[:ux_start].count("\n") + line_in_ux
             char = match.group().strip()[0]  # '*' ou '+'
-            violations.append(StructViolation(
-                check_id="C2",
-                severity="BLOCKING",
-                message=(
-                    f"Liste avec '{char}' détectée dans la section '### Interface et UX' "
-                    f"(ligne ≈{line_in_file}). Utiliser uniquement '-' (tiret) "
-                    "pour les listes dans les sections UX (standard REC-015-FE)."
-                ),
-                line_hint=line_in_file,
-            ))
+            violations.append(
+                StructViolation(
+                    check_id="C2",
+                    severity="BLOCKING",
+                    message=(
+                        f"Liste avec '{char}' détectée dans la section '### Interface et UX' "
+                        f"(ligne ≈{line_in_file}). Utiliser uniquement '-' (tiret) "
+                        "pour les listes dans les sections UX (standard REC-015-FE)."
+                    ),
+                    line_hint=line_in_file,
+                )
+            )
             break  # Une seule violation par fichier suffit pour orienter la correction
 
         return violations
@@ -283,27 +306,29 @@ class StructCheckEngine:
                 continue
             paren_content = paren_match.group(1)
             # Extraire les mots significatifs (3+ caractères) du titre et des parenthèses
-            title_words = set(re.findall(r"\b\w{3,}\b", title_text[:paren_match.start()].lower()))
+            title_words = set(
+                re.findall(r"\b\w{3,}\b", title_text[: paren_match.start()].lower())
+            )
             paren_words = set(re.findall(r"\b\w{3,}\b", paren_content.lower()))
             # Chercher des recoupements sémantiques (mots communs ou sous-chaînes)
             has_overlap = any(
-                pw in tw or tw in pw
-                for pw in paren_words
-                for tw in title_words
+                pw in tw or tw in pw for pw in paren_words for tw in title_words
             )
             if has_overlap or len(paren_words) > 0:
-                line_num = content[:match.start()].count("\n") + 1
-                violations.append(StructViolation(
-                    check_id="C3",
-                    severity="WARNING",
-                    message=(
-                        f"Redondance potentielle détectée dans le titre H4 (ligne {line_num}) : "
-                        f"'{title_text}'. "
-                        "Les parenthèses dans les titres H4 peuvent créer une redondance bilingue. "
-                        "Exemple corrigé : '#### 1. En-tête' au lieu de '#### 1. En-tête (Header)'."
-                    ),
-                    line_hint=line_num,
-                ))
+                line_num = content[: match.start()].count("\n") + 1
+                violations.append(
+                    StructViolation(
+                        check_id="C3",
+                        severity="WARNING",
+                        message=(
+                            f"Redondance potentielle détectée dans le titre H4 (ligne {line_num}) : "
+                            f"'{title_text}'. "
+                            "Les parenthèses dans les titres H4 peuvent créer une redondance bilingue. "
+                            "Exemple corrigé : '#### 1. En-tête' au lieu de '#### 1. En-tête (Header)'."
+                        ),
+                        line_hint=line_num,
+                    )
+                )
         return violations
 
     # ── Check C4 : Diff stylistique vs Gold Standard ──────────────────────────
@@ -319,15 +344,17 @@ class StructCheckEngine:
 
         if gold_content is None:
             if strict:
-                violations.append(StructViolation(
-                    check_id="C4",
-                    severity="BLOCKING",
-                    message=(
-                        "Mode --strict activé : aucun Gold Standard résolu "
-                        "(gold_standard_ref absent ou fichier introuvable). "
-                        "Renseigner le champ 'gold_standard_ref' dans le frontmatter YAML."
-                    ),
-                ))
+                violations.append(
+                    StructViolation(
+                        check_id="C4",
+                        severity="BLOCKING",
+                        message=(
+                            "Mode --strict activé : aucun Gold Standard résolu "
+                            "(gold_standard_ref absent ou fichier introuvable). "
+                            "Renseigner le champ 'gold_standard_ref' dans le frontmatter YAML."
+                        ),
+                    )
+                )
             return violations
 
         # Extraire les titres H3/H4 des deux documents
@@ -346,15 +373,17 @@ class StructCheckEngine:
         divergent = story_titles - gold_titles
         if divergent and gold_titles:
             severity = "BLOCKING" if strict else "WARNING"
-            violations.append(StructViolation(
-                check_id="C4",
-                severity=severity,
-                message=(
-                    f"{len(divergent)} titre(s) H3/H4 absent(s) du Gold Standard : "
-                    f"{', '.join(sorted(divergent)[:5])}{'...' if len(divergent) > 5 else ''}. "
-                    "Vérifier l'alignement stylistique avec le récit de référence."
-                ),
-            ))
+            violations.append(
+                StructViolation(
+                    check_id="C4",
+                    severity=severity,
+                    message=(
+                        f"{len(divergent)} titre(s) H3/H4 absent(s) du Gold Standard : "
+                        f"{', '.join(sorted(divergent)[:5])}{'...' if len(divergent) > 5 else ''}. "
+                        "Vérifier l'alignement stylistique avec le récit de référence."
+                    ),
+                )
+            )
         return violations
 
     # ── Check C5 : Séparateurs '---' entre H2 (Read-Only) ────────────────────
@@ -372,54 +401,64 @@ class StructCheckEngine:
         for match in h2_matches[1:]:  # Ignorer le premier H2
             pos = match.start()
             # Fenêtre de 30 caractères précédant le H2
-            prefix_window = content[max(0, pos - 30):pos]
+            prefix_window = content[max(0, pos - 30) : pos]
             if "---" not in prefix_window:
                 line_num = content[:pos].count("\n") + 1
                 header_text = match.group(1).strip()
-                violations.append(StructViolation(
-                    check_id="C5",
-                    severity="WARNING",
-                    message=(
-                        f"Séparateur '---' manquant avant la section H2 "
-                        f"'{header_text}' (ligne {line_num}). "
-                        "ADR-0303 exige un séparateur entre chaque section H2. "
-                        "Exécuter 'python src/swarm.py sync' pour l'auto-correction."
-                    ),
-                    line_hint=line_num,
-                ))
+                violations.append(
+                    StructViolation(
+                        check_id="C5",
+                        severity="WARNING",
+                        message=(
+                            f"Séparateur '---' manquant avant la section H2 "
+                            f"'{header_text}' (ligne {line_num}). "
+                            "ADR-0303 exige un séparateur entre chaque section H2. "
+                            "Exécuter 'python src/swarm.py sync' pour l'auto-correction."
+                        ),
+                        line_hint=line_num,
+                    )
+                )
         return violations
 
     # ── Check C6 : Frontmatter YAML ──────────────────────────────────────────
 
-    def _check_c6_frontmatter_completeness(self, fm_data: dict) -> list[StructViolation]:
+    def _check_c6_frontmatter_completeness(
+        self, fm_data: dict
+    ) -> list[StructViolation]:
         """
         C6 : Vérifie que le frontmatter YAML contient tous les champs obligatoires.
         """
         violations = []
 
         if not fm_data:
-            violations.append(StructViolation(
-                check_id="C6",
-                severity="BLOCKING",
-                message=(
-                    "Frontmatter YAML absent ou invalide. "
-                    "Chaque récit mLoop doit commencer par un bloc '---' YAML "
-                    "avec les champs : " + ", ".join(sorted(_REQUIRED_FM_FIELDS)) + "."
-                ),
-            ))
+            violations.append(
+                StructViolation(
+                    check_id="C6",
+                    severity="BLOCKING",
+                    message=(
+                        "Frontmatter YAML absent ou invalide. "
+                        "Chaque récit mLoop doit commencer par un bloc '---' YAML "
+                        "avec les champs : "
+                        + ", ".join(sorted(_REQUIRED_FM_FIELDS))
+                        + "."
+                    ),
+                )
+            )
             return violations
 
         missing_fields = _REQUIRED_FM_FIELDS - set(fm_data.keys())
         if missing_fields:
-            violations.append(StructViolation(
-                check_id="C6",
-                severity="BLOCKING",
-                message=(
-                    f"Champ(s) YAML obligatoire(s) manquant(s) : "
-                    f"{', '.join(sorted(missing_fields))}. "
-                    "Référence : standards/blueprints/story_template.md."
-                ),
-            ))
+            violations.append(
+                StructViolation(
+                    check_id="C6",
+                    severity="BLOCKING",
+                    message=(
+                        f"Champ(s) YAML obligatoire(s) manquant(s) : "
+                        f"{', '.join(sorted(missing_fields))}. "
+                        "Référence : standards/blueprints/story_template.md."
+                    ),
+                )
+            )
         return violations
 
     # ── Check C7 : Format du titre H1 ────────────────────────────────────────
@@ -430,15 +469,17 @@ class StructCheckEngine:
         """
         violations = []
         if not _H1_VALID_PATTERN.search(content):
-            violations.append(StructViolation(
-                check_id="C7",
-                severity="WARNING",
-                message=(
-                    "Titre H1 non conforme au standard mLoop. "
-                    "Format attendu : '# Titre Métier Pur' ou '# [JIRA-KEY] Titre Métier Pur'."
-                ),
-                line_hint=1,
-            ))
+            violations.append(
+                StructViolation(
+                    check_id="C7",
+                    severity="WARNING",
+                    message=(
+                        "Titre H1 non conforme au standard mLoop. "
+                        "Format attendu : '# Titre Métier Pur' ou '# [JIRA-KEY] Titre Métier Pur'."
+                    ),
+                    line_hint=1,
+                )
+            )
         return violations
 
     # ── Check C8 : Anti-Goodhart & Complétude Gherkin (4 Piliers) ────────────
@@ -455,13 +496,33 @@ class StructCheckEngine:
         if not scenarios_match:
             return violations
 
-        scenarios_content = content[scenarios_match.start():]
-        
+        scenarios_content = content[scenarios_match.start() :]
+
         # Détection des piliers Gherkin
-        has_nominal = bool(re.search(r"(?i)(nominal|cas\s+passant|happy\s+path|pilier\s+1)", scenarios_content))
-        has_exceptions = bool(re.search(r"(?i)(exception|erreur|cas\s+d'erreur|échec|invalide|pilier\s+2)", scenarios_content))
-        has_resilience = bool(re.search(r"(?i)(résilience|resilience|timeout|réseau|offline|hors\s+ligne|dégradé|pilier\s+3)", scenarios_content))
-        has_ux = bool(re.search(r"(?i)(ux|accessibilité|accessibilite|aria|contraste|vide|empty\s+state|pilier\s+4)", scenarios_content))
+        has_nominal = bool(
+            re.search(
+                r"(?i)(nominal|cas\s+passant|happy\s+path|pilier\s+1)",
+                scenarios_content,
+            )
+        )
+        has_exceptions = bool(
+            re.search(
+                r"(?i)(exception|erreur|cas\s+d'erreur|échec|invalide|pilier\s+2)",
+                scenarios_content,
+            )
+        )
+        has_resilience = bool(
+            re.search(
+                r"(?i)(résilience|resilience|timeout|réseau|offline|hors\s+ligne|dégradé|pilier\s+3)",
+                scenarios_content,
+            )
+        )
+        has_ux = bool(
+            re.search(
+                r"(?i)(ux|accessibilité|accessibilite|aria|contraste|vide|empty\s+state|pilier\s+4)",
+                scenarios_content,
+            )
+        )
 
         missing_pillars = []
         if not has_nominal:
@@ -474,15 +535,166 @@ class StructCheckEngine:
             missing_pillars.append("4. UX / Accessibilité / État vide")
 
         if missing_pillars:
-            violations.append(StructViolation(
-                check_id="C8",
-                severity="WARNING" if len(missing_pillars) <= 2 else "BLOCKING",
-                message=(
-                    f"Couverture Gherkin incomplète (Anti-Goodhart Guardrail) : "
-                    f"Pilier(s) manquant(s) dans '## Scénarios de test' : {', '.join(missing_pillars)}. "
-                    "Chaque récit mLoop doit couvrir les 4 piliers Gherkin (story_template.md)."
-                ),
-                line_hint=scenarios_content[:100].count("\n") + 1
-            ))
+            violations.append(
+                StructViolation(
+                    check_id="C8",
+                    severity="WARNING" if len(missing_pillars) <= 2 else "BLOCKING",
+                    message=(
+                        f"Couverture Gherkin incomplète (Anti-Goodhart Guardrail) : "
+                        f"Pilier(s) manquant(s) dans '## Scénarios de test' : {', '.join(missing_pillars)}. "
+                        "Chaque récit mLoop doit couvrir les 4 piliers Gherkin (story_template.md)."
+                    ),
+                    line_hint=scenarios_content[:100].count("\n") + 1,
+                )
+            )
 
+        return violations
+
+    # ── Check C9 : Présence et Intégrité du Dossier de Preuves Documentaires ───
+
+    def _check_c9_fact_dossier_presence(
+        self, target_file: Path, fm_data: dict, content: str, strict: bool
+    ) -> list[StructViolation]:
+        """
+        C9 : Vérifie la présence et l'intégrité du Dossier de Preuves Documentaires.
+        - Si un lien vers un _fact_dossier.md est présent dans ## Références,
+          vérifie que le fichier cible existe physiquement (BLOCKING si lien brisé).
+        - Si la story est en statut READY_FOR_DEV ou READY_FOR_GROOMING avec
+          fact_dossier_required: true (ou en mode strict), vérifie qu'un dossier existe
+          sous memory/evidence/<STORY_ID>_fact_dossier.md.
+        """
+        violations = []
+        story_id = fm_data.get("id") or target_file.stem
+        status = fm_data.get("status", "")
+
+        # 1. Vérification des liens de dossier dans le texte
+        dossier_links = re.findall(
+            r"\[([^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content
+        )
+        for link_text, link_target in dossier_links:
+            if link_target.startswith("http://") or link_target.startswith("https://"):
+                continue
+            target_path = (target_file.parent / link_target).resolve()
+            if not target_path.exists():
+                violations.append(
+                    StructViolation(
+                        check_id="C9",
+                        severity="BLOCKING",
+                        message=(
+                            f"Lien vers le Dossier de Preuves Documentaires brisé : '{link_target}'. "
+                            f"Le fichier cible n'existe pas sur le disque ({target_path})."
+                        ),
+                        line_hint=1,
+                    )
+                )
+
+        # 2. Vérification d'obligation pour nouveaux récits ou mode strict
+        requires_dossier = fm_data.get("fact_dossier_required", False) or (
+            strict and status in ("READY_FOR_DEV", "READY_FOR_GROOMING")
+        )
+        if requires_dossier:
+            evidence_dir = self.project_path / "memory" / "evidence"
+            dossier_candidates = (
+                list(evidence_dir.glob(f"**/{story_id}_fact_dossier.md"))
+                if evidence_dir.exists()
+                else []
+            )
+            has_valid_link = any(
+                (target_file.parent / lt).resolve().exists() for _, lt in dossier_links
+            )
+            if not dossier_candidates and not has_valid_link:
+                violations.append(
+                    StructViolation(
+                        check_id="C9",
+                        severity="BLOCKING" if strict else "WARNING",
+                        message=(
+                            f"Dossier de Preuves Documentaires manquant pour {story_id}. "
+                            f"Conformément à DOSSIER_DE_PREUVES_PROTOCOL.md, un fichier "
+                            f"memory/evidence/{story_id}_fact_dossier.md doit être produit avant dev."
+                        ),
+                        line_hint=1,
+                    )
+                )
+
+        return violations
+
+    # ── Check C10 : Interdiction des préfixes éphémères dans les Règles d'affaires ───
+
+    def _check_c10_anti_ephemeral_rules(self, content: str) -> list[StructViolation]:
+        """
+        C10 : Vérifie l'absence de préfixes éphémères (RM-XXX, REG-XXX, RULE-XXX)
+        dans les titres des règles d'affaires (ADR-0301 Rule #7 Anti-Bruit).
+        Chaque règle d'affaires doit porter un titre fonctionnel pur en gras.
+        """
+        violations = []
+        rules_match = re.search(r"(?i)##\s+Règles\s+d['’]affaires", content)
+        if not rules_match:
+            return violations
+
+        rules_content = content[rules_match.start() :]
+        next_h2 = re.search(r"(?m)^##\s+", rules_content[4:])
+        if next_h2:
+            rules_content = rules_content[: next_h2.start() + 4]
+
+        ephemeral_matches = re.findall(
+            r"(?m)^\s*[-*]\s*\*\*\s*(?:RM|REG|RULE)-[A-Z0-9-]+",
+            rules_content,
+            re.IGNORECASE,
+        )
+        if ephemeral_matches:
+            bad_prefixes = ", ".join(set(m.strip() for m in ephemeral_matches))
+            violations.append(
+                StructViolation(
+                    check_id="C10",
+                    severity="BLOCKING",
+                    message=(
+                        f"Identifiants éphémères interdits dans les titres de règles d'affaires : {bad_prefixes}. "
+                        "Conformément à ADR-0301 (Règle #7 Anti-Bruit), les préfixes comme 'RM-XXX' sont strictement "
+                        "interdits. Utiliser un titre fonctionnel métier pur en gras : '- **[Titre Métier Pur]** :'."
+                    ),
+                    line_hint=1,
+                )
+            )
+        return violations
+
+    # ── Check C11 : Intégration Dynamique RuleEngine (ADR-0328 §2.2) ─────────
+
+    def _check_c11_rule_engine_integration(self, content: str) -> list[StructViolation]:
+        """
+        C11 : Charge les règles déclaratives `validation_rules` du frontmatter
+        YAML des ADRs (`docs/01-architecture/` du projet cible) et les exécute
+        sur le contenu du récit courant, exactement comme le fait déjà WikiFix
+        (`wikifix.py` §4.7). ADR-0328 §2.2 promet explicitement que ces règles
+        soient « injectées dynamiquement dans struct-check, vibe-check,
+        validate » — ce check comble le branchement manquant côté struct-check.
+
+        Absence de docs/01-architecture/ ou de règles chargées -> aucune
+        violation, jamais d'exception (dégradation gracieuse).
+        """
+        violations: list[StructViolation] = []
+        try:
+            from src.core.rule_engine import RuleEngine
+
+            adr_dir = self.project_path / "docs" / "01-architecture"
+            if not adr_dir.exists():
+                return violations
+
+            rule_engine = RuleEngine()
+            rule_engine.load_from_adr_dir(adr_dir)
+            rule_violations = rule_engine.validate_all(
+                content, target="backlog_stories"
+            )
+            for rv in rule_violations:
+                violations.append(
+                    StructViolation(
+                        check_id="C11",
+                        severity=rv.severity,
+                        message=f"[{rv.adr_id}] {rv.message}",
+                        line_hint=1,
+                    )
+                )
+        except Exception:
+            # Dégradation gracieuse : un ADR malformé ne doit jamais faire
+            # échouer l'audit structurel complet.
+            pass
         return violations

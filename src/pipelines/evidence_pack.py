@@ -56,7 +56,7 @@ class EvidencePackEngine:
         ]
 
     def _resolve_source_path(self, src_name: str) -> Optional[Path]:
-        """Résout le chemin réel d'une source citée en cherchant aussi récursivement sous reference/."""
+        """Résout le chemin réel d'une source citée en cherchant aussi récursivement sous reference/ et docs/."""
         for cp in self._candidate_paths(src_name):
             if cp.exists() and cp.is_file():
                 return cp
@@ -66,9 +66,17 @@ class EvidencePackEngine:
             matches = list(ref_dir.rglob(src_name))
             if matches:
                 return matches[0]
+        # Fallback : recherche récursive sous docs/ (ex: docs/00-ingested/maquettes/<mockup>.md)
+        docs_dir = self.project_path / "docs"
+        if docs_dir.exists():
+            matches = list(docs_dir.rglob(src_name))
+            if matches:
+                return matches[0]
         return None
 
-    def _classify_source(self, src_name: str, resolved_path: Optional[Path]) -> Dict[str, Any]:
+    def _classify_source(
+        self, src_name: str, resolved_path: Optional[Path]
+    ) -> Dict[str, Any]:
         """
         Classifie une source Fact-Search selon ADR-0320 §G :
         - verification_method: "code_source_verified" | "file_existence_only" | "semantic_match"
@@ -102,6 +110,53 @@ class EvidencePackEngine:
             "confidence_score": 0.25,
         }
 
+    def _extract_visual_contract(self, sources: set) -> List[Dict[str, Any]]:
+        """
+        Phase 1 (Enforcement Déterministe du Grounding Visuel & Épistémique) :
+        pour chaque source .md citée dans le récit, si elle correspond à une
+        spécification UI ingérée (frontmatter `document_type: "ui_specification"`,
+        produite par `src/converters/svg_to_md.py`), extrait les champs
+        `is_vectorized` / `ocr_status` afin de tracer si le Contrat Visuel
+        (Maquettes = SSOT, AGENTS.md) a réellement pu être lu par OCR ou non.
+
+        Retourne une liste vide si aucune maquette n'est référencée (pas d'invention
+        de contrat visuel pour une story purement backend/headless).
+        """
+        contracts: List[Dict[str, Any]] = []
+        for src in sorted(sources):
+            if not src.endswith(".md"):
+                continue
+            resolved = self._resolve_source_path(src)
+            if resolved is None:
+                continue
+            try:
+                mockup_content = resolved.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                continue
+
+            fm_match = re.match(r"^---\s*\n(.*?)\n---", mockup_content, re.DOTALL)
+            if not fm_match:
+                continue
+            fm_text = fm_match.group(1)
+
+            is_ui_spec = re.search(
+                r'^document_type:\s*"ui_specification"', fm_text, re.MULTILINE
+            )
+            if not is_ui_spec:
+                continue
+
+            vect_m = re.search(r"^is_vectorized:\s*(true|false)", fm_text, re.MULTILINE)
+            ocr_m = re.search(r'^ocr_status:\s*"([A-Z_]+)"', fm_text, re.MULTILINE)
+
+            contracts.append(
+                {
+                    "mockup_path": str(resolved).replace("\\", "/"),
+                    "is_vectorized": (vect_m.group(1) == "true") if vect_m else False,
+                    "ocr_status": ocr_m.group(1) if ocr_m else "N_A",
+                }
+            )
+        return contracts
+
     def extract_evidence(self, story_file: Path) -> Dict[str, Any]:
         story_file = Path(story_file)
         if not story_file.exists():
@@ -129,36 +184,50 @@ class EvidencePackEngine:
         for match in re.finditer(alert_pattern, content):
             alert_type = match.group(1)
             raw_lines = match.group(2).splitlines()
-            clean_text = "\n".join([line.lstrip("> ").strip() for line in raw_lines]).strip()
-            alerts.append({
-                "type": alert_type,
-                "text": clean_text
-            })
+            clean_text = "\n".join(
+                [line.lstrip("> ").strip() for line in raw_lines]
+            ).strip()
+            alerts.append({"type": alert_type, "text": clean_text})
 
         # 3. Extraction des Questions Ouvertes liées (Q-XXX et QD-XXX)
         questions = sorted(list(set(re.findall(r"\b(?:Q|QD)-\d{3}\b", content))))
 
         # 4. Extraction des Sources de Vérité (scans, SOW, directives ET code source .cs, .plist, .csproj)
         sources = set()
-        for s_match in re.finditer(r"\b([a-zA-Z0-9_\-]+\.(?:md|xlsx|pdf|docx|plist|cs|csproj|xml|yml|json))\b", content):
+        for s_match in re.finditer(
+            r"\b([a-zA-Z0-9_\-]+\.(?:md|xlsx|pdf|docx|plist|cs|csproj|xml|yml|json))\b",
+            content,
+        ):
             sources.add(s_match.group(1))
 
         # 5. Extraction V-Model Harness : Scénarios de Test Gherkin
         scenarios = []
-        scen_matches = re.finditer(r"(?m)^(?:\s*###?\s*|\s*-\s*)?(?:Scénario|Scenario)\s*[:\-]\s*(.+)$", content)
+        scen_matches = re.finditer(
+            r"(?m)^(?:\s*###?\s*|\s*-\s*)?(?:Scénario|Scenario)\s*[:\-]\s*(.+)$",
+            content,
+        )
         for s_m in scen_matches:
-            scenarios.append({
-                "scenario_title": s_m.group(1).strip(),
-                "status": "VERIFIED",
-                "verifier": "Sentinel_ReadOnly"
-            })
+            scenarios.append(
+                {
+                    "scenario_title": s_m.group(1).strip(),
+                    "status": "VERIFIED",
+                    "verifier": "Sentinel_ReadOnly",
+                }
+            )
 
         # 6. Extraction des Preuves Fact-Search & Faits Vérifiés (ADR-0326)
         facts_verified = []
-        facts_match = re.search(r"(?i)Faits (?:Établis & Prouvés|Vérifiés|Clés)\s*:\s*\n((?:\s*[\d\*\-].*\n?)+)", content)
+        facts_match = re.search(
+            r"(?i)Faits (?:Établis & Prouvés|Vérifiés|Clés)\s*:\s*\n((?:\s*[\d\*\-].*\n?)+)",
+            content,
+        )
         if facts_match:
             for f_line in facts_match.group(1).splitlines():
-                clean_f = re.sub(r"^\s*[\d\*\-\.]+\s*(?:\*Fait \d+\*|\bFait \d+\b)?\s*[:\-]?\s*", "", f_line).strip()
+                clean_f = re.sub(
+                    r"^\s*[\d\*\-\.]+\s*(?:\*Fait \d+\*|\bFait \d+\b)?\s*[:\-]?\s*",
+                    "",
+                    f_line,
+                ).strip()
                 if clean_f and not clean_f.startswith("["):
                     facts_verified.append(clean_f)
 
@@ -177,37 +246,62 @@ class EvidencePackEngine:
             elif resolved_path is not None:
                 matched_fact = f"Référence documentaire trouvée sur disque (existence vérifiée) : {src}"
             else:
-                matched_fact = f"Source citée mais introuvable physiquement sur disque : {src}"
-            fact_proofs.append({
-                "query": f"Fact-Search {src}",
-                "source_file": src,
-                "sha256": sha or "NOT_CALCULATED_LOCAL_ONLY",
-                "section": "SSOT Reference",
-                "matched_fact": matched_fact,
-                "verification_method": classification["verification_method"],
-                "source_type": classification["source_type"],
-                "confidence": classification["confidence"],
-                "confidence_score": classification["confidence_score"],
-                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
-            })
+                matched_fact = (
+                    f"Source citée mais introuvable physiquement sur disque : {src}"
+                )
+            fact_proofs.append(
+                {
+                    "query": f"Fact-Search {src}",
+                    "source_file": src,
+                    "sha256": sha or "NOT_CALCULATED_LOCAL_ONLY",
+                    "section": "SSOT Reference",
+                    "matched_fact": matched_fact,
+                    "verification_method": classification["verification_method"],
+                    "source_type": classification["source_type"],
+                    "confidence": classification["confidence"],
+                    "confidence_score": classification["confidence_score"],
+                    "timestamp": datetime.datetime.now(
+                        datetime.timezone.utc
+                    ).isoformat(),
+                }
+            )
+
+        # 6a-bis. Extraction du Contrat Visuel (Phase 1 — Enforcement Déterministe
+        # du Grounding Visuel & Épistémique). Pour chaque maquette Markdown ingérée
+        # référencée (docs/00-ingested/maquettes/*.md, produite par svg_to_md.py),
+        # trace si le SVG source était vectorisé et si l'OCR a effectivement pu lire
+        # son contenu textuel réel (is_vectorized / ocr_status du frontmatter).
+        visual_contract = self._extract_visual_contract(sources)
 
         # 6b. Extraction des Références Externes & Liens Wiki (ADR-0327)
         external_refs = []
-        ref_section_match = re.search(r"(?i)## Références\s*\n(.*?)(?:\n---|\n##|\Z)", content, re.DOTALL)
+        ref_section_match = re.search(
+            r"(?i)## Références\s*\n(.*?)(?:\n---|\n##|\Z)", content, re.DOTALL
+        )
         if ref_section_match:
             ref_text = ref_section_match.group(1)
             for r_m in re.finditer(r"\[([^\]]+)\]\((https?://[^\)]+)\)", ref_text):
-                external_refs.append({
-                    "title": r_m.group(1).strip(),
-                    "url": r_m.group(2).strip(),
-                    "is_azure_devops_wiki": "_wiki/wikis/" in r_m.group(2)
-                })
+                external_refs.append(
+                    {
+                        "title": r_m.group(1).strip(),
+                        "url": r_m.group(2).strip(),
+                        "is_azure_devops_wiki": "_wiki/wikis/" in r_m.group(2),
+                    }
+                )
 
         # 7. Audit Épistémique (ADR-0335 / ADR-0336)
         epistemic_audit = {
-            "what_it_actually_proves": [f"Spécification adossée aux sources vérifiées : {', '.join(sorted(list(sources))[:3])}" if sources else "Spécification basée sur modèle déclaratif"],
-            "what_it_does_not_prove": [f"Comportement sous réserve de validation des questions ouvertes : {', '.join(questions)}" if questions else "Aucune question ouverte non résolue"],
-            "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+            "what_it_actually_proves": [
+                f"Spécification adossée aux sources vérifiées : {', '.join(sorted(list(sources))[:3])}"
+                if sources
+                else "Spécification basée sur modèle déclaratif"
+            ],
+            "what_it_does_not_prove": [
+                f"Comportement sous réserve de validation des questions ouvertes : {', '.join(questions)}"
+                if questions
+                else "Aucune question ouverte non résolue"
+            ],
+            "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
         }
 
         sid = yaml_id or story_id
@@ -215,7 +309,7 @@ class EvidencePackEngine:
         next_actions = [
             f"python src/swarm.py grill --project {proj_name} --story {sid}",
             f"python src/swarm.py rubber-duck --project {proj_name} --file {story_file.name}",
-            f"python src/swarm.py sync --project {proj_name}"
+            f"python src/swarm.py sync --project {proj_name}",
         ]
 
         # ADR-0320 §G : Score racine calculé (non codé en dur), reflétant la proportion
@@ -227,7 +321,10 @@ class EvidencePackEngine:
         elif code_verified_count == len(fact_proofs):
             root_confidence, root_score = "HIGH", 1.0
         elif code_verified_count > 0:
-            root_confidence, root_score = "MEDIUM", round(0.75 + 0.25 * (code_verified_count / len(fact_proofs)), 2)
+            root_confidence, root_score = (
+                "MEDIUM",
+                round(0.75 + 0.25 * (code_verified_count / len(fact_proofs)), 2),
+            )
         else:
             root_confidence, root_score = "MEDIUM", 0.75
 
@@ -238,11 +335,17 @@ class EvidencePackEngine:
         status = "VALIDATED"
         if existing_pack_path.exists():
             try:
-                existing_data = json.loads(existing_pack_path.read_text(encoding="utf-8"))
+                existing_data = json.loads(
+                    existing_pack_path.read_text(encoding="utf-8")
+                )
                 existing_ts = existing_data.get("timestamp")
-                story_mtime = datetime.datetime.fromtimestamp(story_file.stat().st_mtime, tz=datetime.timezone.utc)
+                story_mtime = datetime.datetime.fromtimestamp(
+                    story_file.stat().st_mtime, tz=datetime.timezone.utc
+                )
                 if existing_ts:
-                    existing_dt = datetime.datetime.fromisoformat(existing_ts.replace("Z", "+00:00"))
+                    existing_dt = datetime.datetime.fromisoformat(
+                        existing_ts.replace("Z", "+00:00")
+                    )
                     if story_mtime > existing_dt:
                         status = "STALE_PENDING_REGENERATION"
             except Exception:
@@ -251,7 +354,9 @@ class EvidencePackEngine:
         evidence_pack = {
             "story_id": sid,
             "jira_key": jira_key,
-            "file_path": str(story_file.relative_to(self.project_path)).replace("\\", "/"),
+            "file_path": str(story_file.relative_to(self.project_path)).replace(
+                "\\", "/"
+            ),
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "fact_search_status": "VERIFIED",
             "fact_search_proofs": fact_proofs,
@@ -262,11 +367,20 @@ class EvidencePackEngine:
             "external_references": external_refs,
             "alerts": alerts,
             "open_questions": questions,
+            "visual_contract": visual_contract,
+            # Phase 2.2 (Gate C9 renforcé) : preuve d'assentiment humain sur le socle
+            # factuel restitué (ADR-0320 §H.3, DOSSIER_DE_PREUVES_PROTOCOL.md §2).
+            # Par défaut False/None tant que l'extraction ne détecte pas de validation
+            # explicite (ex: EvidencePack régénéré/complété manuellement post-Grill).
+            # Non-bloquant à ce stade (WARNING via struct-check C9/gate FSM) ; réservé
+            # à une élévation future en BLOCKING une fois le flux de validation outillé.
+            "socle_factuel_validated_by_human": False,
+            "socle_factuel_validated_at": None,
             "verification_harness": scenarios,
             "next_actions": next_actions,
             "confidence": root_confidence,
             "confidence_score": root_score,
-            "status": status
+            "status": status,
         }
 
         return evidence_pack
@@ -274,7 +388,9 @@ class EvidencePackEngine:
     def save_evidence_pack(self, evidence_pack: Dict[str, Any]) -> Path:
         story_id = evidence_pack.get("story_id", "UNKNOWN").replace(" ", "_")
         target_json = self.evidence_dir / f"{story_id}_evidence.json"
-        target_json.write_text(json.dumps(evidence_pack, indent=2, ensure_ascii=False), encoding="utf-8")
+        target_json.write_text(
+            json.dumps(evidence_pack, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
         ZeroFluffConsole.success(f"Artefact EvidencePack consigné sous : {target_json}")
         return target_json
 

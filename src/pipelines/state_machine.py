@@ -11,6 +11,7 @@ Garde-fous implémentés :
 import hashlib
 import re
 import yaml
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, List
 from src.state import StoryStatus
@@ -20,7 +21,7 @@ DEFAULT_TTL_CYCLES = 3
 
 def _clean_yaml_str(raw_yaml: str) -> dict:
     """Parse YAML de manière tolérante aux tirets nus non quotés."""
-    sanitized = re.sub(r'(?m)^(\s*[\w_]+\s*:\s*)-(\s*)$', r'\1"-"\2', raw_yaml)
+    sanitized = re.sub(r"(?m)^(\s*[\w_]+\s*:\s*)-(\s*)$", r'\1"-"\2', raw_yaml)
     try:
         res = yaml.safe_load(sanitized)
         return res if isinstance(res, dict) else {}
@@ -31,22 +32,113 @@ def _clean_yaml_str(raw_yaml: str) -> dict:
 # ─── Transitions autorisées (SSOT) ────────────────────────────────────────────
 # Chaque clé mappe vers la liste des statuts cibles légaux.
 ALLOWED_TRANSITIONS = {
-    StoryStatus.BACKLOG:            [StoryStatus.OPEN, StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW, StoryStatus.ON_HOLD],
-    StoryStatus.OPEN:               [StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW, StoryStatus.BACKLOG, StoryStatus.ON_HOLD],
-    StoryStatus.IN_ANALYZE:         [StoryStatus.IN_PLAN, StoryStatus.IN_REVIEW, StoryStatus.READY_FOR_GROOMING, StoryStatus.OPEN, StoryStatus.BACKLOG, StoryStatus.ON_HOLD, StoryStatus.ERROR],
-    StoryStatus.IN_PLAN:            [StoryStatus.IN_VALIDATE, StoryStatus.IN_BUILD, StoryStatus.IN_REVIEW, StoryStatus.IN_ANALYZE, StoryStatus.ON_HOLD, StoryStatus.ERROR],
-    StoryStatus.IN_BUILD:           [StoryStatus.IN_VALIDATE, StoryStatus.IN_PLAN, StoryStatus.IN_REVIEW, StoryStatus.ON_HOLD, StoryStatus.ERROR],
-    StoryStatus.IN_VALIDATE:        [StoryStatus.READY_FOR_GROOMING, StoryStatus.IN_REVIEW, StoryStatus.SHIPPED, StoryStatus.IN_ANALYZE, StoryStatus.ON_HOLD, StoryStatus.ERROR],
-    StoryStatus.IN_REVIEW:          [StoryStatus.READY_FOR_DEV, StoryStatus.READY_FOR_GROOMING, StoryStatus.IN_ANALYZE, StoryStatus.ON_HOLD, StoryStatus.OPEN, StoryStatus.ERROR],
-    StoryStatus.READY_FOR_GROOMING: [StoryStatus.READY_FOR_DEV, StoryStatus.IN_REVIEW, StoryStatus.IN_ANALYZE, StoryStatus.ON_HOLD],
-    StoryStatus.READY_FOR_DEV:      [StoryStatus.IN_DEV, StoryStatus.IN_REVIEW, StoryStatus.IN_ANALYZE, StoryStatus.ON_HOLD],
-    StoryStatus.IN_DEV:             [StoryStatus.IN_QA, StoryStatus.ACCEPTED, StoryStatus.DONE, StoryStatus.READY_FOR_DEV, StoryStatus.IN_REVIEW, StoryStatus.IN_ANALYZE, StoryStatus.ON_HOLD, StoryStatus.ERROR],
-    StoryStatus.IN_QA:              [StoryStatus.ACCEPTED, StoryStatus.DONE, StoryStatus.IN_DEV, StoryStatus.IN_REVIEW, StoryStatus.IN_ANALYZE, StoryStatus.ON_HOLD, StoryStatus.ERROR],
-    StoryStatus.DONE:               [StoryStatus.ACCEPTED, StoryStatus.IN_DEV, StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW],
-    StoryStatus.ACCEPTED:           [StoryStatus.IN_DEV, StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW],
-    StoryStatus.SHIPPED:            [StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW],
-    StoryStatus.ON_HOLD:            [StoryStatus.BACKLOG, StoryStatus.OPEN, StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW],
-    StoryStatus.ERROR:              [StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW, StoryStatus.OPEN, StoryStatus.BACKLOG],
+    StoryStatus.BACKLOG: [
+        StoryStatus.OPEN,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.ON_HOLD,
+    ],
+    StoryStatus.OPEN: [
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.BACKLOG,
+        StoryStatus.ON_HOLD,
+    ],
+    StoryStatus.IN_ANALYZE: [
+        StoryStatus.IN_PLAN,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.READY_FOR_GROOMING,
+        StoryStatus.OPEN,
+        StoryStatus.BACKLOG,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.IN_PLAN: [
+        StoryStatus.IN_VALIDATE,
+        StoryStatus.IN_BUILD,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.IN_BUILD: [
+        StoryStatus.IN_VALIDATE,
+        StoryStatus.IN_PLAN,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.IN_VALIDATE: [
+        StoryStatus.READY_FOR_GROOMING,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.SHIPPED,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.IN_REVIEW: [
+        StoryStatus.READY_FOR_DEV,
+        StoryStatus.READY_FOR_GROOMING,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.ON_HOLD,
+        StoryStatus.OPEN,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.READY_FOR_GROOMING: [
+        StoryStatus.READY_FOR_DEV,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.ON_HOLD,
+    ],
+    StoryStatus.READY_FOR_DEV: [
+        StoryStatus.IN_DEV,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.ON_HOLD,
+    ],
+    StoryStatus.IN_DEV: [
+        StoryStatus.IN_QA,
+        StoryStatus.ACCEPTED,
+        StoryStatus.DONE,
+        StoryStatus.READY_FOR_DEV,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.IN_QA: [
+        StoryStatus.ACCEPTED,
+        StoryStatus.DONE,
+        StoryStatus.IN_DEV,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.DONE: [
+        StoryStatus.ACCEPTED,
+        StoryStatus.IN_DEV,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.IN_REVIEW,
+    ],
+    StoryStatus.ACCEPTED: [
+        StoryStatus.IN_DEV,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.IN_REVIEW,
+    ],
+    StoryStatus.SHIPPED: [StoryStatus.IN_ANALYZE, StoryStatus.IN_REVIEW],
+    StoryStatus.ON_HOLD: [
+        StoryStatus.BACKLOG,
+        StoryStatus.OPEN,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.IN_REVIEW,
+    ],
+    StoryStatus.ERROR: [
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.OPEN,
+        StoryStatus.BACKLOG,
+    ],
 }
 
 DEFAULT_TTL_CYCLES = 5
@@ -54,11 +146,13 @@ DEFAULT_TTL_CYCLES = 5
 
 class StateTransitionError(ValueError):
     """Exception levée lorsqu'une transition d'état illicite est détectée par le pipeline."""
+
     pass
 
 
 class ContentTamperingError(ValueError):
     """Exception levée lorsqu'une modification non autorisée du contenu est détectée après validation."""
+
     pass
 
 
@@ -124,19 +218,25 @@ class StateMachineEngine:
         sous backlog/reviews/ (ou ses sous-dossiers) et porte le statut APPROUVÉ.
         """
         story_stem = story_file.stem
-        category = story_file.parent.name if story_file.parent.name in ["FOOD", "COMMERCE", "SANTE"] else ""
-        
+        category = (
+            story_file.parent.name
+            if story_file.parent.name in ["FOOD", "COMMERCE", "SANTE"]
+            else ""
+        )
+
         candidates = []
         if category:
-            candidates.append(self.reviews_path / category / f"rubber_duck_{story_stem}.md")
+            candidates.append(
+                self.reviews_path / category / f"rubber_duck_{story_stem}.md"
+            )
         candidates.append(self.reviews_path / f"rubber_duck_{story_stem}.md")
-        
+
         review_file = None
         for cand in candidates:
             if cand.exists():
                 review_file = cand
                 break
-                
+
         if not review_file:
             # Recherche récursive de repli
             matches = list(self.reviews_path.rglob(f"rubber_duck_{story_stem}.md"))
@@ -151,14 +251,113 @@ class StateMachineEngine:
             )
 
         review_text = review_file.read_text(encoding="utf-8")
-        if ("REJETÉ" in review_text or "REJETE" in review_text
-                or ("Problèmes de Blocage" in review_text and "Aucun problème bloquant" not in review_text)):
+        if (
+            "REJETÉ" in review_text
+            or "REJETE" in review_text
+            or (
+                "Problèmes de Blocage" in review_text
+                and "Aucun problème bloquant" not in review_text
+            )
+        ):
             raise StateTransitionError(
                 f"[VERROU SENTINEL BLOQUANT] Le récit '{story_file.name}' présente des rejets de revue Rubber Duck non résolus !\n"
                 f"Rapport : {review_file.relative_to(self.project_path).as_posix()}\n"
                 f"➡ Action obligatoire : Corrigez le récit puis relancez 'python src/swarm.py rubber-duck --project {self.project_path.name} --file {story_file.as_posix()}'"
             )
 
+        return True
+
+    # ─── 1b. Gate C9 : Dossier de Preuves Documentaires (Phase 2) ──────────
+
+    def validate_fact_dossier_gate(
+        self, story_file: Path, strict: bool = False
+    ) -> bool:
+        """
+        Gate déterministe sur le Dossier de Preuves Documentaires (ADR-0320 §H,
+        ADR-0326, DOSSIER_DE_PREUVES_PROTOCOL.md) pour les récits en statut
+        READY_FOR_DEV / READY_FOR_GROOMING (et au-delà du cycle de vie).
+
+        Réutilise la même logique de détection que `struct_checker.py` Check C9
+        (existence de memory/evidence/<STORY_ID>_fact_dossier.md ou lien valide
+        dans '## Références'), mais rattachée à la Machine à États plutôt qu'au
+        seul rapport `struct-check` consultatif.
+
+        Sévérité (décision actée — période de transition) :
+        - `strict=False` (défaut) : dossier manquant -> WARNING affiché via
+          ZeroFluffConsole, retourne True (non bloquant). Évite de bloquer les
+          stories déjà en READY_FOR_DEV sans dossier historique.
+        - `strict=True` (CI/audit explicite) : dossier manquant -> lève
+          StateTransitionError (BLOCKING).
+
+        Hors périmètre (retourne True sans vérification) : statuts autres que
+        READY_FOR_DEV / READY_FOR_GROOMING / IN_DEV / IN_QA / DONE / ACCEPTED.
+        """
+        text = story_file.read_text(encoding="utf-8")
+        if not text.startswith("---"):
+            return True
+
+        parts = text.split("---", 2)
+        if len(parts) < 3:
+            return True
+
+        data = _clean_yaml_str(parts[1])
+        if not isinstance(data, dict):
+            return True
+
+        status = data.get("status", "")
+        gated_statuses = (
+            "READY_FOR_DEV",
+            "READY_FOR_GROOMING",
+            "IN_DEV",
+            "IN_QA",
+            "DONE",
+            "ACCEPTED",
+        )
+        if status not in gated_statuses:
+            return True
+
+        story_id = data.get("id") or story_file.stem
+        content = parts[2]
+
+        # 1. Lien direct dans '## Références' pointant vers un _fact_dossier.md existant
+        dossier_links = re.findall(
+            r"\[([^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content
+        )
+        has_valid_link = any(
+            (story_file.parent / link_target).resolve().exists()
+            for _, link_target in dossier_links
+            if not link_target.startswith(("http://", "https://"))
+        )
+
+        # 2. Fichier canonique sous memory/evidence/<STORY_ID>_fact_dossier.md
+        evidence_dir = self.project_path / "memory" / "evidence"
+        dossier_candidates = (
+            list(evidence_dir.glob(f"**/{story_id}_fact_dossier.md"))
+            if evidence_dir.exists()
+            else []
+        )
+
+        if dossier_candidates or has_valid_link:
+            return True
+
+        message = (
+            f"[GATE C9 — DOSSIER DE PREUVES] Le récit '{story_file.name}' (statut {status}) "
+            f"n'a pas de Dossier de Preuves Documentaires détecté.\n"
+            f"Attendu : memory/evidence/{story_id}_fact_dossier.md "
+            f"(cf. DOSSIER_DE_PREUVES_PROTOCOL.md §2 — Gate Pré-Rédaction)."
+        )
+
+        if strict:
+            raise StateTransitionError(
+                message + "\n➡ Générez le dossier avant de poursuivre (mode strict)."
+            )
+
+        try:
+            from src.cli import ZeroFluffConsole
+
+            ZeroFluffConsole.warning(message)
+        except Exception:
+            pass
         return True
 
     # ─── 2. Cryptographic Anti-Tampering ───────────────────────────────────
@@ -298,4 +497,3 @@ class StateMachineEngine:
             )
 
         return True
-

@@ -84,6 +84,13 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0342](0342-declarative-yaml-extraction-blueprints.md)** : Blueprints d'Extraction Déclarative YAML & Distillation de Connaissances Typées
 *   **[ADR-0343](0343-hypergraph-knowledge-abstracts-ssot.md)** : Hypergraph Knowledge Abstracts & Relations N-aires SSOT
 *   **[ADR-0344](0344-story-status-in-review-rework-lifecycle.md)** : Statut IN_REVIEW, Protocole de Révision Post-Validation & Re-Grill de Portée
+*   **[ADR-0345](0345-herdr-runtime-deep-integration-plugin-architecture.md)** : Intégration Approfondie de Herdr Runtime v0.8.2, Matrice Zero-Blindspot & Architecture Plugin Officiel mLoop
+*   **[ADR-0346](0346-specialized-agent-delegation-gates.md)** : Suite des 5 Workers Stratégiques Spécialisés mLoop, Isolation Cognitive & Matrice Zero-Blindspot
+*   **[ADR-0347](0347-agentic-memory-evals-write-path-fidelity-unprompted-recall.md)** : Métrologie de Mémoire Agentique, Fidélité du Write-Path & Rappel Proactif Non Sollicité
+*   **[ADR-0348](0348-wikiskill-tri-layer-evolution.md)** : Architecture Tri-Couches WikiSkill, Mémoire Négative & Gating de Non-Régression
+*   **[ADR-0349](0349-karpathy-llm-wiki-bootstrap-crawler-enhancements.md)** : Paradigme Karpathy LLM Wiki, Concept-Table Navigable & Gouvernance Déterministe du Crawler Web
+*   **[ADR-0350](0350-obsidian-vault-assistant-codebase-canvas-bridge.md)** : Passerelle Obsidian Vault, Cartographie Codebase Canvas 2D & Synchronisation de Session Dev Logs
+*   **[ADR-0351](0351-deterministic-visual-epistemic-grounding-enforcement.md)** : Enforcement Déterministe du Grounding Visuel & Épistémique (OCR Ingestion, Gate FSM C9, Unification Nommage)
 
 ---
-*Dernière consolidation constitutionnelle : 30 août 2026 — 62 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 4 septembre 2026 — 69 ADRs Unifiées (Zéro Conflit)*

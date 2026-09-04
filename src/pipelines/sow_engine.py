@@ -37,7 +37,12 @@ class SOWEngine:
 
     def get_blueprint_content(self) -> str:
         """Lit le gabarit officiel sow_evaluation_template.md."""
-        bp_path = self.workspace_root / "standards" / "blueprints" / "sow_evaluation_template.md"
+        bp_path = (
+            self.workspace_root
+            / "standards"
+            / "blueprints"
+            / "sow_evaluation_template.md"
+        )
         if not bp_path.exists():
             # Fallback relatif
             bp_path = Path("standards/blueprints/sow_evaluation_template.md")
@@ -122,11 +127,26 @@ class SOWEngine:
         sp = int(hours / 8)
 
         formatted_cost = f"{cost:,} $".replace(",", " ")
-        content = content.replace("([N] jours / [N] h / [N] $ CAD)", f"({days} jours / {hours} h / {formatted_cost} CAD)")
-        content = content.replace("| **Total Heures Estimées** | **[N]** |", f"| **Total Heures Estimées** | **{hours}** |")
-        content = content.replace("| **Total Story Points (1 SP = 8h)** | **[N]** |", f"| **Total Story Points (1 SP = 8h)** | **{sp}** |")
-        content = content.replace("| **Total Jours Ouvrés (1 j = 8h)** | **[N]** |", f"| **Total Jours Ouvrés (1 j = 8h)** | **{days}** |")
-        content = content.replace("| **Valeur Monétaire Estimée** | **[N] $** |", f"| **Valeur Monétaire Estimée** | **{formatted_cost}** |")
+        content = content.replace(
+            "([N] jours / [N] h / [N] $ CAD)",
+            f"({days} jours / {hours} h / {formatted_cost} CAD)",
+        )
+        content = content.replace(
+            "| **Total Heures Estimées** | **[N]** |",
+            f"| **Total Heures Estimées** | **{hours}** |",
+        )
+        content = content.replace(
+            "| **Total Story Points (1 SP = 8h)** | **[N]** |",
+            f"| **Total Story Points (1 SP = 8h)** | **{sp}** |",
+        )
+        content = content.replace(
+            "| **Total Jours Ouvrés (1 j = 8h)** | **[N]** |",
+            f"| **Total Jours Ouvrés (1 j = 8h)** | **{days}** |",
+        )
+        content = content.replace(
+            "| **Valeur Monétaire Estimée** | **[N] $** |",
+            f"| **Valeur Monétaire Estimée** | **{formatted_cost}** |",
+        )
 
         out_dir = self.project_path / "docs" / "01-architecture"
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -134,3 +154,34 @@ class SOWEngine:
 
         out_file.write_text(content, encoding="utf-8")
         return out_file
+
+    # ── ADR-0331 §2.2.3 : Interdiction Formelle des Libellés Génériques ──────
+
+    _GENERIC_LABEL_PATTERNS = [
+        r"\[Détail des récits\]",
+        r"Composant générique",
+        r"Développement divers",
+    ]
+
+    def validate_task_granularity(self, sow_file: Path) -> List[str]:
+        """
+        Linter de conformité ADR-0331 §2.2 Règle #3 : détecte les libellés
+        vagues proscrits (« [Détail des récits] », « Composant générique »,
+        « Développement divers ») dans le tableau de chiffrage détaillé d'un
+        SOW généré. Retourne la liste des libellés génériques rencontrés
+        (liste vide si le SOW est conforme).
+        """
+        violations: List[str] = []
+        if not sow_file.exists():
+            return violations
+
+        content = sow_file.read_text(encoding="utf-8", errors="ignore")
+        for pattern in self._GENERIC_LABEL_PATTERNS:
+            for m in re.finditer(pattern, content, re.IGNORECASE):
+                violations.append(
+                    f"Libellé générique proscrit détecté : « {m.group(0)} » "
+                    f"(ADR-0331 §2.2 Règle #3 — Interdiction Formelle des "
+                    f"Libellés Génériques). Remplacer par une description "
+                    f"fonctionnelle concrète des écrans/flux/protocoles concernés."
+                )
+        return violations
