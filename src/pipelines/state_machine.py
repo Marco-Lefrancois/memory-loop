@@ -289,8 +289,12 @@ class StateMachineEngine:
         - `strict=True` (CI/audit explicite) : dossier manquant -> lève
           StateTransitionError (BLOCKING).
 
-        Hors périmètre (retourne True sans vérification) : statuts autres que
-        READY_FOR_DEV / READY_FOR_GROOMING / IN_DEV / IN_QA / DONE / ACCEPTED.
+        Hors périmètre (retourne True sans vérification, aucun WARNING) :
+        - Statuts non gérés (OPEN, ON_HOLD, IN_ANALYZE, etc.).
+        - Statuts DONE / ACCEPTED : un récit déjà terminé n'a pas besoin de
+          rétro-équiper un Dossier de Preuves (décision PO — la période de
+          transition ne concerne que les récits encore actifs). Seuls
+          READY_FOR_DEV / READY_FOR_GROOMING / IN_DEV / IN_QA sont gatés.
         """
         text = story_file.read_text(encoding="utf-8")
         if not text.startswith("---"):
@@ -310,8 +314,6 @@ class StateMachineEngine:
             "READY_FOR_GROOMING",
             "IN_DEV",
             "IN_QA",
-            "DONE",
-            "ACCEPTED",
         )
         if status not in gated_statuses:
             return True

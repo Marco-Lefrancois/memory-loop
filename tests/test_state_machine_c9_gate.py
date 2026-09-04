@@ -74,3 +74,41 @@ def test_c9_gate_only_applies_to_ready_statuses(tmp_path):
 
     result = engine.validate_fact_dossier_gate(story_file, strict=True)
     assert result is True
+
+
+def test_c9_gate_exempts_done_status_even_without_dossier(tmp_path, capsys):
+    """
+    Décision PO : un récit déjà terminé (DONE) n'a pas besoin de rétro-
+    équiper un Dossier de Preuves — la période de transition ne concerne
+    que les récits encore actifs dans le cycle. Aucun WARNING ni exception,
+    même en mode strict.
+    """
+    story_file = _write_story(tmp_path, status="DONE")
+    engine = StateMachineEngine(str(story_file.parents[2]))
+
+    result = engine.validate_fact_dossier_gate(story_file, strict=True)
+    assert result is True
+    captured = capsys.readouterr()
+    assert "GATE C9" not in captured.out
+
+
+def test_c9_gate_exempts_accepted_status_even_without_dossier(tmp_path, capsys):
+    """Idem pour ACCEPTED (récit livré et accepté par le PO)."""
+    story_file = _write_story(tmp_path, status="ACCEPTED")
+    engine = StateMachineEngine(str(story_file.parents[2]))
+
+    result = engine.validate_fact_dossier_gate(story_file, strict=True)
+    assert result is True
+    captured = capsys.readouterr()
+    assert "GATE C9" not in captured.out
+
+
+def test_c9_gate_still_warns_for_active_ready_for_dev_status(tmp_path, capsys):
+    """Contre-épreuve : READY_FOR_DEV (récit encore actif, pas terminé) doit toujours avertir."""
+    story_file = _write_story(tmp_path, status="READY_FOR_DEV")
+    engine = StateMachineEngine(str(story_file.parents[2]))
+
+    result = engine.validate_fact_dossier_gate(story_file, strict=False)
+    assert result is True
+    captured = capsys.readouterr()
+    assert "GATE C9" in captured.out
