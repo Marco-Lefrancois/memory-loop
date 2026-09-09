@@ -15,7 +15,12 @@ COMMANDS: dict[str, dict] = {
         "handler": "project:handle_guide",
         "help": "Afficher le guide d'utilisation du pipeline CLI mLoop par phase",
         "args": [
-            {"name": "--phase", "type": str, "choices": ["sow", "spec", "plan", "build", "validate", "ship"], "help": "Filtrer par phase du cycle"},
+            {
+                "name": "--phase",
+                "type": str,
+                "choices": ["sow", "spec", "plan", "build", "validate", "ship"],
+                "help": "Filtrer par phase du cycle",
+            },
         ],
         "no_project": True,
     },
@@ -33,15 +38,48 @@ COMMANDS: dict[str, dict] = {
         "handler": "project:handle_focus",
         "help": "Verrouiller l'attention sur un récit spécifique",
         "args": [
-            {"name": "--story", "type": str, "required": True, "help": "Identifiant du récit"},
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit",
+            },
         ],
     },
     "vibe-check": {
         "handler": "project:handle_vibe_check",
         "help": "Guardrail pré-vol de la session (gouvernance de phase ADR-0339)",
         "args": [
-            {"name": "--stage", "type": str, "choices": ["init", "spec", "sow", "plan", "build", "validate", "ship", "run"], "help": "Étape du cycle de vie projet (auto-détectée par défaut)"},
-            {"name": "--phase", "type": str, "choices": ["init", "spec", "sow", "plan", "build", "validate", "ship", "run"], "help": "Alias de --stage"},
+            {
+                "name": "--stage",
+                "type": str,
+                "choices": [
+                    "init",
+                    "spec",
+                    "sow",
+                    "plan",
+                    "build",
+                    "validate",
+                    "ship",
+                    "run",
+                ],
+                "help": "Étape du cycle de vie projet (auto-détectée par défaut)",
+            },
+            {
+                "name": "--phase",
+                "type": str,
+                "choices": [
+                    "init",
+                    "spec",
+                    "sow",
+                    "plan",
+                    "build",
+                    "validate",
+                    "ship",
+                    "run",
+                ],
+                "help": "Alias de --stage",
+            },
         ],
     },
     "install-hooks": {
@@ -49,14 +87,39 @@ COMMANDS: dict[str, dict] = {
         "help": "Installer les hooks Git de protection (pre-commit vibe-check)",
         "args": [],
     },
-
+    "notebooklm": {
+        "handler": "notebooklm:handle_notebooklm",
+        "help": "Gestion, export SSOT et connexion au carnet Google NotebookLM officiel",
+        "args": [
+            {
+                "name": "--bundle",
+                "action": "store_true",
+                "help": "Générer les bundles Markdown prêts pour l'import NotebookLM",
+            },
+            {
+                "name": "--status",
+                "action": "store_true",
+                "help": "Vérifier l'état de l'authentification et les métadonnées",
+            },
+            {
+                "name": "--auth",
+                "action": "store_true",
+                "help": "Lancer l'assistant interactif de connexion Chrome",
+            },
+        ],
+        "no_project": True,
+    },
     # ── Analyse ────────────────────────────────────────────
     "sync": {
         "handler": "analysis:handle_sync",
         "help": "WikiFix + Synchronisation d'état et modélisation Hypergraphe",
         "args": [
             {"name": "--verbose", "action": "store_true", "help": "Affichage détaillé"},
-            {"name": "--incremental", "action": "store_true", "help": "Synchronisation différentielle incrémentale (ADR-0343)"},
+            {
+                "name": "--incremental",
+                "action": "store_true",
+                "help": "Synchronisation différentielle incrémentale (ADR-0343)",
+            },
         ],
     },
     "wikifix": {
@@ -64,14 +127,22 @@ COMMANDS: dict[str, dict] = {
         "help": "Alias de sync (audit de cohérence WikiFix)",
         "args": [
             {"name": "--verbose", "action": "store_true", "help": "Affichage détaillé"},
-            {"name": "--incremental", "action": "store_true", "help": "Synchronisation différentielle incrémentale (ADR-0343)"},
+            {
+                "name": "--incremental",
+                "action": "store_true",
+                "help": "Synchronisation différentielle incrémentale (ADR-0343)",
+            },
         ],
     },
     "export-obsidian": {
         "handler": "analysis:handle_export_obsidian",
         "help": "Exporter l'hypergraphe sous forme de coffre Obsidian avec wikilinks (ADR-0337 / ADR-0343)",
         "args": [
-            {"name": "--out", "type": str, "help": "Répertoire de sortie (défaut: docs/07-obsidian-vault)"},
+            {
+                "name": "--out",
+                "type": str,
+                "help": "Répertoire de sortie (défaut: docs/07-obsidian-vault)",
+            },
         ],
     },
     "hyper-query": {
@@ -102,9 +173,21 @@ COMMANDS: dict[str, dict] = {
         "handler": "analysis:handle_struct_check",
         "help": "Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence Gold Standard (pré-Sentinel)",
         "args": [
-            {"name": "--file", "type": str, "help": "Story .md à vérifier (tous les récits du backlog si absent)"},
-            {"name": "--strict", "action": "store_true", "help": "Mode strict : gold_standard_ref obligatoire, écart = BLOCKING"},
-            {"name": "--verbose", "action": "store_true", "help": "Affiche le détail de tous les checks (pass + fail)"},
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Story .md à vérifier (tous les récits du backlog si absent)",
+            },
+            {
+                "name": "--strict",
+                "action": "store_true",
+                "help": "Mode strict : gold_standard_ref obligatoire, écart = BLOCKING",
+            },
+            {
+                "name": "--verbose",
+                "action": "store_true",
+                "help": "Affiche le détail de tous les checks (pass + fail)",
+            },
         ],
     },
     "story-clean": {
@@ -116,15 +199,27 @@ COMMANDS: dict[str, dict] = {
         "handler": "analysis:handle_rubber_duck",
         "help": "Agent Sentinel — revue contradictoire de fond (Avocat du Diable avec discernement & rigueur)",
         "args": [
-            {"name": "--file", "type": str, "help": "Fichier spécifique à évaluer (optionnel)"},
-            {"name": "--suggest-patch", "action": "store_true", "help": "Générer et afficher des blocs Gherkin de remédiation chirurgicale"},
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Fichier spécifique à évaluer (optionnel)",
+            },
+            {
+                "name": "--suggest-patch",
+                "action": "store_true",
+                "help": "Générer et afficher des blocs Gherkin de remédiation chirurgicale",
+            },
         ],
     },
     "memo-search": {
         "handler": "memo_search:handle_memo_search",
         "help": "Sélectionner la stratégie mémoire ALMA optimale",
         "args": [
-            {"name": "--query", "type": str, "help": "Mot-clé ou domaine cible (ex: cmp, invest, maui)"},
+            {
+                "name": "--query",
+                "type": str,
+                "help": "Mot-clé ou domaine cible (ex: cmp, invest, maui)",
+            },
         ],
     },
     "blast": {
@@ -139,14 +234,24 @@ COMMANDS: dict[str, dict] = {
         "handler": "analysis:handle_chunk",
         "help": "Découpage sémantique d'un fichier Markdown (ADR-0323)",
         "args": [
-            {"name": "--file", "type": str, "required": True, "help": "Fichier Markdown à découper"},
+            {
+                "name": "--file",
+                "type": str,
+                "required": True,
+                "help": "Fichier Markdown à découper",
+            },
         ],
     },
     "agentic-extract": {
         "handler": "analysis:handle_agentic_extract",
         "help": "Extraction documentaire agentique multi-passes (ADR-0323)",
         "args": [
-            {"name": "--file", "type": str, "required": True, "help": "Fichier Markdown à analyser"},
+            {
+                "name": "--file",
+                "type": str,
+                "required": True,
+                "help": "Fichier Markdown à analyser",
+            },
         ],
     },
     "eval-harvest": {
@@ -164,9 +269,23 @@ COMMANDS: dict[str, dict] = {
         "no_project": True,
         "help": "Auditer la consommation de tokens et de coûts par interaction, projet et clé LiteLLM (ADR-0329)",
         "args": [
-            {"name": "--today", "action": "store_true", "help": "Filtrer uniquement sur la date du jour"},
-            {"name": "--date", "type": str, "default": None, "help": "Filtrer sur une date spécifique (YYYY-MM-DD)"},
-            {"name": "--top", "type": int, "default": 10, "help": "Nombre d'interactions les plus lourdes à afficher (défaut: 10)"},
+            {
+                "name": "--today",
+                "action": "store_true",
+                "help": "Filtrer uniquement sur la date du jour",
+            },
+            {
+                "name": "--date",
+                "type": str,
+                "default": None,
+                "help": "Filtrer sur une date spécifique (YYYY-MM-DD)",
+            },
+            {
+                "name": "--top",
+                "type": int,
+                "default": 10,
+                "help": "Nombre d'interactions les plus lourdes à afficher (défaut: 10)",
+            },
         ],
     },
     "supersession-sync": {
@@ -183,30 +302,63 @@ COMMANDS: dict[str, dict] = {
         "handler": "analysis:handle_parent_resolve",
         "help": "Résoudre le bloc parent contextuel d'un extrait ou d'une règle (ADR-0328)",
         "args": [
-            {"name": "--file", "type": str, "help": "Fichier source Markdown à inspecter"},
-            {"name": "--query", "type": str, "default": "", "help": "Extrait sémantique à localiser"},
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Fichier source Markdown à inspecter",
+            },
+            {
+                "name": "--query",
+                "type": str,
+                "default": "",
+                "help": "Extrait sémantique à localiser",
+            },
         ],
     },
     "story-clean": {
         "handler": "analysis:handle_story_clean",
         "help": "Nettoyer les sections de mémoire temporaires (Suite Mémoire, Notes de Traçabilité) des stories (ADR-0301)",
         "args": [
-            {"name": "--verbose", "action": "store_true", "help": "Afficher le détail de chaque fichier inspecté"},
+            {
+                "name": "--verbose",
+                "action": "store_true",
+                "help": "Afficher le détail de chaque fichier inspecté",
+            },
         ],
     },
-
     "extract": {
         "handler": "extraction:handle_extract",
         "help": "Extraction déclarative YAML vers Knowledge Abstracts structurés (ADR-0342)",
         "args": [
-            {"name": "--template", "type": str, "help": "Nom du template (business_rules, data_models, api_contracts, ui_matrix)"},
-            {"name": "--source", "type": str, "help": "Fichier Markdown source à distiller"},
-            {"name": "--target", "type": str, "help": "Répertoire de destination personnalisé (optionnel)"},
-            {"name": "--format", "type": str, "choices": ["markdown", "json"], "default": "markdown", "help": "Format de sortie (défaut: markdown)"},
-            {"name": "--list", "action": "store_true", "help": "Lister les templates d'extraction déclarative disponibles"},
+            {
+                "name": "--template",
+                "type": str,
+                "help": "Nom du template (business_rules, data_models, api_contracts, ui_matrix)",
+            },
+            {
+                "name": "--source",
+                "type": str,
+                "help": "Fichier Markdown source à distiller",
+            },
+            {
+                "name": "--target",
+                "type": str,
+                "help": "Répertoire de destination personnalisé (optionnel)",
+            },
+            {
+                "name": "--format",
+                "type": str,
+                "choices": ["markdown", "json"],
+                "default": "markdown",
+                "help": "Format de sortie (défaut: markdown)",
+            },
+            {
+                "name": "--list",
+                "action": "store_true",
+                "help": "Lister les templates d'extraction déclarative disponibles",
+            },
         ],
     },
-
     # ── Pipelines ──────────────────────────────────────────
     "ingest": {
         "handler": "pipeline:handle_ingest",
@@ -222,8 +374,47 @@ COMMANDS: dict[str, dict] = {
         "handler": "pipeline:handle_research",
         "help": "Session de recherche automatisée",
         "args": [
-            {"name": "--query", "type": str, "default": "", "help": "Sujet de recherche"},
+            {
+                "name": "--query",
+                "type": str,
+                "default": "",
+                "help": "Sujet de recherche",
+            },
             {"name": "--url", "type": str, "help": "URL explicite"},
+        ],
+    },
+    "deep-search": {
+        "handler": "deep_search:handle_deep_search",
+        "help": "Session de Deep Search autonome (Fact-Search local FTS5, recherche web et aspiration ciblée)",
+        "args": [
+            {
+                "name": "--query",
+                "type": str,
+                "required": True,
+                "help": "Sujet ou question de recherche approfondie",
+            },
+            {
+                "name": "--max-sources",
+                "type": int,
+                "default": 5,
+                "help": "Nombre maximal de sources web à aspirer (défaut: 5)",
+            },
+            {
+                "name": "--depth",
+                "type": int,
+                "default": 0,
+                "help": "Profondeur de découverte récursive (défaut: 0)",
+            },
+            {
+                "name": "--render-js",
+                "action": "store_true",
+                "help": "Forcer le rendu Playwright local pour les pages dynamiques",
+            },
+            {
+                "name": "--include-superseded",
+                "action": "store_true",
+                "help": "Inclure les documents obsolètes pénalisés dans Fact-Search",
+            },
         ],
     },
     "crawl": {
@@ -231,14 +422,62 @@ COMMANDS: dict[str, dict] = {
         "help": "Crawl intelligent d'une URL ou du backlog (LLMs.txt fast-path, cache TTL, regex filters)",
         "args": [
             {"name": "--url", "type": str, "help": "URL explicite à crawler"},
-            {"name": "--max-age", "type": int, "help": "Cache TTL en secondes (réutilise le cache sans appel réseau)"},
-            {"name": "--max-depth", "type": int, "default": 0, "help": "Profondeur maximale de découverte récursive (défaut: 0)"},
-            {"name": "--include", "type": str, "help": "Regex des chemins d'URL à inclure"},
-            {"name": "--exclude", "type": str, "help": "Regex des chemins d'URL à exclure"},
-            {"name": "--allow-subdomains", "action": "store_true", "help": "Autoriser le suivi des sous-domaines du domaine principal"},
-            {"name": "--no-llms-txt", "action": "store_true", "help": "Désactiver la détection prioritaire de llms.txt"},
-            {"name": "--ignore-query", "action": "store_true", "help": "Nettoyer et ignorer les paramètres d'URL pour le dédoublonnage"},
-            {"name": "--json-schema", "type": str, "help": "Chemin vers un JSON Schema pour extraction structurée LLM"},
+            {
+                "name": "--max-age",
+                "type": int,
+                "help": "Cache TTL en secondes (réutilise le cache sans appel réseau)",
+            },
+            {
+                "name": "--max-depth",
+                "type": int,
+                "default": 0,
+                "help": "Profondeur maximale de découverte récursive (défaut: 0)",
+            },
+            {
+                "name": "--include",
+                "type": str,
+                "help": "Regex des chemins d'URL à inclure",
+            },
+            {
+                "name": "--exclude",
+                "type": str,
+                "help": "Regex des chemins d'URL à exclure",
+            },
+            {
+                "name": "--allow-subdomains",
+                "action": "store_true",
+                "help": "Autoriser le suivi des sous-domaines du domaine principal",
+            },
+            {
+                "name": "--no-llms-txt",
+                "action": "store_true",
+                "help": "Désactiver la détection prioritaire de llms.txt",
+            },
+            {
+                "name": "--ignore-query",
+                "action": "store_true",
+                "help": "Nettoyer et ignorer les paramètres d'URL pour le dédoublonnage",
+            },
+            {
+                "name": "--json-schema",
+                "type": str,
+                "help": "Chemin vers un JSON Schema pour extraction structurée LLM",
+            },
+            {
+                "name": "--all-sources",
+                "action": "store_true",
+                "help": "Crawl global de toutes les sources du backlog/projet même si une URL explicite est fournie",
+            },
+            {
+                "name": "--render-js",
+                "action": "store_true",
+                "help": "Activer le rendu JavaScript via Playwright local pour les SPAs",
+            },
+            {
+                "name": "--no-github-tree",
+                "action": "store_true",
+                "help": "Désactiver l'exploration de l'arbre Git pour les dépôts GitHub",
+            },
         ],
     },
     "teach": {
@@ -250,9 +489,24 @@ COMMANDS: dict[str, dict] = {
         "handler": "pipeline:handle_update_story",
         "help": "Mettre à jour une section H2 spécifique d'une story de façon AST-déterministe",
         "args": [
-            {"name": "--story", "type": str, "required": True, "help": "Chemin du récit (ex: backlog/stories/FOOD/US-08-FOOD.md)"},
-            {"name": "--section", "type": str, "required": True, "help": "Titre de la section H2 (ex: 'Règles d'affaires')"},
-            {"name": "--content", "type": str, "required": True, "help": "Nouveau contenu Markdown de la section"},
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Chemin du récit (ex: backlog/stories/FOOD/US-08-FOOD.md)",
+            },
+            {
+                "name": "--section",
+                "type": str,
+                "required": True,
+                "help": "Titre de la section H2 (ex: 'Règles d'affaires')",
+            },
+            {
+                "name": "--content",
+                "type": str,
+                "required": True,
+                "help": "Nouveau contenu Markdown de la section",
+            },
         ],
     },
     "memory-hygiene": {
@@ -260,7 +514,6 @@ COMMANDS: dict[str, dict] = {
         "help": "Balayage de confiance de la mémoire vive",
         "args": [],
     },
-
     # ── Architecture ───────────────────────────────────────
     "goal-cascade": {
         "handler": "architecture:handle_goal_cascade",
@@ -291,7 +544,11 @@ COMMANDS: dict[str, dict] = {
         "help": "Générer un Énoncé des Travaux (SOW) et Évaluation Budgétaire (T-Shirt Size)",
         "args": [
             {"name": "--title", "type": str, "help": "Titre du projet"},
-            {"name": "--size", "type": str, "help": "Taille T-Shirt cible (xs, s, m, M, l, L, xl)"},
+            {
+                "name": "--size",
+                "type": str,
+                "help": "Taille T-Shirt cible (xs, s, m, M, l, L, xl)",
+            },
         ],
     },
     "to-spec": {
@@ -325,7 +582,6 @@ COMMANDS: dict[str, dict] = {
             {"name": "--symptom", "type": str, "help": "Symptôme"},
         ],
     },
-
     # ── Validation ─────────────────────────────────────────
     "aoep": {
         "handler": "validation:handle_aoep",
@@ -351,18 +607,30 @@ COMMANDS: dict[str, dict] = {
         "handler": "validation:handle_plugin_validate",
         "help": "Valider la conformité Agent Plugin 1.0",
         "args": [
-            {"name": "--plugin-root", "type": str, "help": "Racine du plugin (défaut: .agents/)"},
-            {"name": "--strict", "action": "store_true", "help": "Mode strict (warnings = erreurs)"},
+            {
+                "name": "--plugin-root",
+                "type": str,
+                "help": "Racine du plugin (défaut: .agents/)",
+            },
+            {
+                "name": "--strict",
+                "action": "store_true",
+                "help": "Mode strict (warnings = erreurs)",
+            },
         ],
     },
-
     # ── Tooling ────────────────────────────────────────────
     "drawdb": {
         "handler": "tooling:handle_drawdb",
         "help": "Pipeline DrawDB (serveur, export, import, sync)",
         "no_project": True,
         "args": [
-            {"name": "--action", "type": str, "choices": ["serve", "export", "import", "sync"], "default": "serve"},
+            {
+                "name": "--action",
+                "type": str,
+                "choices": ["serve", "export", "import", "sync"],
+                "default": "serve",
+            },
             {"name": "--input", "type": str, "help": "Fichier d'entrée"},
             {"name": "--output", "type": str, "help": "Fichier de sortie"},
             {"name": "--port", "type": int, "default": 8080},
@@ -372,16 +640,36 @@ COMMANDS: dict[str, dict] = {
         "handler": "tooling:handle_optimize",
         "help": "Optimisation RHO",
         "args": [
-            {"name": "--keyword", "type": str, "required": True, "help": "Mot-clé pour RHO optimize"},
-            {"name": "--msg", "type": str, "required": True, "help": "Message pour RHO optimize"},
-            {"name": "--scope", "type": str, "choices": ["project", "global"], "default": "project", "help": "Portée"},
+            {
+                "name": "--keyword",
+                "type": str,
+                "required": True,
+                "help": "Mot-clé pour RHO optimize",
+            },
+            {
+                "name": "--msg",
+                "type": str,
+                "required": True,
+                "help": "Message pour RHO optimize",
+            },
+            {
+                "name": "--scope",
+                "type": str,
+                "choices": ["project", "global"],
+                "default": "project",
+                "help": "Portée",
+            },
         ],
     },
     "svg-optimize": {
         "handler": "tooling:handle_svg_optimize",
         "help": "Optimisation et minification des fichiers SVG",
         "args": [
-            {"name": "--input", "type": str, "help": "Fichier, dossier ou motif (*.svg)"},
+            {
+                "name": "--input",
+                "type": str,
+                "help": "Fichier, dossier ou motif (*.svg)",
+            },
         ],
     },
     "hill-climb": {
@@ -393,12 +681,41 @@ COMMANDS: dict[str, dict] = {
         "handler": "tooling:handle_archify",
         "help": "Générer et valider des diagrammes d'architecture interactifs vectoriels (Archify)",
         "args": [
-            {"name": "--file", "type": str, "required": True, "help": "Chemin du fichier JSON de spécification"},
-            {"name": "--output", "type": str, "help": "Chemin du fichier HTML de sortie (défaut: même nom .html)"},
-            {"name": "--type", "type": str, "default": "architecture", "choices": ["architecture", "flow", "sequence", "mindmap"], "help": "Type de diagramme"},
-            {"name": "--quality", "type": str, "default": "showcase", "choices": ["draft", "standard", "showcase"], "help": "Profil de qualité"},
-            {"name": "--validate-only", "action": "store_true", "help": "Effectuer uniquement la validation Showcase sans générer le HTML"},
-            {"name": "--open", "action": "store_true", "help": "Ouvrir automatiquement dans le navigateur par défaut"},
+            {
+                "name": "--file",
+                "type": str,
+                "required": True,
+                "help": "Chemin du fichier JSON de spécification",
+            },
+            {
+                "name": "--output",
+                "type": str,
+                "help": "Chemin du fichier HTML de sortie (défaut: même nom .html)",
+            },
+            {
+                "name": "--type",
+                "type": str,
+                "default": "architecture",
+                "choices": ["architecture", "flow", "sequence", "mindmap"],
+                "help": "Type de diagramme",
+            },
+            {
+                "name": "--quality",
+                "type": str,
+                "default": "showcase",
+                "choices": ["draft", "standard", "showcase"],
+                "help": "Profil de qualité",
+            },
+            {
+                "name": "--validate-only",
+                "action": "store_true",
+                "help": "Effectuer uniquement la validation Showcase sans générer le HTML",
+            },
+            {
+                "name": "--open",
+                "action": "store_true",
+                "help": "Ouvrir automatiquement dans le navigateur par défaut",
+            },
         ],
         "no_project": True,
     },
@@ -406,16 +723,24 @@ COMMANDS: dict[str, dict] = {
         "handler": "tooling:handle_drawdb",
         "help": "Lancer le hub souverain local de visualisation de schéma de base de données (ERD & Tables)",
         "args": [
-            {"name": "--port", "type": int, "default": 8080, "help": "Port d'écoute du serveur local (défaut: 8080)"},
-            {"name": "--no-open", "action": "store_true", "help": "Ne pas ouvrir automatiquement le navigateur"},
+            {
+                "name": "--port",
+                "type": int,
+                "default": 8080,
+                "help": "Port d'écoute du serveur local (défaut: 8080)",
+            },
+            {
+                "name": "--no-open",
+                "action": "store_true",
+                "help": "Ne pas ouvrir automatiquement le navigateur",
+            },
         ],
         "no_project": True,
     },
-
-
     # ── Export ─────────────────────────────────────────────
     "jira_sync": {
         "handler": "export:handle_jira_sync",
+        "aliases": ["jira-sync"],
         "help": (
             "Synchronisation ciblée Jira Cloud (Fail-Closed). "
             "Requiert --story ou --stories pour cibler des tickets. "
@@ -475,11 +800,37 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "jira-read": {
+        "handler": "export:handle_jira_read",
+        "help": (
+            "Lecture Read-Only d'un ticket Jira Cloud (API v3) : restitue la description "
+            "ADF convertie en Markdown lisible (diff Jira <-> récit local). Aucune écriture."
+        ),
+        "args": [
+            {
+                "name": "--issue",
+                "type": str,
+                "default": None,
+                "help": "Clé Jira du ticket à lire (ex: COUVBOIRE-1062).",
+            },
+            {
+                "name": "--out",
+                "type": str,
+                "default": None,
+                "help": "Chemin de sortie Markdown optionnel. Si absent, affiche dans la console.",
+            },
+        ],
+        "no_project": True,
+    },
     "plugin-export": {
         "handler": "export:handle_plugin_export",
         "help": "Exporter un package Agent Plugin 1.0 portable",
         "args": [
-            {"name": "--output", "type": str, "help": "Répertoire de sortie pour l'export"},
+            {
+                "name": "--output",
+                "type": str,
+                "help": "Répertoire de sortie pour l'export",
+            },
         ],
     },
     "cycle-status": {
@@ -497,7 +848,12 @@ COMMANDS: dict[str, dict] = {
         "handler": "export:handle_unlearn",
         "help": "Désapprentissage d'un concept",
         "args": [
-            {"name": "--concept", "type": str, "required": True, "help": "Concept à désapprendre"},
+            {
+                "name": "--concept",
+                "type": str,
+                "required": True,
+                "help": "Concept à désapprendre",
+            },
         ],
     },
     "canvas": {
@@ -505,7 +861,6 @@ COMMANDS: dict[str, dict] = {
         "help": "Générer et synchroniser les toiles interactives 2D Obsidian Canvas (.canvas) (ADR-0337)",
         "args": [],
     },
-
     # ── Skill Registry (SEP-2640 / MLOOP-011-BE) ───────────
     "skill-list": {
         "handler": "skill:handle_skill_list",
@@ -516,60 +871,117 @@ COMMANDS: dict[str, dict] = {
         "handler": "skill:handle_skill_invoke",
         "help": "Invoquer une compétence via son URI skill:// (SEP-2640)",
         "args": [
-            {"name": "--uri", "type": str, "required": True, "help": "URI de la compétence (ex: skill://preload-context)"},
+            {
+                "name": "--uri",
+                "type": str,
+                "required": True,
+                "help": "URI de la compétence (ex: skill://preload-context)",
+            },
         ],
     },
-
     # ── Code Intelligence (CodeGraph - ADR-0204) ───────────
     "code-init": {
         "handler": "code_intelligence:handle_code_init",
         "help": "Initialiser l'index CodeGraph sur le code source",
         "args": [
-            {"name": "--path", "type": str, "help": "Chemin explicite du code source à indexer"},
+            {
+                "name": "--path",
+                "type": str,
+                "help": "Chemin explicite du code source à indexer",
+            },
         ],
     },
     "code-explore": {
         "handler": "code_intelligence:handle_code_explore",
         "help": "Explorer le code source via CodeGraph (AST & Call Paths)",
         "args": [
-            {"name": "--query", "type": str, "required": True, "help": "Symbole, méthode ou question d'architecture"},
-            {"name": "--path", "type": str, "help": "Chemin explicite du projet source"},
+            {
+                "name": "--query",
+                "type": str,
+                "required": True,
+                "help": "Symbole, méthode ou question d'architecture",
+            },
+            {
+                "name": "--path",
+                "type": str,
+                "help": "Chemin explicite du projet source",
+            },
         ],
     },
     "code-impact": {
         "handler": "code_intelligence:handle_code_impact",
         "help": "Calculer le rayon d'impact (Blast Radius) d'un symbole",
         "args": [
-            {"name": "--symbol", "type": str, "required": True, "help": "Nom de la classe, méthode ou fonction"},
-            {"name": "--path", "type": str, "help": "Chemin explicite du projet source"},
+            {
+                "name": "--symbol",
+                "type": str,
+                "required": True,
+                "help": "Nom de la classe, méthode ou fonction",
+            },
+            {
+                "name": "--path",
+                "type": str,
+                "help": "Chemin explicite du projet source",
+            },
         ],
     },
     "code-affected": {
         "handler": "code_intelligence:handle_code_affected",
         "help": "Identifier les tests affectés par les changements de code",
         "args": [
-            {"name": "--files", "nargs": "*", "help": "Liste de fichiers sources modifiés"},
-            {"name": "--path", "type": str, "help": "Chemin explicite du projet source"},
+            {
+                "name": "--files",
+                "nargs": "*",
+                "help": "Liste de fichiers sources modifiés",
+            },
+            {
+                "name": "--path",
+                "type": str,
+                "help": "Chemin explicite du projet source",
+            },
         ],
     },
     "code-status": {
         "handler": "code_intelligence:handle_code_status",
         "help": "Afficher les statistiques de l'index CodeGraph",
         "args": [
-            {"name": "--path", "type": str, "help": "Chemin explicite du projet source"},
+            {
+                "name": "--path",
+                "type": str,
+                "help": "Chemin explicite du projet source",
+            },
         ],
     },
-
     # ── Runnable Gates & Depth Tree (ADR-0341) ─────────────
     "gates": {
         "handler": "gates:handle_gates",
         "help": "Exécuter, vérifier ou auditer les portails d'acceptation (Runnable Gates - ADR-0341)",
         "args": [
-            {"name": "--file", "type": str, "help": "Chemin du fichier de gates .gates.md spécifique"},
-            {"name": "--scope", "type": str, "help": "Filtrer sur un périmètre ou sous-projet"},
-            {"name": "--status", "action": "store_true", "help": "Afficher le statut sans exécuter les oracles"},
-            {"name": "--reverify", "action": "store_true", "help": "Re-vérification stricte de tous les oracles"},
-            {"name": "--lint", "action": "store_true", "help": "Audit de qualité des oracles anti-tautologies"},
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Chemin du fichier de gates .gates.md spécifique",
+            },
+            {
+                "name": "--scope",
+                "type": str,
+                "help": "Filtrer sur un périmètre ou sous-projet",
+            },
+            {
+                "name": "--status",
+                "action": "store_true",
+                "help": "Afficher le statut sans exécuter les oracles",
+            },
+            {
+                "name": "--reverify",
+                "action": "store_true",
+                "help": "Re-vérification stricte de tous les oracles",
+            },
+            {
+                "name": "--lint",
+                "action": "store_true",
+                "help": "Audit de qualité des oracles anti-tautologies",
+            },
         ],
     },
     "tree": {
@@ -580,16 +992,42 @@ COMMANDS: dict[str, dict] = {
             {"name": "--scope", "type": str, "help": "Filtrer sur un scope"},
         ],
     },
-
     # ── Herdr Runtime & Subagents (ADR-0029 / ADR-0205) ────
     "worker-spawn": {
         "handler": "worker:handle_worker_spawn",
         "help": "Instancier un sous-agent Herdr isolé pour un récit spécifique (Clean Slate)",
         "args": [
-            {"name": "--story", "type": str, "required": True, "help": "Identifiant du récit (ex: MMA-4651 ou US-01-FOOD)"},
-            {"name": "--kind", "type": str, "default": "opencode", "help": "Type d'agent (opencode, pi, omp, agy)"},
-            {"name": "--model", "type": str, "default": None, "help": "Modèle spécifique sur LiteLLM (ex: nmedia_cloud/claude-opus-4.8)"},
-            {"name": "--task-type", "type": str, "default": None, "choices": ["deepening", "validation", "deepsearch", "build", "compaction"], "help": "Type de mission pour sélection dynamique du meilleur modèle"},
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit (ex: MMA-4651 ou US-01-FOOD)",
+            },
+            {
+                "name": "--kind",
+                "type": str,
+                "default": "opencode",
+                "help": "Type d'agent (opencode, pi, omp, agy)",
+            },
+            {
+                "name": "--model",
+                "type": str,
+                "default": None,
+                "help": "Modèle spécifique sur LiteLLM (ex: nmedia_cloud/claude-opus-4.8)",
+            },
+            {
+                "name": "--task-type",
+                "type": str,
+                "default": None,
+                "choices": [
+                    "deepening",
+                    "validation",
+                    "deepsearch",
+                    "build",
+                    "compaction",
+                ],
+                "help": "Type de mission pour sélection dynamique du meilleur modèle",
+            },
         ],
     },
     "worker-status": {
@@ -601,18 +1039,140 @@ COMMANDS: dict[str, dict] = {
         "handler": "worker:handle_worker_harvest",
         "help": "Moissonner les preuves d'exécution PTY du worker et mettre à jour l'EvidencePack",
         "args": [
-            {"name": "--story", "type": str, "required": True, "help": "Identifiant du récit"},
-            {"name": "--lines", "type": int, "default": 150, "help": "Nombre de lignes de log PTY à moissonner"},
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit",
+            },
+            {
+                "name": "--lines",
+                "type": int,
+                "default": 150,
+                "help": "Nombre de lignes de log PTY à moissonner",
+            },
         ],
     },
     "worker-close": {
         "handler": "worker:handle_worker_close",
         "help": "Fermer le volet d'un worker Herdr et libérer ses ressources",
         "args": [
-            {"name": "--story", "type": str, "required": True, "help": "Identifiant du récit ou nom du volet"},
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit ou nom du volet",
+            },
         ],
     },
-
+    "worker-reap": {
+        "handler": "worker:handle_worker_reap",
+        "help": "Purger les volets et agents orphelins ou inactifs (ADR-0355 Stall Detection)",
+        "args": [
+            {
+                "name": "--timeout",
+                "type": int,
+                "default": 300,
+                "help": "Délai d'inactivité en secondes pour considérer un worker comme bloqué",
+            },
+            {
+                "name": "--force",
+                "action": "store_true",
+                "help": "Forcer la fermeture des volets sans attendre de confirmation",
+            },
+        ],
+    },
+    "worker-handoff-test": {
+        "handler": "worker:handle_worker_handoff_test",
+        "help": "Tester la complétude et clarté d'une story par un dev naïf (Zero-Ask Simulator)",
+        "args": [
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant de la story à tester",
+            },
+            {
+                "name": "--dry-run",
+                "action": "store_true",
+                "help": "Mode simulation sans appel de modèle",
+            },
+        ],
+    },
+    "worker-legacy-mine": {
+        "handler": "worker:handle_worker_legacy_mine",
+        "help": "Extraire les règles métier et calculs d'une base de code legacy",
+        "args": [
+            {
+                "name": "--source",
+                "type": str,
+                "required": True,
+                "help": "Chemin du dossier source legacy",
+            },
+            {
+                "name": "--domain",
+                "type": str,
+                "default": None,
+                "help": "Nom de domaine métier",
+            },
+            {
+                "name": "--dry-run",
+                "action": "store_true",
+                "help": "Mode simulation sans appel de modèle",
+            },
+        ],
+    },
+    "worker-shadow-estimate": {
+        "handler": "worker:handle_worker_shadow_estimate",
+        "help": "Générer un contre-chiffrage contradictoire pessimiste basé sur les risques",
+        "args": [
+            {
+                "name": "--epic",
+                "type": str,
+                "default": "EPIC-GLOBAL",
+                "help": "Identifiant de l'Epic ou SOW",
+            },
+            {
+                "name": "--desc",
+                "type": str,
+                "default": None,
+                "help": "Description ou contexte du scope",
+            },
+            {
+                "name": "--dry-run",
+                "action": "store_true",
+                "help": "Mode simulation sans appel de modèle",
+            },
+        ],
+    },
+    "worker-visual-dissect": {
+        "handler": "worker:handle_worker_visual_dissect",
+        "help": "Dissecter une maquette et extraire la matrice des 8 états UI",
+        "args": [
+            {
+                "name": "--asset",
+                "type": str,
+                "required": True,
+                "help": "Chemin du fichier maquette (SVG, PNG)",
+            },
+            {
+                "name": "--dry-run",
+                "action": "store_true",
+                "help": "Mode simulation sans appel de modèle",
+            },
+        ],
+    },
+    "worker-janitor-watch": {
+        "handler": "worker:handle_worker_janitor_watch",
+        "help": "Auditer silencieusement l'intégrité de la mémoire et des liens",
+        "args": [
+            {
+                "name": "--dry-run",
+                "action": "store_true",
+                "help": "Mode simulation sans appel de modèle",
+            },
+        ],
+    },
     # ── Daemon & Architecture Codex Extensions ─────────────
     "app-server": {
         "handler": "daemon:handle_app_server",
@@ -630,7 +1190,6 @@ COMMANDS: dict[str, dict] = {
         "help": "Lister les manifestes de rôles agentiques déclaratifs disponibles",
         "args": [],
     },
-
     # ── Semantic Cache & LLM Optimizations (ADR-0336) ─────
     "cache-stats": {
         "handler": "cache:handle_cache_stats",
@@ -642,20 +1201,78 @@ COMMANDS: dict[str, dict] = {
         "handler": "cache:handle_cache_clear",
         "help": "Effacer le cache sémantique déterministe LLM",
         "args": [
-            {"name": "--model", "type": str, "default": None, "help": "Modèle spécifique à purger"},
+            {
+                "name": "--model",
+                "type": str,
+                "default": None,
+                "help": "Modèle spécifique à purger",
+            },
         ],
         "no_project": True,
     },
-
-    # ── Fact-Check & NLI Ground Truth (ADR-0326) ──────────
+    # ── Fact-Check & NLI Ground Truth (ADR-0326 / ADR-0352) ──
     "fact-check": {
         "handler": "fact_check:handle_fact_check",
         "help": "Exécuter l'audit Fact-Check NLI sur une User Story et émettre son certificat",
         "args": [
-            {"name": "--story", "type": str, "help": "Identifiant ou requête vers le récit à auditer"},
-            {"name": "--strict", "action": "store_true", "help": "Mode strict : échoue si des exigences sont sans preuve"},
+            {
+                "name": "--story",
+                "type": str,
+                "help": "Identifiant ou requête vers le récit à auditer",
+            },
+            {
+                "name": "--strict",
+                "action": "store_true",
+                "help": "Mode strict : échoue si des exigences sont sans preuve",
+            },
         ],
     },
+    "fact-search": {
+        "handler": "fact_search:handle_fact_search",
+        "help": "Recherche factuelle haute précision dans l'index FTS5 SSOT documentaire",
+        "args": [
+            {
+                "name": "--query",
+                "type": str,
+                "required": True,
+                "help": "Requête de recherche factuelle",
+            },
+            {
+                "name": "--limit",
+                "type": int,
+                "default": 5,
+                "help": "Nombre maximal de faits à retourner (défaut: 5)",
+            },
+            {
+                "name": "--layer",
+                "type": str,
+                "default": None,
+                "help": "Filtrer par couche SSOT (ex: 01-architecture, 02-business-rules)",
+            },
+            {
+                "name": "--no-synonyms",
+                "action": "store_true",
+                "help": "Désactiver l'expansion synonymique automatique",
+            },
+            {
+                "name": "--include-superseded",
+                "action": "store_true",
+                "help": "Inclure les documents obsolètes/remplacés avec pénalité",
+            },
+        ],
+        "no_project": True,
+    },
+    # ── Verification Leakage Gate (ADR-0354) ────────────────
+    "check-leakage": {
+        "handler": "gates:handle_check_leakage",
+        "help": "Vérifier l'absence de fuites de spécification et assertions tautologiques (ADR-0354)",
+        "args": [
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Fichier de test spécifique à auditer",
+            },
+        ],
+        "no_project": True,
+    },
 }
-
-

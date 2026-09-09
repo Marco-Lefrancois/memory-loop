@@ -3,6 +3,7 @@ Sous-module Jira : adf_converter.py
 Responsabilité : Conversion de Markdown vers l'Atlassian Document Format (ADF)
 requis par l'API Jira Cloud v3 pour un rendu premium et fidèle.
 """
+
 import re
 
 
@@ -13,11 +14,11 @@ def parse_inline_text(text: str) -> list:
     en utilisant la structure JSON sémantique d'ADF.
     """
     pattern = re.compile(
-        r'(\*\*(.*?)\*\*)|'           # 1, 2: **bold**
-        r'(\*(.*?)\*)|'               # 3, 4: *italic/bold*
-        r'(_(.*?)_)|'                 # 5, 6: _italic_
-        r'(`([^`]+)`)|'               # 7, 8: `code`
-        r'(\[([^\]]+)\]\(([^)]+)\))'  # 9, 10, 11: [text](url)
+        r"(\*\*(.*?)\*\*)|"  # 1, 2: **bold**
+        r"(\*(.*?)\*)|"  # 3, 4: *italic/bold*
+        r"(_(.*?)_)|"  # 5, 6: _italic_
+        r"(`([^`]+)`)|"  # 7, 8: `code`
+        r"(\[([^\]]+)\]\(([^)]+)\))"  # 9, 10, 11: [text](url)
     )
 
     nodes = []
@@ -26,10 +27,7 @@ def parse_inline_text(text: str) -> list:
     for match in pattern.finditer(text):
         start, end = match.span()
         if start > last_idx:
-            nodes.append({
-                "type": "text",
-                "text": text[last_idx:start]
-            })
+            nodes.append({"type": "text", "text": text[last_idx:start]})
 
         g_bold = match.group(1)
         g_italic_star = match.group(3)
@@ -38,46 +36,34 @@ def parse_inline_text(text: str) -> list:
         g_link = match.group(9)
 
         if g_bold:
-            nodes.append({
-                "type": "text",
-                "text": match.group(2),
-                "marks": [{"type": "strong"}]
-            })
+            nodes.append(
+                {"type": "text", "text": match.group(2), "marks": [{"type": "strong"}]}
+            )
         elif g_italic_star:
-            nodes.append({
-                "type": "text",
-                "text": match.group(4),
-                "marks": [{"type": "em"}]
-            })
+            nodes.append(
+                {"type": "text", "text": match.group(4), "marks": [{"type": "em"}]}
+            )
         elif g_italic_under:
-            nodes.append({
-                "type": "text",
-                "text": match.group(6),
-                "marks": [{"type": "em"}]
-            })
+            nodes.append(
+                {"type": "text", "text": match.group(6), "marks": [{"type": "em"}]}
+            )
         elif g_code:
-            nodes.append({
-                "type": "text",
-                "text": match.group(8),
-                "marks": [{"type": "code"}]
-            })
+            nodes.append(
+                {"type": "text", "text": match.group(8), "marks": [{"type": "code"}]}
+            )
         elif g_link:
-            nodes.append({
-                "type": "text",
-                "text": match.group(10),
-                "marks": [{
-                    "type": "link",
-                    "attrs": {"href": match.group(11)}
-                }]
-            })
+            nodes.append(
+                {
+                    "type": "text",
+                    "text": match.group(10),
+                    "marks": [{"type": "link", "attrs": {"href": match.group(11)}}],
+                }
+            )
 
         last_idx = end
 
     if last_idx < len(text):
-        nodes.append({
-            "type": "text",
-            "text": text[last_idx:]
-        })
+        nodes.append({"type": "text", "text": text[last_idx:]})
 
     return [n for n in nodes if n.get("text") != ""]
 
@@ -102,65 +88,77 @@ def markdown_to_adf(md: str) -> dict:
     list_type = None
     list_items = []
 
+    # Suivi de la numérotation continue des listes ordonnées (Bug 1) :
+    # quand une orderedList est interrompue par un bloc (code, citation, paragraphe)
+    # puis reprend, la seconde liste doit démarrer à l'ordinal suivant (attrs.order)
+    # plutôt que de redémarrer à 1.
+    ordered_counter = 0
+    prev_block_was_ordered = False
+
     paragraph_nodes = []
 
     def flush_paragraph():
         nonlocal paragraph_nodes
         if not paragraph_nodes:
             return
-        adf_content.append({
-            "type": "paragraph",
-            "content": paragraph_nodes
-        })
+        adf_content.append({"type": "paragraph", "content": paragraph_nodes})
         paragraph_nodes = []
 
     def flush_list():
-        nonlocal list_type, list_items
+        nonlocal list_type, list_items, ordered_counter, prev_block_was_ordered
         if not list_items:
             return
 
         def build_list(items, root_type):
             if not items:
                 return None
-            
+
             list_node = {"type": root_type, "content": []}
-            
+
             i = 0
             while i < len(items):
                 indent, text = items[i]
-                
+
                 # Regrouper tous les enfants ayant une indentation strictement supérieure
                 children = []
                 j = i + 1
                 while j < len(items) and items[j][0] > indent:
                     children.append(items[j])
                     j += 1
-                
+
                 list_item = {
                     "type": "listItem",
                     "content": [
-                        {
-                            "type": "paragraph",
-                            "content": parse_inline_text(text)
-                        }
-                    ]
+                        {"type": "paragraph", "content": parse_inline_text(text)}
+                    ],
                 }
-                
+
                 if children:
                     # Les sous-listes sont toujours des bulletList par défaut dans ce parseur simplifié
                     child_list = build_list(children, "bulletList")
                     if child_list:
                         list_item["content"].append(child_list)
-                        
+
                 list_node["content"].append(list_item)
                 i = j
-                
+
             return list_node
 
         adf_node = build_list(list_items, list_type)
         if adf_node:
+            if list_type == "orderedList":
+                # Nombre d'items de premier niveau de cette liste ordonnée
+                top_level_count = len(adf_node.get("content", []))
+                if prev_block_was_ordered and ordered_counter > 0:
+                    # Reprise d'une numérotation interrompue : démarrer à l'ordinal suivant
+                    adf_node.setdefault("attrs", {})["order"] = ordered_counter + 1
+                ordered_counter += top_level_count
+                prev_block_was_ordered = True
+            else:
+                ordered_counter = 0
+                prev_block_was_ordered = False
             adf_content.append(adf_node)
-            
+
         list_items = []
         list_type = None
 
@@ -174,24 +172,17 @@ def markdown_to_adf(md: str) -> dict:
             row_cells = []
             cell_type = "tableHeader" if is_header else "tableCell"
             for cell in cells:
-                row_cells.append({
-                    "type": cell_type,
-                    "content": [
-                        {
-                            "type": "paragraph",
-                            "content": parse_inline_text(cell)
-                        }
-                    ]
-                })
-            adf_rows.append({
-                "type": "tableRow",
-                "content": row_cells
-            })
+                row_cells.append(
+                    {
+                        "type": cell_type,
+                        "content": [
+                            {"type": "paragraph", "content": parse_inline_text(cell)}
+                        ],
+                    }
+                )
+            adf_rows.append({"type": "tableRow", "content": row_cells})
 
-        adf_content.append({
-            "type": "table",
-            "content": adf_rows
-        })
+        adf_content.append({"type": "table", "content": adf_rows})
         table_rows.clear()
         in_table = False
 
@@ -217,7 +208,7 @@ def markdown_to_adf(md: str) -> dict:
                 content_text = "\n".join(code_lines)
                 code_node = {
                     "type": "codeBlock",
-                    "content": [{"type": "text", "text": content_text}]
+                    "content": [{"type": "text", "text": content_text}],
                 }
                 if attrs:
                     code_node["attrs"] = attrs
@@ -248,19 +239,24 @@ def markdown_to_adf(md: str) -> dict:
             flush_paragraph()
             flush_list()
             flush_table()
-            match = re.match(r'^(#+)\s+(.*)$', stripped)
+            # Un titre rompt toute séquence de numérotation ordonnée
+            ordered_counter = 0
+            prev_block_was_ordered = False
+            match = re.match(r"^(#+)\s+(.*)$", stripped)
             if match:
                 level = len(match.group(1))
                 title_text = match.group(2)
-                adf_content.append({
-                    "type": "heading",
-                    "attrs": {"level": level},
-                    "content": parse_inline_text(title_text)
-                })
+                adf_content.append(
+                    {
+                        "type": "heading",
+                        "attrs": {"level": level},
+                        "content": parse_inline_text(title_text),
+                    }
+                )
                 continue
 
         # 4. Bullet lists
-        bullet_match = re.match(r'^(\s*)([-*])\s+(.*)$', line)
+        bullet_match = re.match(r"^(\s*)([-*])\s+(.*)$", line)
         if bullet_match:
             flush_paragraph()
             flush_table()
@@ -273,7 +269,7 @@ def markdown_to_adf(md: str) -> dict:
             continue
 
         # 5. Ordered lists
-        ordered_match = re.match(r'^(\s*)\d+\.\s+(.*)$', line)
+        ordered_match = re.match(r"^(\s*)\d+\.\s+(.*)$", line)
         if ordered_match:
             flush_paragraph()
             flush_table()
@@ -301,9 +297,9 @@ def markdown_to_adf(md: str) -> dict:
             flush_table()
             content = stripped[1:].strip()
             callout_match = re.match(
-                r'^\[!(NOTE|WARNING|TIP|IMPORTANT|CAUTION)\]\s*(.*)$',
+                r"^\[!(NOTE|WARNING|TIP|IMPORTANT|CAUTION)\]\s*(.*)$",
                 content,
-                re.IGNORECASE
+                re.IGNORECASE,
             )
             if callout_match:
                 adm_type = callout_match.group(1).upper()
@@ -314,34 +310,41 @@ def markdown_to_adf(md: str) -> dict:
                     "TIP": "success",
                     "IMPORTANT": "info",
                     "WARNING": "note",
-                    "CAUTION": "error"
+                    "CAUTION": "error",
                 }
                 panel_type = panel_map.get(adm_type, "info")
 
                 panel_content = []
                 if title:
-                    panel_content.append({
-                        "type": "paragraph",
-                        "content": [{
-                            "type": "text",
-                            "text": f"{adm_type}: {title}",
-                            "marks": [{"type": "strong"}]
-                        }]
-                    })
+                    panel_content.append(
+                        {
+                            "type": "paragraph",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": f"{adm_type}: {title}",
+                                    "marks": [{"type": "strong"}],
+                                }
+                            ],
+                        }
+                    )
 
-                adf_content.append({
-                    "type": "panel",
-                    "attrs": {"panelType": panel_type},
-                    "content": panel_content
-                })
+                adf_content.append(
+                    {
+                        "type": "panel",
+                        "attrs": {"panelType": panel_type},
+                        "content": panel_content,
+                    }
+                )
             else:
-                adf_content.append({
-                    "type": "blockquote",
-                    "content": [{
-                        "type": "paragraph",
-                        "content": parse_inline_text(content)
-                    }]
-                })
+                adf_content.append(
+                    {
+                        "type": "blockquote",
+                        "content": [
+                            {"type": "paragraph", "content": parse_inline_text(content)}
+                        ],
+                    }
+                )
             continue
 
         # 8. Regular lines — groupées dans un paragraphe compact avec hardBreaks
@@ -358,8 +361,4 @@ def markdown_to_adf(md: str) -> dict:
     flush_list()
     flush_table()
 
-    return {
-        "version": 1,
-        "type": "doc",
-        "content": adf_content
-    }
+    return {"version": 1, "type": "doc", "content": adf_content}
