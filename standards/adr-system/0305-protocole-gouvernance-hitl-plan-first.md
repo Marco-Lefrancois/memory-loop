@@ -24,9 +24,14 @@ Le déclenchement d'un plan bloquant obéit désormais à une **matrice de criti
 ### 2.2 Gabarit Unique & Dualité Transparente (Antigravity ↔ Plannotator)
 
 1. **SSOT Blueprint Unique** : Tous les plans formels (Niveau 3) DOIVENT respecter le gabarit unique [`standards/blueprints/plan_template.md`](file:///c:/Memory%20Loop/standards/blueprints/plan_template.md).
-2. **Expérience de Revue Native** :
+2. **Expérience de Revue Native & Cycle Plannotator Étendu** :
    - **Antigravity IDE** : Rendu et annotation interactive via le panneau d'artefact natif (`implementation_plan.md`, sélection de texte, commentaires inline, bouton *Proceed*).
-   - **OpenCode / Claude Code / Pi (CLI)** : Rendu et annotation visuelle via le plugin web **Plannotator** (`@plannotator/opencode`, `@plannotator/pi-extension`).
+   - **OpenCode / Claude Code / Pi / mLoop CLI** : Intégration bidirectionnelle native avec **Plannotator** (`@plannotator/opencode`, `@plannotator/pi-extension` et `python src/swarm.py`) couvrant 4 rituels majeurs :
+     - **Cadrage & Plans** : Annotation et validation visuelle du plan d'action (`plannotator annotate --gate`).
+     - **Gating de Spécifications (Phase 2 Spec)** : `python src/swarm.py annotate --story <KEY> --gate --require-approval` pour valider visuellement les critères d'acceptation Gherkin avec l'humain.
+     - **Revue de Code Git (Phase 4 Validate)** : `python src/swarm.py review` (`plannotator review --git`) pour inspecter les diffs visuellement avec commentaires inline avant tout commit ou merge.
+     - **Inspection UI Web en Direct (ADR-0340)** : `python src/swarm.py annotate --url http://localhost:...` pour crayonner et annoter directement les interfaces utilisateur en cours d'exécution.
+     - **Export de Livrable Portable (Phase 5 Ship)** : `python src/swarm.py guide-export` pour générer un artefact de revue HTML autonome partageable ou chiffré E2EE.
 3. **Workers Autonomes (`worker-spawn`)** : Les sous-agents créés pour des tâches de Niveau 3 produisent leur plan dans leur espace de travail isolé avant moissonnage (`worker-harvest`).
 4. **Phase 1 Fragmentée** : Respect strict du séquencement `init` $\rightarrow$ dépôt physique des intrants par l'humain dans `reference/` $\rightarrow$ `grill` $\rightarrow$ `ingest` via MarkItDown.
 5. **Confirmation Gate des ADRs** : L'agent a l'obligation de demander confirmation avant de créer ou de modifier une ADR dans `standards/adr-system/`.

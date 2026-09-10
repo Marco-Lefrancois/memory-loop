@@ -33,8 +33,23 @@ Auparavant, la création de ce fichier à la racine du projet entraînait :
 
 ---
 
-## 3. Conséquences
+## 3. Conséquences Initiales
 
-- **Traçabilité totale** : Conservation permanente de l'historique de tous les cadrages d'implémentation par récit.
+- **Traçabilité totale** : Conservation de l'historique des cadrages d'implémentation par récit.
 - **Zéro-Pollution** : Propreté stricte de la racine des répertoires projets et centralisation sous `memory/plan/`.
 - **Rétro-compatibilité Plannotator & Antigravity** : Les outils d'annotation visuelle (Plannotator) et les artefacts IDE continuent d'intercepter les plans tout en garantissant leur archivage sécurisé.
+
+---
+
+## 4. Amendement 2026-09-10 : Cycle de Vie Réel & Découplage de la Preuve
+
+Suite au retour d'expérience et à l'audit du système :
+1. **Consommation par les agents (Vérité terrain)** :
+   - Les agents mLoop n'ont **pas** vocation à relire perpétuellement les anciens plans de stories déjà livrées.
+   - La source de vérité immuable d'un travail terminé est l'**EvidencePack** ([`memory/evidence/<STORY>_evidence.json`](file:///c:/Memory%20Loop/CLAUDE.md), ADR-0341), les tests d'acceptation et les commits Git.
+2. **Pertinence recentrée sur la Session Active & l'Anti-Amnésie** :
+   - Le plan d'implémentation est hautement pertinent **pendant** la conception (alignement HITL via Plannotator/Antigravity) et **pendant** l'exécution de la story pour permettre la reprise de session déterministe (`python src/swarm.py resume`).
+   - Une fois la story livrée (`DONE`), le plan devient une trace historique passive.
+3. **Hygiène Stricte & Zéro Stub Vide** :
+   - Tout fichier de plan à 0 octet est interdit.
+   - Les plans de stories terminées ne doivent pas gonfler inutilement les index contextuels ou le graphe de connaissances.
