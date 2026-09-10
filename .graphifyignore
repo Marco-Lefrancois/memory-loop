@@ -1,0 +1,58 @@
+# ==============================================================================
+# mLoop Graphify Exclusion Rules (.graphifyignore) - ADR-0204 & ADR-0363
+# ==============================================================================
+# Graphify est STRICTEMENT réservé à l'architecture, la documentation et le SSOT.
+# Le code source physique applicatif (AST, classes, méthodes) est indexé exclusivement
+# par CodeGraph (.codegraph/codegraph.db).
+
+# --- 1. Code source physique (Domaine exclusif CodeGraph - ADR-0204) ---
+**/reference/codebase/**
+**/reference/**/codebase/**
+**/*.cs
+**/*.vb
+**/*.fs
+
+# --- 2. Assets binaires, images et maquettes vectorielles volumineuses ---
+**/*.svg
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.ico
+**/*.webp
+**/*.pdf
+**/*.zip
+**/*.tar*
+**/*.7z
+
+# --- 3. Caches de build, compilateurs et environnements ---
+**/bin/**
+**/obj/**
+**/dist/**
+**/build/**
+**/target/**
+**/__pycache__/**
+**/*.pyc
+**/*.pyo
+**/node_modules/**
+**/.venv/**
+**/venv/**
+**/env/**
+
+# --- 4. Caches internes mLoop & anti-récursion de graphes ---
+**/ingest_cache.json
+**/test_cache/**
+**/memory/docs_cache/**
+# Empêche d'indexer les graphes à l'intérieur du graphe (boucle récursive) :
+**/knowledge_graph.json
+**/graphify-out/graph.json
+
+# --- 5. Outils et IDEs ---
+**/.git/**
+**/.obsidian/**
+**/.codegraph/**
+**/.claude/**
+**/.gemini/**
+**/.antigravitycli/**
+**/.idea/**
+**/.vscode/**

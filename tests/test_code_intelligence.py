@@ -80,3 +80,23 @@ def test_handle_code_status(mock_bin, mock_run, mock_project: Path):
     code = handle_code_status(args, state, mock_project)
     assert code == 0
     mock_run.assert_called_once()
+
+
+def test_find_target_source_path_none_fallback():
+    # Quand project_path est None, doit résoudre la racine sans lever d'exception
+    target = _find_target_source_path(None, None)
+    assert target.exists()
+
+
+def test_compact_explore_output():
+    from src.commands.handlers.code_intelligence import _compact_explore_output
+    # Simuler une sortie très longue de plus de 70 lignes de code
+    fake_lines = ["=== Symbol: Test ==="]
+    for i in range(1, 100):
+        fake_lines.append(f"{i}\t  line_of_code_{i} = True")
+    fake_raw = "\n".join(fake_lines)
+
+    compacted = _compact_explore_output(fake_raw, max_code_lines=5)
+    assert "[Corps de code tronque" in compacted
+    assert len(compacted.splitlines()) < len(fake_lines)
+
