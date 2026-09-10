@@ -71,25 +71,21 @@ layer: fullstack
 # language: fr
 Fonctionnalité: [Nom] PRO (US-XXX)
 
-  # PILIER 1 : CHEMIN NOMINAL (Happy Path)
   Scénario: [NOM] - Succès de l'action principale
     Étant donné [Contexte idéal]
     Quand [Action déclenchée]
     Alors [Résultat persistant et visuel attendu]
 
-  # PILIER 2 : EXCEPTIONS MÉTIER (Business Rules)
   Scénario: [NOM] - Rejet pour [Règle RM-XXX]
     Étant donné [Condition d'échec métier]
     Quand [Action déclenchée]
     Alors [Rejet typé et message d'erreur contextualisé]
 
-  # PILIER 3 : CAS LIMITES TECHNIQUES (Resilience)
   Scénario: [NOM] - Gestion de l'Idempotence / Outbox
     Étant donné [Condition technique instable ou doublon]
     Quand [Action déclenchée]
     Alors [Maintien de la cohérence système]
 
-  # PILIER 4 : COMPORTEMENT UX & NAVIGATION
   Scénario: [NOM] - Feedback UI et Transition
     Étant donné [État spécifique de l'interface]
     Quand [Action utilisateur]
