@@ -64,17 +64,17 @@ def test_fts5_sanitization_safe():
 def test_resolve_project_alias_camelcase_and_symbols():
     """Vérifie la résolution d'alias avec différentes syntaxes vers un projet Boire valide."""
     res1 = SemanticLexiconResolver.resolve_project_alias("BoireEtFrere")
-    assert res1 in ("BoireFrere_Reception", "BoireFrere_Segment2")
+    assert res1 == "BoireFrere_Segment2"
 
     res2 = SemanticLexiconResolver.resolve_project_alias("Boire & Frère")
-    assert res2 in ("BoireFrere_Reception", "BoireFrere_Segment2")
+    assert res2 == "BoireFrere_Segment2"
 
     res3 = SemanticLexiconResolver.resolve_project_alias("boire-frere")
-    assert res3 in ("BoireFrere_Reception", "BoireFrere_Segment2")
+    assert res3 == "BoireFrere_Segment2"
 
 
 def test_resolve_project_alias_prefers_ssot_over_empty_stub(tmp_path):
-    """Vérifie qu'un dossier stub vide sans SSOT est pénalisé face à un projet valide."""
+    """Vérifie la résolution du projet vers le nom officiel canonique."""
     # Test avec resolve_project_name
     canonical = resolve_project_name("BoireEtFrere")
-    assert canonical in ("BoireFrere_Reception", "BoireFrere_Segment2")
+    assert canonical == "BoireFrere_Segment2"

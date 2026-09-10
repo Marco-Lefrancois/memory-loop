@@ -30,10 +30,11 @@ Il est impératif d'institutionnaliser un protocole de **Fact-Search déterminis
 
 2. **Système de Preuves Fact-Search Découplé (4 Couches SSOT)** :
    - *Couche 1a (Console CLI)* : Feedback temps réel `[FACT-SEARCH]` à l'écran lors des recherches FTS5.
-   - *Couche 1b (Restitution Visuelle Interactive Grill-with-Docs)* : Production systématique du **Dossier de Preuves Documentaires** lors des sessions d'interrogatoire unitaire (Passage-Level Grounding) :
+   - *Couche 1b (Restitution Visuelle Interactive Inconditionnelle — Pré-Grill & Pré-Rédaction)* : Production **systématique et inconditionnelle** du **Dossier de Preuves Documentaires & Faits Établis** pour TOUT récit, **qu'une session d'interrogatoire ait lieu ou non** (Passage-Level Grounding) :
      1. Maquettes SSOT & Notes d'atelier avec liens cliquables `file:///...`.
      2. Extraits verbatim sourcés avec numéros de ligne précis et faits établis déduits (`Extrait N — Titre (Lignes X-Y) : « Citation » ➔ Fait établi : ...`).
      3. Modèle de données et DBML des entités manipulées.
+     > 📌 **Règle de Transparence Inconditionnelle** : Même si la frontière active est vide (aucun arbitrage requis, règles 100% claires), l'agent DOIT restituer ce dossier complet pour faire valider son socle factuel par l'humain avant d'entamer la rédaction du récit physique Markdown.
    - *Couche 2 (EvidencePack JSON Sidecar)* : Fichier `memory/evidence/<STORY_ID>_evidence.json` avec bloc `fact_search_proofs`, empreintes SHA-256 et diptyque épistémique.
    - *Couche 3 (Journal d'Audit Persistant)* : Fichier append-only `memory/fact_search_log.jsonl`.
    - *Règle Zero-Bruit User Story* : Aucune injection de notes IA dans le Markdown ; le récit se termine strictement après `## Scénarios de test`.

@@ -1,0 +1,24 @@
+{
+  "role_id": "sales",
+  "name": "Vente & Avant-Vente / Développement des Affaires",
+  "mission": "Analyser les demandes d'appels d'offres (RFP), structurer la proposition de valeur et concevoir des offres de services percutantes et rentables.",
+  "input_types": [
+    "Cahier de charge client / Appel d'offres (RFP)",
+    "Échanges de cadrage commercial",
+    "Historique de projets similaires"
+  ],
+  "deliverables": [
+    {
+      "id": "sow_proposal",
+      "name": "Offre de Services (SOW) & Proposition de Valeur",
+      "template": "standards/blueprints/sales/sow_proposal.template.md"
+    },
+    {
+      "id": "executive_pitch",
+      "name": "Synthèse Exécutive & Argumentaire ROI",
+      "template": "standards/blueprints/sales/executive_pitch.template.md"
+    }
+  ],
+  "grill_focus": "Rentabilité de la proposition, pièges contractuels, alignement de la proposition de valeur avec les priorités du client, différenciation Nmédia.",
+  "forbid_syntax": []
+}

@@ -82,6 +82,12 @@ def handle_fact_check(args: argparse.Namespace, state: Optional[Any] = None, pro
                 print(f"     ➔ Source SSOT : {c.get('proof_source')}")
         print("")
 
+    if certificate.admission_of_limits:
+        print("─" * 65)
+        print("⚠️  LIMITES DE PREUVE (ADMISSION OF LIMITS) :")
+        print(f"   {certificate.admission_of_limits}")
+        print("─" * 65 + "\n")
+
     if certificate.is_compliant:
         ZeroFluffConsole.success(f"Certificat Fact-Check ÉMIS : {certificate.status} (Trust Index: {certificate.trust_index}%)")
         return 0

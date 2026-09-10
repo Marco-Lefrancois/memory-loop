@@ -35,6 +35,7 @@ class FactCheckCertificate:
     is_compliant: bool  # True si 0 contradiction et trust_index >= 60%
     results: List[NLIVerificationResult] = field(default_factory=list)
     contradictions: List[Dict[str, Any]] = field(default_factory=list)
+    admission_of_limits: str = ""  # Synthèse d'aveu des limites (ADR-0353)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -48,9 +49,23 @@ class FactCheckCertificate:
             "trust_index": self.trust_index,
             "status": self.status,
             "is_compliant": self.is_compliant,
+            "admission_of_limits": self.admission_of_limits,
             "contradictions": self.contradictions,
             "results": [r.to_dict() for r in self.results],
         }
+
+    def generate_user_facing_summary(self) -> str:
+        """Génère la vue synthétique en langage clair pour l'utilisateur (ADR-0353)."""
+        lines = [
+            f"Bilan Fact-Check pour {self.story_id} ({self.project_name}) :",
+            f"• Statut : {self.status} (Indice de confiance : {self.trust_index}%)",
+            f"• Affirmations validées : {self.entailment_count}/{self.total_claims}",
+            f"• Contradictions : {self.contradiction_count}",
+            f"• Affirmations non documentées : {self.unsupported_count}",
+            "",
+            self.admission_of_limits
+        ]
+        return "\n".join(lines)
 
 
 class FactCheckCertificateGenerator:
@@ -79,6 +94,7 @@ class FactCheckCertificateGenerator:
                 is_compliant=True,
                 results=[],
                 contradictions=[],
+                admission_of_limits="✅ Aucune affirmation à auditer (Récit sans exigences détectées).",
             )
 
         entailments = [r for r in results if r.verdict == VerdictEnum.ENTAILMENT]
@@ -108,6 +124,25 @@ class FactCheckCertificateGenerator:
             for c in contradictions
         ]
 
+        # Synthèse d'aveu des limites (ADR-0353 - Dual View & Admission of Limits)
+        if len(contradictions) > 0:
+            admission_of_limits = (
+                f"🚨 CONTRADICTION BLOQUANTE : {len(contradictions)} exigence(s) contredisent formellement "
+                f"le SSOT documentaire. Aucune progression sans résolution des conflits."
+            )
+        elif len(unsupported) > 0:
+            unsupp_samples = [f"'{u.statement[:60]}...'" if len(u.statement) > 60 else f"'{u.statement}'" for u in unsupported[:2]]
+            admission_of_limits = (
+                f"⚠️ LIMITES DE PREUVE : {len(entailments)}/{total} critère(s) confirmés par le SSOT. "
+                f"Cependant, {len(unsupported)} critère(s) demeurent sans preuve documentaire ({', '.join(unsupp_samples)}). "
+                f"Validation humaine (HITL) formellement exigée avant mise en œuvre."
+            )
+        else:
+            admission_of_limits = (
+                f"✅ PREUVES COMPLÈTES : L'intégralité des {total} critère(s) et scénarios est rigoureusement "
+                f"étayée par les règles d'affaires et décisions architecturales actives du SSOT."
+            )
+
         return FactCheckCertificate(
             story_id=story_id,
             project_name=project_name,
@@ -121,6 +156,7 @@ class FactCheckCertificateGenerator:
             is_compliant=is_compliant,
             results=results,
             contradictions=contradiction_details,
+            admission_of_limits=admission_of_limits,
         )
 
     @classmethod

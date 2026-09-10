@@ -81,7 +81,10 @@ scratch/
 .obsidian/
 .omp/
 .vscode/
+.claude/
 .opencode/node_modules/
+.fact_search_index.db
+login_notebooklm.mjs
 .DS_Store
 Thumbs.db
 *.bak

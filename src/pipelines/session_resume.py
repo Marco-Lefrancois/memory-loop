@@ -28,8 +28,8 @@ def run_session_resume(project_name: str):
         mapping_content = story_mapping_file.read_text(encoding="utf-8")
         lines = [l for l in mapping_content.splitlines() if l.strip().startswith("|") or l.strip().startswith("#")]
         mapping_summary = "\n".join(lines[:35])
-    elif backlog_file.exists():
-        mapping_summary = f"[Consolidé dans sprint_backlog.md (SSOT Master Unifiée)]\n" + "\n".join([l for l in backlog_file.read_text(encoding="utf-8").splitlines() if l.strip().startswith("|") or l.strip().startswith("#")][:25])
+    else:
+        mapping_summary = "[Consolidé dans sprint_backlog.md (SSOT Master Unifiée)]"
 
         
     # 2. Lecture du dernier rapport d'état Self-Dev
@@ -66,6 +66,12 @@ def run_session_resume(project_name: str):
 ## 5 Derniers Souvenirs Extraits (Auto-Recall FTS5)
 {obs_summary or 'Aucune observation enregistrée'}
 """
+    # Garde-fou constitutionnel : forcer strictement <= 200 lignes (ADR-0362)
+    health_lines = health_content.strip().splitlines()
+    if len(health_lines) > 200:
+        health_lines = health_lines[:198] + ["", "*[Tronqué pour respecter le plafond strict de 200 lignes ADR-0362]*"]
+        health_content = "\n".join(health_lines) + "\n"
+
     # Écriture dans le dossier du projet métier
     proj_health_file.parent.mkdir(parents=True, exist_ok=True)
     proj_health_file.write_text(health_content, encoding="utf-8")

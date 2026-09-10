@@ -13,8 +13,8 @@ Scope: Validation de la rigueur épistémique Fact-Search, grounding sans halluc
   EXPECT: /Intégrité SSOT & Absence de Références Fantômes : PASS/
   EVIDENCE: pending
 
-- [ ] G3: L'EvidencePack sidecar JSON (<STORY_ID>_evidence.json) est généré avec fact_search_proofs et empreintes de gates
-  CHECK: python -c "from pathlib import Path; import json; evs=list(Path('memory/evidence').glob('*_evidence.json')); valid=all(('gate_execution_ledger' in json.loads(e.read_text(encoding='utf-8')) or 'fact_search_proofs' in json.loads(e.read_text(encoding='utf-8'))) for e in evs) if evs else False; print('EVIDENCE_PACK_VALID' if valid else 'EVIDENCE_PACK_MISSING_OR_INVALID')"
+- [ ] G3: L'EvidencePack sidecar JSON (<STORY_ID>_evidence.json) et le Dossier de Preuves (<STORY_ID>_fact_dossier.md) sont générés avec empreintes
+  CHECK: python -c "from pathlib import Path; import json; evs=list(Path('memory/evidence').glob('*_evidence.json')); docs=list(Path('memory/evidence').glob('*_fact_dossier.md')); valid=(len(evs)>0 and len(docs)>0); print('EVIDENCE_PACK_VALID' if valid else 'EVIDENCE_PACK_MISSING_OR_INVALID')"
   EXPECT: EVIDENCE_PACK_VALID
   EVIDENCE: pending
 

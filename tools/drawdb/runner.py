@@ -51,9 +51,10 @@ def serve_drawdb(port: int = DEFAULT_PORT, auto_open: bool = True):
 
     os.chdir(DRAWDB_DIR)
     handler = http.server.SimpleHTTPRequestHandler
+    socketserver.TCPServer.allow_reuse_address = True
     
     try:
-        with socketserver.TCPServer(("", port), handler) as httpd:
+        with socketserver.ThreadingTCPServer(("", port), handler) as httpd:
             url = f"http://localhost:{port}"
             print(f"🚀 [mLoop drawDB] Serveur local souverain démarré sur : {url}")
             print("Pressez Ctrl+C pour arrêter le serveur.")

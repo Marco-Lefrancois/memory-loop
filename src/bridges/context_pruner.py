@@ -1,31 +1,56 @@
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
+from pathlib import Path
+
+from src.engine.artifacts.bus import OpaqueArtifactBus, ArtifactHandle
+
 
 class ContextPruningEngine:
     """
-    Moteur d'élagage contextuel dynamique (Pattern Dynamic Context Pruning / ADR-0310).
-    Réduit la consommation de tokens en compactant les sorties d'outils volumineuses
-    et les listings intermédiaires résolus sans altérer la mémoire sémantique ni les ADRs.
+    Moteur d'élagage contextuel dynamique (Pattern Dynamic Context Pruning / ADR-0310 & ADR-0354).
+    Offloade automatiquement les sorties volumineuses vers l'OpaqueArtifactBus pour éviter
+    l'épuisement de la fenêtre contextuelle tout en garantissant un adressage déterministe.
     """
 
-    MAX_TOOL_OUTPUT_CHARS = 1200  # Seuil de compactage des sorties intermédiaires
+    MAX_TOOL_OUTPUT_CHARS = 1500  # Seuil de compactage des sorties intermédiaires
+    MAX_TOOL_OUTPUT_LINES = 30
+    _bus: Optional[OpaqueArtifactBus] = None
+
+    @classmethod
+    def get_bus(cls) -> OpaqueArtifactBus:
+        if cls._bus is None:
+            cls._bus = OpaqueArtifactBus()
+        return cls._bus
 
     @classmethod
     def prune_tool_output(cls, tool_name: str, content: str) -> str:
-        """Compacte chirurgicalement la sortie d'un outil si elle dépasse le seuil utile."""
-        if not content or len(content) <= cls.MAX_TOOL_OUTPUT_CHARS:
+        """
+        Compacte chirurgicalement la sortie d'un outil si elle dépasse le seuil utile
+        en l'enregistrant dans l'OpaqueArtifactBus et en retournant un descripteur fenêtré.
+        """
+        if not content or (len(content) <= cls.MAX_TOOL_OUTPUT_CHARS and len(content.splitlines()) <= cls.MAX_TOOL_OUTPUT_LINES):
             return content
 
-        # Si c'est un listing de fichiers ou un diff volumineux
-        if tool_name in ["run_command", "view_file", "grep_search", "list_dir"]:
-            lines = content.splitlines()
-            if len(lines) > 30:
-                head = "\n".join(lines[:15])
-                tail = "\n".join(lines[-10:])
-                omitted = len(lines) - 25
-                return f"{head}\n\n[... {omitted} lignes de sortie intermédiaire compactées par ContextPruner ...]\n\n{tail}"
+        bus = cls.get_bus()
+        summary = f"Sortie de l'outil '{tool_name}' ({len(content)} car., {len(content.splitlines())} lignes)"
+        offloaded, descriptor, handle = bus.offload_if_exceeds(
+            content=content,
+            max_chars=cls.MAX_TOOL_OUTPUT_CHARS,
+            max_lines=cls.MAX_TOOL_OUTPUT_LINES,
+            summary=summary,
+            schema_type=f"tool_output/{tool_name}",
+            metadata={"tool_name": tool_name},
+        )
 
-        return content[:cls.MAX_TOOL_OUTPUT_CHARS] + "\n[... sortie tronquée pour optimisation de contexte ...]"
+        if offloaded and descriptor:
+            return descriptor
+
+        # Fallback si l'écriture échoue
+        lines = content.splitlines()
+        head = "\n".join(lines[:10])
+        tail = "\n".join(lines[-5:])
+        omitted = len(lines) - 15
+        return f"{head}\n\n[... {omitted} lignes compactées par ContextPruner ...]\n\n{tail}"
 
     @classmethod
     def prune_messages(cls, messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:

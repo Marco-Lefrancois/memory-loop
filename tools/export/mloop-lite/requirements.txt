@@ -1,0 +1,22 @@
+# ==============================================================================
+# 🚀 mLoop Lite — Dépendances d'Ingestion & Outils (Optionnel mais Recommandé)
+# ==============================================================================
+# NOTE : Le cœur de mLoop Lite fonctionne avec ZERO dépendance (Python Standard Library).
+# Installez ces modules uniquement pour activer la conversion automatique des fichiers
+# clients (Office, PDFs, Scans OCR) et le scraping web.
+# ==============================================================================
+
+# 📑 1. Pack Conversion Multi-Formats Microsoft MarkItDown (PDF, Word, Excel, PowerPoint)
+markitdown>=0.0.1a4
+pymupdf>=1.23.0
+python-docx>=1.1.0
+openpyxl>=3.1.0
+python-pptx>=0.6.23
+
+# 👁️ 2. Pack OCR Local Windows (Scans de documents, maquettes, textes dans images)
+rapidocr_onnxruntime>=1.3.0
+
+# 🌐 3. Pack mLoop Crawler (Extraction & Nettoyage de pages web / docs publiques)
+httpx>=0.27.0
+beautifulsoup4>=4.12.0
+markdownify>=0.11.6

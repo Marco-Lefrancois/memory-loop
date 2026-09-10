@@ -45,6 +45,9 @@ def handle_crawl(args: argparse.Namespace, state: LoopState, project_path: Path)
             llms_txt=not getattr(args, "no_llms_txt", False),
             ignore_query_parameters=getattr(args, "ignore_query", False),
             json_schema_path=getattr(args, "json_schema", None),
+            all_sources=getattr(args, "all_sources", False),
+            render_js=getattr(args, "render_js", False),
+            github_tree=not getattr(args, "no_github_tree", False),
         )
         crawler.execute(state, explicit_url=getattr(args, "url", None))
         ZeroFluffConsole.success("Crawl terminé.")

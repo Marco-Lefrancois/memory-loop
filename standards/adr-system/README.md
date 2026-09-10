@@ -91,6 +91,14 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0349](0349-karpathy-llm-wiki-bootstrap-crawler-enhancements.md)** : Paradigme Karpathy LLM Wiki, Concept-Table Navigable & Gouvernance Déterministe du Crawler Web
 *   **[ADR-0350](0350-obsidian-vault-assistant-codebase-canvas-bridge.md)** : Passerelle Obsidian Vault, Cartographie Codebase Canvas 2D & Synchronisation de Session Dev Logs
 *   **[ADR-0351](0351-deterministic-visual-epistemic-grounding-enforcement.md)** : Enforcement Déterministe du Grounding Visuel & Épistémique (OCR Ingestion, Gate FSM C9, Unification Nommage)
+*   **[ADR-0352](0352-harnessdev-autonomous-harness-creation-evolution.md)** : Enseignements HarnessDev, Abstraction H=<E,T,C,S,L,V> & Souveraineté du Harnais d'Agent mLoop
+*   **[ADR-0353](0353-agentic-rag-trust-evidence-retrieval-flight-recorder.md)** : Confiance & Traçabilité en RAG Agentique : Enregistreur de Vol de Récupération, Filtrage de Supersession & Confinement des Données Non Fiables
+*   **[ADR-0354](0354-opaque-artifact-bus-leakage-gate-simplicity-guard.md)** : Opaque Artifact Bus, Verification Leakage Gate & Simplicity Guard
+*   **[ADR-0355](0355-sortie-inspired-resilient-subagent-and-handoff-architecture.md)** : Architecture de Sous-Agents Résilients Inspirée de Sortie & Handoff Zero-Ask
+*   **[ADR-0360](0360-google-notebooklm-ssot-synchronization.md)** : Synchronisation SSOT Google NotebookLM (RAG Gemini 2.5) & Export Granulaire
+*   **[ADR-0361](0361-restitution-inconditionnelle-dossier-de-preuves-chat.md)** : Restitution Inconditionnelle du Dossier de Preuves Documentaires dans le Chat & Interdiction des Plans d'Intention Abstraits
+*   **[ADR-0362](0362-context-hygiene-skill-doctor-and-write-path-ceiling.md)** : Hygiène Contextuelle, Skill Doctor, Plafonnement Mémoire 200 Lignes et Isolation des Sous-Agents
+*   **[ADR-0363](0363-agentic-graph-pipeline-and-graphify-hygiene.md)** : Protocole Agentic Subgraph Retrieval, Hygiène Graphify, Cache Mémoire et Cloisonnement CodeGraph
 
 ---
-*Dernière consolidation constitutionnelle : 4 septembre 2026 — 69 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 10 septembre 2026 — 77 ADRs Unifiées (Zéro Conflit)*

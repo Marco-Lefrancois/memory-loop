@@ -15,7 +15,7 @@ import sys
 import argparse
 from pathlib import Path
 import httpx
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def load_env():
     """Charge le fichier .env de la racine s'il existe (3 niveaux au-dessus)."""
@@ -79,9 +79,12 @@ def fetch_spend_breakdown(api_key: str, key_token: str, base_url: str) -> list:
     """Récupère l'historique de consommation ventilé par modèle et par jour."""
     url = f"{base_url}/spend/logs"
     headers = {"Authorization": f"Bearer {api_key}"}
+    now = datetime.now()
+    start_date = now.strftime("%Y-%m-01")
+    end_date = (now + timedelta(days=1)).strftime("%Y-%m-%d")
     params = {
-        "start_date": "2026-08-01",
-        "end_date": "2026-08-31",
+        "start_date": start_date,
+        "end_date": end_date,
         "api_key": key_token
     }
     try:

@@ -106,6 +106,12 @@ def run_worker_harvest(
     ZeroFluffConsole.section(f"HERDR WORKER HARVEST - {story_id}")
     proj_path = resolve_project_path(project_name)
 
+    # ADR-0355: Lecture du signal sidecar si présent (.mloop/status ou memory/worker_*.status)
+    from src.core.worker_signal import read_worker_signal
+    signal = read_worker_signal(proj_path, story_id)
+    if signal:
+        ZeroFluffConsole.info(f"Signal sidecar détecté : [{signal.signal_type.value}] - {signal.reason or 'Sans détails'}")
+
     res = herdr.harvest_story_evidence(
         project_name=project_name,
         story_id=story_id,
@@ -118,6 +124,28 @@ def run_worker_harvest(
         ZeroFluffConsole.info(f"Artefact EvidencePack mis à jour : {res.get('evidence_file')}")
         if res.get("summary_preview"):
             ZeroFluffConsole.info(f"Aperçu du log élagué : {res.get('summary_preview')[:120]}...")
+
+        # ADR-0355: Validation de la preuve physique (Handoff Evidence Gate)
+        from src.pipelines.completion_gate import CompletionGate, HandoffEvidencePolicy, GateStatus
+        evidence_res = CompletionGate.validate_workspace_evidence(
+            project_path=proj_path,
+            story_id=story_id,
+            signal=signal,
+            policy=HandoffEvidencePolicy.OBSERVED
+        )
+        res["evidence_gate"] = {
+            "status": evidence_res.status.value,
+            "requires_hitl": evidence_res.requires_hitl,
+            "reasons": evidence_res.reasons,
+            "warnings": evidence_res.warnings,
+        }
+
+        if evidence_res.status == GateStatus.FAIL:
+            ZeroFluffConsole.error(f"Échec Gate d'évidence : {'; '.join(evidence_res.reasons)}")
+        elif evidence_res.status == GateStatus.DEGENERATE_CANDIDATE:
+            ZeroFluffConsole.warning(f"Alerte Gate d'évidence (HITL requis) : {'; '.join(evidence_res.reasons)}")
+        else:
+            ZeroFluffConsole.success("Gate d'évidence validée (Preuve d'effort confirmée).")
 
         # ADR-0341 : Re-vérification parente automatique des portails d'acceptation (GATES)
         try:
@@ -154,4 +182,40 @@ def run_worker_close(
         ZeroFluffConsole.warning(f"Fermeture volet {worker_name} : {res.get('error', 'Volet déjà clos ou non existant')}")
 
     return res
+
+
+def run_worker_reap(
+    project_name: Optional[str] = None,
+    timeout_sec: int = 300,
+    force: bool = False
+) -> Dict[str, Any]:
+    """
+    Purges stalled, idle, or zombie workers (ADR-0355 Stall Detection & Reaping).
+    """
+    ZeroFluffConsole.section("HERDR WORKER REAP - AUDIT ANTI-ZOMBIE (STALL DETECTION)")
+    res = herdr.reap_zombie_workers(timeout_sec=timeout_sec, force=force)
+    if res.get("success"):
+        reaped_count = res.get("reaped_count", 0)
+        if reaped_count > 0:
+            ZeroFluffConsole.success(f"Purge réussie : {reaped_count} worker(s) arrêté(s).")
+            for w in res.get("reaped", []):
+                ZeroFluffConsole.info(f" - Volet {w.get('pane_id')} ({w.get('name')}) fermé : {w.get('reason')}")
+        else:
+            ZeroFluffConsole.info("Aucun worker zombie ou inactif détecté. Runtime sain.")
+    else:
+        errors = res.get("errors", [])
+        ZeroFluffConsole.warning(f"Purge avec avertissements : {len(errors)} erreur(s).")
+        for err in errors:
+            ZeroFluffConsole.error(f" - Volet {err.get('pane_id')}: {err.get('error')}")
+
+    return res
+
+
+def run_worker_reap_zombies(project_name: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Purges all orphan/idle worker panes to guarantee zero-leak execution hygiene (Backward compatibility alias).
+    """
+    return run_worker_reap(project_name=project_name)
+
+
 

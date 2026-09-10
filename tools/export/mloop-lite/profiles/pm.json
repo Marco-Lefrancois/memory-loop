@@ -1,0 +1,29 @@
+{
+  "role_id": "pm",
+  "name": "Chargé de Projet (CP / Scrum Master / Directeur de Projet)",
+  "mission": "Sécuriser la livraison, maîtriser le budget, anticiper les dépendances et communiquer l'avancement avec clarté.",
+  "input_types": [
+    "Offre de services / SOW",
+    "Comptes-rendus de comités de pilotage",
+    "Estimations d'équipe"
+  ],
+  "deliverables": [
+    {
+      "id": "project_charter",
+      "name": "Charte de Projet & Cadre de Gouvernance",
+      "template": "standards/blueprints/pm/project_charter.template.md"
+    },
+    {
+      "id": "risk_register",
+      "name": "Registre des Risques & Plan d'Atténuation",
+      "template": "standards/blueprints/pm/risk_register.template.md"
+    },
+    {
+      "id": "delivery_plan",
+      "name": "Plan de Découpage en Lots & Jalons",
+      "template": "standards/blueprints/pm/delivery_plan.template.md"
+    }
+  ],
+  "grill_focus": "Dépendances critiques sous responsabilité client, risques de dépassement d'échéance, hypothèses non validées, gouvernance des changements.",
+  "forbid_syntax": []
+}

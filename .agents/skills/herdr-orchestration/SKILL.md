@@ -3,9 +3,9 @@ name: herdr-orchestration
 description: Directives et protocole de contrôle d'infrastructure natif via Herdr v0.8.0 PTY multiplexer (Mode Unattended / Autonomie Totale).
 ---
 
-# 🤖 HERDR OPERATING PROTOCOL v0.8.0 (System Capabilities & Rules)
+# 🤖 HERDR OPERATING PROTOCOL v0.8.2+ (System Capabilities & Rules - ADR-0345)
 
-Tu es l'**Agent Orchestrateur Principal**. Tu disposes de la pleine possession de l'environnement d'exécution via le daemon **Herdr v0.8.0**.
+Tu es l'**Agent Orchestrateur Principal**. Tu disposes de la pleine possession de l'environnement d'exécution via le daemon **Herdr v0.8.2+** et le plugin officiel **`mloop-herdr-plugin`**.
 
 > [!IMPORTANT]
 > **Règle d'Or de Non-Blocage :**
@@ -13,7 +13,7 @@ Tu es l'**Agent Orchestrateur Principal**. Tu disposes de la pleine possession d
 
 ---
 
-## 🚀 Commandes CLI mLoop Haut-Niveau (Herdr Automation - ADR-0324 & ADR-0325)
+## 🚀 Commandes CLI mLoop Haut-Niveau (Herdr Automation - ADR-0324, ADR-0325 & ADR-0345)
 
 L'orchestrateur mLoop dispose de commandes CLI unifiées pour automatiser le cycle de vie des workers sans manipulation manuelle de volets terminaux, avec sélection dynamique du meilleur modèle LiteLLM selon la mission :
 
@@ -33,7 +33,16 @@ python src/swarm.py worker-harvest --project <nom_projet> --story <STORY_ID>
 
 # 4. Clôturer le volet worker une fois la tâche validée
 python src/swarm.py worker-close --project <nom_projet> --story <STORY_ID>
+
+# 5. Purger tous les volets orphelins (Zero Zombie Policy)
+herdr plugin action invoke reap_zombies --plugin org.mloop.orchestrator
 ```
+
+> [!IMPORTANT]
+> **Expérience Native dans Herdr (Link Handlers & Panes) :**
+> - **Split Backlog** : `herdr plugin pane open --plugin org.mloop.orchestrator --entrypoint backlog`
+> - **EvidencePack Overlay** : `herdr plugin pane open --plugin org.mloop.orchestrator --entrypoint evidence`
+> - **Navigation par Clic (Link Handlers)** : Faire `Ctrl+Click` sur un chemin de story (`backlog/stories/US-XXX.md`) ou un fichier d'evidence (`*_evidence.json`) dans n'importe quel terminal Herdr ouvre instantanément le volet d'inspection mLoop dédié.
 
 > [!IMPORTANT]
 > **Règle du Prompt Auto-Suffisant (Clean Slate Protocol) :**
@@ -57,6 +66,7 @@ python src/swarm.py worker-close --project <nom_projet> --story <STORY_ID>
 >   - **`compaction`** (Micro-tâches & Linters) ➔ `nmedia_cloud/gemini-3.5-flash-lite`
 
 ---
+
 
 ## 🛠️ Primitives de Contrôle Herdr v0.8.0 (Bas Niveau)
 

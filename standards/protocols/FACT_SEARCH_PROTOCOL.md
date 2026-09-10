@@ -51,12 +51,12 @@ flowchart TD
     └─ 🎯 Indice de Certitude : 1.0 (HIGH)
 ```
 
-### Couche 1b : Restitution Visuelle Interactive en Séance Grill-with-Docs (Passage-Level Grounding)
-Lors des sessions interactives d'interrogatoire unitaire (`/grill`, `grill-with-docs`), l'agent ouvre chaque question par le **Dossier de Preuves Documentaires** :
+### Couche 1b : Restitution Visuelle Interactive Inconditionnelle (Passage-Level Grounding — Pré-Grill & Pré-Rédaction)
+Avant d'ouvrir une session de Grilling OU avant de rédiger le récit physique si aucun arbitrage n'est requis (frontière vide), l'agent présente obligatoirement le **Dossier de Preuves Documentaires** :
 1. **Maquettes & Notes d'Atelier (SSOT Visuelle)** : Liens cliquables `file:///...`, identification des écrans et ajustements de cadrage.
 2. **Extraits de la Transcription / Specs** : Format verbatim numéroté (`Extrait N (Lignes X-Y) : « Citation » ➔ Fait établi : ...`).
 3. **Structure de Données** : Définition des entités, types et contraintes.
-4. **Question d'Arbitrage Unique** : 1 question avec options A (Recommandée)/B/C.
+4. **Issue de Frontière** : Soit une Question d'Arbitrage Unique (Round 1:1 avec recommandation mLoop si zone grise), soit un Constat formel de Frontière Vide (validation du socle factuel par l'humain avant rédaction).
 
 ### Couche 2 : EvidencePack JSON Sidecar (`memory/evidence/<STORY_ID>_evidence.json`)
 Structure `fact_search_proofs` autonome contenant :

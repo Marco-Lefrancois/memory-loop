@@ -283,6 +283,22 @@ class EcosystemCalibrator:
         else:
             self.log_step("3/8", "Skills -> Router Index", "PASS", f"Les {len(skill_folders)} skills sont répertoriés dans l'index.")
 
+        # Audit d'hygiène mémorielle et coût en jetons (SkillDoctor - ADR-0348 / Claude Code v2.1.261)
+        try:
+            from src.pipelines.skill_doctor import SkillDoctor
+            doc = SkillDoctor(self.root_dir)
+            report = doc.audit(suggest_tombstone=False)
+            summary = report.get("summary", {})
+            boot_tokens = summary.get("total_boot_description_tokens", 0)
+            oversized = summary.get("oversized_skills_count", 0)
+            risk = summary.get("context_rot_risk", "LOW")
+            if risk == "HIGH":
+                self.log_step("3/8-bis", "Skill Hygiene & Context Rot", "WARN", f"Risque Context Rot ÉLEVÉ ({oversized} skill(s) > 2000 tok, descriptions boot: {boot_tokens} tok).")
+            else:
+                self.log_step("3/8-bis", "Skill Hygiene & Context Rot", "PASS", f"Budget boot sain : {boot_tokens} tok / 15,000 max ({summary.get('boot_budget_usage_pct')}%), risque: {risk}.")
+        except Exception as e:
+            self.log_step("3/8-bis", "Skill Hygiene & Context Rot", "WARN", f"Diagnostic skills non exécuté : {e}")
+
     def _audit_system_prompts(self) -> None:
         """[4/8] Audits AGENTS.md & GEMINI.md for core commands & directives."""
         agents_file = self.root_dir / "AGENTS.md"

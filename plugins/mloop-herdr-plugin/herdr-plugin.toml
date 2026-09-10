@@ -1,0 +1,104 @@
+# herdr-plugin.toml - Manifeste du plugin officiel mLoop Orchestrator pour Herdr v0.8.2+
+id = "org.mloop.orchestrator"
+name = "mLoop Orchestrator"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "mLoop autonomous multi-agent orchestration, Sprint Backlog viewer, and EvidencePack inspector for Herdr."
+platforms = ["linux", "macos", "windows"]
+
+[[panes]]
+id = "backlog"
+title = "Sprint Backlog"
+name = "Sprint Backlog"
+command = ["python", "tui_panes.py", "backlog"]
+placement = "split"
+direction = "right"
+
+
+[[panes]]
+id = "evidence"
+title = "EvidencePack Viewer"
+name = "EvidencePack Viewer"
+command = ["python", "tui_panes.py", "evidence"]
+placement = "overlay"
+
+[[panes]]
+id = "dag"
+title = "DAG Monitor"
+name = "DAG Monitor"
+command = ["python", "tui_panes.py", "dag"]
+placement = "split"
+direction = "down"
+
+
+[[actions]]
+id = "open_backlog"
+title = "Open Sprint Backlog"
+name = "Open Sprint Backlog"
+command = ["python", "tui_panes.py", "backlog"]
+description = "Open Sprint Backlog viewer"
+
+[[actions]]
+id = "open_evidence"
+title = "Open EvidencePack Viewer"
+name = "Open EvidencePack Viewer"
+command = ["python", "tui_panes.py", "evidence"]
+description = "Open EvidencePack and Fact-Search viewer"
+
+[[actions]]
+id = "vibe_check"
+title = "mLoop Vibe-Check"
+name = "mLoop Vibe-Check"
+command = ["python", "-m", "src.swarm", "vibe-check"]
+description = "Run mLoop pre-flight 11-points vibe check"
+
+[[actions]]
+id = "status"
+title = "mLoop Status"
+name = "mLoop Status"
+command = ["python", "tui_panes.py", "status"]
+description = "Show mLoop project status and active worker count"
+
+[[actions]]
+id = "reap_zombies"
+title = "Reap Zombies"
+name = "Reap Zombies"
+command = ["python", "tui_panes.py", "reap_zombies"]
+description = "Clean up idle and orphaned worker sessions"
+
+[[actions]]
+id = "sync"
+title = "Sync Knowledge Graph"
+name = "Sync Knowledge Graph"
+command = ["python", "-m", "src.swarm", "sync"]
+description = "Synchronize local Graphify knowledge graph and WikiFix"
+
+[[actions]]
+id = "janitor_watch"
+title = "Semantic Janitor Check"
+name = "Semantic Janitor Check"
+command = ["python", "-m", "src.swarm", "worker-janitor-watch"]
+description = "Check project markdown links, phantom stories, and memory hygiene"
+
+[[actions]]
+id = "shadow_estimate"
+title = "Shadow Risk Estimate"
+name = "Shadow Risk Estimate"
+command = ["python", "-m", "src.swarm", "worker-shadow-estimate"]
+description = "Run contradictory risk-grounded shadow estimation"
+
+[[link_handlers]]
+id = "story_link"
+title = "Open Story Backlog"
+pattern = ".*stories/.*\\.md"
+action = "open_backlog"
+
+[[link_handlers]]
+id = "evidence_link"
+title = "Open EvidencePack Viewer"
+pattern = ".*_evidence\\.json"
+action = "open_evidence"
+
+
+
+

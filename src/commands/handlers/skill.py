@@ -53,3 +53,21 @@ def handle_skill_invoke(args: argparse.Namespace, state: LoopState, project_path
     except Exception as exc:  # noqa: BLE001
         ZeroFluffConsole.error(f"[SEP-2640] Erreur inattendue lors de l'invocation : {exc}")
         return 1
+
+
+def handle_skill_doctor(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Audite l'hygiène du catalogue de compétences mLoop (tokens, context rot, tombstones)."""
+    from src.pipelines.skill_doctor import run_skill_doctor
+
+    workspace_root = Path.cwd()
+    threshold = getattr(args, "threshold", 2000)
+    output_json = getattr(args, "json", False)
+    suggest_tombstone = not getattr(args, "no_tombstone", False)
+
+    report = run_skill_doctor(
+        workspace_root=workspace_root,
+        threshold=threshold,
+        suggest_tombstone=suggest_tombstone,
+        output_json=output_json,
+    )
+    return 0 if report.get("success") else 1

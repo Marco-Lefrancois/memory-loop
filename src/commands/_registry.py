@@ -684,7 +684,6 @@ COMMANDS: dict[str, dict] = {
             {
                 "name": "--file",
                 "type": str,
-                "required": True,
                 "help": "Chemin du fichier JSON de spécification",
             },
             {
@@ -695,9 +694,9 @@ COMMANDS: dict[str, dict] = {
             {
                 "name": "--type",
                 "type": str,
-                "default": "architecture",
-                "choices": ["architecture", "flow", "sequence", "mindmap"],
-                "help": "Type de diagramme",
+                "default": None,
+                "choices": ["architecture", "workflow", "sequence", "dataflow", "lifecycle", "flow"],
+                "help": "Type de diagramme (architecture, workflow, sequence, dataflow, lifecycle - auto-détecté si omis)",
             },
             {
                 "name": "--quality",
@@ -715,6 +714,11 @@ COMMANDS: dict[str, dict] = {
                 "name": "--open",
                 "action": "store_true",
                 "help": "Ouvrir automatiquement dans le navigateur par défaut",
+            },
+            {
+                "name": "--doctor",
+                "action": "store_true",
+                "help": "Vérifier la santé, les gabarits et les validateurs du moteur Archify",
             },
         ],
         "no_project": True,
@@ -879,6 +883,57 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "skill-doctor": {
+        "handler": "skill:handle_skill_doctor",
+        "no_project": True,
+        "help": "Auditer l'hygiène et le coût en jetons des compétences .agents/skills/ (ADR-0348 / Claude Code v2.1.261)",
+        "args": [
+            {
+                "name": "--threshold",
+                "type": int,
+                "default": 2000,
+                "help": "Seuil d'alerte en jetons par compétence (défaut: 2000)",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie structurée en JSON",
+            },
+            {
+                "name": "--no-tombstone",
+                "action": "store_true",
+                "help": "Désactiver les suggestions de mise en TOMBSTONE",
+            },
+        ],
+    },
+    "doctor": {
+        "handler": "skill:handle_skill_doctor",
+        "no_project": True,
+        "help": "Bilan de santé global et diagnostic d'hygiène des compétences mLoop",
+        "args": [
+            {
+                "name": "--skills",
+                "action": "store_true",
+                "help": "Auditer l'hygiène contextuelle des compétences",
+            },
+            {
+                "name": "--threshold",
+                "type": int,
+                "default": 2000,
+                "help": "Seuil d'alerte en jetons par compétence (défaut: 2000)",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie structurée en JSON",
+            },
+            {
+                "name": "--no-tombstone",
+                "action": "store_true",
+                "help": "Désactiver les suggestions de mise en TOMBSTONE",
+            },
+        ],
+    },
     # ── Code Intelligence (CodeGraph - ADR-0204) ───────────
     "code-init": {
         "handler": "code_intelligence:handle_code_init",
@@ -906,7 +961,13 @@ COMMANDS: dict[str, dict] = {
                 "type": str,
                 "help": "Chemin explicite du projet source",
             },
+            {
+                "name": "--compact",
+                "action": "store_true",
+                "help": "Restituer un résumé condensé sans corps de code verbatim (Token Budget Guardrail)",
+            },
         ],
+        "no_project": True,
     },
     "code-impact": {
         "handler": "code_intelligence:handle_code_impact",
@@ -924,6 +985,7 @@ COMMANDS: dict[str, dict] = {
                 "help": "Chemin explicite du projet source",
             },
         ],
+        "no_project": True,
     },
     "code-affected": {
         "handler": "code_intelligence:handle_code_affected",
@@ -940,6 +1002,7 @@ COMMANDS: dict[str, dict] = {
                 "help": "Chemin explicite du projet source",
             },
         ],
+        "no_project": True,
     },
     "code-status": {
         "handler": "code_intelligence:handle_code_status",
@@ -951,6 +1014,84 @@ COMMANDS: dict[str, dict] = {
                 "help": "Chemin explicite du projet source",
             },
         ],
+        "no_project": True,
+    },
+    # ── Graph Intelligence (Graphify - ADR-0204 / ADR-0363) ──
+    "graph-status": {
+        "handler": "graph_intelligence:handle_graph_status",
+        "help": "Afficher les statistiques et la fraîcheur du graphe de connaissances",
+        "args": [
+            {
+                "name": "--global",
+                "dest": "global_graph",
+                "action": "store_true",
+                "help": "Cibler le graphe racine global mLoop",
+            },
+        ],
+        "no_project": True,
+    },
+    "graph-query": {
+        "handler": "graph_intelligence:handle_graph_query",
+        "help": "Interroger le graphe de connaissances sur un concept, ADR ou règle (Agentic Retrieval)",
+        "args": [
+            {
+                "name": "--query",
+                "type": str,
+                "required": True,
+                "help": "Concept, identifiant ou mot-clé recherché",
+            },
+            {
+                "name": "--limit",
+                "type": int,
+                "default": 5,
+                "help": "Nombre maximal de résultats restitués (budget de tokens)",
+            },
+            {
+                "name": "--global",
+                "dest": "global_graph",
+                "action": "store_true",
+                "help": "Cibler le graphe racine global mLoop",
+            },
+        ],
+        "no_project": True,
+    },
+    "graph-explain": {
+        "handler": "graph_intelligence:handle_graph_explain",
+        "help": "Restituer la fiche conceptuelle et le voisinage 1-hop d'un nœud du graphe",
+        "args": [
+            {
+                "name": "--concept",
+                "type": str,
+                "required": True,
+                "help": "Identifiant ou nom du concept/ADR",
+            },
+            {
+                "name": "--global",
+                "dest": "global_graph",
+                "action": "store_true",
+                "help": "Cibler le graphe racine global mLoop",
+            },
+        ],
+        "no_project": True,
+    },
+    "graph-impact": {
+        "handler": "graph_intelligence:handle_graph_impact",
+        "help": "Calculer le rayon d'impact conceptuel et architectural (Blast Radius)",
+        "args": [
+            {
+                "name": "--target",
+                "type": str,
+                "required": True,
+                "help": "Nom du concept, fichier ou composant cible",
+            },
+            {
+                "name": "--global",
+                "dest": "global_graph",
+                "action": "store_true",
+                "help": "Cibler le graphe racine global mLoop",
+            },
+        ],
+        "no_project": True,
     },
     # ── Runnable Gates & Depth Tree (ADR-0341) ─────────────
     "gates": {
@@ -1271,6 +1412,103 @@ COMMANDS: dict[str, dict] = {
                 "name": "--file",
                 "type": str,
                 "help": "Fichier de test spécifique à auditer",
+            },
+        ],
+        "no_project": True,
+    },
+    # ── Visual Review & Annotation (Plannotator ADR-0305 / ADR-0307) ──
+    "review": {
+        "handler": "plannotator:handle_review",
+        "help": "Revue de code visuelle interactive via Plannotator (diff Git local ou PR)",
+        "args": [
+            {
+                "name": "--pr",
+                "type": str,
+                "help": "URL de Pull Request GitHub/GitLab à réviser",
+            },
+            {
+                "name": "--tailscale",
+                "action": "store_true",
+                "help": "Partager la session sur le réseau Tailnet HTTPS",
+            },
+            {
+                "name": "--no-local",
+                "action": "store_true",
+                "help": "Pour revue PR, diff seul sans checkout local",
+            },
+        ],
+        "no_project": True,
+    },
+    "annotate": {
+        "handler": "plannotator:handle_annotate",
+        "help": "Annotation visuelle de récits, ADRs, documents ou URLs avec porte de décision",
+        "args": [
+            {
+                "name": "--story",
+                "type": str,
+                "help": "Identifiant du récit à annoter (ex: US-042)",
+            },
+            {
+                "name": "--adr",
+                "type": str,
+                "help": "Numéro ou mot-clé de l'ADR à annoter (ex: 0305)",
+            },
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Chemin vers un fichier local Markdown, HTML ou texte",
+            },
+            {
+                "name": "--url",
+                "type": str,
+                "help": "URL d'une application web locale ou distante à annoter",
+            },
+            {
+                "name": "--no-gate",
+                "action": "store_true",
+                "help": "Désactiver le bouton d'approbation (lecture et annotation libre)",
+            },
+            {
+                "name": "--require-approval",
+                "action": "store_true",
+                "help": "Bloquer l'exécution tant que le réviseur n'approuve pas dans l'UI",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Émettre le résultat de validation structuré en JSON",
+            },
+            {
+                "name": "--result-file",
+                "type": str,
+                "help": "Chemin où écrire le JSON de décision de manière atomique",
+            },
+            {
+                "name": "--tailscale",
+                "action": "store_true",
+                "help": "Partager la session d'annotation sur le réseau Tailnet HTTPS",
+            },
+        ],
+        "no_project": True,
+    },
+    "guide-export": {
+        "handler": "plannotator:handle_guide_export",
+        "help": "Exporter un guide de revue autonome HTML portable via Plannotator",
+        "args": [
+            {
+                "name": "--snapshot",
+                "type": str,
+                "help": "Fichier snapshot JSON d'un guide",
+            },
+            {
+                "name": "--id",
+                "type": str,
+                "help": "Identifiant d'un guide Plannotator existant",
+            },
+            {
+                "name": "--out",
+                "type": str,
+                "help": "Chemin du fichier HTML de sortie",
             },
         ],
         "no_project": True,

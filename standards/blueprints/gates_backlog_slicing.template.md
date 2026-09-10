@@ -22,3 +22,9 @@ Scope: Découpage en User Stories verticales INVEST, Gherkin 4 Piliers et intég
   CHECK: python src/swarm.py struct-check --project {PROJECT_NAME}
   EXPECT: /0 anomalies de référencement|PASS/i
   EVIDENCE: pending
+
+- [ ] G5: Zéro identifiant éphémère (RM-XXX, REG-XXX, RULE-XXX) dans les titres des Règles d'affaires (Standard ADR-0301 Rule #7)
+  CHECK: python src/swarm.py struct-check --project {PROJECT_NAME} --strict
+  EXPECT: /0 erreurs bloquantes|PASS/i
+  EVIDENCE: pending
+

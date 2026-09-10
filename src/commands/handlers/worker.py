@@ -46,3 +46,61 @@ def handle_worker_close(args: argparse.Namespace, state: LoopState, project_path
     story_id = getattr(args, "story", "")
     res = run_worker_close(args.project, story_id)
     return 0 if res.get("success") else 1
+
+
+def handle_worker_handoff_test(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Exécute une simulation Handoff Zero-Ask aveugle sur une story."""
+    from src.pipelines.delegation import run_handoff_simulator
+    story_id = getattr(args, "story", "")
+    dry_run = getattr(args, "dry_run", False)
+    res = run_handoff_simulator(args.project, story_id, dry_run=dry_run)
+    return 0 if res.get("success") else 1
+
+
+def handle_worker_legacy_mine(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Extrait la logique métier et les validations d'un code source legacy."""
+    from src.pipelines.delegation import run_legacy_miner
+    source = getattr(args, "source", "")
+    domain = getattr(args, "domain", None)
+    dry_run = getattr(args, "dry_run", False)
+    res = run_legacy_miner(args.project, source, target_domain=domain, dry_run=dry_run)
+    return 0 if res.get("success") else 1
+
+
+def handle_worker_shadow_estimate(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Exécute un chiffrage contradictoire pessimiste basé sur les risques."""
+    from src.pipelines.delegation import run_shadow_estimator
+    target_id = getattr(args, "epic", "") or getattr(args, "story", "") or "EPIC-GLOBAL"
+    desc = getattr(args, "desc", None)
+    dry_run = getattr(args, "dry_run", False)
+    res = run_shadow_estimator(args.project, target_id, scope_description=desc, dry_run=dry_run)
+    return 0 if res.get("success") else 1
+
+
+def handle_worker_visual_dissect(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Dissecte une maquette et génère la matrice UI des 8 états."""
+    from src.pipelines.delegation import run_visual_dissector
+    asset = getattr(args, "asset", "")
+    dry_run = getattr(args, "dry_run", False)
+    res = run_visual_dissector(args.project, asset, dry_run=dry_run)
+    return 0 if res.get("success") else 1
+
+
+def handle_worker_janitor_watch(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Lance un audit de santé de la mémoire et des liens documentaires."""
+    from src.pipelines.delegation import run_semantic_janitor
+    dry_run = getattr(args, "dry_run", False)
+    res = run_semantic_janitor(args.project, dry_run=dry_run)
+    return 0 if res.get("success") else 1
+
+
+def handle_worker_reap(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Purge les volets et agents orphelins ou inactifs (ADR-0355 Stall Detection)."""
+    from src.pipelines.worker_pipeline import run_worker_reap
+    timeout_sec = getattr(args, "timeout", 300)
+    force = getattr(args, "force", False)
+    project_name = getattr(args, "project", None)
+    res = run_worker_reap(project_name=project_name, timeout_sec=timeout_sec, force=force)
+    return 0 if res.get("success") else 1
+
+

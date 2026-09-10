@@ -51,7 +51,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "options": {
         "baseURL": "https://api-ia.nmedia.ca/v1",
-        "apiKey": "{file:~/.secrets/nmedia-key-metro}"
+        "apiKey": "{file:~/.secrets/litellm-key-metro}"
       },
       "models": {
         "claude-opus-4.8": {
@@ -321,6 +321,30 @@
       "description": "Memory Loop : Guardrail pré-vol de la session",
       "template": "python src/swarm.py vibe-check --project $ARGUMENTS"
     },
+    "loop-worker-close": {
+      "description": "Memory Loop : Fermer un volet worker et libérer les ressources",
+      "template": "python src/swarm.py worker-close --project $ARGUMENTS"
+    },
+    "loop-worker-handoff": {
+      "description": "Memory Loop : Tester l'autonomie d'une User Story (Zero-Ask Simulator)",
+      "template": "python src/swarm.py worker-handoff-test --project $ARGUMENTS"
+    },
+    "loop-worker-legacy": {
+      "description": "Memory Loop : Extraire les règles métier d'une base legacy",
+      "template": "python src/swarm.py worker-legacy-mine --project $ARGUMENTS"
+    },
+    "loop-worker-shadow": {
+      "description": "Memory Loop : Générer un contre-chiffrage contradictoire et audit des risques",
+      "template": "python src/swarm.py worker-shadow-estimate --project $ARGUMENTS"
+    },
+    "loop-worker-visual": {
+      "description": "Memory Loop : Dissecter une maquette et cartographier les 8 états UI",
+      "template": "python src/swarm.py worker-visual-dissect --project $ARGUMENTS"
+    },
+    "loop-worker-janitor": {
+      "description": "Memory Loop : Lancer l'audit de santé de la mémoire et des liens",
+      "template": "python src/swarm.py worker-janitor-watch --project $ARGUMENTS"
+    },
     "loop-focus": {
       "description": "Memory Loop : Verrouiller l'attention sur un récit",
       "template": "python src/swarm.py focus --project $ARGUMENTS"
@@ -471,7 +495,14 @@
         "python",
         "src/bridges/mcp_herdr.py"
       ],
-      "timeout": 15000
+      "timeout": 60000
+    },
+    "openviking": {
+      "type": "local",
+      "command": [
+        "python",
+        "src/bridges/mcp_openviking.py"
+      ]
     }
   }
 }

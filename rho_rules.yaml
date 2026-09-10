@@ -5,3 +5,6 @@ rules:
   - id: "RHO-001"
     trigger: "Error: No active story identified in IN_ANALYZE status"
     action: "Avertir l'utilisateur ou verrouiller le contexte sur une Story existante (Focus Lock)."
+  - id: "RHO-002"
+    trigger: "Detection of placeholder code, // TODO comments, or truncated output"
+    action: "Interdiction formelle des ellipses et placeholders (output-skill). Forcer la livraison exhaustive et syntaxiquement complète."

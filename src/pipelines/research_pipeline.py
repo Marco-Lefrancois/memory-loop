@@ -20,7 +20,7 @@ def run_research(project_name: str, state: LoopState, project_path: Path, query:
     # 2. Exécution du crawler si une URL est transmise
     if explicit_url:
         ZeroFluffConsole.step_s1("Research Crawl", f"Aspiration directe de {explicit_url}...")
-        crawler = WebCrawlerAgent()
+        crawler = WebCrawlerAgent(max_age=86400)
         crawler.execute(state, explicit_url=explicit_url)
         ZeroFluffConsole.success(f"Crawl terminé pour {explicit_url}")
         

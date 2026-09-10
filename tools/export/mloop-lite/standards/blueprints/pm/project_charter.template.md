@@ -1,0 +1,16 @@
+# ⏱️ Charte de Projet & Cadre de Gouvernance — <PROJET>
+
+## 1. Objectifs, Enveloppe Budgétaire & Dates Clés
+* **Budget alloué** : `<Montant / Heures>`
+* **Date de lancement visée** : `<Date>`
+
+## 2. Rôles & Équipe Projet
+* **Directeur de Projet** : ...
+* **Chargé de Projet (Nmédia)** : ...
+* **Analyste d'Affaires** : ...
+* **Tech Lead** : ...
+* **Product Owner Client** : ...
+
+## 3. Règles de Communication & Gouvernance
+* Statut hebdomadaire : Chaque `<Jour>` à `<Heure>`.
+* Gestion des changements de périmètre : Toute demande hors devis fonctionnel fait l'objet d'un avenant écrit.

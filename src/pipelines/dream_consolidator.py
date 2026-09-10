@@ -51,7 +51,13 @@ class DreamConsolidationDaemon:
             except Exception:
                 continue
 
-        # 2. Consolider le rapport de santé de session
+        # 2. Sauvegarder l'index complet des EvidencePacks dans un fichier satellite
+        summaries_dir = self.evidence_dir / "summaries"
+        summaries_dir.mkdir(parents=True, exist_ok=True)
+        full_index_file = summaries_dir / "consolidated_evidence_index.json"
+        full_index_file.write_text(json.dumps(evidence_summaries, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        # 3. Consolider le rapport de santé de session
         health_report = {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "evidence_packs_audited": len(evidence_files),
@@ -65,8 +71,34 @@ class DreamConsolidationDaemon:
         return health_report
 
     def _write_health_report(self, report: Dict[str, Any], evidence_summaries: List[Dict[str, Any]]) -> None:
-        """Met à jour memory/SESSION_MEMORY_HEALTH.md."""
+        """Met à jour memory/SESSION_MEMORY_HEALTH.md sous le plafond strict des 200 lignes / 25 Ko (ADR-0362)."""
         health_file = self.memory_dir / "SESSION_MEMORY_HEALTH.md"
+
+        # Diagnostic des compétences mLoop
+        skills_summary_lines: List[str] = []
+        try:
+            from src.pipelines.skill_doctor import SkillDoctor
+            ws_root = self.project_root
+            if not (ws_root / ".agents" / "skills").exists():
+                for parent in [ws_root.parent, ws_root.parent.parent]:
+                    if (parent / ".agents" / "skills").exists():
+                        ws_root = parent
+                        break
+            doc = SkillDoctor(ws_root)
+            doc_report = doc.audit(suggest_tombstone=False)
+            summ = doc_report.get("summary", {})
+            skills_summary_lines = [
+                "## 🩺 Hygiène Contextuelle & Compétences (SkillDoctor)",
+                "",
+                f"- **Catalogue Détecté** : `{summ.get('total_skills', 0)}` compétences",
+                f"- **Budget Descriptions Boot** : `{summ.get('total_boot_description_tokens', 0):,}` / `{summ.get('boot_budget_max_tokens', 15000):,}` jetons ({summ.get('boot_budget_usage_pct', 0)}%)",
+                f"- **Risque de Context Rot** : `[{summ.get('context_rot_risk', 'LOW')}]`",
+                f"- **Compétences Volumineuses (> 2k tok)** : `{summ.get('oversized_skills_count', 0)}`",
+                "",
+            ]
+        except Exception:
+            pass
+
         lines = [
             "# 🧠 Bilan de Santé & Consolidation Mémorielle (Dream Daemon)",
             "",
@@ -77,22 +109,40 @@ class DreamConsolidationDaemon:
             f"- **Alertes Actives** : `{report['total_alerts']}`",
             f"- **Temps de Consolidation** : `{report['consolidation_duration_ms']} ms`",
             "",
+        ]
+
+        if skills_summary_lines:
+            lines.extend(skills_summary_lines)
+
+        lines.extend([
             "## 📑 Synthèse des Artefacts Consolidés",
             "",
             "| Story ID | Questions Ouvertes | Alertes | Statut |",
             "| :--- | :---: | :---: | :---: |",
-        ]
+        ])
 
-        for es in evidence_summaries[:20]:
+        # Prioriser les stories avec alertes ou questions ouvertes, plafonner à 10 items
+        sorted_summaries = sorted(evidence_summaries, key=lambda x: (x["open_questions"] + x["alerts"]), reverse=True)
+        top_summaries = sorted_summaries[:10]
+
+        for es in top_summaries:
             lines.append(f"| `{es['story_id']}` | {es['open_questions']} | {es['alerts']} | `{es['status']}` |")
+
+        if len(evidence_summaries) > 10:
+            lines.append(f"\n*... et {len(evidence_summaries) - 10} autre(s) EvidencePack(s). Index exhaustif consigné sous `memory/evidence/summaries/consolidated_evidence_index.json` (Plafond 200 lignes / 25 Ko).*")
 
         lines.extend([
             "",
             "---",
-            "*Généré par `DreamConsolidationDaemon` (Memory Loop 2.0).* ",
+            "*Généré par `DreamConsolidationDaemon` (Memory Loop 2.0 - ADR-0362).* ",
         ])
 
-        health_file.write_text("\n".join(lines), encoding="utf-8")
+        # Garde-fou constitutionnel : forcer strictement <= 200 lignes
+        if len(lines) > 200:
+            lines = lines[:198] + ["", "*[Tronqué pour respecter le plafond strict de 200 lignes ADR-0362]*"]
+
+        final_content = "\n".join(lines)
+        health_file.write_text(final_content, encoding="utf-8")
 
 
 def run_dream_consolidation(project_root: Path | str) -> Dict[str, Any]:

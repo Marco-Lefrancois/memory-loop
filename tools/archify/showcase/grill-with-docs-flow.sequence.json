@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Grill with Docs — Séquence Épistémique & Consommation des Règles",
+    "output": "tools/archify/showcase/grill-with-docs-flow.sequence.html",
+    "column_fit": "spread",
+    "viewBox": [960, 790],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-grounding",
+        "label": "1. Fact-Search & Preuves #L",
+        "focus": ["adr_rules", "agent_grill", "fts5_engine", "po_analyst"],
+        "note": "L'agent applique ADR-0326, interroge FTS5 et restitue le Dossier de Preuves sourcé avant tout arbitrage."
+      },
+      {
+        "id": "view-grill",
+        "label": "2. Grill-with-Docs 1:1",
+        "focus": ["po_analyst", "agent_grill", "adr_rules"],
+        "note": "Interrogatoire chirurgical sur la frontière active selon ADR-0320 : une question par tour avec recommandation motivée."
+      },
+      {
+        "id": "view-nli-ship",
+        "label": "3. Fact-Check NLI & Handoff",
+        "focus": ["agent_grill", "nli_verifier", "dev_agents"],
+        "note": "Vérification NLI des assertions, scellement SHA-256 de l'EvidencePack et livraison no-code aux développeurs."
+      }
+    ]
+  },
+  "participants": [
+    { "id": "po_analyst", "type": "external", "label": "PO / Analyste", "sublabel": "Validation & Arbitrage" },
+    { "id": "adr_rules", "type": "database", "label": "ADRs SSOT", "sublabel": "ADR-0320 & ADR-0326" },
+    { "id": "agent_grill", "type": "frontend", "label": "Agent Cerveau", "sublabel": "Grill & Spécification" },
+    { "id": "fts5_engine", "type": "database", "label": "Moteur FTS5", "sublabel": "Fact-Search SQLite" },
+    { "id": "nli_verifier", "type": "backend", "label": "Vérif. NLI", "sublabel": "Harnais Entailment" },
+    { "id": "dev_agents", "type": "external", "label": "Devs / Agents", "sublabel": "Universal Handoff" }
+  ],
+  "segments": [
+    { "from": 150, "to": 320, "label": "1. Passage-Level Grounding & Preuves (ADR-0326)" },
+    { "from": 335, "to": 525, "label": "2. Validation Humaine & Grill-Me 1:1 (ADR-0320)" },
+    { "from": 535, "to": 725, "label": "3. Fact-Check NLI & Universal Handoff (ADR-0319)" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "agent_grill", "to": "adr_rules", "y": 180, "label": "Lecture JIT (ADR-0326 Fact-Search)", "variant": "emphasis" },
+    { "id": "m2", "from": "adr_rules", "to": "agent_grill", "y": 215, "label": "Contrat 4 couches & Search-Before-Ask", "variant": "return" },
+    { "id": "m3", "from": "agent_grill", "to": "fts5_engine", "y": 245, "label": "Requête BM25 (Ateliers & DBML)", "variant": "emphasis" },
+    { "id": "m4", "from": "fts5_engine", "to": "agent_grill", "y": 275, "label": "Extraits verbatim & lignes #L", "variant": "return" },
+    { "id": "m5", "from": "agent_grill", "to": "po_analyst", "y": 305, "label": "Dossier de Preuves Documentaires", "variant": "security" },
+    { "id": "m6", "from": "po_analyst", "to": "agent_grill", "y": 355, "label": "Validation du socle factuel", "variant": "return" },
+    { "id": "m7", "from": "agent_grill", "to": "adr_rules", "y": 385, "label": "Lecture ADR-0320 (Frontier Tree)", "variant": "dashed" },
+    { "id": "m8", "from": "agent_grill", "to": "po_analyst", "y": 415, "label": "Grill-Me 1:1 (Question + Recommandation)", "variant": "security" },
+    { "id": "m9", "from": "po_analyst", "to": "agent_grill", "y": 445, "label": "Arbitrage métier sur la zone grise", "variant": "return" },
+    { "id": "m10", "from": "agent_grill", "to": "adr_rules", "y": 475, "label": "Épuisement frontière (ADR-0320)", "variant": "dashed" },
+    { "id": "m11", "from": "agent_grill", "to": "po_analyst", "y": 508, "label": "User Story 4 Piliers Gherkin", "variant": "return" },
+    { "id": "m12", "from": "agent_grill", "to": "nli_verifier", "y": 550, "label": "Soumission des assertions", "variant": "security" },
+    { "id": "m13", "from": "nli_verifier", "to": "fts5_engine", "y": 580, "label": "Cross-check Entailment vs Conflit", "variant": "security" },
+    { "id": "m14", "from": "fts5_engine", "to": "nli_verifier", "y": 610, "label": "Zero hallucination confirmée", "variant": "return" },
+    { "id": "m15", "from": "nli_verifier", "to": "agent_grill", "y": 640, "label": "EvidencePack certifié SHA-256", "variant": "return" },
+    { "id": "m16", "from": "agent_grill", "to": "dev_agents", "y": 670, "label": "Universal Dev Handoff (No-Code)", "variant": "emphasis" },
+    { "id": "m17", "from": "dev_agents", "to": "po_analyst", "y": 700, "label": "Spécification prête à coder", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "agent_grill", "from": 180, "to": 705, "type": "frontend" },
+    { "participant": "adr_rules", "from": 180, "to": 220, "type": "database" },
+    { "participant": "fts5_engine", "from": 245, "to": 280, "type": "database" },
+    { "participant": "po_analyst", "from": 305, "to": 360, "type": "external" },
+    { "participant": "adr_rules", "from": 385, "to": 400, "type": "database" },
+    { "participant": "po_analyst", "from": 415, "to": 450, "type": "external" },
+    { "participant": "nli_verifier", "from": 550, "to": 650, "type": "backend" },
+    { "participant": "fts5_engine", "from": 580, "to": 615, "type": "database" },
+    { "participant": "dev_agents", "from": 670, "to": 705, "type": "external" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Casser la Boîte Noire (ADR-0326)",
+      "items": [
+        "L'agent montre d'abord ce qu'il a compris via le Dossier de Preuves (extraits #L).",
+        "Règle Search-Before-Ask : interdiction d'interroger l'humain sur des faits déjà écrits.",
+        "Le PO valide et rectifie le socle factuel avant tout arbitrage d'architecture."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Le Grilling à Frontière Active (ADR-0320)",
+      "items": [
+        "Modélisation en arbre de conception (Design Tree) et calcul de la frontière active.",
+        "Mode atomique : 1 seule question à la fois, accompagnée d'une recommandation motivée.",
+        "Épuisement de frontière : dès que les choix sont clos, la story est immédiatement finalisée."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Vérification NLI & Zero-Bruit (ADR-0319)",
+      "items": [
+        "Audit logique NLI : validation que chaque exigence découle des faits (Entailment).",
+        "EvidencePack sidecar scellé en SHA-256 contenant la traçabilité complète.",
+        "User Story purement fonctionnelle : zéro code technique ni méta-instructions IA."
+      ]
+    }
+  ]
+}

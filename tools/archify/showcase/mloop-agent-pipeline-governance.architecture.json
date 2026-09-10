@@ -1,0 +1,434 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "mLoop — Interaction Agent (Cerveau) vs Pipeline Python (Moteur) & Règles Vivantes",
+    "output": "tools/archify/showcase/mloop-agent-pipeline-governance.architecture.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-global",
+        "label": "Architecture Globale : 4 Piliers & Flux Vivant",
+        "focus": [
+          "ssot_adrs",
+          "ssot_contracts",
+          "ssot_blueprints",
+          "agent_orchestrator",
+          "agent_planner",
+          "agent_sentinel",
+          "pipe_swarm",
+          "pipe_linter",
+          "pipe_oracles",
+          "sem_fts5",
+          "sem_graphify",
+          "deliv_backlog",
+          "deliv_handoff"
+        ],
+        "note": "Séparation stricte entre Règles SSOT Markdown, Cerveau Agentique (Système 2) et Harnais Python déterministe (Système 1)."
+      },
+      {
+        "id": "view-rules-consumption",
+        "label": "Consommation des Règles Vivantes (Non-Hardcodé)",
+        "focus": [
+          "ssot_adrs",
+          "ssot_contracts",
+          "ssot_blueprints",
+          "ssot_skills",
+          "agent_orchestrator",
+          "agent_planner",
+          "agent_sentinel",
+          "pipe_linter"
+        ],
+        "note": "Les agents lisent les ADRs et gabarits à la volée. Le pipeline Python valide leur conformité via les contrats machine JSON."
+      },
+      {
+        "id": "view-harness-enforcement",
+        "label": "Contrôle Déterministe & Oracles SHA-256",
+        "focus": [
+          "agent_sentinel",
+          "agent_worker",
+          "pipe_linter",
+          "pipe_oracles",
+          "sem_evidence",
+          "deliv_backlog",
+          "deliv_sync"
+        ],
+        "note": "Le Harnais applique Zero-Fail Carryover : struct-check bloque les dérives et l'Oracle certifie l'EvidencePack avant synchronisation."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "ssot_adrs",
+      "type": "database",
+      "label": "64+ ADRs Système",
+      "sublabel": "standards/adr-system/*.md",
+      "pos": [60, 110],
+      "size": [150, 64],
+      "tag": "RÈGLES VIVANTES"
+    },
+    {
+      "id": "ssot_contracts",
+      "type": "security",
+      "label": "Contrats Machines",
+      "sublabel": "adr-contracts.json",
+      "pos": [60, 260],
+      "size": [150, 64],
+      "tag": "ANTI-DRIFT"
+    },
+    {
+      "id": "ssot_blueprints",
+      "type": "database",
+      "label": "Gabarits Blueprints",
+      "sublabel": "standards/blueprints/*.md",
+      "pos": [60, 410],
+      "size": [150, 64],
+      "tag": "GABARITS SSOT"
+    },
+    {
+      "id": "ssot_skills",
+      "type": "database",
+      "label": "Skills & AGENTS.md",
+      "sublabel": ".agents/skills/*/SKILL.md",
+      "pos": [60, 560],
+      "size": [150, 64],
+      "tag": "DIRECTIVES"
+    },
+    {
+      "id": "agent_orchestrator",
+      "type": "frontend",
+      "label": "Orchestrateur IDE",
+      "sublabel": "Boot Sequence & Focus",
+      "pos": [330, 110],
+      "size": [150, 64],
+      "tag": "CERVEAU (SYST. 2)"
+    },
+    {
+      "id": "agent_planner",
+      "type": "frontend",
+      "label": "Agent Plan & Grill",
+      "sublabel": "Grill-with-Docs (ADR-0320)",
+      "pos": [330, 260],
+      "size": [150, 64],
+      "tag": "SPÉCIFICATION"
+    },
+    {
+      "id": "agent_sentinel",
+      "type": "frontend",
+      "label": "Agent Sentinel QA",
+      "sublabel": "Audit 4 Piliers Gherkin",
+      "pos": [330, 410],
+      "size": [150, 64],
+      "tag": "CONTRADICTOIRE"
+    },
+    {
+      "id": "agent_worker",
+      "type": "backend",
+      "label": "Worker Herdr PTY",
+      "sublabel": "Fork & Harvest (ADR-0346)",
+      "pos": [330, 560],
+      "size": [150, 64],
+      "tag": "OUT-OF-PROCESS"
+    },
+    {
+      "id": "pipe_swarm",
+      "type": "backend",
+      "label": "Swarm Kernel CLI",
+      "sublabel": "swarm.py resume/calibrate",
+      "pos": [600, 110],
+      "size": [150, 64],
+      "tag": "MOTEUR (SYST. 1)"
+    },
+    {
+      "id": "pipe_debate",
+      "type": "backend",
+      "label": "Débat Agentique",
+      "sublabel": "agentic_debate.py (3 Têtes)",
+      "pos": [600, 260],
+      "size": [150, 64],
+      "tag": "STRESS-TEST"
+    },
+    {
+      "id": "pipe_linter",
+      "type": "security",
+      "label": "Gatekeeper Struct",
+      "sublabel": "struct-check --strict",
+      "pos": [600, 410],
+      "size": [150, 64],
+      "tag": "HARNAIS STRICT"
+    },
+    {
+      "id": "pipe_oracles",
+      "type": "security",
+      "label": "Oracles Reverify",
+      "sublabel": "Certification EvidencePack",
+      "pos": [600, 560],
+      "size": [150, 64],
+      "tag": "SHA-256 GATE"
+    },
+    {
+      "id": "sem_fts5",
+      "type": "database",
+      "label": "SQLite FTS5 BM25",
+      "sublabel": "Fact-Search & Preuves",
+      "pos": [870, 110],
+      "size": [150, 64],
+      "tag": "SOCLE TEXTE"
+    },
+    {
+      "id": "sem_graphify",
+      "type": "database",
+      "label": "Graphe Graphify",
+      "sublabel": "Nœuds conceptuels docs/",
+      "pos": [870, 260],
+      "size": [150, 64],
+      "tag": "SOCLE CONCEPT"
+    },
+    {
+      "id": "sem_codegraph",
+      "type": "security",
+      "label": "CodeGraph AST",
+      "sublabel": "Blast Radius & Locks",
+      "pos": [870, 410],
+      "size": [150, 64],
+      "tag": "SOCLE CODE"
+    },
+    {
+      "id": "sem_evidence",
+      "type": "database",
+      "label": "Evidence Register",
+      "sublabel": "memory/evidence/*.json",
+      "pos": [870, 560],
+      "size": [150, 64],
+      "tag": "HISTORIQUE ÉTAT"
+    },
+    {
+      "id": "deliv_backlog",
+      "type": "database",
+      "label": "Récits 4 Piliers",
+      "sublabel": "backlog/stories/*.md",
+      "pos": [1140, 110],
+      "size": [150, 64],
+      "tag": "LIVRABLES"
+    },
+    {
+      "id": "deliv_sync",
+      "type": "cloud",
+      "label": "Triple Sync Hub",
+      "sublabel": "Git / Jira / Obsidian",
+      "pos": [1140, 335],
+      "size": [150, 64],
+      "tag": "SYNCHRONISATION"
+    },
+    {
+      "id": "deliv_handoff",
+      "type": "external",
+      "label": "Universal Dev Handoff",
+      "sublabel": "Devs humains & Agents",
+      "pos": [1140, 560],
+      "size": [150, 64],
+      "tag": "CONSOMMATEURS"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "SSOT Règles & Contrats (Non-Hardcodé)",
+      "wraps": ["ssot_adrs", "ssot_contracts", "ssot_blueprints", "ssot_skills"],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Cerveau Agentique (Système 2 - Cognitif)",
+      "wraps": ["agent_orchestrator", "agent_planner", "agent_sentinel", "agent_worker"],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "Harnais & Pipeline Python (Système 1)",
+      "wraps": ["pipe_swarm", "pipe_debate", "pipe_linter", "pipe_oracles"],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Triade Sémantique & Traçabilité",
+      "wraps": ["sem_fts5", "sem_graphify", "sem_codegraph", "sem_evidence"],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "Livrables Métier & Dev Handoff",
+      "wraps": ["deliv_backlog", "deliv_sync", "deliv_handoff"],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "from": "ssot_adrs",
+      "to": "agent_orchestrator",
+      "label": "lecture JIT",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [270, 126]
+    },
+    {
+      "from": "ssot_adrs",
+      "to": "ssot_contracts",
+      "label": "dérivation",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [135, 217]
+    },
+    {
+      "from": "ssot_contracts",
+      "to": "agent_planner",
+      "label": "contrats SCC",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [270, 276]
+    },
+    {
+      "from": "ssot_blueprints",
+      "to": "agent_sentinel",
+      "label": "gabarit story",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [270, 426]
+    },
+    {
+      "from": "ssot_skills",
+      "to": "agent_worker",
+      "label": "directives PTY",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [270, 576]
+    },
+    {
+      "from": "agent_orchestrator",
+      "to": "pipe_swarm",
+      "label": "boot & resume",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [540, 126]
+    },
+    {
+      "from": "agent_planner",
+      "to": "pipe_debate",
+      "label": "arbitrage",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [540, 276]
+    },
+    {
+      "from": "agent_sentinel",
+      "to": "pipe_linter",
+      "label": "audit struct",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [540, 426]
+    },
+    {
+      "from": "agent_worker",
+      "to": "pipe_oracles",
+      "label": "harvesting",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [540, 576]
+    },
+    {
+      "from": "pipe_swarm",
+      "to": "sem_fts5",
+      "label": "indexation",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [810, 126]
+    },
+    {
+      "from": "pipe_debate",
+      "to": "sem_graphify",
+      "label": "concepts docs",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [810, 276]
+    },
+    {
+      "from": "pipe_linter",
+      "to": "sem_codegraph",
+      "label": "impact AST",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [810, 426]
+    },
+    {
+      "from": "pipe_oracles",
+      "to": "sem_evidence",
+      "label": "scellement SHA",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [810, 576]
+    },
+    {
+      "from": "sem_fts5",
+      "to": "deliv_backlog",
+      "label": "faits injectés",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [1080, 126]
+    },
+    {
+      "from": "sem_evidence",
+      "to": "deliv_handoff",
+      "label": "preuves SHA",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [1080, 576]
+    },
+    {
+      "from": "deliv_backlog",
+      "to": "deliv_sync",
+      "label": "push récits",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [1215, 254]
+    },
+    {
+      "from": "deliv_sync",
+      "to": "deliv_handoff",
+      "label": "synchro dev",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [1215, 480]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Règles Documentaires vs Code Hardcodé",
+      "items": [
+        "Les ADRs et Gabarits sont des fichiers Markdown modifiables sans recompiler le pipeline Python.",
+        "L'Agent charge les règles Just-in-Time (Progressive Disclosure) via lecture directe de fichiers.",
+        "Le fichier adr-contracts.json agit comme le contrat machine audité par le calibrateur Python."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cerveau (Syst. 2) vs Moteur Déterministe (Syst. 1)",
+      "items": [
+        "Le Cerveau (Agent IA) est cognitif : il modélise, challenge (Grill-Me) et rédige des récits fonctionnels.",
+        "Le Moteur (Python CLI) est déterministe : il applique les linters, vérifie l'intégrité et bloque les erreurs.",
+        "Règle d'or Zero-Fail Carryover : tout échec CLI (Exit Code ≠ 0) interrompt immédiatement l'agent."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Triade Sémantique & Certification SHA-256",
+      "items": [
+        "FTS5 (mots-clés BM25) + Graphify (relations conceptuelles) + CodeGraph (dépendances physiques du code).",
+        "Zéro question triviale (Search-Before-Ask) grâce au Dossier de Preuves Documentaires.",
+        "Oracles Reverify : chaque récit est validé par un EvidencePack JSON scellé par empreinte SHA-256."
+      ]
+    }
+  ]
+}

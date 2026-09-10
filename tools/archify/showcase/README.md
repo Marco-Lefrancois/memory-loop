@@ -62,6 +62,41 @@ Ces artefacts HTML sont **100% autonomes** (zéro dépendance externe, CSS/JS et
 
 ---
 
+### 6. 🛡️ mLoop — Interaction Agent (Cerveau) vs Pipeline Python (Moteur) & Règles Vivantes
+*Cartographie de l'ingénierie de harnais, de la séparation Système 1 / Système 2 et de la consommation des ADRs non-hardcodées.*
+- 🌐 **Rendu HTML Interactif** : [`mloop-agent-pipeline-governance.architecture.html`](mloop-agent-pipeline-governance.architecture.html)
+- 📄 **Spécification JSON IR** : [`mloop-agent-pipeline-governance.architecture.json`](mloop-agent-pipeline-governance.architecture.json)
+- **Vues incluses** :
+  1. *Architecture Globale : 4 Piliers & Flux Vivant* (SSOT Markdown $\rightarrow$ Cerveau Agentique $\rightarrow$ Pipeline Python $\rightarrow$ Triade Sémantique $\rightarrow$ Dev Handoff).
+  2. *Consommation des Règles Vivantes (Non-Hardcodé)* (Lecture Just-in-Time des 64+ ADRs et gabarits Markdown sans recompiler le code).
+  3. *Contrôle Déterministe & Oracles SHA-256* (Garde-fous déterministes struct-check, EvidencePack JSON et règle Zero-Fail Carryover).
+
+---
+
+### 7. ⏱️ mLoop — Séquence d'Exécution : Cerveau, Moteur & Règles Vivantes
+*Traversée temporelle pas-à-pas de la création d'un récit, du Boot Anti-Amnésie au Grill-with-Docs et à la certification SHA.*
+- 🌐 **Rendu HTML Interactif** : [`mloop-agent-pipeline-flow.sequence.html`](mloop-agent-pipeline-flow.sequence.html)
+- 📄 **Spécification JSON IR** : [`mloop-agent-pipeline-flow.sequence.json`](mloop-agent-pipeline-flow.sequence.json)
+- **Scénarios temporels modélisés** :
+  - *Phase 0 & 1 : Boot Sequence & Ingestion* (Restauration d'état sans crawl disque brute, indexation FTS5).
+  - *Phase 2 & 3 : Règles Vivantes & Arbitrages* (Lecture JIT de l'ADR-0300, Search-Before-Ask et Grill 1:1).
+  - *Phase 4 & 5 : Audit Déterministe & Handoff* (Vérification adr-contracts.json, scellement SHA-256 et synchronisation Jira/Git).
+
+---
+
+### 8. 🔍 Grill with Docs & Diptyque Épistémique mLoop (Fact-Search / Fact-Check)
+*Architecture et flux de séquence du protocole de grounding documentaire, d'entrevue 1:1 à frontière active et de vérification NLI.*
+- 🌐 **Rendu Architecture Vectoriel** : [`grill-with-docs-epistemic-flow.architecture.html`](grill-with-docs-epistemic-flow.architecture.html)
+- 📄 **Spécification JSON Architecture** : [`grill-with-docs-epistemic-flow.architecture.json`](grill-with-docs-epistemic-flow.architecture.json)
+- 🌐 **Rendu Séquence Temporelle** : [`grill-with-docs-flow.sequence.html`](grill-with-docs-flow.sequence.html)
+- 📄 **Spécification JSON Séquence** : [`grill-with-docs-flow.sequence.json`](grill-with-docs-flow.sequence.json)
+- **Les 3 Étapes du Diptyque Épistémique** :
+  1. *Passage-Level Grounding (ADR-0326)* : Recherche FTS5 dans les notes d'ateliers et DBML, génération inconditionnelle du Dossier de Preuves `#L` avant toute question.
+  2. *Grill-with-Docs 1:1 (ADR-0320)* : Parcours de la frontière active du Design Tree, une question atomique à la fois avec recommandation motivée.
+  3. *Fact-Check NLI & Universal Handoff (ADR-0319)* : Décomposition en assertions, test Entailment vs Contradiction, scellement SHA-256 de l'EvidencePack.
+
+---
+
 ## 🎬 Fonctionnalités Interactives à Montrer en Démo
 
 1. **Onglets de Vues (Chapters / Views)** : Cliquez sur les boutons de scénarios en haut pour voir la caméra zoomer et mettre en évidence le parcours ciblé.

@@ -49,3 +49,51 @@ def handle_tree(args: argparse.Namespace, state: LoopState, project_path: Path) 
         lint=False,
         scope=scope,
     )
+
+
+def handle_check_leakage(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Vérifie l'absence de fuites de spécification et de vérification (ADR-0354)."""
+    from src.engine.gates.verification_leakage import VerificationLeakageGate
+    from src.cli import ZeroFluffConsole
+
+    gate = VerificationLeakageGate()
+    target_file = getattr(args, "file", None)
+
+    if target_file:
+        p = Path(target_file)
+        if not p.exists() and project_path is not None and (project_path / target_file).exists():
+            p = project_path / target_file
+        report = gate.check_file(p)
+        print(report.format_summary())
+        return 0 if report.passed else 1
+
+    # Parcourir les fichiers de tests du projet ou glob global
+    test_files = []
+    if project_path is not None and (project_path / "tests").exists():
+        test_files.extend((project_path / "tests").glob("test_*.py"))
+    if Path("tests").exists():
+        for f in Path("tests").glob("test_*.py"):
+            if f not in test_files:
+                test_files.append(f)
+
+    ZeroFluffConsole.info(f"Vérification de fuite sur {len(test_files)} fichier(s) de tests...")
+
+    all_passed = True
+    rejected_count = 0
+    for tf in test_files:
+        try:
+            report = gate.check_file(tf)
+            if not report.passed:
+                all_passed = False
+                rejected_count += 1
+                print(report.format_summary())
+        except Exception:
+            pass
+
+    if all_passed:
+        ZeroFluffConsole.success("Aucune fuite de vérification (Zero Verification Leakage) détectée.")
+        return 0
+    else:
+        ZeroFluffConsole.error(f"{rejected_count} fichier(s) contiennent des violations anti-fuite critiques.")
+        return 1
+

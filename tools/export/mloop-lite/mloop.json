@@ -1,0 +1,26 @@
+{
+  "project_name": "mloop-lite",
+  "active_role": "ba",
+  "role_name": "Analyste d'Affaires (BA / Product Owner)",
+  "mission": "Cadrer les besoins d'affaires, croiser les entretiens client avec les documents officiels et rédiger les livrables stratégiques sans jargon technique.",
+  "phase": "0_INCEPTION",
+  "deliverables_available": [
+    {
+      "id": "devis_fonctionnel",
+      "name": "Cahier de Charge Fonctionnel (Devis Fonctionnel)"
+    },
+    {
+      "id": "business_case",
+      "name": "Business Case & Étude d'Opportunité (ROI)"
+    },
+    {
+      "id": "matrice_scope",
+      "name": "Matrice de Périmètre In-Scope vs Out-of-Scope"
+    },
+    {
+      "id": "matrice_tracabilite",
+      "name": "Matrice de Traçabilité des Exigences (RTM)"
+    }
+  ],
+  "version": "1.0.0-lite"
+}

@@ -27,6 +27,9 @@ Ces skills sont paramétrés pour ne pas s'activer tout seuls afin de préserver
 - **`/sop`** (*SOP*) : La "Bible" mLoop. Contient la Référence Standard des Opérations, l'architecture globale (Kernel-Pipeline) et les principes d'auto-amélioration.
 
 ### 🔬 Skills Externes & Spécialisés
+- **`/design-taste`** : Compétence mLoop enregistrée automatiquement.
+- **`/archify`** : Compétence mLoop enregistrée automatiquement.
+- **`/impeccable`** : Compétence mLoop enregistrée automatiquement.
 - **`/obsidian-canvas`** : Compétence mLoop enregistrée automatiquement.
 - **`/visual-excalidraw`** : Compétence mLoop enregistrée automatiquement.
 - **`/visual-mermaid`** : Compétence mLoop enregistrée automatiquement.
@@ -41,6 +44,7 @@ Ces skills sont paramétrés pour ne pas s'activer tout seuls afin de préserver
 - **`/sentinel`** : Compétence mLoop enregistrée automatiquement.
 - **`/rubber-duck`** : Compétence mLoop enregistrée automatiquement.
 - **`/svg-optimize`** : Compétence mLoop enregistrée automatiquement.
+- **`/svg-ocr`** : Extraction du texte des maquettes SVG/PNG à texte vectorisé (paths) via rendu headless Chromium + OCR natif Windows. À utiliser quand le SVG n'a pas de balises `<text>` et que le modèle actif ne supporte pas l'entrée image.
 - **`/grill`** : Compétence mLoop enregistrée automatiquement.
 - **`/research`** : Recherche autonome via le Deep Research Pipeline (Scout -> Crawl -> Synthesize).
 - **`/teach`** : Enseignement d'un nouveau concept ou skill à l'utilisateur dans le workspace actuel.

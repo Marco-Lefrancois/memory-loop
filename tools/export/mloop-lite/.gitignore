@@ -1,0 +1,18 @@
+# Environnements virtuels
+.venv/
+env/
+venv/
+
+# Fichiers de secrets & clés API
+.env
+*.key
+*.secret
+
+# Caches Python & bases temporaires
+__pycache__/
+*.pyc
+memory/.fact_search_index.db
+
+# Fichiers système
+.DS_Store
+Thumbs.db

@@ -149,6 +149,40 @@ def is_external_link_allowed(target_url: str, base_url: str, allow_external: boo
         return False
 
 
+def is_empty_spa_shell(html_content: str, text_content: str) -> bool:
+    """Détecte si la page est un squelette SPA vide nécessitant l'exécution JavaScript."""
+    if len(text_content.strip()) > 500:
+        return False
+    spa_markers = [
+        'id="root"', 'id="app"', 'id="__next"', 'id="__nuxt"',
+        'noscript>You need to enable JavaScript',
+        'noscript>Please enable JavaScript',
+        'You need to enable JavaScript to run this app',
+    ]
+    return any(marker in html_content for marker in spa_markers)
+
+
+def delegate_playwright_scrape(url: str, output_dir: Path) -> Optional[str]:
+    """Délègue l'aspiration d'une page SPA au moteur local Playwright de mloop-crawler."""
+    try:
+        from src.bridges.mcp_crawler import resolve_crawler_cli_path
+        cli_path = resolve_crawler_cli_path()
+        if not cli_path.exists():
+            return None
+
+        import subprocess
+        output_dir.mkdir(parents=True, exist_ok=True)
+        cmd = ["node", str(cli_path), "scrape", url, "--engine", "playwright", "--out", str(output_dir)]
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        if proc.returncode == 0:
+            candidates = sorted(output_dir.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+            if candidates:
+                return candidates[0].read_text(encoding="utf-8")
+    except Exception as e:
+        logger.debug(f"Délégation Playwright échouée pour {url}: {e}")
+    return None
+
+
 class WebCrawlerAgent:
     """
     Système 1 : Smart Web Crawler Agent Asynchrone (Smart Discovery & Traversal - ADR-0336).
@@ -168,6 +202,10 @@ class WebCrawlerAgent:
         llms_txt: bool = True,
         ignore_query_parameters: bool = False,
         json_schema_path: Optional[str] = None,
+        all_sources: bool = False,
+        max_domain_requests: int = 25,
+        render_js: bool = False,
+        github_tree: bool = True,
     ):
         self.name = "Web Crawler"
         self.max_concurrency = max_concurrency
@@ -180,6 +218,12 @@ class WebCrawlerAgent:
         self.llms_txt = llms_txt
         self.ignore_query_parameters = ignore_query_parameters
         self.json_schema_path = json_schema_path
+        self.all_sources = all_sources
+        self.max_domain_requests = max_domain_requests
+        self.render_js = render_js
+        self.github_tree = github_tree
+        self.domain_request_counts: Dict[str, int] = {}
+        self.seen_content_hashes: Set[str] = set()
 
     def _html_to_clean_markdown(self, html_content: str, url: str = None) -> str:
         """Convertit le HTML brut en Markdown lisible sans scripts ni styles parasites."""
@@ -231,6 +275,31 @@ class WebCrawlerAgent:
 
         return list(set(found_links))
 
+    def _extract_markdown_links(self, markdown_content: str, base_url: str) -> List[str]:
+        """Extrait les liens valides d'un contenu Markdown ([label](href)) en respectant les filtres."""
+        found_links = []
+        for m in re.finditer(r'\[([^\]]+)\]\(([^)]+)\)', markdown_content):
+            href = m.group(2).strip().split('#')[0].split()[0]
+            if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
+                continue
+
+            normalized = normalize_url(href, base_url, ignore_query=self.ignore_query_parameters)
+            if not normalized:
+                continue
+
+            is_domain = is_domain_allowed(normalized, base_url, self.allow_subdomains)
+            is_ext = is_external_link_allowed(normalized, base_url, self.allow_external_links)
+
+            if not is_domain and not is_ext:
+                continue
+
+            if not is_path_allowed(normalized, self.include_paths, self.exclude_paths):
+                continue
+
+            found_links.append(normalized)
+
+        return list(set(found_links))
+
     async def _fetch_llms_txt(
         self,
         client: "httpx.AsyncClient",
@@ -241,6 +310,18 @@ class WebCrawlerAgent:
         """Sonde et récupère llms.txt ou llms-full.txt si disponible sur le domaine racine."""
         try:
             parsed = urllib.parse.urlparse(url)
+            # Ignorer les plateformes de partage de code ou documents où le root llms.txt ne correspond pas au repo spécifique
+            if parsed.netloc.lower() in [
+                "github.com",
+                "gist.github.com",
+                "gitlab.com",
+                "bitbucket.org",
+                "raw.githubusercontent.com",
+                "huggingface.co",
+                "arxiv.org",
+            ]:
+                return None
+
             origin = f"{parsed.scheme}://{parsed.netloc}"
 
             candidates = [
@@ -266,7 +347,98 @@ class WebCrawlerAgent:
                     continue
         except Exception as e:
             logger.debug(f"Vérification llms.txt ignorée pour {url}: {e}")
-        return None
+    async def _fetch_github_repo_tree(
+        self,
+        client: "httpx.AsyncClient",
+        url: str,
+        docs_cache_dir: Path,
+        headers: Dict[str, str],
+    ) -> List[Path]:
+        """
+        Explore récursivement l'arborescence d'un dépôt GitHub via l'API Git Tree publique.
+        Extrait automatiquement les SKILL.md, docs/**/*.md, research/**/*.md et fichiers d'architecture.
+        """
+        discovered_files: List[Path] = []
+        try:
+            parsed = urllib.parse.urlparse(url)
+            parts = [p for p in parsed.path.strip("/").split("/") if p]
+            if len(parts) < 2 or parsed.netloc.lower() not in ["github.com", "www.github.com"]:
+                return discovered_files
+
+            user, repo = parts[0], parts[1]
+            repo_cache_dir = docs_cache_dir / f"repo_{user}_{repo}"
+            repo_cache_dir.mkdir(parents=True, exist_ok=True)
+
+            api_headers = {
+                "User-Agent": "mLoop-SmartCrawler/2.0",
+                "Accept": "application/vnd.github.v3+json",
+            }
+
+            branches = ["main", "master"]
+            tree_items = []
+            active_branch = "main"
+
+            for b in branches:
+                tree_url = f"https://api.github.com/repos/{user}/{repo}/git/trees/{b}?recursive=1"
+                try:
+                    res = await client.get(tree_url, headers=api_headers, timeout=10.0)
+                    if res.status_code == 200:
+                        data = res.json()
+                        tree_items = data.get("tree", [])
+                        active_branch = b
+                        break
+                except Exception:
+                    continue
+
+            if not tree_items:
+                return discovered_files
+
+            # Filtrer les cibles documentaires, skills et configurations canoniques
+            target_patterns = [
+                r".*SKILL\.md$",
+                r".*skill\.ya?ml$",
+                r"^docs/.*\.md$",
+                r"^research/.*\.md$",
+                r"^standards/.*\.md$",
+                r"^AGENTS\.md$",
+                r"^CLAUDE\.md$",
+                r"^GEMINI\.md$",
+                r"^SCHEMA\.md$",
+                r"^DESIGN\.md$",
+                r"^package\.json$",
+                r"^pyproject\.toml$",
+                r"^llms\.txt$",
+            ]
+
+            matched_paths = []
+            for it in tree_items:
+                if it.get("type") == "blob":
+                    path_str = it.get("path", "")
+                    if any(re.search(pat, path_str, re.IGNORECASE) for pat in target_patterns):
+                        matched_paths.append(path_str)
+
+            # Plafond de sauvegarde (max 30 fichiers)
+            matched_paths = matched_paths[:30]
+            ZeroFluffConsole.info(f"[GITHUB-TREE] {len(matched_paths)} fichier(s) documentaire(s)/skill(s) découverts pour {user}/{repo}...")
+
+            for item_path in matched_paths:
+                raw_url = f"https://raw.githubusercontent.com/{user}/{repo}/{active_branch}/{item_path}"
+                try:
+                    file_res = await client.get(raw_url, headers=headers, timeout=8.0)
+                    if file_res.status_code == 200:
+                        out_target = repo_cache_dir / item_path
+                        out_target.parent.mkdir(parents=True, exist_ok=True)
+                        out_target.write_text(file_res.text, encoding="utf-8")
+                        discovered_files.append(out_target)
+                except Exception as ex:
+                    logger.debug(f"Erreur aspiration raw GitHub {item_path}: {ex}")
+
+            if discovered_files:
+                ZeroFluffConsole.success(f"[GITHUB-TREE] {len(discovered_files)} artefact(s) sauvegardés sous {repo_cache_dir.name}/")
+        except Exception as e:
+            logger.debug(f"Exploration Git Tree GitHub ignorée pour {url}: {e}")
+
+        return discovered_files
 
     def _check_max_age_cache(self, output_file: Path) -> bool:
         """Vérifie si le fichier de cache est encore valide selon le TTL max_age."""
@@ -298,7 +470,15 @@ class WebCrawlerAgent:
 
         url_hash = hashlib.sha256(url_clean.encode("utf-8")).hexdigest()[:12]
         domain = urllib.parse.urlparse(url_clean).netloc.replace(".", "_")
+        parsed_netloc = urllib.parse.urlparse(url_clean).netloc.lower()
         output_file = docs_cache_dir / f"crawl_{domain}_{url_hash}.md"
+
+        # Vérification du quota de requêtes par domaine (Anti-épuisement / HarnessDev)
+        curr_domain_count = self.domain_request_counts.get(parsed_netloc, 0)
+        if curr_domain_count >= self.max_domain_requests:
+            ZeroFluffConsole.warning(f"[QUOTA] Plafond de requêtes atteint ({self.max_domain_requests}) pour {parsed_netloc}. URL ignorée : {url_clean}")
+            return None, []
+        self.domain_request_counts[parsed_netloc] = curr_domain_count + 1
 
         # 1. Vérification du cache TTL
         if self._check_max_age_cache(output_file):
@@ -317,11 +497,13 @@ class WebCrawlerAgent:
 
         # Conversion automatique des URLs GitHub vers raw README
         fetch_url = url_clean
+        is_github_repo = False
         if "github.com" in url_clean and "github.blog" not in url_clean and "/tree/" not in url_clean and "/blob/" not in url_clean:
-            parts = url_clean.rstrip("/").split("/")
-            if len(parts) == 5:
-                user = parts[3]
-                repo = parts[4]
+            parts = [p for p in urllib.parse.urlparse(url_clean).path.strip("/").split("/") if p]
+            if len(parts) == 2:
+                is_github_repo = True
+                user = parts[0]
+                repo = parts[1]
                 fetch_url = f"https://raw.githubusercontent.com/{user}/{repo}/main/README.md"
 
         discovered_links: List[str] = []
@@ -358,6 +540,11 @@ class WebCrawlerAgent:
 
                     elif fetch_url.endswith(".md") or "raw.githubusercontent" in fetch_url or "text/plain" in content_type or "text/markdown" in content_type:
                         content_md = response.text
+                        if self.max_depth > 0:
+                            discovered_links = self._extract_markdown_links(content_md, fetch_url)
+
+                        if is_github_repo and self.github_tree:
+                            await self._fetch_github_repo_tree(client, url_clean, docs_cache_dir, headers)
 
                     else:
                         # RÈGLE 3 : Détection Markdown Twin URL
@@ -376,8 +563,22 @@ class WebCrawlerAgent:
 
                         if not is_markdown_twin_used:
                             content_md = self._html_to_clean_markdown(response.text, url_clean)
+                            if self.render_js or is_empty_spa_shell(response.text, content_md):
+                                rendered = delegate_playwright_scrape(url_clean, docs_cache_dir)
+                                if rendered and len(rendered.strip()) > len(content_md.strip()):
+                                    content_md = rendered
+                                    ZeroFluffConsole.info(f"[SPA-RENDER] Rendu Playwright appliqué avec succès ({len(content_md)} octets)")
+
                             if self.max_depth > 0:
                                 discovered_links = self._extract_links(response.text, url_clean)
+
+                    # Détection de contenu identique (Anti-redondance / HarnessDev)
+                    content_hash_digest = hashlib.sha256(content_md.strip().encode("utf-8")).hexdigest()
+                    if content_hash_digest in self.seen_content_hashes and len(content_md.strip()) > 80:
+                        ZeroFluffConsole.info(f"[DEDUP] Contenu dupliqué détecté pour {url_clean} (Hash identique). Re-crawl ignoré.")
+                        output_file.write_text(f"sha256: {url_hash}\nsource: {url_clean}\ndedup_of: {content_hash_digest}\n\n{content_md}", encoding="utf-8")
+                        return output_file, []
+                    self.seen_content_hashes.add(content_hash_digest)
 
                     output_file.write_text(f"sha256: {url_hash}\nsource: {url_clean}\n\n{content_md}", encoding="utf-8")
                     ZeroFluffConsole.success(f"Sauvegarde du crawl sous {output_file.name}")
@@ -400,22 +601,25 @@ class WebCrawlerAgent:
             (crawler_dir / subdir).mkdir(parents=True, exist_ok=True)
 
         project_path = Path("Projects") / state.project_name
-        sources_text = ""
 
-        for d in [ProjectLayout.DOCS, ProjectLayout.DIRECTIVES, ProjectLayout.REFERENCE, ProjectLayout.BACKLOG]:
-            dir_path = project_path / d
-            if dir_path.exists():
-                for ext in ["*.md", "*.txt"]:
-                    for f in dir_path.rglob(ext):
-                        try:
-                            sources_text += f.read_text(encoding="utf-8") + "\n"
-                        except Exception as e:
-                            logger.debug(f"Lecture ignorée sur {f}: {e}")
+        if explicit_url and not self.all_sources:
+            initial_urls = [explicit_url]
+        else:
+            sources_text = ""
+            for d in [ProjectLayout.DOCS, ProjectLayout.DIRECTIVES, ProjectLayout.REFERENCE, ProjectLayout.BACKLOG]:
+                dir_path = project_path / d
+                if dir_path.exists():
+                    for ext in ["*.md", "*.txt"]:
+                        for f in dir_path.rglob(ext):
+                            try:
+                                sources_text += f.read_text(encoding="utf-8") + "\n"
+                            except Exception as e:
+                                logger.debug(f"Lecture ignorée sur {f}: {e}")
 
-        initial_urls = list(set(re.findall(r'https?://[^\s)\]]+', sources_text)))
-        if explicit_url:
-            initial_urls.append(explicit_url)
-        initial_urls = list(set(initial_urls))
+            initial_urls = list(set(re.findall(r'https?://[^\s)\]]+', sources_text)))
+            if explicit_url:
+                initial_urls.append(explicit_url)
+            initial_urls = list(set(initial_urls))
 
         if not initial_urls:
             ZeroFluffConsole.step_s1(self.name, "Aucune URL externe détectée.")
@@ -457,6 +661,10 @@ class WebCrawlerAgent:
                                 next_queue.append(link)
 
                 current_queue = list(set(next_queue))
+
+                # Point de contrôle in-flight si l'intervalle temporel (60-90s) est atteint
+                if hasattr(state, "checkpoint") and state.should_checkpoint():
+                    state.checkpoint(project_path=project_path, reason="crawler_in_flight")
 
         return state
 

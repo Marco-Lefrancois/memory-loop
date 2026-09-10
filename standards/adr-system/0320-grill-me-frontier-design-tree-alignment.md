@@ -75,6 +75,19 @@ Suite à un audit de qualité du Fact-Checking mené le 26 août 2026, il est co
 4. **Journalisation Systématique de la Couche 3** : Toute recherche Fact-Search (manuelle via outils agent, ou via `GrillEngine.perform_fact_search()`) doit être consignée dans `memory/fact_search_log.jsonl`, avec le champ `source_type`. La certitude affichée doit être graduée selon le nombre et le rang des résultats retournés, jamais fixée à `HIGH` par défaut dès qu'un résultat existe.
 5. **Rétro-Alimentation des EvidencePacks Caducs** : Un EvidencePack dont le `timestamp` est antérieur à la dernière modification du récit associé doit être marqué `"status": "STALE_PENDING_REGENERATION"` plutôt que de conserver silencieusement `"VALIDATED"`.
 
+### H. Restitution Inconditionnelle du Dossier de Faits Établis (Pre-Grill Fact Disclosure)
+
+Afin d'éradiquer le syndrome de la "boîte noire épistémique" où l'agent fouille en coulisses sans donner de visibilité à l'humain :
+
+1. **Découplage Faits vs Arbitrages** : La restitution des faits découverts (`look it up`) ne doit jamais être conditionnée à la présence de questions d'arbitrage (`ask the PO`).
+2. **Restitution Systématique Pré-Rédaction** : Avant d'ouvrir une session de Grilling OU avant de commencer la rédaction d'un récit (si aucun arbitrage n'est requis), l'agent **DOIT impérativement présenter le Dossier de Preuves Documentaires & Faits Établis** complet :
+   - Maquettes SSOT & Notes d'ajustement UI (avec liens `file:///...`).
+   - Extraits verbatim sourcés avec numéros de lignes précis de transcription/specs et déduction des faits établis.
+   - Modèle de données DBML et entités cibles.
+3. **Deux Issues Formelles de Cadrage** :
+   - *Cas A (Frontière active non vide)* : Le Dossier de Preuves introduit immédiatement l'unique Question d'Arbitrage ciblée (Round 1:1 avec recommandation mLoop).
+   - *Cas B (Frontière vide / Faits 100% limpides)* : L'agent présente l'intégralité du Dossier de Preuves, conclut par un constat explicite de frontière vide (*« Tous les faits nécessaires sont vérifiés et documentés sans ambiguïté résiduelle. Aucun arbitrage requis »*), et attend la validation du socle factuel par l'humain avant d'enclencher la rédaction de la story.
+
 ---
 
 ## 📈 3. Conséquences & 6 Piliers d'Impact mLoop
@@ -92,3 +105,4 @@ Suite à un audit de qualité du Fact-Checking mené le 26 août 2026, il est co
 
 *Décision d'architecture mLoop officialisée le 15 août 2026.*
 *Amendement (Sections F & G) officialisé le 26 août 2026, suite à audit de session Grill-with-Docs sur le projet Metro_OneTrust (codebase COMMERCE).*
+*Amendement (Section H : Restitution Inconditionnelle du Dossier de Faits) officialisé le 3 septembre 2026.*

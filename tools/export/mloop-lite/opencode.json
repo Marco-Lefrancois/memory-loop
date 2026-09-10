@@ -1,0 +1,58 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "model": "nmedia_cloud/claude-sonnet-4.6-thinking",
+  "small_model": "nmedia_cloud/gemini-3.5-flash-lite",
+  "instructions": [
+    ".agents/rules/*.md",
+    "docs/LEXIQUE.md"
+  ],
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 10000
+  },
+  "provider": {
+    "nmedia_cloud": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://api-ia.nmedia.ca/v1",
+        "apiKey": "{env:NMEDIA_CLOUD_API_KEY}"
+      },
+      "models": {
+        "claude-sonnet-4.6-thinking": {
+          "name": "Claude 3.7 Sonnet Thinking (Recommandé pour Grill & Analyse)"
+        },
+        "claude-sonnet-4.6": {
+          "name": "Claude 3.7 Sonnet Standard"
+        },
+        "claude-sonnet-5": {
+          "name": "Claude 3.5 Sonnet v2"
+        },
+        "claude-opus-4.8": {
+          "name": "Claude 3 Opus (Haute Capacité)"
+        },
+        "gpt-5.6-terra-thinking": {
+          "name": "GPT-4.5 / Terra Thinking"
+        },
+        "gemini-3.5-flash-lite": {
+          "name": "Gemini 2.0 Flash Lite (Recherche rapide & Tâches légères)"
+        }
+      }
+    },
+    "opencode": {
+      "npm": "@ai-sdk/openai-compatible",
+      "models": {
+        "opencode/gemini-2.0-flash": {
+          "name": "Gemini 2.0 Flash (Modèle Gratuit OpenCode)"
+        },
+        "opencode/gpt-4o-mini": {
+          "name": "GPT-4o Mini (Modèle Gratuit OpenCode)"
+        },
+        "opencode/deepseek-r1": {
+          "name": "DeepSeek R1 Reasoning (Modèle Gratuit OpenCode)"
+        }
+      }
+    }
+  }
+}

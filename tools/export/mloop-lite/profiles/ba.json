@@ -1,0 +1,39 @@
+{
+  "role_id": "ba",
+  "name": "Analyste d'Affaires (BA / Product Owner)",
+  "mission": "Cadrer les besoins d'affaires, croiser les entretiens client avec les documents officiels et rédiger les livrables stratégiques sans jargon technique.",
+  "input_types": [
+    "Entretiens et ateliers découverte",
+    "Politiques internes et documents client",
+    "Études de marché et benchmarks",
+    "Pages web de référence"
+  ],
+  "deliverables": [
+    {
+      "id": "devis_fonctionnel",
+      "name": "Cahier de Charge Fonctionnel (Devis Fonctionnel)",
+      "template": "standards/blueprints/ba/cahier_de_charges_fonctionnel.template.md"
+    },
+    {
+      "id": "business_case",
+      "name": "Business Case & Étude d'Opportunité (ROI)",
+      "template": "standards/blueprints/ba/business_case.template.md"
+    },
+    {
+      "id": "matrice_scope",
+      "name": "Matrice de Périmètre In-Scope vs Out-of-Scope",
+      "template": "standards/blueprints/ba/matrice_scope.template.md"
+    },
+    {
+      "id": "matrice_tracabilite",
+      "name": "Matrice de Traçabilité des Exigences (RTM)",
+      "template": "standards/blueprints/ba/matrice_tracabilite.template.md"
+    }
+  ],
+  "grill_focus": "Contradictions entre l'oral de l'entretien et l'écrit des documents, risques financiers, attentes floues, dérives de périmètre (scope creep).",
+  "forbid_syntax": [
+    "Gherkin (Scenario, Given, When, Then)",
+    "Snippets de code source",
+    "Détails d'implémentation de base de données"
+  ]
+}

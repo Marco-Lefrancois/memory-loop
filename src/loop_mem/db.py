@@ -524,7 +524,9 @@ def upsert_lexicon_term(
                 now_iso,
             ),
         )
-        lex_id = cursor.lastrowid
+        cursor.execute("SELECT id FROM project_lexicon WHERE project_name=? AND term=?", (project_name, term))
+        row = cursor.fetchone()
+        lex_id = row[0] if row else cursor.lastrowid
 
         # 2. Rafraîchir l'index FTS5 (perf : rowid explicite = lex_id pour éviter un scan complet
         # de la table virtuelle sur la colonne UNINDEXED "lexicon_id" — DELETE WHERE col=? sur une
@@ -556,12 +558,13 @@ def search_lexicon_terms(
     with get_observation_db_session() as conn:
         cursor = conn.cursor()
 
-        # Nettoyage de la requête pour syntaxe FTS5
-        clean_q = "".join(c for c in query if c.isalnum() or c.isspace()).strip()
+        # Nettoyage de la requête pour syntaxe FTS5 (remplacer ponctuation par des espaces)
+        clean_q = "".join(c if c.isalnum() else " " for c in query).strip()
         if not clean_q:
             return []
 
-        fts_query = f"{clean_q}*"
+        words = clean_q.split()
+        fts_query = " ".join(f"{w}*" for w in words)
 
         if project_name:
             cursor.execute(

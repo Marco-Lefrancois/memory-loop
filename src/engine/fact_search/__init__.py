@@ -38,6 +38,8 @@ def fact_search_query(
     limit: int = 10,
     log_audit: bool = True,
     db_path: Optional[Path] = None,
+    layer: Optional[str] = None,
+    include_superseded: bool = False,
 ) -> List[Dict[str, Any]]:
     """Interface canonique de recherche plein texte et d'extraction KWIC."""
     return FactSearchRetriever.search(
@@ -47,6 +49,8 @@ def fact_search_query(
         limit=limit,
         log_audit=log_audit,
         db_path=db_path,
+        layer=layer,
+        include_superseded=include_superseded,
     )
 
 

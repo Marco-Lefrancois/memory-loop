@@ -205,6 +205,25 @@ def log_error(msg: str):
     sys.stderr.flush()
 
 
+def validate_tool_registry() -> bool:
+    """
+    Valide la conformité stricte JSON Schema des outils du registre (ADR-0352 / HarnessDev).
+    Garantit une neutralité totale vis-à-vis des fournisseurs (OpenAI, Gemini, Anthropic).
+    """
+    for name, meta in TOOL_REGISTRY.items():
+        if not meta.get("description"):
+            log_error(f"Outil {name} sans description valide.")
+            return False
+        schema = meta.get("inputSchema", {})
+        if schema.get("type") != "object":
+            log_error(f"Outil {name} : inputSchema doit être de type 'object'.")
+            return False
+        if "properties" not in schema:
+            log_error(f"Outil {name} : inputSchema sans champ 'properties'.")
+            return False
+    return True
+
+
 def _get_visible_tools(phase: str) -> list[dict]:
     """Return filtered tool list based on active phase."""
     allowed = PHASE_TOOL_FILTER.get(phase)

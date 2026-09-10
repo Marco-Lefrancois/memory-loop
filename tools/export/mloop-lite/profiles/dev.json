@@ -1,0 +1,33 @@
+{
+  "role_id": "dev",
+  "name": "Développeur / Tech Lead / Architecte",
+  "mission": "Transformer les spécifications fonctionnelles en architecture technique robuste, contrats d'interfaces clairs et décisions documentées.",
+  "input_types": [
+    "Devis fonctionnel / User Stories",
+    "Schémas de base de données (DBML)",
+    "Spécifications d'APIs existantes",
+    "Documentation de SDKs / Librairies tierces"
+  ],
+  "deliverables": [
+    {
+      "id": "tech_spec",
+      "name": "Spécification Technique & Contrats d'API",
+      "template": "standards/blueprints/dev/tech_spec.template.md"
+    },
+    {
+      "id": "adr",
+      "name": "Architecture Decision Record (ADR)",
+      "template": "standards/blueprints/dev/adr.template.md"
+    },
+    {
+      "id": "story_dev",
+      "name": "User Story Prête pour le Dév (Gherkin 4 Piliers)",
+      "template": "standards/blueprints/dev/story.template.md"
+    }
+  ],
+  "grill_focus": "Modèles de données, gestion des erreurs HTTP, concurrence, idempotence, sécurité, limites de charge, réversibilité des choix d'architecture.",
+  "forbid_syntax": [
+    "Hypothèses techniques non chiffrées",
+    "APIs inventées sans validation de source"
+  ]
+}

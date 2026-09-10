@@ -10,6 +10,8 @@ validation_rules:
       forbidden_patterns: 
         - "REC-\\d+-FE"
         - "REC-\\d+-BE"
+        - "INC-\\d+-FE"
+        - "INC-\\d+-BE"
         - "backlog/stories"
 ---
 

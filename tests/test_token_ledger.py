@@ -36,6 +36,6 @@ def test_token_ledger_record_and_query(tmp_path: Path):
 
 def test_vibe_check_key_alignment():
     """Vérifie le contrôle d'alignement clé LiteLLM vs projet."""
-    res_boire = run_vibe_check(project_name="BoireFrere_Reception")
+    res_boire = run_vibe_check(project_name="BoireFrere_Segment2")
     check_item = next(c for c in res_boire["checks"] if "Alignement Projet" in c["check"])
     assert check_item["status"] == "PASS"

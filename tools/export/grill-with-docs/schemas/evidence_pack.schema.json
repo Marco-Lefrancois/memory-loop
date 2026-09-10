@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvidencePack",
+  "description": "Sidecar JSON documentant la traçabilité des preuves d'une User Story.",
+  "type": "object",
+  "required": [
+    "story_id",
+    "jira_key",
+    "timestamp",
+    "fact_search_status",
+    "fact_search_proofs"
+  ],
+  "properties": {
+    "story_id": {
+      "type": "string"
+    },
+    "jira_key": {
+      "type": "string"
+    },
+    "file_path": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fact_search_status": {
+      "type": "string",
+      "enum": [
+        "VERIFIED",
+        "PARTIAL",
+        "UNVERIFIED"
+      ]
+    },
+    "fact_search_proofs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "query",
+          "source_file",
+          "section",
+          "matched_fact",
+          "confidence",
+          "timestamp"
+        ],
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "source_file": {
+            "type": "string"
+          },
+          "section": {
+            "type": "string"
+          },
+          "matched_fact": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "HIGH",
+              "MEDIUM",
+              "LOW"
+            ]
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "source_hashes_sha256": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "epistemic_audit": {
+      "type": "object",
+      "properties": {
+        "what_it_actually_proves": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "what_it_does_not_prove": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "claim_boundaries": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

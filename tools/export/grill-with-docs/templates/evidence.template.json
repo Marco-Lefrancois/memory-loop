@@ -1,0 +1,26 @@
+{
+  "story_id": "STORY-001-BE",
+  "jira_key": "PROJ-101",
+  "file_path": "backlog/stories/STORY-001-BE.md",
+  "timestamp": "2026-09-02T10:00:00Z",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "règle de calcul de la priorité de ponte",
+      "source_file": "docs/00-ingested/ateliers/atelier_cadrage.md",
+      "section": "Lignes 313–337",
+      "matched_fact": "« Ce qui vient faire apparaître les flèches ici, c'est que c'est mes œufs les plus vieux overall. » ➔ Fait établi : Calcul centralisé is_oldest_priority pour la date la plus ancienne globale.",
+      "confidence": "HIGH",
+      "source_type": "documentation",
+      "timestamp": "2026-09-02T10:00:00Z"
+    }
+  ],
+  "source_hashes_sha256": {},
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification basée sur modèle déclaratif SSOT"
+    ],
+    "what_it_does_not_prove": [],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin"
+  }
+}

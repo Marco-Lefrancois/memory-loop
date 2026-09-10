@@ -21,6 +21,7 @@ Ce skill permet de vérifier et réaligner instantanément l'ensemble de l'écos
 6. **Synchronisation Sémantique** : Met à jour la base SQLite FTS5 et le graphe Graphify.
 7. **Registre Ingestion SHA256** : Vérifie l'intégrité anti-doublon d'ingestion.
 8. **Validation Guardrails (audit-loop)** : Certifie l'état `status: PASS` (Exit 0).
+9. **Hygiène Mémorielle & Profilage des Compétences (Skill-Doctor)** : Audite l'empreinte en jetons de `.agents/skills/`, prévient le *Context Rot* (seuil d'alerte 15 000 jetons au boot) et signale les compétences dormantes à marquer en `TOMBSTONE` (ADR-0348 / Claude Code v2.1.261).
 
 ## 🚀 Commande d'Exécution
 

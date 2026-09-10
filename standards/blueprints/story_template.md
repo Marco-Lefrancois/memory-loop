@@ -82,6 +82,12 @@ gold_standard_ref: ""      # Optionnel. Ex: "REC-015-FE.md" — référence styl
 
 ---
 
+## Références
+- 📂 **Dossier de Preuves & Cadrage SSOT** : [<STORY_ID>_fact_dossier.md](../../memory/evidence/<STORY_ID>_fact_dossier.md)
+- [Nom Référence Métier / Wiki] : [Lien HTTPS Officiel](https://...)
+
+---
+
 ## Scénarios de test
 
 ```gherkin

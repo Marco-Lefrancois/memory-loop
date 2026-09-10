@@ -1,0 +1,24 @@
+{
+  "role_id": "qa",
+  "name": "Assurance Qualité (QA / Testeur)",
+  "mission": "Auditer la testabilité des exigences, identifier les cas limites et construire la stratégie de recette et de validation.",
+  "input_types": [
+    "User Stories",
+    "Spécifications fonctionnelles et techniques",
+    "Maquettes et parcours utilisateurs"
+  ],
+  "deliverables": [
+    {
+      "id": "test_plan",
+      "name": "Cahier de Recette & Plan de Tests",
+      "template": "standards/blueprints/qa/test_plan.template.md"
+    },
+    {
+      "id": "edge_cases_matrix",
+      "name": "Matrice des Cas Limites & Erreurs",
+      "template": "standards/blueprints/qa/edge_cases_matrix.template.md"
+    }
+  ],
+  "grill_focus": "Cas limites (edge cases), comportements aux extrêmes, indisponibilités réseau, critères d'acceptation non mesurables, régressions potentielles.",
+  "forbid_syntax": []
+}

@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "mLoop — Séquence d'Exécution : Cerveau, Moteur & Règles Vivantes",
+    "output": "tools/archify/showcase/mloop-agent-pipeline-flow.sequence.html",
+    "column_fit": "spread",
+    "viewBox": [960, 790],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view-boot-ingest",
+        "label": "1. Boot Sequence & Amorçage Anti-Amnésie",
+        "focus": ["human", "agent_brain", "python_pipe", "semantic_triad"],
+        "note": "Restauration mécanique de l'état sans exploration brute du disque, synchronisation FTS5 et Graphify."
+      },
+      {
+        "id": "view-rules-debate",
+        "label": "2. Consommation des Règles & Grill-with-Docs",
+        "focus": ["agent_brain", "ssot_rules", "semantic_triad", "human"],
+        "note": "Chargement Just-in-Time des ADRs, interrogation des preuves et levée des ambiguïtés via Grill-Me 1:1."
+      },
+      {
+        "id": "view-harness-ship",
+        "label": "3. Audit Déterministe, SHA-256 & Handoff",
+        "focus": ["agent_brain", "python_pipe", "ssot_rules", "semantic_triad", "sync_dest", "human"],
+        "note": "Contrôle strict des contrats JSON, certification cryptographique de l'EvidencePack et livraison Jira/Git."
+      }
+    ]
+  },
+  "participants": [
+    { "id": "human", "type": "external", "label": "PO / Architecte", "sublabel": "Décisions & Cadrage" },
+    { "id": "ssot_rules", "type": "database", "label": "SSOT Règles", "sublabel": "ADRs & Gabarits" },
+    { "id": "agent_brain", "type": "frontend", "label": "Agent Cerveau", "sublabel": "Système 2 (Cognitif)" },
+    { "id": "python_pipe", "type": "backend", "label": "Pipeline Python", "sublabel": "Système 1 (Harnais)" },
+    { "id": "semantic_triad", "type": "database", "label": "Triade Sémantique", "sublabel": "FTS5 & Graphify" },
+    { "id": "sync_dest", "type": "cloud", "label": "Git & Jira", "sublabel": "Cloud & Remote" }
+  ],
+  "segments": [
+    { "from": 150, "to": 320, "label": "Phase 0 & 1 : Boot Sequence & Ingestion" },
+    { "from": 335, "to": 525, "label": "Phase 2 & 3 : Règles Vivantes & Arbitrages" },
+    { "from": 535, "to": 725, "label": "Phase 4 & 5 : Audit Déterministe & Handoff" }
+  ],
+  "messages": [
+    { "id": "m1", "from": "human", "to": "agent_brain", "y": 180, "label": "Lancement cadrage / story", "variant": "default" },
+    { "id": "m2", "from": "agent_brain", "to": "python_pipe", "y": 215, "label": "python src/swarm.py resume", "variant": "emphasis" },
+    { "id": "m3", "from": "python_pipe", "to": "semantic_triad", "y": 245, "label": "Sync FTS5 & Graphify", "variant": "dashed" },
+    { "id": "m4", "from": "semantic_triad", "to": "python_pipe", "y": 275, "label": "Graphe synchronisé", "variant": "return" },
+    { "id": "m5", "from": "python_pipe", "to": "agent_brain", "y": 305, "label": "Contexte restauré (Anti-amnésie)", "variant": "return" },
+    { "id": "m6", "from": "agent_brain", "to": "ssot_rules", "y": 355, "label": "Lecture JIT (ADR-0300, Blueprint)", "variant": "emphasis" },
+    { "id": "m7", "from": "ssot_rules", "to": "agent_brain", "y": 385, "label": "Gabarits & Contrats déclaratifs", "variant": "return" },
+    { "id": "m8", "from": "agent_brain", "to": "semantic_triad", "y": 415, "label": "Fact-Search (Search-Before-Ask)", "variant": "emphasis" },
+    { "id": "m9", "from": "semantic_triad", "to": "agent_brain", "y": 445, "label": "Dossier de Preuves Documentaires", "variant": "return" },
+    { "id": "m10", "from": "agent_brain", "to": "human", "y": 475, "label": "Grill-with-Docs 1:1 (Arbitrage)", "variant": "security" },
+    { "id": "m11", "from": "human", "to": "agent_brain", "y": 508, "label": "Décisions fonctionnelles validées", "variant": "return" },
+    { "id": "m12", "from": "agent_brain", "to": "python_pipe", "y": 550, "label": "Soumission struct-check --strict", "variant": "security" },
+    { "id": "m13", "from": "python_pipe", "to": "ssot_rules", "y": 580, "label": "Audit adr-contracts.json", "variant": "security" },
+    { "id": "m14", "from": "ssot_rules", "to": "python_pipe", "y": 610, "label": "Conformité validée (Exit 0)", "variant": "return" },
+    { "id": "m15", "from": "python_pipe", "to": "semantic_triad", "y": 640, "label": "Oracle Reverify (Scellement SHA)", "variant": "security" },
+    { "id": "m16", "from": "python_pipe", "to": "sync_dest", "y": 670, "label": "jira_sync & git push", "variant": "emphasis" },
+    { "id": "m17", "from": "sync_dest", "to": "human", "y": 700, "label": "Récit prêt pour dev (READY_FOR_DEV)", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "agent_brain", "from": 180, "to": 705, "type": "frontend" },
+    { "participant": "python_pipe", "from": 215, "to": 310, "type": "backend" },
+    { "participant": "semantic_triad", "from": 245, "to": 280, "type": "database" },
+    { "participant": "ssot_rules", "from": 355, "to": 390, "type": "database" },
+    { "participant": "semantic_triad", "from": 415, "to": 450, "type": "database" },
+    { "participant": "python_pipe", "from": 550, "to": 675, "type": "backend" },
+    { "participant": "ssot_rules", "from": 580, "to": 615, "type": "database" },
+    { "participant": "semantic_triad", "from": 640, "to": 655, "type": "database" },
+    { "participant": "sync_dest", "from": 670, "to": 705, "type": "cloud" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Consommation JIT des Règles",
+      "items": [
+        "L'agent charge les gabarits et ADRs uniquement lorsqu'il entre dans la phase concernée.",
+        "Zéro hardcoding : les règles évoluent dans des fichiers Markdown versionnés dans standards/.",
+        "Le pipeline Python audite la cohérence via adr-contracts.json dérivé des ADRs 01xx."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Harnais Déterministe & Anti-Drift",
+      "items": [
+        "Le pipeline Python applique la règle Zero-Fail Carryover : aucun avancement si Exit Code ≠ 0.",
+        "struct-check bloque tout récit contenant du code physique ou un frontmatter incomplet.",
+        "Les preuves textuelles et maquettes sont consignées dans l'EvidencePack sidecar."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Scellement & Universal Handoff",
+      "items": [
+        "Chaque récit est certifié par empreinte SHA-256 avant toute promotion en backlog officiel.",
+        "La synchronisation triple pousse sur Git, Jira Cloud et l'hypergraphe Obsidian.",
+        "Handoff universel : les développeurs ou agents de code consomment des spécifications pures."
+      ]
+    }
+  ]
+}

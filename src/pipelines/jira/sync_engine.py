@@ -457,7 +457,11 @@ def sync_targeted_to_jira(
         return None
 
     auth = (jira_email, jira_token)
-    headers = {"Accept": "application/json", "Content-Type": "application/json"}
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip, deflate",
+    }
 
     with httpx.Client(base_url=jira_url, auth=auth, headers=headers, timeout=30.0) as client:
         if state.jira_default_component_id:

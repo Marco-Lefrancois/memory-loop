@@ -1,0 +1,24 @@
+{
+  "role_id": "design",
+  "name": "Designer UX / UI / Graphiste",
+  "mission": "Concevoir des parcours utilisateurs intuitifs, alignés sur les besoins d'affaires et exhaustifs sur tous les états d'interface.",
+  "input_types": [
+    "Brief créatif et charte de marque",
+    "Parcours utilisateurs d'affaires",
+    "Retours d'ateliers et tests utilisateurs"
+  ],
+  "deliverables": [
+    {
+      "id": "ux_spec",
+      "name": "Spécification UX & Matrice des 4 États",
+      "template": "standards/blueprints/design/ux_spec.template.md"
+    },
+    {
+      "id": "accessibility_checklist",
+      "name": "Checklist Accessibilité & Ergonomie",
+      "template": "standards/blueprints/design/accessibility_checklist.template.md"
+    }
+  ],
+  "grill_focus": "Gestion des 4 états (Vide, Chargement, Erreur, Succès), contrastes et accessibilité (WCAG), cohérence mobile vs desktop, clarté des CTA.",
+  "forbid_syntax": []
+}

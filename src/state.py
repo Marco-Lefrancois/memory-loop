@@ -1,5 +1,6 @@
 import json
-from datetime import datetime
+import time
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -229,12 +230,90 @@ class QAReport(BaseModel):
 
 
 class JournalEntry(BaseModel):
-    id: str = Field(default_factory=lambda: f"entry_{int(__import__('time').time())}")
-    timestamp: str = Field(default_factory=lambda: __import__('datetime').datetime.now().isoformat())
+    id: str = Field(default_factory=lambda: f"entry_{int(time.time())}")
+    timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
     event: str
     details: str
     impacted_nodes: List[str] = Field(default_factory=list)
 
+
+class SavepointManager:
+    """
+    Gestionnaire déterministe de points de restauration en cours d'exécution (In-Flight Checkpoints).
+    Répond à l'angle mort révélé par HarnessDev (0% de checkpointing sur 26 679 runs).
+    Sauvegarde l'état toutes les 60 à 90 secondes ou lors d'actions critiques.
+    Maintient une politique FIFO stricte de rétention des 3 derniers instantanés.
+    """
+    MAX_RETAINED = 3
+
+    @staticmethod
+    def get_checkpoints_dir(project_path: Optional[Path] = None) -> Path:
+        if project_path:
+            target_dir = project_path / "memory" / "checkpoints"
+        else:
+            target_dir = Path("memory") / "checkpoints"
+        target_dir.mkdir(parents=True, exist_ok=True)
+        return target_dir
+
+    @classmethod
+    def save_checkpoint(
+        cls,
+        state_dict: Dict[str, Any],
+        project_path: Optional[Path] = None,
+        reason: str = "in_flight"
+    ) -> Path:
+        target_dir = cls.get_checkpoints_dir(project_path)
+        timestamp = int(time.time())
+        filename = f"checkpoint_{timestamp}_{reason}.json"
+        target_file = target_dir / filename
+        tmp_file = target_dir / f"{filename}.tmp"
+
+        payload = {
+            "checkpoint_version": "1.0",
+            "timestamp": timestamp,
+            "datetime_utc": datetime.now(timezone.utc).isoformat(),
+            "reason": reason,
+            "state": state_dict,
+        }
+
+        with open(tmp_file, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2, ensure_ascii=False)
+        tmp_file.replace(target_file)
+
+        cls.prune_old_checkpoints(target_dir)
+        return target_file
+
+    @classmethod
+    def prune_old_checkpoints(cls, target_dir: Path) -> None:
+        try:
+            checkpoints = sorted(target_dir.glob("checkpoint_*.json"), key=lambda p: p.stat().st_mtime)
+            while len(checkpoints) > cls.MAX_RETAINED:
+                oldest = checkpoints.pop(0)
+                try:
+                    oldest.unlink(missing_ok=True)
+                except Exception:
+                    pass
+        except Exception as e:
+            logger.debug(f"Erreur de nettoyage des checkpoints: {e}")
+
+    @classmethod
+    def list_checkpoints(cls, project_path: Optional[Path] = None) -> List[Path]:
+        target_dir = cls.get_checkpoints_dir(project_path)
+        return sorted(target_dir.glob("checkpoint_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+
+    @classmethod
+    def load_latest_checkpoint(cls, project_path: Optional[Path] = None) -> Optional[Dict[str, Any]]:
+        checkpoints = cls.list_checkpoints(project_path)
+        if not checkpoints:
+            return None
+        latest = checkpoints[0]
+        try:
+            with open(latest, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data.get("state")
+        except Exception as e:
+            logger.warning(f"Impossible de lire le checkpoint {latest}: {e}")
+            return None
 
 
 class LoopState(BaseModel):
@@ -243,8 +322,12 @@ class LoopState(BaseModel):
     current_phase: LoopPhase = LoopPhase.SPEC
     previous_phase: Optional[LoopPhase] = None
     current_state_id: Optional[str] = None
-    session_start_utc: str = Field(default_factory=lambda: __import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat())
+    session_start_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     
+    # ─── IN-FLIGHT CHECKPOINTING (ADR-0352 / HARNESSDEV) ───
+    last_checkpoint_timestamp: float = Field(default_factory=lambda: time.time())
+    checkpoint_interval_seconds: int = 60  # Intervalle temporel configurable (60 à 90 secondes)
+
     # ─── ARTEFACTS FSM ───
     analysis: Optional[AnalysisResult] = None
     plan: Optional[PlanResult] = None
@@ -255,7 +338,6 @@ class LoopState(BaseModel):
     clarifications: List[Clarification] = Field(default_factory=list)
     sprint_backlog: List[SprintBacklogItem] = Field(default_factory=list)
 
-    
     # ─── ONTOLOGIE COWORKER (L1) ───
     journal: List[JournalEntry] = Field(default_factory=list)
     
@@ -272,6 +354,44 @@ class LoopState(BaseModel):
 
     # ─── GRAPHIFY INTEGRATION (ADR-0018) ─────────────────────────
     graph_path: str = "graphify-out/graph.json"
+
+    def should_checkpoint(self, interval_seconds: Optional[int] = None) -> bool:
+        """Vérifie si le délai temporel (60 à 90s) depuis le dernier checkpoint est dépassé."""
+        target_interval = interval_seconds or self.checkpoint_interval_seconds
+        return (time.time() - self.last_checkpoint_timestamp) >= target_interval
+
+    def checkpoint(
+        self,
+        project_path: Optional[Path] = None,
+        reason: str = "in_flight",
+        force: bool = False
+    ) -> Optional[Path]:
+        """Crée un point de contrôle atomique sur disque si le délai est atteint ou forcé."""
+        if not force and not self.should_checkpoint():
+            return None
+        
+        target_proj = project_path or (Path("Projects") / self.project_name if self.project_name else None)
+        state_data = self.model_dump(exclude={"sprint_backlog", "knowledge_graph"})
+        saved_file = SavepointManager.save_checkpoint(state_data, project_path=target_proj, reason=reason)
+        self.last_checkpoint_timestamp = time.time()
+        logger.info(f"[CHECKPOINT] État in-flight sauvegardé sous {saved_file.name} (Raison: {reason})")
+        return saved_file
+
+    def restore_latest_checkpoint(self, project_path: Optional[Path] = None) -> bool:
+        """Restaure l'état depuis le plus récent checkpoint valide."""
+        target_proj = project_path or (Path("Projects") / self.project_name if self.project_name else None)
+        state_dict = SavepointManager.load_latest_checkpoint(target_proj)
+        if not state_dict:
+            return False
+        try:
+            loaded = LoopState.model_validate(state_dict)
+            for field in self.__class__.model_fields:
+                if field not in ("sprint_backlog", "knowledge_graph"):
+                    setattr(self, field, getattr(loaded, field))
+            return True
+        except Exception as e:
+            logger.warning(f"Erreur lors de la validation du checkpoint restauré: {e}")
+            return False
 
     def can_transition_to(self, target_phase: LoopPhase) -> bool:
         """Vérifie si une transition de phase est légale selon le mode et l'état."""

@@ -135,7 +135,7 @@ class HerdrSocketAdapter:
         os.makedirs(os.path.dirname(self.events_file), exist_ok=True)
 
     def emit_event(self, event_type: str, node_id: str, payload: Optional[Dict[str, Any]] = None) -> None:
-        """Appends a structured event to herdr_events.jsonl for Herdr TUI ingestion."""
+        """Appends a structured event to herdr_events.jsonl for Herdr TUI ingestion and sends toast notifications."""
         event = {
             "initiative": self.initiative_name,
             "event_type": event_type,
@@ -148,6 +148,26 @@ class HerdrSocketAdapter:
                 f.write(json.dumps(event, ensure_ascii=False) + "\n")
         except Exception as e:
             logger.debug(f"[HerdrSocketAdapter] Failed to emit event: {e}")
+
+        # Broadcast toast notification to Herdr UI for critical or milestone events
+        try:
+            from src.core.herdr_adapter import herdr
+            if event_type in ["circuit_breaker_triggered", "deadlock_detected", "node_failed"]:
+                herdr.show_notification(
+                    title=f"⚠️ mLoop Alert: {event_type.replace('_', ' ').title()}",
+                    body=f"Initiative: {self.initiative_name} | Node: {node_id}",
+                    sound="request",
+                    position="top-right"
+                )
+            elif event_type in ["node_completed"]:
+                herdr.show_notification(
+                    title=f"✅ mLoop DAG: Node Complete",
+                    body=f"Node '{node_id}' finished successfully.",
+                    sound="done",
+                    position="bottom-right"
+                )
+        except Exception:
+            pass
 
 
 class GraphRouter:

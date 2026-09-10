@@ -18,7 +18,13 @@ Scope: Alignement métier 1:1, résolution de l'arbre Frontier Design Tree, cré
   EXPECT: /Fact-Search FTS5 Before Edit : PASS/
   EVIDENCE: pending
 
-- [ ] G4: Revue qualitative Sentinel / Rubber-Duck complétée sans objection bloquante (Definition of Ready)
+- [ ] G4: Le Dossier de Preuves Documentaires (<STORY_ID>_fact_dossier.md) est formalisé et archivé sous memory/evidence/
+  CHECK: python -c "from pathlib import Path; dossiers = list(Path('memory/evidence').glob('*_fact_dossier.md')); print('FACT_DOSSIER_OK' if len(dossiers) > 0 else 'NO_FACT_DOSSIER')"
+  EXPECT: FACT_DOSSIER_OK
+  EVIDENCE: pending
+
+- [ ] G5: Revue qualitative Sentinel / Rubber-Duck complétée sans objection bloquante (Definition of Ready)
   CHECK: python src/swarm.py rubber-duck --project {PROJECT_NAME}
   EXPECT: /Score INVEST|Revue sémantique terminée|READY/i
   EVIDENCE: pending
+
