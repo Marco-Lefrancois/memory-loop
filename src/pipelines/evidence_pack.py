@@ -333,11 +333,21 @@ class EvidencePackEngine:
         # de reconduire silencieusement un statut VALIDATED désormais caduc.
         existing_pack_path = self.evidence_dir / f"{sid}_evidence.json"
         status = "VALIDATED"
+        # BUG-WIKIFIX-03 : préservation non-destructive des champs scellés par l'humain.
+        # La régénération WikiFix/sync ne doit pas écraser un socle factuel déjà validé
+        # manuellement (socle_factuel_validated_by_human / _at) par les valeurs par défaut.
+        preserved_socle_validated = False
+        preserved_socle_validated_at = None
         if existing_pack_path.exists():
             try:
                 existing_data = json.loads(
                     existing_pack_path.read_text(encoding="utf-8")
                 )
+                if existing_data.get("socle_factuel_validated_by_human") is True:
+                    preserved_socle_validated = True
+                    preserved_socle_validated_at = existing_data.get(
+                        "socle_factuel_validated_at"
+                    )
                 existing_ts = existing_data.get("timestamp")
                 story_mtime = datetime.datetime.fromtimestamp(
                     story_file.stat().st_mtime, tz=datetime.timezone.utc
@@ -374,8 +384,8 @@ class EvidencePackEngine:
             # explicite (ex: EvidencePack régénéré/complété manuellement post-Grill).
             # Non-bloquant à ce stade (WARNING via struct-check C9/gate FSM) ; réservé
             # à une élévation future en BLOCKING une fois le flux de validation outillé.
-            "socle_factuel_validated_by_human": False,
-            "socle_factuel_validated_at": None,
+            "socle_factuel_validated_by_human": preserved_socle_validated,
+            "socle_factuel_validated_at": preserved_socle_validated_at,
             "verification_harness": scenarios,
             "next_actions": next_actions,
             "confidence": root_confidence,

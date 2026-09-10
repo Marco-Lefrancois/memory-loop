@@ -27,18 +27,26 @@ def handle_grill(args: argparse.Namespace, state: LoopState, project_path: Path)
     if search_term and search_term != "Décision d'Architecture":
         ge.perform_fact_search(str(search_term))
 
-    adr_path = ge.record_adr(
-        title=getattr(args, "title", "Décision d'Architecture"),
-        context=getattr(
-            args, "context", "Contexte issu d'une session de grilling interactive."
-        ),
-        decision=getattr(args, "decision", "Décision arbitrée conjointement."),
-        positives=getattr(
-            args, "positives", "Clarification du domaine et réduction de l'ambiguïté."
-        ),
-        negatives=getattr(args, "negatives", "Obligation d'alignement strict."),
-    )
-    ZeroFluffConsole.success(f"ADR généré avec succès : {adr_path}")
+    # BUG-GRILL-02 : ne générer un ADR QUE si un contenu de décision réel est fourni
+    # (--context ou --decision). Un simple marquage de story (--title + --story) ne doit
+    # pas créer d'ADR parasite faisant doublon avec des décisions d'architecture existantes.
+    ctx = getattr(args, "context", None)
+    dec = getattr(args, "decision", None)
+    if ctx or dec:
+        adr_path = ge.record_adr(
+            title=getattr(args, "title", None) or "Décision d'Architecture",
+            context=ctx or "Contexte issu d'une session de grilling interactive.",
+            decision=dec or "Décision arbitrée conjointement.",
+            positives=getattr(args, "positives", None)
+            or "Clarification du domaine et réduction de l'ambiguïté.",
+            negatives=getattr(args, "negatives", None)
+            or "Obligation d'alignement strict.",
+        )
+        ZeroFluffConsole.success(f"ADR généré avec succès : {adr_path}")
+    else:
+        ZeroFluffConsole.info(
+            "Aucun contenu de décision (--context/--decision) fourni : marquage de story sans génération d'ADR."
+        )
 
     if getattr(args, "story", None):
         if ge.mark_story_grilled(args.story):

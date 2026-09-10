@@ -165,3 +165,49 @@ status: READY_FOR_DEV
 
     assert evidence["socle_factuel_validated_by_human"] is False
     assert evidence["socle_factuel_validated_at"] is None
+
+
+def test_evidence_pack_preserves_human_validation_on_regeneration(tmp_path):
+    """
+    BUG-WIKIFIX-03 (anti-régression) : lors d'une régénération (WikiFix/sync), les champs
+    scellés par l'humain sur l'EvidencePack existant NE doivent PAS être écrasés par les
+    valeurs par défaut. Merge non-destructif de socle_factuel_validated_by_human / _at.
+    """
+    project_dir = tmp_path / "TestProjectPreserve"
+    project_dir.mkdir()
+    stories_dir = project_dir / "backlog" / "stories"
+    stories_dir.mkdir(parents=True)
+
+    story_file = stories_dir / "US-05.md"
+    story_file.write_text(
+        """---
+id: US-05-TEST
+status: READY_FOR_GROOMING
+---
+# US-05 : Story avec socle validé humainement
+""",
+        encoding="utf-8",
+    )
+
+    engine = EvidencePackEngine(project_dir)
+
+    # 1er passage : génère et sauvegarde le pack (socle non validé par défaut)
+    pack1 = engine.extract_evidence(story_file)
+    engine.save_evidence_pack(pack1)
+
+    # L'humain scelle manuellement le socle dans le pack existant sur disque
+    pack_path = project_dir / "memory" / "evidence" / "US-05-TEST_evidence.json"
+    sealed = json.loads(pack_path.read_text(encoding="utf-8"))
+    sealed["socle_factuel_validated_by_human"] = True
+    sealed["socle_factuel_validated_at"] = "2026-09-10T10:52:00+00:00"
+    pack_path.write_text(
+        json.dumps(sealed, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+
+    # 2e passage (régénération WikiFix) : DOIT préserver le scellé humain
+    pack2 = engine.extract_evidence(story_file)
+
+    assert pack2["socle_factuel_validated_by_human"] is True, (
+        "La régénération ne doit pas écraser la validation humaine existante."
+    )
+    assert pack2["socle_factuel_validated_at"] == "2026-09-10T10:52:00+00:00"
