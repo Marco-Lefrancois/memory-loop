@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Cycle de Vie mLoop & Portes de Gouvernance",
+    "subtitle": "Gouvernance Anti-Dérive en 5 Portes Séquentielles (ADR-0339)",
+    "output": "docs/05-assets/mloop-lifecycle.architecture.html",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "main-lifecycle",
+        "label": "Phases de Cycle de Vie",
+        "focus": ["inception", "plan", "build", "validate", "ship"],
+        "note": "Trajectoire séquentielle obligatoire : SOW -> Plan -> Build -> Validate -> Ship."
+      },
+      {
+        "id": "human-gates",
+        "label": "Portes Humaines (HITL)",
+        "focus": ["plan", "plannotator_wait", "validate", "review_wait"],
+        "note": "Points d'arrêt et d'approbation visuelle via Plannotator."
+      }
+    ]
+  },
+  "lanes": [
+    { "id": "main", "label": "Phases Canoniques (ADR-0339)" },
+    { "id": "waiting", "label": "Portes d'Étape HITL" }
+  ],
+  "states": [
+    { "id": "inception", "type": "start", "label": "P0-P1: SOW", "sublabel": "Cadrage & Contrat", "lane": "main", "col": 0, "step": "01", "tag": "contrat" },
+    { "id": "plan", "type": "active", "label": "P2: Plan / Spec", "sublabel": "Grill-with-Docs", "lane": "main", "col": 1, "step": "02", "tag": "cadrage" },
+    { "id": "build", "type": "active", "label": "P3: Build", "sublabel": "TDD & Workers", "lane": "main", "col": 2, "step": "03", "tag": "code" },
+    { "id": "validate", "type": "decision", "label": "P4: Validate", "sublabel": "Runnable Gates", "lane": "main", "col": 3, "step": "04", "tag": "audit" },
+    { "id": "ship", "type": "success", "label": "P5: Ship & Sync", "sublabel": "EvidencePack & Jira", "lane": "main", "col": 4, "step": "05", "tag": "livraison" },
+    { "id": "plannotator_wait", "type": "waiting", "label": "Gate 2: DoR", "sublabel": "Plannotator Story Gate", "lane": "waiting", "col": 0, "tag": "hitl" },
+    { "id": "review_wait", "type": "waiting", "label": "Gate 4: Code Review", "sublabel": "Plannotator Diff Git", "lane": "waiting", "col": 1, "tag": "hitl" }
+  ],
+  "transitions": [
+    { "id": "t_plan_plannotator", "from": "plan", "to": "plannotator_wait", "variant": "default" },
+    { "id": "t_val_review", "from": "validate", "to": "review_wait", "variant": "default" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Gouvernance des Phases (ADR-0339)",
+      "items": [
+        "Trajectoire séquentielle obligatoire : SOW -> Plan -> Build -> Validate -> Ship",
+        "Interdiction formelle de coder avant signature du SOW (Zéro-Dérive)"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Portes Hybrides (Automatisées + HITL)",
+      "items": [
+        "Portes automatisées : WikiFix (ADR-0319), Sentinel, Runnable Gates (ADR-0341)",
+        "Portes humaines : Plannotator Review, Grill-with-Docs, Approbation SOW"
+      ]
+    }
+  ]
+}

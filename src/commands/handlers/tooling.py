@@ -81,12 +81,21 @@ def handle_hill_climb(args: argparse.Namespace, state: LoopState, project_path: 
 
 def handle_archify(args: argparse.Namespace, state: LoopState | None, project_path: Path | None) -> int:
     """Validation et rendu de diagrammes d'architecture interactifs Archify."""
-    from tools.archify.archify_runner import run_archify_command, find_archify_bin
+    from tools.archify.archify_runner import (
+        find_archify_bin,
+        normalize_diagram_type,
+        run_archify_command,
+        run_archify_doctor,
+    )
     import os
 
-    input_file = args.file
+    if getattr(args, "doctor", False):
+        ZeroFluffConsole.info("Vérification de la santé du moteur Archify...")
+        return run_archify_doctor()
+
+    input_file = getattr(args, "file", None)
     if not input_file:
-        ZeroFluffConsole.error("L'argument --file <chemin_json> est obligatoire.")
+        ZeroFluffConsole.error("L'argument --file <chemin_json> est obligatoire (ou utilisez --doctor).")
         return 1
 
     input_path = Path(input_file)
@@ -97,9 +106,11 @@ def handle_archify(args: argparse.Namespace, state: LoopState | None, project_pa
         ZeroFluffConsole.error(f"Fichier de spécification introuvable : {input_path}")
         return 1
 
+    d_type = normalize_diagram_type(getattr(args, "type", None), str(input_path))
+
     if args.validate_only:
-        ZeroFluffConsole.info(f"Validation Showcase de la spécification Archify : {input_path}")
-        return run_archify_command("validate", args.type, str(input_path), quality=args.quality)
+        ZeroFluffConsole.info(f"Validation Showcase de la spécification Archify [{d_type}] : {input_path}")
+        return run_archify_command("validate", d_type, str(input_path), quality=args.quality)
 
     output_file = args.output
     if not output_file:
@@ -109,8 +120,8 @@ def handle_archify(args: argparse.Namespace, state: LoopState | None, project_pa
     if not output_path.is_absolute() and project_path:
         output_path = project_path / output_file
 
-    ZeroFluffConsole.info(f"Compilation Archify Showcase : {input_path} -> {output_path}")
-    code = run_archify_command("deliver", args.type, str(input_path), output_path=str(output_path), quality=args.quality)
+    ZeroFluffConsole.info(f"Compilation Archify Showcase [{d_type}] : {input_path} -> {output_path}")
+    code = run_archify_command("deliver", d_type, str(input_path), output_path=str(output_path), quality=args.quality)
     if code == 0:
         ZeroFluffConsole.success(f"Artefact HTML généré avec succès : {output_path}")
         if getattr(args, "open", False):
