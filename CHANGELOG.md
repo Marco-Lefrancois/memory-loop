@@ -105,7 +105,19 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 - **Synchronisation Globale du Framework mLoop (`ADR-0339`)** :
   - Mise à jour du runner de cycle de vie en version v2.17.
   - Support de 5 types natifs dans le compilateur de cycle de vie.
-  - Synchronisation des outils, skills et de la suite de tests de validation.
+  - Synchronisation des outils, skills et de la suite de tests de validation (550+ tests).
+- **Auto-Heal Daemon Herdr & Résilience d'Exécution** :
+  - Démarrage automatique idempotent du serveur Herdr en arrière-plan détaché lors du `worker-spawn` (`HerdrAdapter.ensure_server_running()`), éliminant les fallbacks fantômes.
+- **Intégration & Module de Lecture Jira** :
+  - Commande CLI `mloop jira-read` en lecture seule pour diff rapide Jira <-> Markdown local.
+  - Préservation du numérotage continu des listes ordonnées ADF découpées par des blocs intercalaires (`attrs.order`).
+
+### Fixed
+- Correction TDD de 3 défauts critiques du framework CLI :
+  - Résolution des récits par identifiant interne de frontmatter (`id:` / `jira_key:`) lors du nommage par clé Jira.
+  - Suppression de la création d'ADR parasite lors de simples marquages de story sans contexte décisionnel.
+  - Préservation non-destructive des validations humaines du socle factuel (`socle_factuel_validated_by_human`) lors de la régénération d'EvidencePacks.
+- Neutralisation du blueprint `story_template_PRO_ANALYSIS.md` éradiquant la propagation de drift des marqueurs `# PILIER X` (conformité `ADR-0301`).
 
 ---
 
@@ -118,9 +130,113 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.15.5] - 2026-09-04
+
+### Added
+- **Enforcement Déterministe du Grounding Visuel (`ADR-0351`)** :
+  - Extraction textuelle et spatiale OCR des maquettes vectorielles SVG (`svg_to_md.py`) avec dégradation gracieuse.
+  - Bloc `visual_contract` dans les EvidencePacks (`is_vectorized`, `ocr_status`).
+  - 10ᵉ contrôle Vibe-Check et Check C11 `struct-check` (Contrat Visuel Lisible).
+- **Quality Gate C9 (Dossier de Preuves Documentaires)** :
+  - Contrôle physique sur `StateMachineEngine` avertissant ou bloquant l'avancement des récits sans dossier de preuves valide.
+  - Exemption explicite des récits déjà complétés (`DONE` / `ACCEPTED`).
+- **Gouvernance des Contrats & Règles** :
+  - Implémentation des contrôles F1-F5 / G1-G4 dans `DevilAdvocateCritic` anti-invention d'APIs (`ADR-0319`).
+  - Injection dynamique du moteur de règles `RuleEngine` (`ADR-0328`).
+  - Filtrage de granularité des tâches SOW (`ADR-0331`) et détection des sauts de phase non tracés (`ADR-0339`).
+  - Résolution sémantique des sous-projets modulaires via `SemanticLexiconResolver`.
+
+### Fixed
+- Correction du sélecteur `resolve_story_query` pour empêcher la collision d'identifiants partageant le même suffixe numérique mais des préfixes distincts (ex: `INC-004-BE` vs `REC-004-BE`).
+
+---
+
 ## [2.15.0] - 2026-08-30
 
 ### Added
 - **Graphe de Connaissance Souverain & Cache MCP (`ADR-0363`)** :
   - Récupération déterministe depuis le graphe agentique local.
   - Hygiène et optimisation du cache `graphify`.
+- **Découverte & Exploration Documentaire Smart Crawler v2 (`ADR-0345`)** :
+  - Traversée intelligente et extraction sémantique des arbres de documentation.
+- **Granularité SOW & Transparence d'Exécution (`ADR-0331`)** :
+  - Filtrage des libellés génériques et décomposition en sous-tâches atomiques vérifiables.
+- **Cycle de Vie des Récits In-Review / Rework (`ADR-0344`)** :
+  - Formalisation des états de révision contradictoire et de retravail avec traçabilité d'arbitrage.
+
+---
+
+## [2.14.0] - 2026-08-26
+
+### Added
+- **Protocole d'Alignement Grill-Me & Frontier Design Tree (`ADR-0320`)** :
+  - Inversion de charge d'arbitrage : questions d'arbitrage 1:1 fermées avec recommandation motivée.
+  - Cartographie de la frontière de conception en arbre de décision.
+- **Fiabilisation du Signal des EvidencePacks avec Code Source Réel** :
+  - Distinction formelle de force probante : extensions de code physique (`.cs`, `.csproj`, `.xml`) constituant une preuve d'implémentation vs documentation (`.md`, `.pdf`).
+- **Isolation des Sous-Agents & Garde-Fous Anti-Récursion (`ADR-0203`)** :
+  - Cloisonnement d'environnement, bornes strictes de récursion et quotas d'appels inter-agents.
+
+---
+
+## [2.13.0] - 2026-08-21
+
+### Added
+- **Protocole Fondateur Fact-Search & Revue Sémantique (`ADR-0326`)** :
+  - Règle constitutionnelle « *Search-Before-Ask* » interdisant les affirmations non sourcées.
+  - Système de preuves découplé en 4 couches (Console CLI, Dossier de preuves, EvidencePack JSON, Journal d'audit).
+- **URLs Canoniques Azure DevOps Wiki (`ADR-0327`)** :
+  - Normalisation des URLs Wiki d'entreprise et résolution déterministe vers l'arborescence ingérée locale.
+- **Sanctuarisation du Zero-Bruit Développeur (`ADR-0319`)** :
+  - Règle de pureté fonctionnelle : les récits Markdown s'arrêtent strictement après les scénarios de test.
+
+---
+
+## [2.12.0] - 2026-08-12
+
+### Added
+- **Intégration du Harnais de Code T3 (`ADR-0028`)** :
+  - Exécution sandboxée sécurisée et vérification déterministe des commandes système.
+- **Runtime Agentique Herdr (`ADR-0029`)** :
+  - Gestion du cycle de vie des sous-agents en processus légers isolés.
+- **Archivage Systématique des Plans (`ADR-0307`)** :
+  - Persistance horodatée et indexation de 100% des plans de travail sous `memory/plan/`.
+- **Gouvernance des Notifications Push (`ADR-0314`)** :
+  - Politiques anti-spam et routage sélectif des alertes critiques vers les canaux développeurs.
+
+---
+
+## [2.11.0] - 2026-08-06
+
+### Added
+- **Moteur Prompts & Evals MCP (`ADR-0308`)** :
+  - Système d'évaluation continue des contextes et prompts injectés aux sous-agents.
+- **Crawler de Jumeaux Markdown (`ADR-0312`)** :
+  - Synchronisation miroir des référentiels distants vers l'arborescence `docs/00-ingested/`.
+- **Reprise de Session Fluide Vibe-Code (`ADR-0310`)** :
+  - Restauration de contexte d'ingénierie post-interruption sans perte d'état cognitif.
+- **Innovations Auto-Développement mLoop Swarm (`ADR-0313`)** :
+  - Auto-évaluation des patterns de code et calibration de performance par renforcement local.
+
+---
+
+## [2.10.0] - 2026-07-30
+
+### Added
+- **Standard OKF LLM Wiki v2 (`ADR-0003`)** :
+  - Organisation des connaissances sous forme de graphe hypertexte structuré en couches SSOT (`docs/00-ingested/`, `docs/01-architecture/`, `docs/02-business-rules/`).
+- **Nomenclature & Gouvernance de Backlog OKF (`ADR-0005`)** :
+  - Schéma strict d'identifiants de stories, formatage Markdown unifié et taxonomie de statut.
+- **Protocole de Gouvernance des Angles Morts & Spikes (`ADR-0306`)** :
+  - Détection proactive des zones d'ombre de conception et encadrement des expérimentations techniques exploratoires.
+
+---
+
+## [2.0.0] - 2026-07-01
+
+### Added
+- **Architecture Fondatrice Memory Loop (mLoop)** :
+  - Modélisation du cycle de raisonnement sous forme de State-Graph pur Python (`ADR-0001`).
+  - Mécanismes de contextualisation active multi-IDE (`ADR-0002`) reliant les espaces de travail locaux.
+  - Enclave d'exécution sécurisée gVisor (`ADR-0004`) garantissant l'étanchéité des sorties d'outils.
+  - Socle CLI souverain, zero-cloud et zéro dépendance opaque.
