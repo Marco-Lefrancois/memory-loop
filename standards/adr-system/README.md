@@ -16,7 +16,6 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0003](0003-okf-llm-wiki-v2-standard.md)** : Adoption de l'Open Knowledge Format (OKF v0.1) et du Paradigme LLM Wiki v2
 *   **[ADR-0004](0004-secure-enclave-gvisor-harness.md)** : Secure Enclave & Harnais d'Exécution Sécurisée gVisor
 *   **[ADR-0005](0005-gouvernance-backlog-nomenclature-okf.md)** : Gouvernance du Backlog & Nomenclature Standardisée OKF
-*   **[ADR-0028](0028-t3-code-harness-integration.md)** : Intégration du Control Surface T3 Code (`pingdotgg/t3code`) avec l'Écosystème mLoop
 *   **[ADR-0029](0029-herdr-agent-runtime-integration.md)** : Intégration du Runtime Multi-Agents & Daemon Persistant Herdr (`herdrdev/herdr` v0.8.0) dans mLoop
 
 ---

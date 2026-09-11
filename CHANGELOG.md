@@ -195,8 +195,8 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 ## [2.12.0] - 2026-08-12
 
 ### Added
-- **Intégration du Harnais de Code T3 (`ADR-0028`)** :
-  - Exécution sandboxée sécurisée et vérification déterministe des commandes système.
+- **Moteur d'Isolation Physique & Bac à Sable (`SandboxRunner`)** :
+  - Exécution sécurisée des commandes avec restrictions mémoires et CPU (Job Objects sous Windows, Bubblewrap & Landlock sous Linux).
 - **Runtime Agentique Herdr (`ADR-0029`)** :
   - Gestion du cycle de vie des sous-agents en processus légers isolés.
 - **Archivage Systématique des Plans (`ADR-0307`)** :
