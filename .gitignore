@@ -32,7 +32,6 @@ tools/archify/showcase/metro-*
 # --- 2. MEMORY LOOP RUNTIME STATE & DATABASES (STRICT EXCLUSION) ---
 memory/*.db
 memory/*.jsonl
-memory/loop_mem.db
 memory/active_project.json
 memory/global_execution_traces.json
 memory/SESSION_MEMORY_HEALTH.md
@@ -45,6 +44,9 @@ memory/evidence/
 memory/plan/
 memory/reports/
 memory/audit/
+memory/evals/
+memory/logs/
+memory/backups/
 memory/memo_archive/
 memory/compaction/
 memory/artifacts/
@@ -53,15 +55,56 @@ memory/artifacts/
 .env
 *.env
 .env.*
+!.env.example
+!.env.template
+!.env.sample
 .secrets/
 **/.secrets/
+*.pem
+*.key
+*.pfx
+*.p12
+*.cert
+*.crt
+*service_account*.json
+*credentials*.json
+.aws/
+.azure/
 
-# --- 4. PYTHON & BUILD CACHES ---
+# --- 4. CONFIGURATIONS LOCALES & EXEMPLES (OPENCODE, ETC.) ---
+opencode.json
+opencode.*.json
+!opencode.example.json
+!opencode.json.example
+
+# --- 5. LOGS & FICHIERS TEMPORAIRES ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Bases de données & fichiers temporaires SQLite (WAL / Journaux)
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+.fact_search_index.db
+
+# --- 6. PYTHON & BUILD CACHES ---
 __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
 .venv/
 venv/
 ENV/
@@ -69,8 +112,15 @@ env/
 dist/
 build/
 *.egg-info/
+*.egg
+.eggs/
 
-# --- 5. GRAPH & SEARCH CACHES ---
+# --- 7. NODE.JS & PAQUETS WEB ---
+node_modules/
+**/node_modules/
+.opencode/node_modules/
+
+# --- 8. GRAPH & SEARCH CACHES ---
 graphify-out/
 .graphify_detect.json
 .codegraph/
@@ -78,16 +128,40 @@ graphify-out/
 output/
 scratch/
 
-# --- 6. IDE, EDITORS & OS ARTIFACTS ---
+# --- 9. IDE, ÉDITEURS & ARTIFACTS OS ---
+# Antigravity & AI harnesses
 .antigravitycli/
 .obsidian/
 .omp/
-.vscode/
 .claude/
-.opencode/node_modules/
-.fact_search_index.db
 login_notebooklm.mjs
+
+# VS Code
+.vscode/
+
+# JetBrains (PyCharm, IntelliJ, WebStorm, etc.)
+.idea/
+*.iml
+
+# Visual Studio & Windows dev
+*.suo
+*.user
+*.userosv
+*.sln.docstates
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+
+# Fichiers système OS (Windows & macOS)
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+._*
+.Spotlight-V100
+.Trashes
 *.bak
 *.tmp

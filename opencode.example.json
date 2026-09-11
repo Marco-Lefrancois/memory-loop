@@ -51,7 +51,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "options": {
         "baseURL": "https://api-ia.nmedia.ca/v1",
-        "apiKey": "{file:~/.secrets/litellm-key-metro}"
+        "apiKey": "{env:NMEDIA_CLOUD_API_KEY}"
       },
       "models": {
         "claude-opus-4.8": {
@@ -453,7 +453,7 @@
         "@upstash/context7-mcp"
       ],
       "environment": {
-        "CONTEXT7_API_KEY": "{file:~/.secrets/context7-key}"
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },
       "timeout": 15000
     },
