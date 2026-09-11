@@ -37,7 +37,10 @@ class LifecycleHookRegistry:
             "user_prompt_submit": [],
             "pre_tool_use": [],
             "post_tool_use": [],
-            "interrupt": []
+            "interrupt": [],
+            "pre_compact": [],
+            "post_compact": [],
+            "checkpoint_resume": [],
         }
 
     def register(self, event_name: str, handler: HookHandler) -> None:

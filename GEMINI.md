@@ -19,9 +19,11 @@ Ceci est le **Cerveau** (Backend d'État & Orchestrateur) de l'IDE, dédié à l
 - 🧠 **3. Base Sémantique & Graphe Local** : Mise à jour de l'index Graphify et SQLite FTS5 (WikiFix + Sync). Commande : `python src/swarm.py sync --project <nom_projet>`.
 - 📚 **4. Oracle Google NotebookLM (RAG Gemini 2.5 - ADR-0360)** : Export et mise à jour du carnet officiel [`memory-loop-ssot`](https://notebook.google.com/notebook/ddf80a44-cf1c-4eb8-86fd-7cebe6156f87). Commande : `python src/swarm.py notebooklm --bundle` ou `python src/swarm.py notebooklm --status`.
 - 🩺 **5. Diagnostic & Hygiène Contextuelle (Skill Doctor - ADR-0362)** : Audit d'empreinte jetons et détection du *Context Rot* sur les compétences `.agents/skills/`. Commande : `python src/swarm.py doctor --skills` (ou `python src/swarm.py skill-doctor`).
+- 🕸️ **6. Graph Intelligence & Subgraph Retrieval (ADR-0204 & ADR-0363)** : Consultation du graphe de connaissances sans dumping JSON brut (0 fatigue de contexte). Commandes : `python src/swarm.py graph-status`, `python src/swarm.py graph-query --query "..."`, `python src/swarm.py graph-explain --concept "..."`, `python src/swarm.py graph-impact --target "..."`.
+- 🛡️ **7. Protection Anti-Amnésie & Pré-Compaction (ADR-0364)** : Sauvegarde Système 1 déterministe avant compression de contexte LLM, résolution LOD-0 de l'Artefact #1 et Micro-URIs canoniques (`assets://`, `evidence://`, `story://`, `source://`). Commandes : `python src/swarm.py hook --event pre_compact` ou `python src/swarm.py hook --event resume`.
 
 
-**Double Moteur d'Analyse & Diagrammes** : **Graphify** pour la documentation, l'architecture SSOT et les règles métier (`graphify query`, `graphify explain`) ; **CodeGraph** pour le code source physique (`codegraph_explore`, `code-explore`, `code-impact`, `code-affected`) ; **Archify** pour la génération et validation de diagrammes d'architecture interactifs vectoriels (`python src/swarm.py archify` ou `tools/archify/archify_runner.py`).
+**Double Moteur d'Analyse & Diagrammes** : **Graphify** pour la documentation, l'architecture SSOT et les règles métier (`graph-query`, `graph-explain`, `graph_query`, `graph_explain`) ; **CodeGraph** pour le code source physique (`codegraph_explore`, `code-explore`, `code-impact`, `code-affected`) ; **Archify** pour la génération et validation de diagrammes d'architecture interactifs vectoriels (`python src/swarm.py archify` ou `tools/archify/archify_runner.py`).
 
 ---
 
@@ -104,6 +106,7 @@ Ceci est le **Cerveau** (Backend d'État & Orchestrateur) de l'IDE, dédié à l
   - Alerter immédiatement si une exigence est irréalisable, floue ou hors périmètre.
 
 - 🚫 **Never do (Ne Jamais Faire)** :
+  - **Zéro Dumping de Graphe JSON Brut (ADR-0363)** : Interdiction formelle d'ouvrir ou d'ingérer des fichiers de graphes bruts (`graph.json`, `knowledge_graph.json`) dans la fenêtre de contexte d'inférence (violation de Token Budget & risque de Context Rot). La consultation s'effectue exclusivement par le pipeline (`python src/swarm.py graph-query`, `graph-explain`, `graph-status`) ou le bridge MCP officiel.
   - **Interdiction des Plans d'Intention Abstraits au Cadrage (ADR-0361)** : Interdiction formelle, lors de la phase de cadrage/incubation d'un récit, de répondre par une promesse d'action (« je vais faire le fact-search plus tard ») ou un plan générique. Le socle de preuves physiques réelles doit être immédiatement produit et restitué en texte intégral dans le dialogue.
   - **Zéro Question Trivialement Documentée (Search-Before-Ask)** : Interdiction formelle de poser une question au PO si la réponse figure déjà dans les documents ingérés.
   - **Zéro Lien Wiki Invalide** : Interdiction d'utiliser `friendlyName=` conjointement avec `pagePath=`, et interdiction de générer des chemins Wiki Azure DevOps non vérifiés contre le staging local `reference/`.

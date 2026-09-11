@@ -46,6 +46,8 @@ memory/plan/
 memory/reports/
 memory/audit/
 memory/memo_archive/
+memory/compaction/
+memory/artifacts/
 
 # --- 3. ENVIRONMENTS, CREDENTIALS & SECRETS ---
 .env

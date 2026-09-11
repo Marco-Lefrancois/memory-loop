@@ -6,6 +6,7 @@ Garantit l'intégrité des flux de messages agentiques :
 """
 import re
 import hashlib
+from pathlib import Path
 from typing import List, Dict, Any, Optional
 
 class ContextGuard:
@@ -108,3 +109,40 @@ class ContextGuard:
 
         untrusted_attr = "true" if is_untrusted else "false"
         return f'<retrieved_data source="{source_id}" untrusted="{untrusted_attr}">\n{cleaned_content}\n</retrieved_data>'
+
+    @classmethod
+    def offload_heavy_tool_output(
+        cls,
+        output_text: str,
+        max_chars: int = 2000,
+        project_name: Optional[str] = None,
+        base_dir: Optional[Path] = None,
+    ) -> str:
+        """
+        Déporte les sorties d'outils volumineuses (> 2000 caractères) dans un fichier sidecar
+        sous memory/artifacts/sidecars/<hash>.txt et retourne un résumé compact avec Micro-URI.
+        Évite l'explosion du contexte tout en garantissant la récupérabilité totale (ADR-0364).
+        """
+        if not output_text or len(output_text) <= max_chars:
+            return output_text
+
+        content_hash = hashlib.sha256(output_text.encode("utf-8")).hexdigest()[:12]
+
+        from src.engine.hooks.path_resolver import PathAliasResolver
+        proj_root = PathAliasResolver.get_project_root(project_name, base_dir)
+        sidecar_dir = proj_root / "memory" / "artifacts" / "sidecars"
+        try:
+            sidecar_dir.mkdir(parents=True, exist_ok=True)
+            sidecar_file = sidecar_dir / f"{content_hash}.txt"
+            sidecar_file.write_text(output_text, encoding="utf-8")
+        except Exception:
+            pass
+
+        preview = cls.truncate_tool_output(output_text, max_lines=20, head_lines=15, tail_lines=5)
+
+        return (
+            f"{preview}\n\n"
+            f"[⚠️ Sortie volumineuse ({len(output_text)} chars) déportée dans le sidecar: "
+            f"`evidence://../artifacts/sidecars/{content_hash}.txt` - Consultation complète via view_file si nécessaire]"
+        )
+

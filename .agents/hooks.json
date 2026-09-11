@@ -1,0 +1,31 @@
+{
+  "mloop-compaction-guard": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content|run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python src/bridges/antigravity_hook.py --event post_tool_use",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python src/bridges/antigravity_hook.py --event pre_invocation",
+        "timeout": 10
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python src/bridges/antigravity_hook.py --event stop",
+        "timeout": 15
+      }
+    ]
+  }
+}

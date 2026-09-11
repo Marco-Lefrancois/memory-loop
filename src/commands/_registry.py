@@ -87,6 +87,28 @@ COMMANDS: dict[str, dict] = {
         "help": "Installer les hooks Git de protection (pre-commit vibe-check)",
         "args": [],
     },
+    "hook": {
+        "handler": "hook:handle_hook",
+        "help": "Déclencher ou tester un hook de cycle de vie ou de pré-compaction (ADR-0364)",
+        "args": [
+            {
+                "name": "--event",
+                "default": "pre_compact",
+                "help": "Nom de l'événement (pre_compact, post_compact, resume, session_start)",
+            },
+            {
+                "name": "--format",
+                "choices": ["text", "json", "markdown"],
+                "default": "text",
+                "help": "Format de sortie",
+            },
+            {
+                "name": "--story",
+                "default": None,
+                "help": "Identifiant de la story cible (optionnel)",
+            },
+        ],
+    },
     "notebooklm": {
         "handler": "notebooklm:handle_notebooklm",
         "help": "Gestion, export SSOT et connexion au carnet Google NotebookLM officiel",

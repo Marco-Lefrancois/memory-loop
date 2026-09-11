@@ -125,6 +125,7 @@ flowchart LR
 | `python src/swarm.py dream` | Routine de consolidation et hygiène de mémoire Overnight | `--project <P>` |
 | `python src/swarm.py unlearn` | Désapprentissage sémantique et propagation de suppression | `--project <P>`, `--concept <C>` |
 | `python src/swarm.py svg-optimize` | Optimisation et minification des fichiers vectoriels SVG | `--project <P>` |
+| `python src/swarm.py hook` | Exécuter ou tester un hook de cycle de vie ou pré-compaction (ADR-0364) | `--event <pre_compact/resume/...>`, `[--project <P>]`, `[--format <text/json>]` |
 
 ---
 
