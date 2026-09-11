@@ -35,3 +35,14 @@ Pour faciliter la lecture, l'analyste doit utiliser des termes d'action normalis
 
 Lors de la rédaction des critères d'acceptation, l'analyste a l'interdiction de citer un élément UI sans son tableau de contrat associé (voir `story_template.md`).
 
+---
+
+## Modulation par Complexité de Composant (Anti-Remplissage)
+
+Le cycle D-A-F-E et la matrice d'états s'appliquent à la **hauteur de la richesse réelle du composant**, en cohérence avec le Triage Bimodal (`STORY_AUTHORING_FRAMEWORK.md`, Mode FULL vs LIGHT) :
+
+- **Composant riche** (formulaire multi-champs, liste alimentée par API, carte cliquable, wizard multi-étapes) : documenter le cycle D-A-F-E complet et la matrice des 8 États d'Interaction dans leur intégralité.
+- **Composant simple** (champ unique + bouton, écran `minimal-spotlight`, action directe sans état intermédiaire) : ne documenter que les **états et étapes du cycle qui portent une décision UX ou métier réelle**. Un état natif générique (survol, pression tactile, contour de focus) sans règle métier spécifique associée est considéré comme du remplissage et doit être omis.
+
+**Interdiction formelle** : décrire un état d'interaction uniquement pour satisfaire un compte de 8 lignes, sans qu'il n'apporte d'information exploitable pour le développeur (ex : « Aucun message d'erreur applicable » n'est pas un état, c'est une négation — à retirer plutôt qu'à lister).
+

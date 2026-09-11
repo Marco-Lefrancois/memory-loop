@@ -23,7 +23,7 @@ Avant toute rédaction, l'Agent et le Lead/PO qualifient la story dans l'une des
 | :--- | :--- | :--- |
 | **Typologie de Tâche** | • Intégration de SDKs / APIs tierces / Webhooks<br>• Logique métier asynchrone, State Management, Event Bus<br>• Flux d'authentification, SSO, gestion des tokens et sessions<br>• Règles de sécurité, conformité (Loi 25, RGPD, SOC2) & Chiffrement<br>• Flux transactionnels, paiements, pipelines critiques | • Ajustements de textes statiques & libellés i18n<br>• Modifications cosmétiques simples (styles, couleurs, padding)<br>• Variations mineures de layout sans logique conditionnelle<br>• Écrans informatifs simples sans persistance locale |
 | **Couverture Gherkin** | **4 Piliers obligatoires** :<br>1. Nominal (*Happy Path*)<br>2. Exceptions (*Rejets Métier / Validations*)<br>3. Résilience (*Timeouts / Offline / Mode dégradé*)<br>4. UX & Observabilité (*Logs / Accessibilité*) | **2 Piliers ciblés** :<br>1. Nominal (*Rendu nominal attendu*)<br>2. UX / Repli simple (*Cas vide ou indisponibilité*) |
-| **Matrice UX** | **4 États visuels obligatoires** :<br>*Initial, Processing, Fallback, Success* | **1 État direct** :<br>*Affichage statique nominal* |
+| **Matrice UX** | **États signifiants obligatoires** (4 au plancher : *Initial, Processing, Fallback, Success* ; jusqu'à 8 pour un composant riche — voir modulation `INTERACTION_MANIFESTO.md` et `story_template.md` §3) | **1 État direct** :<br>*Affichage statique nominal* |
 | **Contrats d'Interface** | Profil A/B exhaustif (Interfaces, signatures asynchrones `Task<T>` / `Promise`, types, erreurs) | Mention déclarative simplifiée |
 | **EvidencePack Sidecar** | Complet (`fact_search_proofs`, sources, audit épistémique) | Standard allégé |
 

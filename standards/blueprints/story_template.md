@@ -34,15 +34,14 @@ gold_standard_ref: ""      # Optionnel. Ex: "REC-015-FE.md" — référence styl
 #### 2. [Section UI 2]
 * **[Élément]** : [Description]
 
-#### 3. Matrice des États d'Interaction & Résilience (8 États UI - ADR-0340)
-* **[Default / Nominal State]** : [Comportement visuel au repos]
-* **[Hover State]** : [Transition subtile au survol]
-* **[Focus-Visible State]** : [Contour d'accessibilité clavier]
-* **[Active State]** : [Rétroaction lors du clic/toucher]
-* **[Disabled State]** : [Indicateur grisé ou inerte non bloquant]
-* **[Loading / Processing State]** : [Spinner ou indicateur de progression pendant la soumission]
-* **[Error State]** : [Message d'anomalie en ligne et mise en évidence]
-* **[Success State]** : [Notification de confirmation ou redirection]
+#### 3. États d'Interaction (signifiants)
+> **Règle de modulation (anti-remplissage)** : la profondeur de cette section s'adapte à la richesse réelle du composant. Ne documenter que les états qui portent une décision UX ou métier ; ne pas énumérer des états natifs génériques sans contenu spécifique.
+> - **Composant riche** (formulaire multi-champs, liste alimentée par API, carte cliquable, wizard) : documenter la **Matrice complète des 8 États** (référence) : Default/Nominal, Hover, Focus-Visible, Active, Disabled, Loading/Processing, Error, Success.
+> - **Composant simple / écran `minimal-spotlight`** (champ + bouton, saisie unique, action directe) : documenter uniquement les **états signifiants** (ex : champ vide → bouton désactivé ; saisie valide → bouton activé ; validation locale ; succès → transition). Omettre Hover/Active/Focus-Visible lorsqu'ils relèvent du comportement natif par défaut sans règle métier associée.
+
+* **[État 1]** : [Comportement et condition de déclenchement]
+* **[État 2]** : [Comportement et condition de déclenchement]
+* **[État N]** : [Comportement et condition de déclenchement]
 
 ### Liste Call to Actions
 
@@ -55,6 +54,8 @@ gold_standard_ref: ""      # Optionnel. Ex: "REC-015-FE.md" — référence styl
 ## Règles d'affaires
 * **[Titre Métier Pur]** : [Description de la règle]
 
+> **Note** : Le titre est le nom métier de la règle uniquement (ex : « Saisie Limitée »). Zéro numérotation type `Règle-01`/`RG-01` imposée par le SSOT — un identifiant technique n'apporte aucune valeur au dev et introduit du bruit rédactionnel.
+
 ---
 
 ## Maquettes
@@ -62,14 +63,17 @@ gold_standard_ref: ""      # Optionnel. Ex: "REC-015-FE.md" — référence styl
 
 ---
 
-## Contrats d'échange API
+## Navigation / Contrats d'échange API
+> **Règle conditionnelle par `layer`** :
+> - **`layer: frontend`** : le contrat d'échange officiel EST la **Matrice CTA** (section précédente). Cette section se limite alors à `## Navigation` (écran cible, navigation amont/aval). Si l'écran consomme réellement des routes backend, les lister en version allégée (méthode + chemin, sans payload) ; ne jamais inclure une sous-section « Contrats d'échange API » vide ou renvoyant uniquement vers « à définir ».
+> - **`layer: backend` / `layer: fullstack`** : documenter le contrat complet ci-dessous (Profil A/B, payload, idempotence).
 
-### Spécifications de l'Interface
+### Navigation
 - **Écran cible** : [Type d'app Power Apps]
 - **Navigation Amont** : [Origine]
 - **Navigation Aval** : [Destination]
 
-### Contrats d'échange API
+### Contrats d'échange API *(backend/fullstack uniquement, ou FE avec routes réelles consommées)*
 - **[Nom Opération]** : `[METHODE] /api/...`
 ```json
 {
