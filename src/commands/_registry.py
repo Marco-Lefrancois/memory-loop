@@ -642,6 +642,16 @@ COMMANDS: dict[str, dict] = {
         ],
     },
     # ── Tooling ────────────────────────────────────────────
+    "dashboard": {
+        "handler": "dashboard:handle_dashboard",
+        "help": "Tableau de bord d'observabilité et supervision souverain mLoop (FastAPI / Zero-Docker)",
+        "no_project": True,
+        "aliases": ["ui", "supervision"],
+        "args": [
+            {"name": "--port", "type": int, "default": 8080, "help": "Port du serveur web local"},
+            {"name": "--no-browser", "action": "store_true", "help": "Ne pas ouvrir automatiquement le navigateur"},
+        ],
+    },
     "drawdb": {
         "handler": "tooling:handle_drawdb",
         "help": "Pipeline DrawDB (serveur, export, import, sync)",

@@ -7,6 +7,33 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.19.0] - 2026-09-11
+
+### Added
+- **Tableau de Bord d'Observabilité & Supervision Souverain (`mloop dashboard`)** :
+  - Serveur FastAPI & Uvicorn local autonome (*Zero-Docker*, 100% Python pur, données locales).
+  - Commandes CLI `mloop dashboard` (alias : `mloop ui`, `mloop supervision`) avec support des drapeaux `--port` (défaut : 8080) et `--no-browser`.
+  - Hub d'observabilité en temps réel avec endpoints REST dédiés :
+    - `GET /api/health` : État de santé, flags souverains et projet actif.
+    - `GET /api/projects` & `POST /api/project/select` : Liste et bascule dynamique entre projets (avec résolution canonique des alias).
+    - `GET /api/metrics` : Agrégation des tokens consommés, coûts USD, modèles d'IA et répartition par actions.
+    - `GET /api/events` : Flux d'événements et télémétrie en direct.
+    - `GET /api/stories` : État d'avancement des User Stories du backlog et EvidencePacks associés.
+    - `GET /api/graph` : Métriques du graphe de connaissances souverain (nœuds, arêtes, statut graphify).
+    - `GET /api/state` : Statut du pipeline et progression des 6 phases du cycle de vie cognitif.
+  - Interface utilisateur moderne embarquée (`src/dashboard/static/index.html`) :
+    - Thème sombre épuré, responsive, cartes métriques en direct et barre d'avancement du cycle en 6 étapes.
+    - Tableau de bord des stories avec badges de statut et preuves contractuelles.
+    - Journal des événements live et sélecteur interactif de projet.
+- **Suite de tests d'intégration** :
+  - Validation exhaustive de l'API de supervision via `TestClient` (`tests/test_dashboard_api.py`, 9 tests validés à 100 %).
+
+### Changed
+- Ajout du `$schema` officiel OpenCode dans `.opencode/opencode.json`.
+- Déclaration et routage du sous-système de dashboard dans le registre central des commandes CLI (`src/commands/_registry.py`).
+
+---
+
 ## [2.18.0] - 2026-09-11
 
 ### Added
