@@ -342,7 +342,7 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
-## [1.9.0] - 2026-06-30
+## [1.7.0] - 2026-06-30
 
 ### Added
 - **Segmentation Cognitive Memory Loop vs OpenSpec (`ADR-0103`)** :
@@ -357,7 +357,7 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
-## [1.8.0] - 2026-06-25
+## [1.6.0] - 2026-06-25
 
 ### Added
 - **Gouvernance HITL, Phase 1 & Plan-First (`ADR-0305`)** :
@@ -373,7 +373,7 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
-## [1.7.0] - 2026-06-18
+## [1.5.0] - 2026-06-18
 
 ### Added
 - **Protocole Story-as-State & Machine à États FSM (`ADR-0302`)** :
@@ -382,6 +382,8 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 - **Gouvernance de Synchronisation Jira Anti-Drift (`ADR-0304`)** :
   - Séparation stricte des autorités : le Markdown local dans `backlog/` détient l'autorité de conception, Jira détient l'autorité de planification temporelle.
   - Proscription absolue des scripts jetables ou appels `curl` directs ; centralisation exclusive via `python src/swarm.py jira_sync`.
+- **Amorçage des Grands Projets d'Analyse** :
+  - Initialisation du projet d'envergure `Projects/BoireFrere_Segment2` et industrialisation de `Projects/mLoop`.
 
 ### Fixed
 - **Conflits de Statuts Jira ↔ Markdown** :
@@ -389,7 +391,7 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
-## [1.6.0] - 2026-06-09
+## [1.4.0] - 2026-06-09
 
 ### Added
 - **Graph Loop Architecture & SSOT NetworkX (`ADR-0200`)** :
@@ -400,10 +402,12 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
   - Routage par le risque (*Risk-Based Routing*) : Fast-track pour risque `LOW`, revue contradictoire approfondie par `evaluator_node.py` pour risque `HIGH`/`CRITICAL`.
 - **Compétences Cognitives Documentaires** :
   - Déploiement des compétences initiales de recherche et d'assimilation documentaire approfondie (`research`, `teach`).
+- **Observabilité & Supervision** :
+  - Lancement des premiers travaux d'interface et d'observabilité sous `Projects/mLoop-Dashboard`.
 
 ---
 
-## [1.5.0] - 2026-05-31
+## [1.3.0] - 2026-05-31
 
 ### Added
 - **Standard Gherkin des 4 Piliers Obligatoires (`ADR-0301`)** :
@@ -413,160 +417,65 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 - **Harnachement des Blueprints Markdown Zero-Drift (`ADR-0303`)** :
   - Centralisation du gabarit unique inviolable sous [`standards/blueprints/story_template.md`].
   - Interdiction stricte de paraphraser ou d'altérer la hiérarchie des sections H1/H2/H3.
+- **Modélisation & Projets IA** :
+  - Amorçage des projets de modélisation avancée (`Projects/Ai_Fine_Tuning_Model`).
 
 ---
 
-## [1.4.0] - 2026-05-28
+## [1.2.0] - 2026-05-28
 
 ### Added
+- **Constitution mLoop & Loi Fondamentale (`ADR-0000`)** :
+  - Promulgation constitutionnelle de l'Agentic Coworker Framework : séparation formelle entre l'Ontologie (L'Être : Memory, Skills, Soul, Handoff, Self-Healing) et le Protocole (Le Faire : Délégation asymétrique, Backend d'État strict, Graph Loop, Cycle Plan-Analyze-Validate).
+  - Sanctuarisation de la frontière étanche : mLoop est un backend d'analyse, d'état et de validation déterministe ; le code applicatif physique réside dans les dépôts clients dédiés.
+  - Publication du *Memory Loop Master Handbook* (`docs/01-architecture/framework/memory_loop_master_handbook.md`) et des gabarits normatifs (`soul_template.md`, `JOURNAL_TEMPLATE.md`).
 - **Structure Canonique et SSOT du Répertoire `docs/` (`ADR-0102`)** :
   - Découpage normé en 5 sous-dossiers : `00-ingested/` (matière première), `01-architecture/` (ADRs & synthèses), `02-business-rules/` (règles métier vivantes `RM-*`), `03-models/` (schémas), `04-transverse/` (questions ouvertes, glossaire).
   - Indexation sémantique globale via `docs/index.md` servant de point d'ancrage pour le graphe de connaissances.
 - **Story Constraint Contract & Score INVEST Déterministe (`ADR-0300`)** :
   - Verrouillage de la frontière d'analyse avant transition vers `READY_FOR_GROOMING`.
   - Calcul automatique de conformité INVEST via `wikifix` avec seuil bloquant à 80%.
-- **Premières Compétences Cognitives mLoop** :
-  - Déploiement des compétences initiales d'analyse d'affaires et de contrôle qualité : `analyze`, `validate`, `sop`.
+- **Déploiement des Compétences Cognitives Fondatrices** :
+  - Création du socle de base de données locale `src/loop_mem/db.py`.
+  - Déploiement des premières compétences cognitives modulaires d'analyse et de contrôle qualité : `analyze`, `validate`, `sop`.
 
 ---
 
-## [1.3.0] - 2026-05-12
+## [1.1.0] - 2026-05-25
 
 ### Added
-- **Structure Canonique Projet Client (Loi des 3 Piliers) (`ADR-0100`)** :
+- **Pipeline de Synchronisation Jira Intégré (`src/pipelines/jira/`)** :
+  - Implémentation du moteur de synchronisation Jira (`sync_engine.py`), du convertisseur Atlassian Document Format (`adf_converter.py`) et du nettoyeur Markdown (`md_cleaner.py`).
+- **Passerelles MCP & Modélisation du Flux Sémantique** :
+  - Création des serveurs de passerelle MCP `src/bridges/mcp_loop_mem.py` et `src/bridges/mcp_crawler.py`.
+  - Formalisation de l'architecture de flux sémantique (`docs/01-architecture/framework/memory_loop_semantic_flow.md`) et de l'agent d'ingestion (`src/pipelines/ingest_agent.py`).
+- **Structure de Répertoire Projet Client (Loi des 3 Piliers) (`ADR-0100`)** :
   - Partitionnement étanche de l'espace de travail client : `reference/` (matière première humaine), `docs/` (SSOT architecture & règles), `backlog/` (spécifications & exécution), `memory/` (persistance & traces d'exécution), `graphify-out/` (graphe de connaissances).
 - **Pipeline d'Ingestion MarkItDown Local (`ADR-0101`)** :
-  - Abandon définitif des dépendances de serveurs RAG distants opaques.
   - Conversion locale et autonome des formats Office/PDF (DOCX, XLSX, PDF, PPTX) en Markdown pur sous `docs/00-ingested/`.
   - Registre persistant `memory/ingest_registry.json` et déduplication systématique par empreintes SHA-256.
 
 ---
 
-## [1.2.0] - 2026-04-30
+## [1.0.0] - 2026-05-22
 
 ### Added
-- **Harnais d'Exécution Sécurisée gVisor (`ADR-0004`)** :
-  - Spécification de l'isolation d'exécution Système 1 (Kernel User-Space Sentry) pour interdire toute évasion de conteneur, *process fork* ou falsification de l'hôte.
-  - Canaux de communication hors-bande (`:8888`) pour la télémétrie de sandboxing.
-- **Gouvernance & Nomenclature de Backlog OKF (`ADR-0005`)** :
-  - Standardisation de la taxonomie des récits (`ST-XXX`, `INC-XXX-BE`, `INC-XXX-FE`).
-  - Règles de structuration sémantique du `sprint_backlog.md` et du `STORY_MAPPING.md`.
-
----
-
-## [1.1.0] - 2026-04-15
-
-### Added
-- **Architecture de Contextualisation Active Multi-IDE (`ADR-0002`)** :
+- **Naissance Matérielle du Cœur Memory Loop (mLoop)** :
+  - Création formelle du paquet Python de base `src/` (`src/__init__.py`, `src/state.py`, `src/cli.py`).
+  - Modélisation du cycle de raisonnement sous forme de State-Graph pur Python 3.12+ avec validation Pydantic v2 (`ADR-0001`).
+  - Implémentation du premier moteur d'audit qualité et d'alignement Markdown `src/pipelines/wikifix.py`.
+  - Intégration du crawler d'ingestion documentaire `src/pipelines/crawler.py` et du premier agent Graphify (`src/pipelines/graphify/agent.py`).
+  - Mécanismes de garde-fous initiaux : plafonnement budgétaire de tokens (`TokenBudget`) et disjoncteurs anti-emballement (`MaxRevisionsReached`).
+- **Contextualisation Active Multi-IDE (`ADR-0002`)** :
   - Découplage complet entre le moteur Python agnostique (`src/`) et les adaptateurs d'environnements de développement (`.agents/skills/` pour Antigravity, `opencode.json` pour OpenCode, `CLAUDE.md` pour Claude Code, `.vscode/tasks.json` pour VS Code).
-  - Pipeline de réalignement et synchronisation automatique `python src/swarm.py calibrate`.
-- **Moteur d'Ingestion AST Statique Graphify v1.1** :
-  - Transition de Graphify d'un agent autonome vers un outil d'ingestion AST statique et lexical avec cache incrémental SHA-256 (`ingest_cache.json`).
-- **Fondations de l'Open Knowledge Format v0.1 (`ADR-0003`)** :
-  - Spécification initiale des métadonnées Frontmatter YAML pour documents d'architecture et règles métier.
 
 ---
 
-## [1.0.0] - 2026-04-01
+## [0.9.0] - 2026-05-11
 
 ### Added
-- **Agentic Coworker Framework & Loi Fondamentale (`ADR-0000`)** :
-  - Établissement de la Constitution mLoop : séparation entre l'Ontologie (L'Être : Memory, Skills, Soul, Handoff, Self-Healing) et le Protocole (Le Faire : Délégation asymétrique, Backend d'État strict, Graph Loop, Cycle Plan-Analyze-Validate).
-  - Sanctuarisation de la frontière étanche : mLoop est un backend d'analyse, d'état et de validation déterministe ; le code applicatif physique réside dans les dépôts clients dédiés.
-- **Architecture par Graphe d'États Déterministe Python 3.12+ (`ADR-0001`)** :
-  - Orchestration par State Graph typé avec validation Pydantic v2 (`src/state.py`).
-  - Implémentation du CLI unifié `src/swarm.py` avec console Rich Zero-Fluff.
-  - Mécanismes de garde-fous : plafonnement budgétaire de tokens (`TokenBudget`) et disjoncteurs anti-emballement (`MaxRevisionsReached`).
-- **Socle de Persistance Locale SQLite FTS5** :
-  - Stockage local déterministe sous `memory/cache/` pour la recherche textuelle plein texte sans dépendance cloud.
-
----
-
-## [0.9.0] - 2026-03-24
-
-### Added
-- **Stabilisation Pré-v1.0 & CLI Unifié Swarm** :
-  - Finalisation de l'architecture modulaire du CLI Python pur sous `src/swarm.py` avec console Rich Zero-Fluff.
-  - Implémentation des disjoncteurs financiers (`TokenBudget`) et du plafonnement de récursions (`MaxRevisionsReached`) prévenant toute boucle infinie d'agents.
-  - Formalisation du cycle canonique P-A-V (Plan $\rightarrow$ Analyze $\rightarrow$ Validate) régissant chaque interaction avec le backlog.
-- **Typage Statique du Moteur d'État** :
-  - Intégration complète de Pydantic v2 pour la validation du schéma d'état partagé (`LoopState`).
-
----
-
-## [0.8.0] - 2026-03-12
-
-### Added
-- **Normalisation des Blueprints & Gabarits de Récits** :
-  - Premiers gabarits normatifs de spécification fonctionnelle sous `standards/blueprints/` (prémices du standard Story Template).
-  - Définition des règles d'acceptation déterministes et structuration des scénarios de test.
-- **Proscription des Formats Non Versionnables** :
-  - Bannissement des outils de prise de notes propriétaires au profit exclusif de fichiers Markdown sous contrôle de version Git.
-
----
-
-## [0.7.0] - 2026-03-01
-
-### Added
-- **Adaptabilité Multi-IDE & Architecture Découplée** :
-  - Premières expérimentations d'adaptateurs découplés reliant le moteur mLoop agnostique aux IDE émergents (VS Code, Cursor, prémices d'Antigravity et Claude Code).
-  - Principe d'indépendance technologique : interdiction de lier la logique de raisonnement à un format d'assistant propriétaire (*vendor lock-in*).
-
----
-
-## [0.6.0] - 2026-02-20
-
-### Added
-- **Persistance Locale Déterministe & SQLite FTS5** :
-  - Remplacement des bases vectorielles cloud par une couche de stockage locale SQLite avec indexation plein texte FTS5 et scoring BM25.
-  - Structuration du répertoire de cache sous `memory/cache/` garantissant une souveraineté totale et zéro fuite de données d'affaires vers des tiers.
-- **Suppression des Dépendances Externes** :
-  - Élimination des bibliothèques de vectorisation lourdes au profit d'index lexicaux et de graphes de dépendances relationnels.
-
----
-
-## [0.5.0] - 2026-02-10
-
-### Added
-- **Paradigme LLM-Wiki & Prototype OpenKB v0.1** :
-  - Rupture avec le RAG naïf : adoption du modèle de Base de Connaissances Persistante et Compilée (LLM-Wiki) où la connaissance est cumulative et synthétisée en continu.
-  - Spécification initiale d'OpenKB v0.1 (précurseur de l'Open Knowledge Format - OKF v0.1) articulant Frontmatter YAML typé et corps Markdown sémantique.
-- **Indexation Hiérarchique en Arbre (PageIndex)** :
-  - Mécanisme de Tree Indexing pour la navigation raisonnée dans les documents longs (> 20 pages) évitant la fragmentation et la pourriture contextuelle (*Context Rot*).
-
----
-
-## [0.4.0] - 2026-02-01
-
-### Added
-- **Ontologie de l'Être & Protocole du Faire** :
-  - Formalisation théorique du modèle Agentic Coworker : séparation stricte entre l'Ontologie (l'Être : mémoire vivante, persona Zero-Fluff, self-healing) et le Protocole (le Faire : délégation asymétrique Système 2 / Système 1, validation bloquante).
-  - Définition de la posture Sentinel : contrôle qualité contradictoire et détection proactive des failles et contradictions métiers.
-
----
-
-## [0.3.0] - 2026-01-22
-
-### Added
-- **Harnais de Sandboxing & Spécification Sécuritaire gVisor** :
-  - Conception de l'enclave d'exécution Système 1 basée sur le noyau en espace utilisateur gVisor (Sentry) pour neutraliser les risques d'élévation de privilèges de scripts arbitraires.
-  - Règles d'isolation strictes : interception exhaustive des appels système (syscalls), communication de télémétrie hors-bande via socket dédié (:8888), et interdiction absolue des duplications de processus (*process fork*).
-
----
-
-## [0.2.0] - 2026-01-12
-
-### Added
-- **Moteur d'Ingestion Documentaire Sémantique** :
-  - Premiers prototypes de conversion automatisée des formats bureautiques bruts (PDF, Word DOCX, tableurs Excel) en Markdown pur exploitable par des agents IA.
-  - Mécanismes de vérification d'intégrité par empreinte cryptographique pour éradiquer les doublons d'ingestion.
-
----
-
-## [0.1.0] - 2026-01-01
-
-### Added
-- **Incubation Initiale & Genèse Conceptuelle Memory Loop** :
-  - Lancement du projet de recherche appliquée **Memory Loop (mLoop)**.
-  - Analyse comparative des limites du RAG traditionnel face aux exigences d'ingénierie d'affaires : identification de l'amnésie des contextes longs, de l'illusion de complétude vectorielle et de la dérive algorithmique (*Agent Drift*).
-  - Établissement des principes fondateurs : déterminisme d'état en Python 3, souveraineté totale des données, zéro dépendance cloud opaque, et primauté de la validation humaine (HITL).
+- **Phase Pilote Initiale & Premier Projet d'Ingestion (`Projects/HTC`)** :
+  - Création du premier espace d'expérimentation d'ingestion et d'analyse documentaire (`Projects/HTC`).
+  - Mise en place du premier suivi d'état (`project-state.md`), du contexte projet (`project_context.json`) et du manifeste d'ingestion (`Config/ingest_manifest.json`).
+  - Première implémentation d'indexation plein texte BM25 locale (`.index/bm25.json`) et détection des lacunes de compétences (`skill_gap_report.json`).
+  - Validation du besoin d'un moteur autonome et déterministe de gestion de mémoire pour agents IA, menant à la naissance du cœur mLoop le 22 mai 2026.
