@@ -11,7 +11,7 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ### Added
 - **Orchestration Asynchrone Structurée (`ADR-0367`)** :
-  - Bannissement de `asyncio.gather()` au profit de `asyncio.TaskGroup()` pour tous les traitements batch multi-agents, garantissant l'annulation immédiate et propre des coroutines sœurs en cas d'exception (*Zero Orphan Tasks*).
+  - Bannissement de `asyncio.gather()` au profit de `asyncio.TaskGroup()` pour tous les traitements batch multi-agents (`src/core/llm_client.py`, `src/pipelines/crawler.py`), garantissant l'annulation immédiate et propre des coroutines sœurs en cas d'exception (*Zero Orphan Tasks*).
   - Budgétisation temporelle hiérarchique avec `asyncio.timeout()` combinant deadline globale et délais unitaires par requête pour prévenir les blocages cumulatifs.
   - Gestion dynamique et étanche des contextes asynchrones et connexions via `contextlib.AsyncExitStack`.
   - Registre d'observabilité in-memory des tâches (`TaskRegistry`) pour diagnostic en vol via le daemon mLoop.
@@ -23,7 +23,8 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
   - `CSVAnonymizer` : Pseudonymisation PII déterministe par SHA-256 tronqué avec sel de projet (`project_salt`), préservant l'intégrité relationnelle et les clés de jointures lors des échantillonnages.
   - `CSVRowDiff` : Moteur de diff sémantique ligne à ligne détectant les ajouts, suppressions et modifications de valeurs par clé primaire.
   - `CSVColumnTransformer` : Transformations déclaratives (renommages, suppressions, dérivations par gabarit).
-  - `csv_to_markdown_summary` : Générateur d'aperçu Markdown compact pour ingestion SSOT sous `docs/00-ingested/`.
+  - `csv_to_markdown_summary` : Générateur d'aperçu Markdown compact pour ingestion SSOT sous `docs/00-ingested/` intégré dans `src/pipelines/ingest_agent.py`.
+  - 4 nouvelles commandes CLI déclaratives enregistrées dans `src/commands/_registry.py` et `src/commands/handlers/tooling.py` : `csv-normalize`, `csv-validate`, `csv-anonymize`, `csv-diff`.
   - Suite de 7 tests unitaires et de non-régression validée à 100 % (`tests/test_csv_engine.py`).
 
 ---
