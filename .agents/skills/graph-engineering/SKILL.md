@@ -1,6 +1,6 @@
 ---
 name: graph-engineering
-description: "Graph Engineering: Orchestration du graphe DAG Multi-Agents (Pattern Diamant, EvidencePacks, Risk Routing)."
+description: "Orchestration du graphe DAG Multi-Agents, sous-graphes NetworkX et EvidencePacks. Use when navigating semantic knowledge graphs, managing DAG execution topology, or querying architectural entity relationships."
 disable-model-invocation: false
 ---
 

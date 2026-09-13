@@ -1,6 +1,6 @@
 ---
 name: rubber-duck
-description: "Revue contradictoire Read-Only (Agent Sentinel) pour auditer les critères d'acceptation et les 4 piliers Gherkin."
+description: "Revue contradictoire Read-Only (Agent Sentinel) pour auditer les critères d'acceptation et les 4 piliers Gherkin. Use when requesting a read-only sanity check on user stories, specs, or acceptance criteria."
 ---
 
 # Skill Rubber-Duck : Critique Contradictoire Read-Only (Agent Sentinel)

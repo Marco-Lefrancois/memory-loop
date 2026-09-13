@@ -11,6 +11,7 @@ Inspiré du /skill-doctor de Claude Code (v2.1.261) et du framework WikiSkill (A
 from __future__ import annotations
 
 import json
+import math
 import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -51,6 +52,32 @@ class SkillDoctor:
             # Heuristique robuste : 1 token pour ~3.7 caractères en Markdown/code mixte
             cleaned = text.strip()
             return max(1, int(len(cleaned) / 3.7))
+
+    @staticmethod
+    def compute_lexical_similarity(text1: str, text2: str) -> float:
+        """Calcule la similarité cosinus lexicale entre deux descriptions de compétences (sac de mots normalisé)."""
+        words1 = re.findall(r"\b[a-zA-Z0-9_\-]{3,}\b", text1.lower())
+        words2 = re.findall(r"\b[a-zA-Z0-9_\-]{3,}\b", text2.lower())
+        if not words1 or not words2:
+            return 0.0
+
+        freq1: Dict[str, int] = {}
+        for w in words1:
+            freq1[w] = freq1.get(w, 0) + 1
+
+        freq2: Dict[str, int] = {}
+        for w in words2:
+            freq2[w] = freq2.get(w, 0) + 1
+
+        common_words = set(freq1.keys()) & set(freq2.keys())
+        dot_product = sum(freq1[w] * freq2[w] for w in common_words)
+
+        norm1 = math.sqrt(sum(v * v for v in freq1.values()))
+        norm2 = math.sqrt(sum(v * v for v in freq2.values()))
+
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+        return dot_product / (norm1 * norm2)
 
     def parse_skill_manifest(self, skill_file: Path) -> Dict[str, Any]:
         """Parse le fichier SKILL.md et extrait les sections avec leurs jetons respectifs."""
@@ -195,6 +222,8 @@ class SkillDoctor:
 
             if not parsed["description"]:
                 flags.append("MISSING_DESCRIPTION")
+            elif not is_disabled_auto and "use when" not in parsed["description"].lower():
+                flags.append("MISSING_TRIGGER ('Use when...')")
 
             # Candidat au tombstone si dormant ET volumineux ou redondant
             if suggest_tombstone and invocations == 0 and (total_tokens > self.individual_threshold or "thinking-" in name):
@@ -203,11 +232,27 @@ class SkillDoctor:
             parsed["flags"] = flags
             skills_report.append(parsed)
 
-        # Calcul du score de risque de Context Rot
+        # Détection des collisions lexicales de routing (> 75% similarité cosinus - ADR-0365)
+        collisions: List[Dict[str, Any]] = []
+        active_skills = [s for s in skills_report if not s["disable_model_invocation"] and s["description"]]
+        for i in range(len(active_skills)):
+            for j in range(i + 1, len(active_skills)):
+                s1 = active_skills[i]
+                s2 = active_skills[j]
+                sim = self.compute_lexical_similarity(s1["description"], s2["description"])
+                if sim >= 0.75:
+                    collisions.append({
+                        "skill_a": s1["name"],
+                        "skill_b": s2["name"],
+                        "similarity": round(sim, 2),
+                    })
+
+        # Calcul du score de risque de Context Rot (ADR-0362 & ADR-0365)
+        # La fenêtre d'attention au démarrage est directement impactée par le budget des descriptions injectées
         context_rot_risk = "LOW"
-        if total_boot_description_tokens > self.description_budget_threshold or len(oversized_skills) >= 5:
+        if total_boot_description_tokens > self.description_budget_threshold:
             context_rot_risk = "HIGH"
-        elif total_boot_description_tokens > (self.description_budget_threshold * 0.7) or len(oversized_skills) >= 2:
+        elif total_boot_description_tokens > (self.description_budget_threshold * 0.7) or len(collisions) >= 3:
             context_rot_risk = "MEDIUM"
 
         summary = {
@@ -219,6 +264,7 @@ class SkillDoctor:
             "oversized_skills_count": len(oversized_skills),
             "dormant_skills_count": len(dormant_skills),
             "tombstone_candidates_count": len(tombstone_candidates),
+            "collisions_count": len(collisions),
             "context_rot_risk": context_rot_risk,
         }
 
@@ -228,6 +274,7 @@ class SkillDoctor:
             "oversized_skills": oversized_skills,
             "dormant_skills": dormant_skills,
             "tombstone_candidates": tombstone_candidates,
+            "collisions": collisions,
             "skills": skills_report,
         }
 
@@ -246,11 +293,16 @@ class SkillDoctor:
         print(f"• Empreinte Totale du Catalogue : ~{summary['total_catalog_tokens']:,} jetons")
         print(f"• Poids Descriptions de Démarrage : ~{summary['total_boot_description_tokens']:,} / {summary['boot_budget_max_tokens']:,} jetons ({summary['boot_budget_usage_pct']}%)")
         print(f"• Risque de Context Rot : {risk_icon} [{risk}]")
-        print(f"• Compétences Volumineuses (> {self.individual_threshold} tok) : {summary['oversized_skills_count']}")
+        print(f"• Compétences de Référence (> {self.individual_threshold} tok) : {summary['oversized_skills_count']}")
+        print(f"• Collisions Lexicales (> 75%) : {summary.get('collisions_count', 0)}")
         print(f"• Compétences Dormantes (0 appel tracé) : {summary['dormant_skills_count']}")
 
+        if result.get("collisions"):
+            collision_str = ", ".join([f"{c['skill_a']} <-> {c['skill_b']} ({int(c['similarity']*100)}%)" for c in result["collisions"][:5]])
+            ZeroFluffConsole.warning(f"Collisions de routing potentielles : {collision_str}")
+
         if result.get("oversized_skills"):
-            ZeroFluffConsole.warning(f"Compétences à condenser : {', '.join(result['oversized_skills'][:10])}")
+            ZeroFluffConsole.info(f"Compétences de référence volumineuses : {', '.join(result['oversized_skills'][:10])}")
 
         if result.get("tombstone_candidates"):
             ZeroFluffConsole.info(f"Candidats recommandés au Tombstone (ADR-0348) : {', '.join(result['tombstone_candidates'][:10])}")

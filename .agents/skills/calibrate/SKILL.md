@@ -1,6 +1,6 @@
 ---
 name: calibrate
-description: "Calibrate: Auto-étalonnage continu de l'écosystème mLoop (CLI, opencode.json, skills, MCP, AGENTS.md, guardrails)."
+description: "Auto-étalonnage continu de l'écosystème mLoop (CLI, opencode.json, skills, MCP, guardrails). Use when validating repository configuration, aligning tool bindings, or running system-wide health calibration."
 disable-model-invocation: false
 ---
 

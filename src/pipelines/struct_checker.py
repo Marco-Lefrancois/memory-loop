@@ -176,21 +176,35 @@ class StructCheckEngine:
     def _resolve_gold_standard(self, fm_data: dict, strict: bool) -> Optional[Path]:
         """
         Résout le chemin du Gold Standard selon la logique de fallback :
-        1. gold_standard_ref dans le frontmatter → glob dans backlog/stories/
-        2. Fallback : standards/blueprints/story_template.md
-        3. Si strict et introuvable → None (C4 gérera la violation BLOCKING)
+        1. Chemin direct si ref pointe vers un fichier existant (absolu ou relatif)
+        2. gold_standard_ref dans le frontmatter → glob dans backlog/stories/
+        3. Chercher dans standards/gold_standards/ ou standards/blueprints/
+        4. Fallback : standards/blueprints/story_template.md
+        5. Si strict et introuvable → None (C4 gérera la violation BLOCKING)
         """
         ref = fm_data.get("gold_standard_ref", "")
         if ref and str(ref).strip():
-            ref_name = Path(str(ref).strip()).name
-            # Chercher dans le backlog du projet
+            ref_str = str(ref).strip()
+            # 1. Vérification chemin direct (relatif au repo ou absolu)
+            direct_p = Path(ref_str)
+            if direct_p.exists() and direct_p.is_file():
+                return direct_p
+            abs_p = Path("C:/Memory Loop") / ref_str
+            if abs_p.exists() and abs_p.is_file():
+                return abs_p
+
+            ref_name = direct_p.name
+            # 2. Chercher dans le backlog du projet
             candidates = list(self.project_path.glob(f"backlog/stories/**/{ref_name}"))
             if candidates:
                 return candidates[0]
-            # Chercher dans les gold_standards du framework
+            # 3. Chercher dans les gold_standards ou blueprints du framework
             gs_dir = Path("standards") / "gold_standards"
             if (gs_dir / ref_name).exists():
                 return gs_dir / ref_name
+            bp_dir = Path("standards") / "blueprints"
+            if (bp_dir / ref_name).exists():
+                return bp_dir / ref_name
             # Non trouvé en mode strict → C4 signalera la violation
             if strict:
                 return None
@@ -357,20 +371,53 @@ class StructCheckEngine:
                 )
             return violations
 
-        # Extraire les titres H3/H4 des deux documents
+        # Titres canoniques reconnus par le standard mLoop (ADR-0366)
+        canonical_titles = {
+            "spécifications de l'interface",
+            "liste call to actions",
+            "opérations métier & logique backend",
+            "matrice des réponses http & filtres métier",
+            "navigation",
+            "contrats d'échange api",
+            "états d'interaction",
+            "preuves amont & traçabilité factuelle",
+            "spécifications & modèles de données ssot",
+            "handoff technique aval & référentiel dev",
+            "paquet openspec",
+            "paquet openspec (handoff développeur)",
+            "handoff technique openspec",
+            "navigation / contrats d'échange api",
+        }
+
+        def _normalize_title(t: str) -> str:
+            # Nettoyer balises Markdown et notes explicatives entre parenthèses
+            cleaned = re.sub(r"[*_]", "", t)
+            cleaned = re.sub(r"\s*\([^)]*\)", "", cleaned)
+            cleaned = re.sub(r"^\d+[\.\)]\s*", "", cleaned)
+            return cleaned.strip().lower()
+
+        # Extraire les titres H3/H4 normalisés des deux documents
         def _extract_section_titles(text: str) -> set[str]:
-            return {
-                title.strip().lower()
-                for hashes, title in _HEADING_PATTERN.findall(text)
-                if len(hashes) in (3, 4)
-            }
+            titles = set()
+            for hashes, title in _HEADING_PATTERN.findall(text):
+                h_level = len(hashes)
+                norm = _normalize_title(title)
+                if not norm:
+                    continue
+                if h_level == 3:
+                    titles.add(norm)
+                elif h_level == 4:
+                    # Ne retenir en H4 que les titres structurels/fixes (non dynamiques/numérotés)
+                    if not re.match(r"^\d+[\.\)]", title.strip()) and not re.match(r"^\[.*\]$", norm):
+                        titles.add(norm)
+            return titles
 
         story_titles = _extract_section_titles(content)
         gold_titles = _extract_section_titles(gold_content)
 
-        # Détecter les titres du récit qui ne sont pas dans le Gold Standard
-        # (heuristique : divergence stylistique potentielle, pas une erreur formelle)
-        divergent = story_titles - gold_titles
+        # Détecter les titres du récit qui ne sont ni dans le Gold Standard ni dans les titres canoniques
+        raw_divergent = story_titles - gold_titles
+        divergent = {t for t in raw_divergent if t not in canonical_titles}
         if divergent and gold_titles:
             severity = "BLOCKING" if strict else "WARNING"
             violations.append(

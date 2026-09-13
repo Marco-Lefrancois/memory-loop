@@ -489,6 +489,25 @@ class WebCrawlerAgent:
             "Accept": "text/markdown, text/x-markdown, text/plain;q=0.9, text/html;q=0.8",
         }
 
+        # Revalidation conditionnelle HTTP 304 (ADR-0365 / Source-Driven Development)
+        existing_etag = None
+        existing_last_modified = None
+        if output_file.exists():
+            try:
+                header_snippet = output_file.read_text(encoding="utf-8", errors="ignore")[:500]
+                for l in header_snippet.splitlines()[:8]:
+                    if l.startswith("etag:"):
+                        existing_etag = l.split(":", 1)[1].strip()
+                    elif l.startswith("last_modified:"):
+                        existing_last_modified = l.split(":", 1)[1].strip()
+            except Exception:
+                pass
+
+        if existing_etag:
+            headers["If-None-Match"] = existing_etag
+        if existing_last_modified:
+            headers["If-Modified-Since"] = existing_last_modified
+
         # 2. Fast-Path LLMs.txt
         if self.llms_txt:
             llms_file = await self._fetch_llms_txt(client, url_clean, docs_cache_dir, headers)
@@ -518,7 +537,19 @@ class WebCrawlerAgent:
                     fetch_url = fetch_url.replace("main/README.md", "master/README.md")
                     response = await client.get(fetch_url, headers=headers, timeout=12.0, follow_redirects=True)
 
+                # Traitement HTTP 304 Not Modified
+                if response.status_code == 304:
+                    ZeroFluffConsole.success(f"[HTTP 304] Non modifié (ETag/Cache valide). Réutilisation instantanée de {output_file.name}")
+                    try:
+                        output_file.touch()
+                    except Exception:
+                        pass
+                    return output_file, []
+
                 if response.status_code == 200:
+                    resp_etag = response.headers.get("etag")
+                    resp_last_modified = response.headers.get("last-modified")
+
                     content_type = response.headers.get("content-type", "").lower()
                     is_doc_ext = any(fetch_url.lower().endswith(ext) for ext in [".pdf", ".docx", ".xlsx", ".pptx", ".zip"])
                     is_doc_ct = any(ct in content_type for ct in ["application/pdf", "application/vnd", "application/msword", "application/zip"])
@@ -572,15 +603,23 @@ class WebCrawlerAgent:
                             if self.max_depth > 0:
                                 discovered_links = self._extract_links(response.text, url_clean)
 
+                    # Métadonnées d'en-tête cache
+                    header_meta = [f"sha256: {url_hash}", f"source: {url_clean}"]
+                    if resp_etag:
+                        header_meta.append(f"etag: {resp_etag}")
+                    if resp_last_modified:
+                        header_meta.append(f"last_modified: {resp_last_modified}")
+                    meta_prefix = "\n".join(header_meta)
+
                     # Détection de contenu identique (Anti-redondance / HarnessDev)
                     content_hash_digest = hashlib.sha256(content_md.strip().encode("utf-8")).hexdigest()
                     if content_hash_digest in self.seen_content_hashes and len(content_md.strip()) > 80:
                         ZeroFluffConsole.info(f"[DEDUP] Contenu dupliqué détecté pour {url_clean} (Hash identique). Re-crawl ignoré.")
-                        output_file.write_text(f"sha256: {url_hash}\nsource: {url_clean}\ndedup_of: {content_hash_digest}\n\n{content_md}", encoding="utf-8")
+                        output_file.write_text(f"{meta_prefix}\ndedup_of: {content_hash_digest}\n\n{content_md}", encoding="utf-8")
                         return output_file, []
                     self.seen_content_hashes.add(content_hash_digest)
 
-                    output_file.write_text(f"sha256: {url_hash}\nsource: {url_clean}\n\n{content_md}", encoding="utf-8")
+                    output_file.write_text(f"{meta_prefix}\n\n{content_md}", encoding="utf-8")
                     ZeroFluffConsole.success(f"Sauvegarde du crawl sous {output_file.name}")
                     return output_file, discovered_links
                 else:

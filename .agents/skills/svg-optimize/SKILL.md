@@ -1,6 +1,6 @@
 ---
 name: svg-optimize
-description: Optimisation et minification des fichiers vectoriels SVG (SVGO, suppression des métadonnées éditeur, minification des chemins et réduction de poids).
+description: Optimisation et minification des fichiers vectoriels SVG (SVGO, suppression métadonnées). Use when minifying SVG mockups, cleaning vector paths, or reducing visual asset file sizes in docs/05-assets/.
 ---
 
 # 🎨 Skill : Optimisation Vectorielle SVG (`/svg-optimize`)

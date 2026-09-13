@@ -29,37 +29,55 @@ class EvidencePackEngine:
         self.evidence_dir.mkdir(parents=True, exist_ok=True)
 
     def _resolve_source_sha256(self, src_name: str) -> Optional[str]:
-        """Calcule l'empreinte SHA-256 d'une source trouvée sur disque (docs, reference, root)."""
-        candidate_paths = self._candidate_paths(src_name)
-        for cp in candidate_paths:
-            if cp.exists() and cp.is_file():
-                try:
-                    h = hashlib.sha256()
-                    with open(cp, "rb") as f:
-                        while chunk := f.read(8192):
-                            h.update(chunk)
-                    return h.hexdigest()
-                except Exception:
-                    pass
+        """Calcule l'empreinte SHA-256 d'une source trouvée sur disque."""
+        resolved = self._resolve_source_path(src_name)
+        if resolved and resolved.is_file():
+            try:
+                h = hashlib.sha256()
+                with open(resolved, "rb") as f:
+                    while chunk := f.read(8192):
+                        h.update(chunk)
+                return h.hexdigest()
+            except Exception:
+                pass
         return None
 
     def _candidate_paths(self, src_name: str) -> List[Path]:
-        """Chemins candidats de résolution d'une source citée (docs, reference, root)."""
+        """Chemins candidats de résolution d'une source citée (docs, reference, memory, backlog, root)."""
         return [
+            self.project_path / "memory" / "evidence" / src_name,
+            self.project_path / "memory" / src_name,
+            self.project_path / "backlog" / "handoff" / src_name,
+            self.project_path / "backlog" / "reviews" / src_name,
+            self.project_path / "backlog" / src_name,
             self.project_path / "docs" / "00-ingested" / src_name,
             self.project_path / "docs" / "05-assets" / src_name,
             self.project_path / "docs" / src_name,
             self.project_path / "reference" / src_name,
             self.project_path / src_name,
+            Path("C:/Memory Loop") / "standards" / "blueprints" / src_name,
+            Path("C:/Memory Loop") / ".agents" / "references" / src_name,
             Path("c:/Memory Loop") / "docs" / "00-ingested" / src_name,
             Path("c:/Memory Loop") / "docs" / src_name,
         ]
 
     def _resolve_source_path(self, src_name: str) -> Optional[Path]:
-        """Résout le chemin réel d'une source citée en cherchant aussi récursivement sous reference/ et docs/."""
+        """Résout le chemin réel d'une source citée en cherchant aussi récursivement sous reference/, docs/, memory/ et backlog/."""
         for cp in self._candidate_paths(src_name):
             if cp.exists() and cp.is_file():
                 return cp
+        # Fallback : recherche récursive sous memory/ (ex: memory/evidence/<fact_dossier>.md)
+        memory_dir = self.project_path / "memory"
+        if memory_dir.exists():
+            matches = list(memory_dir.rglob(src_name))
+            if matches:
+                return matches[0]
+        # Fallback : recherche récursive sous backlog/ (ex: backlog/handoff/.../<tasks>.md)
+        backlog_dir = self.project_path / "backlog"
+        if backlog_dir.exists():
+            matches = list(backlog_dir.rglob(src_name))
+            if matches:
+                return matches[0]
         # Fallback : recherche récursive sous reference/ (arborescences de code source multi-niveaux)
         ref_dir = self.project_path / "reference"
         if ref_dir.exists():
@@ -72,6 +90,12 @@ class EvidencePackEngine:
             matches = list(docs_dir.rglob(src_name))
             if matches:
                 return matches[0]
+        # Fallback : recherche sous les référentiels globaux du framework
+        for global_dir in [Path("C:/Memory Loop/standards"), Path("C:/Memory Loop/.agents")]:
+            if global_dir.exists():
+                matches = list(global_dir.rglob(src_name))
+                if matches:
+                    return matches[0]
         return None
 
     def _classify_source(
@@ -193,10 +217,13 @@ class EvidencePackEngine:
         questions = sorted(list(set(re.findall(r"\b(?:Q|QD)-\d{3}\b", content))))
 
         # 4. Extraction des Sources de Vérité (scans, SOW, directives ET code source .cs, .plist, .csproj)
+        # Décodage préalable des URLs (ex: %C3%A9 -> é) pour éviter les corruptions lexicales
+        import urllib.parse
+        decoded_content = urllib.parse.unquote(content)
         sources = set()
         for s_match in re.finditer(
-            r"\b([a-zA-Z0-9_\-]+\.(?:md|xlsx|pdf|docx|plist|cs|csproj|xml|yml|json))\b",
-            content,
+            r"\b([a-zA-Z0-9_\-À-ÿ]+\.(?:md|xlsx|pdf|docx|plist|cs|csproj|xml|yml|json))\b",
+            decoded_content,
         ):
             sources.add(s_match.group(1))
 

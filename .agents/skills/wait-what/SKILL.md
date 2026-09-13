@@ -1,6 +1,6 @@
 ---
 name: wait-what
-description: Skill de pause de sécurité et d'auto-audit contradicteur lorsque l'agent détecte une incohérence majeure, une contradiction d'architecture ou un risque d'hallucination.
+description: Pause de sécurité et d'auto-audit contradicteur en cas d'incohérence majeure ou de risque d'hallucination. Use when encountering an obvious contradiction, suspecting hallucinated requirements, or performing a Stop & Ask pause.
 ---
 
 # 🛑 Skill `/wait-what` (Sanity Check & Pause Anti-Hallucination)

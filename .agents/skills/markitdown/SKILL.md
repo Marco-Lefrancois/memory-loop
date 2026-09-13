@@ -1,6 +1,6 @@
 ---
 name: markitdown
-description: "Ingestion documentaire MarkItDown (PDF, Office, Images, Audio, HTML) vers Markdown normalisé."
+description: "Ingestion documentaire MarkItDown (PDF, Office, Images, Audio, HTML) vers Markdown normalisé. Use when converting raw binary documents, PDFs, or Office files into clean Markdown for ingestion."
 ---
 
 # Skill : MarkItDown Ingestion (powered by microsoft/markitdown)

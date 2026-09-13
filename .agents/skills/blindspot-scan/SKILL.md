@@ -1,6 +1,6 @@
 ---
 name: blindspot-scan
-description: Audit proactif d'angles morts techniques (compatibilité runtimes, dépendances diamant, race conditions, debug vs prod) et analyse comparative multi-codebases (ADR-0306).
+description: Audit proactif d'angles morts techniques (compatibilité runtimes, dépendances diamant, race conditions). Use when analyzing third-party dependencies, refactoring core architecture, or detecting multi-codebase blindspots.
 ---
 
 # Skill : Blind-Spot & Comparative Scan (ADR-0306)

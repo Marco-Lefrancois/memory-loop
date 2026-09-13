@@ -1,6 +1,6 @@
 ---
 name: archify
-description: Création et validation de diagrammes d'architecture, workflows, séquences et flux de données interactifs vectoriels (HTML standalone, SVG zoomable, vues filtrées, animations de flux trace).
+description: Création et validation de diagrammes d'architecture, workflows et flux de données vectoriels (HTML standalone, SVG zoomable). Use when designing architecture diagrams, rendering system flows, or exporting SVG vector maps.
 license: MIT
 metadata:
   version: "2.16"

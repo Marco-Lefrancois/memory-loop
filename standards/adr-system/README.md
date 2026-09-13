@@ -99,6 +99,8 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0362](0362-context-hygiene-skill-doctor-and-write-path-ceiling.md)** : Hygiène Contextuelle, Skill Doctor, Plafonnement Mémoire 200 Lignes et Isolation des Sous-Agents
 *   **[ADR-0363](0363-agentic-graph-pipeline-and-graphify-hygiene.md)** : Protocole Agentic Subgraph Retrieval, Hygiène Graphify, Cache Mémoire et Cloisonnement CodeGraph
 *   **[ADR-0364](0364-hooks-pre-compaction-et-checkpoint-boundaries.md)** : Protocole de Hooks de Pré-Compaction, Checkpoint Boundaries et Récupération Déterministe
+*   **[ADR-0365](0365-harmonisation-symbiotique-skills-et-standard-agent-skills.md)** : Harmonisation Symbiotique des Compétences, Standard Agent-Skills et Checklists Partagées
+*   **[ADR-0366](0366-standard-story-2.0-handoff-tripartite-et-maillage-referentiel.md)** : Standard Story 2.0, Handoff Tripartite et Maillage Référentiel
 
 ---
-*Dernière consolidation constitutionnelle : 11 septembre 2026 — 78 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 13 septembre 2026 — 80 ADRs Unifiées (Zéro Conflit)*

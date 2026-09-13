@@ -1,6 +1,6 @@
 ---
 name: triage
-description: Skill de triage du backlog et de découpage en récits verticaux actionnables (Agent-Ready) au gabarit story_template.md.
+description: Triage du backlog et découpage en récits verticaux actionnables au gabarit story_template.md. Use when prioritizing backlog items, triaging incoming feature requests, or splitting messy user stories.
 ---
 
 # 🧹 Skill `/triage` (Triage du Backlog & Vertical Slicing)

@@ -7,6 +7,105 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.22.0] - 2026-09-13
+
+### Added
+- **Standardisation OpenSpec & Verticalité Fonctionnelle Pure (`ADR-0366` Bonifié)** :
+  - Sanctuarisation de la sous-section `### 3. Paquet OpenSpec (Handoff Développeur)` reprenant la triade native d'OpenSpec (`proposal.md`, `specs/api.md`, `tasks.md`) et la Definition of Done (`definition-of-done.md`).
+  - Intégration du pattern Dual-Link distant Azure DevOps Git (`Wiki_AF_Segment2`) + chemin relatif Markdown au sein du dépôt Git, avec proscription formelle des liens absolus `file:///C:/...` non portables.
+
+### Changed
+- **Épure Fonctionnelle Pure des Récits Utilisateurs** :
+  - Retrait intégral de la table « Matrice des Réponses HTTP » dans les critères d'acceptation des récits fonctionnels au profit de règles d'admissibilité et cas de rejet purement métier (zéro fuite de plomberie HTTP dans le récit).
+  - Tous les codes de transport HTTP (200, 400, 409), schémas JSON et erreurs RFC 7807 sont isolés dans `specs/api.md` d'OpenSpec.
+  - Zéro-bruit de gouvernance : retrait de la revue interne Sentinel / Rubber Duck du corps de la User Story (archivée sous `backlog/reviews/`).
+- **Linter Structurel (`src/pipelines/struct_checker.py`)** :
+  - Support natif des titres canoniques OpenSpec (`paquet openspec`, `paquet openspec (handoff développeur)`).
+
+---
+
+## [2.21.0] - 2026-09-13
+
+### Added
+- **Standard Constitutionnel Story 2.0 & Handoff Tripartite (`ADR-0366`)** :
+  - Établissement de la chaîne de valeur à 4 étages : *Amont (Preuves Fact-Search) ➔ Cœur (Story 2.0 Fonctionnelle No-Code) ➔ Aval (Handoff Tripartite Déclaratif) ➔ Exécution (TDD & DoD)*.
+  - Standardisation de l'arborescence du handoff technique sous `backlog/handoff/<STORY_ID>/` dans les projets clients mLoop, préservant strictement la Loi des 3 Piliers (ADR-0100) et projetable 1:1 vers `openspec/changes/<STORY_ID>/` dans le dépôt applicatif du développeur.
+  - Gabarit normatif [`standards/blueprints/handoff_tripartite_template.md`](standards/blueprints/handoff_tripartite_template.md) formalisant la triade souveraine :
+    - `proposal.md` : Rationale technique, impact sur les tables de données et sécurité.
+    - `specs/api.md` : Schémas JSON typés, contrats d'échange et codes HTTP.
+    - `tasks.md` : Découpage en micro-tâches atomiques (< 5 fichiers) suivant le cycle Red-Green-Refactor et la Règle de Beyoncé.
+  - Normalisation de la section `## Références` en 3 sous-blocs étanches avec pattern **Dual-Link** systématique (Lien distant Web Azure DevOps / GitHub + Lien workspace local `file:///...`).
+  - Clause anti-fuite de pagination (calculs globaux de priorité et minima côté serveur) et typage strict des dates en ISO 8601 (`YYYY-MM-DD`).
+
+### Changed
+- **Gabarit Maître des Récits (`standards/blueprints/story_template.md`)** :
+  - Intégration harmonieuse des titres canoniques pour récits `layer: backend` (`Opérations Métier & Logique Backend`, `Matrice des Réponses HTTP & Filtres Métier`, `Contrats d'échange API`) et `layer: frontend` (`Spécifications de l'Interface`, `Liste Call to Actions`).
+  - Normalisation complète du bloc `## Références` à 3 sous-blocs et du 4e pilier Gherkin (Empty State obligatoire).
+- **Checklist Qualité INVEST (`.agents/references/invest-story-checklist.md`)** :
+  - Ajout des points de contrôle d'intégrité référentielle (Dual-Link, handoff aval `tasks.md`), anti-fuite de pagination et gestion de l'Empty State.
+
+### Fixed
+- **Pipeline de Contrôle Structurel (`src/pipelines/struct_checker.py`)** :
+  - Élimination des faux positifs C4 Gold Standard Diff : normalisation des titres H3/H4 et tolérance des sections canoniques backend (`layer: backend`).
+  - Résolution déterministe de `gold_standard_ref` en mode `--strict` : reconnaissance des chemins directs et du dossier `standards/blueprints/`.
+- **Moteur d'EvidencePack (`src/pipelines/evidence_pack.py`)** :
+  - Résolution des sources sous `memory/evidence/`, `memory/`, `backlog/handoff/`, `standards/` et `.agents/`.
+  - Calcul direct de l'empreinte SHA-256 pour 100% des fichiers trouvés sur disque (élimination des statuts dégradés `NOT_CALCULATED_LOCAL_ONLY` et des alertes "introuvable sur disque").
+  - Décodage URL préalable (`urllib.parse.unquote`) et support des caractères accentués dans l'extraction des sources.
+
+---
+
+## [2.20.0] - 2026-09-13
+
+### Added
+- **Harmonisation Symbiotique des Compétences & Standard Agent-Skills (`ADR-0365`)** :
+  - Adoption de la norme **Skill Anatomy 2.0** pour l'ensemble du catalogue `.agents/skills/` (frontmatter typé avec clause explicite `Use when...`, déroulé opérationnel, tables anti-rationalisation inviolables, signaux d'alerte et vérification de sortie par preuves factuelles).
+  - Intégration de 15 compétences d'ingénierie logicielle d'état de l'art issues d'Addy Osmani (`addyosmani/agent-skills`) :
+    - `test-driven-development` : TDD Red-Green-Refactor, Règle de Beyoncé, pyramide de tests, DAMP vs DRY.
+    - `source-driven-development` : Grounding officiel sur SDKs et documentations en ligne versionnées, inspection read-only des dépendances réelles sans génération de code physique dans les projets clients.
+    - `doubt-driven-development` : Vérification contradictoire in-flight en contexte vierge et traque systématique des hypothèses tacites.
+    - `spec-driven-development` : Rédaction de spécifications formelles, PRDs et contrats d'interfaces avant tout code.
+    - `constraint-driven-development` : Bornes de qualité non négociables, budgets de performance et gardiens d'intégrité.
+    - `planning-and-task-breakdown` : Graphe de sous-tâches physiques atomiques ordonnées par dépendance (< 5 fichiers, handoff OpenSpec ready).
+    - `incremental-implementation` : Implémentation par tranches verticales minces commitées avec validation continue.
+    - `context-engineering` : Gestion du budget de contexte (< 75%), compression d'historique et élimination du lost-in-the-middle.
+    - `code-simplification` : Refactoring chirurgical sans changement de comportement (principe de la barrière de Chesterton).
+    - `security-and-hardening` : Prévention OWASP Top 10, détection de secrets, audits de dépendances et moindre privilège.
+    - `performance-optimization` : Profiling, détection de requêtes N+1, budgétisation de latence et Core Web Vitals.
+    - `shipping-and-launch` : Déploiement progressif (Canary), feature flags, observabilité active et seuils de rollback.
+    - `api-and-interface-design` : Conception de contrats d'API déclaratifs, schémas REST / gRPC et gestion d'erreurs typées.
+    - `browser-testing-with-devtools` : Vérification visuelle, inspection DOM et capture de traces console via Chrome DevTools MCP.
+    - `debugging-and-error-recovery` : Diagnostic systématique des causes racines d'anomalies et procédures de rétablissement.
+  - Hub de Checklists Partagées (`.agents/references/`) :
+    - 7 checklists d'ingénierie Addy : `definition-of-done.md`, `security-checklist.md`, `performance-checklist.md`, `accessibility-checklist.md`, `observability-checklist.md`, `orchestration-patterns.md`, `testing-patterns.md`.
+    - 5 checklists souveraines mLoop couvrant 100% des phases : `invest-story-checklist.md`, `fact-search-grounding-checklist.md`, `adr-decision-checklist.md`, `herdr-worker-checklist.md`, `sync-and-release-checklist.md`.
+- **Améliorations du Pipeline Python `src/` & Métrologie** :
+  - `src/pipelines/crawler.py` : Revalidation conditionnelle HTTP 304 (RFC 9110) via en-têtes `If-None-Match` (ETag) et `If-Modified-Since` avec réutilisation instantanée du cache Markdown.
+  - `src/pipelines/skill_doctor.py` : Détection de collisions lexicales de routing (similarité cosinus TF-IDF > 75%), vérification de la syntaxe des déclencheurs (`Use when...`), et distinction formelle entre le budget de démarrage (descriptions boot < 15 000 jetons) et le volume de référence à la demande.
+  - `src/pipelines/calibrate.py` : Validation de l'exhaustivité de l'index du routeur (`[3/8]`) et audit d'hygiène mémorielle (`[3/8-bis]`).
+- **Standard d'Inspiration OpenSpec sans Dépendance Externe** :
+  - Formalisation de l'export de sous-tâches atomiques au format tripartite Markdown (`proposal.md`, `specs/`, `tasks.md`) dans `plan` et `planning-and-task-breakdown`, sans aucune installation de binaire ni dépendance npm/Node.js.
+
+### Changed
+- **Refonte et Condensation Majeure des 4 Compétences Maîtresses mLoop** :
+  - `grill` : Allégé de 3 672 à ~600 tokens. Déport des gabarits vers `standards/blueprints/dossier_de_preuves_template.md`, intégration de la mécanique *interview-me* (hypothèse initiale, confidence score %, questions 1:1 avec guess attaché, question brise-glace *Want vs Should Want*).
+  - `plan` : Allégé de 4 280 à ~700 tokens. Recentrage sur le découpage vertical INVEST, la symétrie FE/BE (Profil B), le filtrage des ADRs Type 1 et la délégation du graphe de sous-tâches physiques à `planning-and-task-breakdown`.
+  - `sentinel` : Allégé de 2 604 à ~650 tokens. Intégration du cycle du doute en 5 étapes (`CLAIM` ➔ `EXTRACT` ➔ `DOUBT` ➔ `RECONCILE` ➔ `VERDICT`) et des 4 axes d'attaque non-négociables.
+  - `herdr-orchestration` : Allégé de 2 557 à ~550 tokens. Matrice stricte des 4 critères de déclenchement Fork & Harvest, prompts isolés par fichier scratch et Teardown Gate anti-zombies.
+- `impeccable` : Condensé sous 1 500 tokens avec intégration de la clause `Use when...` et des 16 règles anti-slop IA.
+- `router/SKILL.md` : Mise à jour intégrale de la cartographie thématique des 36 compétences actives.
+- Synchronisation des directives d'amorçage de 11 compétences mLoop avec l'adjonction de la clause normalisée `Use when...` (`archify`, `blindspot-scan`, `calibrate`, `design-taste`, `graph-engineering`, `markitdown`, `rubber-duck`, `svg-ocr`, `svg-optimize`, `triage`, `wait-what`).
+
+### Deprecated & Archived
+- **Archivage Propre dans `memory/archive-skills/`** :
+  - Retrait du catalogue actif et archivage documenté de 14 compétences redondantes ou sur-spécifiées :
+    - `tdd` (remplacé par `test-driven-development`).
+    - 6 compétences de réflexion abstraite (`thinking-cynefin`, `thinking-kepner-tregoe`, `thinking-reversibility`, `thinking-theory-of-constraints`, `thinking-triz`, `thinking-via-negativa`).
+    - 7 compétences doublons (`teach`, `office`, `analyze`, `research`, `research-and-develop`, `validate`, `sop`).
+  - Création de `memory/archive-skills/README.md` avec la table de correspondance exhaustive.
+
+---
+
 ## [2.19.0] - 2026-09-11
 
 ### Added

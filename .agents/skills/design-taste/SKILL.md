@@ -1,6 +1,6 @@
 ---
 name: design-taste
-description: Framework Frontend & UI Anti-Slop pour mLoop (Inspiré de taste-skill v2). Inférence du brief ("Read the Room"), déclaration One-Line Design Read, réglage dynamique par curseurs (Dials 1-10), interdiction formelle des automatismes génériques (AI-purple, bento 3 colonnes symétriques), matrices typographiques et checklist pré-vol.
+description: Framework Frontend & UI Anti-Slop pour mLoop (dials 1-10, tokens OKLCH). Use when refining frontend styling, eliminating generic AI design cliches, or establishing bespoke visual identity.
 ---
 
 # 🎨 design-taste : Framework Frontend & UI Anti-Slop mLoop

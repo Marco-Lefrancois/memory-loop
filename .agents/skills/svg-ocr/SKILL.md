@@ -1,6 +1,6 @@
 ---
 name: svg-ocr
-description: Extraction du texte des maquettes SVG/PNG à texte vectorisé (paths) via rendu headless Chromium + OCR natif Windows (Windows.Media.Ocr). Débloque la lecture du Contrat Visuel quand le texte n'est pas parsable et que le modèle actif ne supporte pas l'entrée image.
+description: Extraction OCR headless Chromium pour maquettes SVG/PNG à texte vectorisé en chemins. Use when extracting text from vectorized SVG mockups, inspecting button labels in headless mode, or reading non-selectable asset text.
 ---
 
 # 🔍 Skill : Extraction de Texte Maquettes (`/svg-ocr`)

@@ -126,6 +126,7 @@ flowchart LR
 | `python src/swarm.py unlearn` | Désapprentissage sémantique et propagation de suppression | `--project <P>`, `--concept <C>` |
 | `python src/swarm.py svg-optimize` | Optimisation et minification des fichiers vectoriels SVG | `--project <P>` |
 | `python src/swarm.py hook` | Exécuter ou tester un hook de cycle de vie ou pré-compaction (ADR-0364) | `--event <pre_compact/resume/...>`, `[--project <P>]`, `[--format <text/json>]` |
+| `python src/swarm.py doctor --skills` | Bilan d'hygiène contextuelle, audit métrologique et détection de collisions (ADR-0362, ADR-0365) | `[--threshold <N>]`, `[--json]` |
 
 ---
 
