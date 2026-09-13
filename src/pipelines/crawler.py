@@ -5,6 +5,7 @@ import os
 import re
 import time
 import urllib.parse
+from contextlib import AsyncExitStack
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -667,15 +668,15 @@ class WebCrawlerAgent:
         ZeroFluffConsole.info(f"Lancement du crawl asynchrone pour {len(initial_urls)} URL(s) (concurrence max: {self.max_concurrency}, profondeur: {self.max_depth})...")
         semaphore = asyncio.Semaphore(self.max_concurrency)
 
-        try:
-            client_ctx = httpx.AsyncClient(http2=True, verify=False)
-        except Exception:
-            client_ctx = httpx.AsyncClient(http2=False, verify=False)
-
         visited: Set[str] = set()
         current_queue: List[str] = initial_urls
 
-        async with client_ctx as client:
+        async with AsyncExitStack() as stack:
+            try:
+                client = await stack.enter_async_context(httpx.AsyncClient(http2=True, verify=False))
+            except Exception:
+                client = await stack.enter_async_context(httpx.AsyncClient(http2=False, verify=False))
+
             for current_depth in range(self.max_depth + 1):
                 if not current_queue:
                     break
@@ -688,8 +689,18 @@ class WebCrawlerAgent:
                     break
 
                 ZeroFluffConsole.info(f"[Depth {current_depth}] Traitement de {len(to_fetch)} URL(s)...")
-                tasks = [self._crawl_single_url(client, semaphore, url, project_path, state) for url in to_fetch]
-                results = await asyncio.gather(*tasks, return_exceptions=True)
+
+                results: List[Any] = [None] * len(to_fetch)
+
+                async def _crawl_worker(idx: int, target_url: str):
+                    try:
+                        results[idx] = await self._crawl_single_url(client, semaphore, target_url, project_path, state)
+                    except Exception as e:
+                        results[idx] = e
+
+                async with asyncio.TaskGroup() as tg:
+                    for idx, url in enumerate(to_fetch):
+                        tg.create_task(_crawl_worker(idx, url))
 
                 next_queue: List[str] = []
                 for res in results:

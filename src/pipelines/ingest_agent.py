@@ -156,9 +156,10 @@ class IngestAgent:
                 extracted_text = self._parse_pptx(filepath)
             elif ext == ".csv":
                 try:
-                    extracted_text = filepath.read_text(encoding="utf-8")
-                except Exception:
-                    extracted_text = "[Erreur de lecture CSV]"
+                    from src.converters.csv_engine import csv_to_markdown_summary
+                    extracted_text = csv_to_markdown_summary(filepath, max_preview_rows=25)
+                except Exception as e:
+                    extracted_text = f"[Erreur de lecture CSV : {e}]"
 
         # Sauvegarde automatique de la version Markdown dans docs/00-ingested/
         ingested_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED

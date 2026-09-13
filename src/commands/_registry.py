@@ -1545,4 +1545,44 @@ COMMANDS: dict[str, dict] = {
         ],
         "no_project": True,
     },
+    # ── Moteur Tabulaire & CSV (ADR-0368) ──────────────────
+    "csv-normalize": {
+        "handler": "tooling:handle_csv_normalize",
+        "help": "Normaliser l'encodage (BOM/CP1252) et les séparateurs d'un CSV vers UTF-8 propre",
+        "args": [
+            {"name": "--file", "type": str, "required": True, "help": "Chemin du fichier CSV à normaliser"},
+            {"name": "--out", "type": str, "help": "Chemin du fichier de sortie normalisé"},
+        ],
+        "no_project": True,
+    },
+    "csv-validate": {
+        "handler": "tooling:handle_csv_validate",
+        "help": "Valider un fichier CSV en flux continu selon un schéma JSON déclaratif",
+        "args": [
+            {"name": "--file", "type": str, "required": True, "help": "Chemin du fichier CSV à valider"},
+            {"name": "--schema", "type": str, "required": True, "help": "Chemin du fichier JSON de schéma"},
+        ],
+        "no_project": True,
+    },
+    "csv-anonymize": {
+        "handler": "tooling:handle_csv_anonymize",
+        "help": "Anonymiser déterministement les colonnes PII sensibles et échantillonner",
+        "args": [
+            {"name": "--file", "type": str, "required": True, "help": "Chemin du fichier CSV source"},
+            {"name": "--fields", "type": str, "required": True, "help": "Colonnes sensibles séparées par virgule (ex: 'email,nom')"},
+            {"name": "--out", "type": str, "help": "Chemin du fichier de sortie anonymisé"},
+            {"name": "--sample", "type": int, "help": "Nombre de lignes à échantillonner via Reservoir Sampling"},
+        ],
+        "no_project": True,
+    },
+    "csv-diff": {
+        "handler": "tooling:handle_csv_diff",
+        "help": "Comparer deux instantanés de CSV et identifier les deltas sur clé primaire",
+        "args": [
+            {"name": "--old", "type": str, "required": True, "help": "Chemin de l'ancienne version du CSV"},
+            {"name": "--new", "type": str, "required": True, "help": "Chemin de la nouvelle version du CSV"},
+            {"name": "--key", "type": str, "required": True, "help": "Nom de la colonne clé primaire"},
+        ],
+        "no_project": True,
+    },
 }

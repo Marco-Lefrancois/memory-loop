@@ -101,6 +101,8 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0364](0364-hooks-pre-compaction-et-checkpoint-boundaries.md)** : Protocole de Hooks de Pré-Compaction, Checkpoint Boundaries et Récupération Déterministe
 *   **[ADR-0365](0365-harmonisation-symbiotique-skills-et-standard-agent-skills.md)** : Harmonisation Symbiotique des Compétences, Standard Agent-Skills et Checklists Partagées
 *   **[ADR-0366](0366-standard-story-2.0-handoff-tripartite-et-maillage-referentiel.md)** : Standard Story 2.0, Handoff Tripartite et Maillage Référentiel
+*   **[ADR-0367](0367-structured-concurrency-resource-orchestration.md)** : Orchestration Asynchrone Structurée — Éradication des Tâches Orphelines, Budgets Hiérarchiques & Gestion Dynamique des Ressources
+*   **[ADR-0368](0368-resilient-csv-tabular-engine-and-privacy.md)** : Moteur Tabulaire Résilient & Étanche — Normalisation Multi-Encodage, Streaming à Mémoire Constante, Diff Sémantique et Anonymisation PII
 
 ---
-*Dernière consolidation constitutionnelle : 13 septembre 2026 — 80 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 13 septembre 2026 — 82 ADRs Unifiées (Zéro Conflit)*

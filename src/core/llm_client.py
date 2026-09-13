@@ -221,22 +221,45 @@ class AsyncLLMClient:
         self,
         requests: List[Dict[str, Any]],
         project_name: str = "mLoop",
+        overall_timeout: Optional[float] = None,
+        per_request_timeout: Optional[float] = None,
     ) -> List[Dict[str, Any]]:
         """
-        Exécute une collection de requêtes en parallèle asynchrone avec gestion automatique de la concurrence.
+        Exécute une collection de requêtes en concurrence structurée via asyncio.TaskGroup (ADR-0367).
+        Garantit l'éradication des tâches orphelines et supporte des budgets temporels hiérarchiques.
         """
-        tasks = []
-        for req in requests:
-            task = self.complete(
-                model=req.get("model", "nmedia_cloud/claude-sonnet-4.6"),
-                system_prompt=req.get("system_prompt", ""),
-                user_prompt=req.get("user_prompt", ""),
-                response_schema=req.get("response_schema"),
-                temperature=req.get("temperature", 0.0),
-                project_name=project_name,
-                action_name=req.get("action_name", "batch_complete"),
-                target_name=req.get("target_name"),
-            )
-            tasks.append(task)
+        if not requests:
+            return []
 
-        return await asyncio.gather(*tasks, return_exceptions=False)
+        results: List[Optional[Dict[str, Any]]] = [None] * len(requests)
+
+        async def _run_indexed(idx: int, req: Dict[str, Any]):
+            kwargs = {
+                "model": req.get("model", "nmedia_cloud/claude-sonnet-4.6"),
+                "system_prompt": req.get("system_prompt", ""),
+                "user_prompt": req.get("user_prompt", ""),
+                "response_schema": req.get("response_schema"),
+                "temperature": req.get("temperature", 0.0),
+                "project_name": project_name,
+                "action_name": req.get("action_name", "batch_complete"),
+                "target_name": req.get("target_name"),
+            }
+            if per_request_timeout:
+                async with asyncio.timeout(per_request_timeout):
+                    res = await self.complete(**kwargs)
+            else:
+                res = await self.complete(**kwargs)
+            results[idx] = res
+
+        async def _run_all():
+            async with asyncio.TaskGroup() as tg:
+                for idx, req in enumerate(requests):
+                    tg.create_task(_run_indexed(idx, req))
+
+        if overall_timeout:
+            async with asyncio.timeout(overall_timeout):
+                await _run_all()
+        else:
+            await _run_all()
+
+        return [r for r in results if r is not None]

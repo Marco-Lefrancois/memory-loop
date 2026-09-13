@@ -7,6 +7,27 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.23.0] - 2026-09-13
+
+### Added
+- **Orchestration Asynchrone Structurée (`ADR-0367`)** :
+  - Bannissement de `asyncio.gather()` au profit de `asyncio.TaskGroup()` pour tous les traitements batch multi-agents, garantissant l'annulation immédiate et propre des coroutines sœurs en cas d'exception (*Zero Orphan Tasks*).
+  - Budgétisation temporelle hiérarchique avec `asyncio.timeout()` combinant deadline globale et délais unitaires par requête pour prévenir les blocages cumulatifs.
+  - Gestion dynamique et étanche des contextes asynchrones et connexions via `contextlib.AsyncExitStack`.
+  - Registre d'observabilité in-memory des tâches (`TaskRegistry`) pour diagnostic en vol via le daemon mLoop.
+  - Suite de tests unitaires et métrologiques validée à 100 % (`tests/test_structured_concurrency.py`).
+- **Moteur Tabulaire Résilient & Anonymisation PII (`ADR-0368`)** :
+  - Module complet `src/converters/csv_engine.py` assurant l'ingestion sans fuite et la manipulation sécurisée de jeux de données tabulaires.
+  - `CSVNormalizer` : Détection automatique des encodages (UTF-8, UTF-8-BOM, CP1252, ISO-8859-1), sniffing de délimiteurs (`;`, `,`, `\t`, `|`) et transcodage en UTF-8 pur.
+  - `CSVSchemaValidator` : Validation stricte en streaming ligne à ligne avec typage fort (`int`, `float`, `email`, `regex`, `required`) et rapport d'erreurs d'audit avec numéros de lignes physiques.
+  - `CSVAnonymizer` : Pseudonymisation PII déterministe par SHA-256 tronqué avec sel de projet (`project_salt`), préservant l'intégrité relationnelle et les clés de jointures lors des échantillonnages.
+  - `CSVRowDiff` : Moteur de diff sémantique ligne à ligne détectant les ajouts, suppressions et modifications de valeurs par clé primaire.
+  - `CSVColumnTransformer` : Transformations déclaratives (renommages, suppressions, dérivations par gabarit).
+  - `csv_to_markdown_summary` : Générateur d'aperçu Markdown compact pour ingestion SSOT sous `docs/00-ingested/`.
+  - Suite de 7 tests unitaires et de non-régression validée à 100 % (`tests/test_csv_engine.py`).
+
+---
+
 ## [2.22.0] - 2026-09-13
 
 ### Added
