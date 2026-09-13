@@ -479,3 +479,94 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
   - Mécanismes de garde-fous : plafonnement budgétaire de tokens (`TokenBudget`) et disjoncteurs anti-emballement (`MaxRevisionsReached`).
 - **Socle de Persistance Locale SQLite FTS5** :
   - Stockage local déterministe sous `memory/cache/` pour la recherche textuelle plein texte sans dépendance cloud.
+
+---
+
+## [0.9.0] - 2026-03-24
+
+### Added
+- **Stabilisation Pré-v1.0 & CLI Unifié Swarm** :
+  - Finalisation de l'architecture modulaire du CLI Python pur sous `src/swarm.py` avec console Rich Zero-Fluff.
+  - Implémentation des disjoncteurs financiers (`TokenBudget`) et du plafonnement de récursions (`MaxRevisionsReached`) prévenant toute boucle infinie d'agents.
+  - Formalisation du cycle canonique P-A-V (Plan $\rightarrow$ Analyze $\rightarrow$ Validate) régissant chaque interaction avec le backlog.
+- **Typage Statique du Moteur d'État** :
+  - Intégration complète de Pydantic v2 pour la validation du schéma d'état partagé (`LoopState`).
+
+---
+
+## [0.8.0] - 2026-03-12
+
+### Added
+- **Normalisation des Blueprints & Gabarits de Récits** :
+  - Premiers gabarits normatifs de spécification fonctionnelle sous `standards/blueprints/` (prémices du standard Story Template).
+  - Définition des règles d'acceptation déterministes et structuration des scénarios de test.
+- **Proscription des Formats Non Versionnables** :
+  - Bannissement des outils de prise de notes propriétaires au profit exclusif de fichiers Markdown sous contrôle de version Git.
+
+---
+
+## [0.7.0] - 2026-03-01
+
+### Added
+- **Adaptabilité Multi-IDE & Architecture Découplée** :
+  - Premières expérimentations d'adaptateurs découplés reliant le moteur mLoop agnostique aux IDE émergents (VS Code, Cursor, prémices d'Antigravity et Claude Code).
+  - Principe d'indépendance technologique : interdiction de lier la logique de raisonnement à un format d'assistant propriétaire (*vendor lock-in*).
+
+---
+
+## [0.6.0] - 2026-02-20
+
+### Added
+- **Persistance Locale Déterministe & SQLite FTS5** :
+  - Remplacement des bases vectorielles cloud par une couche de stockage locale SQLite avec indexation plein texte FTS5 et scoring BM25.
+  - Structuration du répertoire de cache sous `memory/cache/` garantissant une souveraineté totale et zéro fuite de données d'affaires vers des tiers.
+- **Suppression des Dépendances Externes** :
+  - Élimination des bibliothèques de vectorisation lourdes au profit d'index lexicaux et de graphes de dépendances relationnels.
+
+---
+
+## [0.5.0] - 2026-02-10
+
+### Added
+- **Paradigme LLM-Wiki & Prototype OpenKB v0.1** :
+  - Rupture avec le RAG naïf : adoption du modèle de Base de Connaissances Persistante et Compilée (LLM-Wiki) où la connaissance est cumulative et synthétisée en continu.
+  - Spécification initiale d'OpenKB v0.1 (précurseur de l'Open Knowledge Format - OKF v0.1) articulant Frontmatter YAML typé et corps Markdown sémantique.
+- **Indexation Hiérarchique en Arbre (PageIndex)** :
+  - Mécanisme de Tree Indexing pour la navigation raisonnée dans les documents longs (> 20 pages) évitant la fragmentation et la pourriture contextuelle (*Context Rot*).
+
+---
+
+## [0.4.0] - 2026-02-01
+
+### Added
+- **Ontologie de l'Être & Protocole du Faire** :
+  - Formalisation théorique du modèle Agentic Coworker : séparation stricte entre l'Ontologie (l'Être : mémoire vivante, persona Zero-Fluff, self-healing) et le Protocole (le Faire : délégation asymétrique Système 2 / Système 1, validation bloquante).
+  - Définition de la posture Sentinel : contrôle qualité contradictoire et détection proactive des failles et contradictions métiers.
+
+---
+
+## [0.3.0] - 2026-01-22
+
+### Added
+- **Harnais de Sandboxing & Spécification Sécuritaire gVisor** :
+  - Conception de l'enclave d'exécution Système 1 basée sur le noyau en espace utilisateur gVisor (Sentry) pour neutraliser les risques d'élévation de privilèges de scripts arbitraires.
+  - Règles d'isolation strictes : interception exhaustive des appels système (syscalls), communication de télémétrie hors-bande via socket dédié (:8888), et interdiction absolue des duplications de processus (*process fork*).
+
+---
+
+## [0.2.0] - 2026-01-12
+
+### Added
+- **Moteur d'Ingestion Documentaire Sémantique** :
+  - Premiers prototypes de conversion automatisée des formats bureautiques bruts (PDF, Word DOCX, tableurs Excel) en Markdown pur exploitable par des agents IA.
+  - Mécanismes de vérification d'intégrité par empreinte cryptographique pour éradiquer les doublons d'ingestion.
+
+---
+
+## [0.1.0] - 2026-01-01
+
+### Added
+- **Incubation Initiale & Genèse Conceptuelle Memory Loop** :
+  - Lancement du projet de recherche appliquée **Memory Loop (mLoop)**.
+  - Analyse comparative des limites du RAG traditionnel face aux exigences d'ingénierie d'affaires : identification de l'amnésie des contextes longs, de l'illusion de complétude vectorielle et de la dérive algorithmique (*Agent Drift*).
+  - Établissement des principes fondateurs : déterminisme d'état en Python 3, souveraineté totale des données, zéro dépendance cloud opaque, et primauté de la validation humaine (HITL).
