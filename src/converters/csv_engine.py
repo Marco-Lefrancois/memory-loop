@@ -89,9 +89,11 @@ class CSVSchemaValidator:
     def validate_file(self, csv_file: Path) -> Dict[str, Any]:
         errors: List[Dict[str, Any]] = []
 
+        total_rows = 0
         with open(csv_file, "r", encoding="utf-8", errors="replace") as f:
             reader = csv.DictReader(f)
             for row_idx, row in enumerate(reader, start=2):
+                total_rows += 1
                 for col_name, rules in self.schema.items():
                     val = row.get(col_name)
                     is_required = rules.get("required", False)
@@ -103,6 +105,7 @@ class CSVSchemaValidator:
                                 "row": row_idx,
                                 "column": col_name,
                                 "message": f"Champ requis manquant : {col_name}",
+                                "error": f"Champ requis manquant : {col_name}",
                             })
                         continue
 
@@ -115,6 +118,7 @@ class CSVSchemaValidator:
                                 "row": row_idx,
                                 "column": col_name,
                                 "message": f"Valeur non entière : {val_str}",
+                                "error": f"Valeur non entière : {val_str}",
                             })
                     elif col_type == "float":
                         try:
@@ -124,6 +128,7 @@ class CSVSchemaValidator:
                                 "row": row_idx,
                                 "column": col_name,
                                 "message": f"Valeur décimale invalide : {val_str}",
+                                "error": f"Valeur décimale invalide : {val_str}",
                             })
                     elif col_type == "email":
                         if not self.EMAIL_REGEX.match(val_str):
@@ -131,6 +136,7 @@ class CSVSchemaValidator:
                                 "row": row_idx,
                                 "column": col_name,
                                 "message": f"Format d'email invalide : {val_str}",
+                                "error": f"Format d'email invalide : {val_str}",
                             })
                     elif col_type == "regex" and "regex" in rules:
                         pattern = re.compile(rules["regex"])
@@ -139,11 +145,13 @@ class CSVSchemaValidator:
                                 "row": row_idx,
                                 "column": col_name,
                                 "message": f"Ne respecte pas le pattern {rules['regex']}: {val_str}",
+                                "error": f"Ne respecte pas le pattern {rules['regex']}: {val_str}",
                             })
 
         return {
             "valid": len(errors) == 0,
             "errors": errors,
+            "total_rows": total_rows,
         }
 
 
@@ -188,7 +196,12 @@ class CSVAnonymizer:
                             row[col] = self._pseudonymize(row[col])
                     writer.writerow(row)
 
-        return {"anonymized_rows": len(rows), "columns": sensitive_columns}
+        return {
+            "anonymized_rows": len(rows),
+            "rows_processed": len(rows),
+            "columns": sensitive_columns,
+            "sensitive_columns_masked": sensitive_columns,
+        }
 
 
 class CSVRowDiff:
