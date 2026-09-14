@@ -18,7 +18,7 @@ Contrat de dégradation gracieuse (OBLIGATOIRE) :
 import os
 import subprocess
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 SKILL_DIR = Path(__file__).resolve().parents[2] / ".agents" / "skills" / "svg-ocr"
 RENDER_SCRIPT = SKILL_DIR / "render_svg.js"
@@ -26,6 +26,22 @@ OCR_SCRIPT = SKILL_DIR / "ocr_png.ps1"
 
 DEFAULT_RENDER_TIMEOUT_S = 30
 DEFAULT_OCR_TIMEOUT_S = 30
+
+
+def _decode_bytes(raw: Any) -> str:
+    """Décode les octets d'un flux de sous-processus avec fallback robuste multi-encodage Windows."""
+    if not raw:
+        return ""
+    if isinstance(raw, str):
+        return raw
+    if isinstance(raw, bytes):
+        for enc in ("utf-8", "cp850", "cp1252"):
+            try:
+                return raw.decode(enc)
+            except UnicodeDecodeError:
+                pass
+        return raw.decode("utf-8", errors="replace")
+    return str(raw)
 
 
 def is_svg_ocr_enabled() -> bool:
@@ -39,12 +55,12 @@ def _npm_global_root() -> Optional[str]:
         proc = subprocess.run(
             ["npm", "root", "-g"],
             capture_output=True,
-            text=True,
             timeout=15,
             shell=True,
         )
-        if proc.returncode == 0 and proc.stdout.strip():
-            return proc.stdout.strip()
+        stdout = _decode_bytes(proc.stdout).strip()
+        if proc.returncode == 0 and stdout:
+            return stdout
     except Exception:
         pass
     return None
@@ -55,6 +71,8 @@ def _render_svg_to_png(svg_path: Path, work_dir: Path) -> Optional[Path]:
     if not RENDER_SCRIPT.exists():
         return None
 
+    svg_path = svg_path.resolve()
+    work_dir = work_dir.resolve()
     work_dir.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ)
     if not env.get("NPM_GLOBAL_ROOT"):
@@ -75,7 +93,6 @@ def _render_svg_to_png(svg_path: Path, work_dir: Path) -> Optional[Path]:
                 svg_path.name,
             ],
             capture_output=True,
-            text=True,
             timeout=DEFAULT_RENDER_TIMEOUT_S,
             env=env,
         )
@@ -94,6 +111,7 @@ def _ocr_png(png_path: Path) -> Optional[str]:
     if not OCR_SCRIPT.exists():
         return None
 
+    png_path = png_path.resolve()
     try:
         proc = subprocess.run(
             [
@@ -107,16 +125,16 @@ def _ocr_png(png_path: Path) -> Optional[str]:
                 str(png_path),
             ],
             capture_output=True,
-            text=True,
             timeout=DEFAULT_OCR_TIMEOUT_S,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return None
 
-    if proc.returncode != 0 or not proc.stdout.strip():
+    stdout = _decode_bytes(proc.stdout).strip()
+    if proc.returncode != 0 or not stdout:
         return None
 
-    return proc.stdout.strip()
+    return stdout
 
 
 def ocr_vectorized_svg(
@@ -138,13 +156,13 @@ def ocr_vectorized_svg(
     if not is_svg_ocr_enabled():
         return None
 
-    svg_path = Path(svg_path)
+    svg_path = Path(svg_path).resolve()
     if not svg_path.exists():
         return None
 
     if work_dir is None:
         work_dir = Path(os.environ.get("TEMP", ".")) / "opencode" / "ocr_work"
-    work_dir = Path(work_dir)
+    work_dir = Path(work_dir).resolve()
 
     try:
         png_path = _render_svg_to_png(svg_path, work_dir)

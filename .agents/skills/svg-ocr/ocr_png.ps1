@@ -16,6 +16,9 @@ param(
     [string]$Language = ""
 )
 
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
 
 $asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object {
@@ -54,12 +57,13 @@ if ($null -eq $engine) {
 
 foreach ($f in ($Files -split ',')) {
     $f = $f.Trim()
-    if (-not (Test-Path -LiteralPath $f)) {
-        Write-Warning "Fichier introuvable : $f"
+    $fullPath = [System.IO.Path]::GetFullPath($f)
+    if (-not (Test-Path -LiteralPath $fullPath)) {
+        Write-Warning "Fichier introuvable : $fullPath"
         continue
     }
-    Write-Output "==================== $([System.IO.Path]::GetFileName($f)) ===================="
-    $file = Await ([Windows.Storage.StorageFile]::GetFileFromPathAsync($f)) ([Windows.Storage.StorageFile])
+    Write-Output "==================== $([System.IO.Path]::GetFileName($fullPath)) ===================="
+    $file = Await ([Windows.Storage.StorageFile]::GetFileFromPathAsync($fullPath)) ([Windows.Storage.StorageFile])
     $stream = Await ($file.OpenAsync([Windows.Storage.FileAccessMode]::Read)) ([Windows.Storage.Streams.IRandomAccessStream])
     $decoder = Await ([Windows.Graphics.Imaging.BitmapDecoder]::CreateAsync($stream)) ([Windows.Graphics.Imaging.BitmapDecoder])
     $bitmap = Await ($decoder.GetSoftwareBitmapAsync()) ([Windows.Graphics.Imaging.SoftwareBitmap])
