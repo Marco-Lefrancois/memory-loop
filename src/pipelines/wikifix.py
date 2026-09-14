@@ -729,15 +729,23 @@ class WikiFixAgent:
                         f"Marqueurs d'échafaudage ou bruits de titres interdits détectés ({', '.join(set(title_noise))}). Utiliser des titres standard propres."
                     )
 
-                # Contrôle 5 : Interdiction des préfixes d'identifiants éphémères dans les Règles d'affaires (ADR-0301 Rule #7)
+                # Contrôle 5 : Interdiction des préfixes d'identifiants éphémères dans les Règles d'affaires (ADR-0301 Amendement 2026-09)
                 ephemeral_rm = re.findall(
-                    r"(?:^|\n)\s*[-*]\s*\*\*\s*(?:RM|REG|RULE)-[A-Z0-9-]+",
+                    r"(?:^|\n)\s*[-*]\s*\*\*\s*(?:RM-(?:TEMP|TODO|FIXME|WIP)|TODO|FIXME|WIP)\b",
                     content,
                     re.IGNORECASE,
                 )
                 if ephemeral_rm:
                     missing.append(
-                        f"Identifiants éphémères interdits dans les titres de règles d'affaires ({', '.join(set(s.strip() for s in ephemeral_rm))}). Utiliser un titre fonctionnel métier pur en gras."
+                        f"Identifiants éphémères interdits dans les règles d'affaires ({', '.join(set(s.strip() for s in ephemeral_rm))}). Utiliser le standard 'RM-XXX [Titre Métier Pur]'."
+                    )
+                bare_rm = re.findall(
+                    r"(?:^|\n)\s*[-*]\s*\*\*\s*RM-[A-Z0-9-]+\s*\*\*\s*:",
+                    content,
+                )
+                if bare_rm:
+                    missing.append(
+                        f"Règle d'affaires sans titre fonctionnel ({', '.join(set(s.strip() for s in bare_rm))}). Suivre le standard 'RM-XXX [Nom de la Règle]'."
                     )
 
                 # Contrôle 6 : Dualité Stricte Read/Write Model (Récits Frontend)
@@ -820,6 +828,9 @@ class WikiFixAgent:
                     cand4 = Path("standards") / src_clean
                     cand5 = project_path / "memory" / "evidence" / Path(src_clean).name
                     cand6 = project_path / "memory" / "evidence" / src_clean
+                    cand7 = project_path / "backlog" / src_clean
+                    cand8 = project_path / "reference" / src_clean
+                    cand9 = (fpath.parent / src_clean).resolve()
                     if not (
                         cand1.exists()
                         or cand2.exists()
@@ -827,17 +838,17 @@ class WikiFixAgent:
                         or cand4.exists()
                         or cand5.exists()
                         or cand6.exists()
+                        or cand7.exists()
+                        or cand8.exists()
+                        or cand9.exists()
                     ):
-                        ingested_matches = (
-                            list(
-                                (project_path / "docs").glob(
-                                    f"**/{Path(src_clean).name}"
-                                )
-                            )
-                            if (project_path / "docs").exists()
-                            else []
-                        )
-                        if not ingested_matches:
+                        matches = []
+                        fname = Path(src_clean).name
+                        for sub in ["docs", "backlog", "reference"]:
+                            sub_p = project_path / sub
+                            if sub_p.exists():
+                                matches.extend(list(sub_p.glob(f"**/{fname}")))
+                        if not matches:
                             ghost_sources.append(src)
 
                 if ghost_sources and is_ready:

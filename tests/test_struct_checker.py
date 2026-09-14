@@ -637,6 +637,42 @@ validation_rules:
         c11_violations = [v for v in report.violations if v.check_id == "C11"]
         self.assertEqual(len(c11_violations), 0)
 
+    def test_c10_valid_prefixed_rules(self):
+        """Un préfixe RM-XXX suivi d'un titre entre crochets est valide."""
+        content = _valid_story().replace(
+            "- Règle 1 : L'accès est conditionnel au rôle utilisateur.",
+            "- **RM-101 [Contrôle d'Accès]** : L'accès est conditionnel au rôle utilisateur.\n"
+            "- **RM-102 [Validation des Quotas]** : Le volume ne doit pas excéder 50.",
+        )
+        f = _make_file(content, self.tmp_path)
+        report = self.engine.check_file(f)
+        c10_violations = [v for v in report.violations if v.check_id == "C10"]
+        self.assertEqual(len(c10_violations), 0)
+
+    def test_c10_blocking_on_temporary_rule_prefix(self):
+        """Un tag temporaire type RM-TEMP ou TODO est BLOCKING."""
+        content = _valid_story().replace(
+            "- Règle 1 : L'accès est conditionnel au rôle utilisateur.",
+            "- **RM-TEMP [Règle Provisoire]** : Doit être vérifié.\n",
+        )
+        f = _make_file(content, self.tmp_path)
+        report = self.engine.check_file(f)
+        c10_violations = [v for v in report.violations if v.check_id == "C10"]
+        self.assertEqual(len(c10_violations), 1)
+        self.assertEqual(c10_violations[0].severity, "BLOCKING")
+
+    def test_c10_blocking_on_bare_rule_id_without_title(self):
+        """Un identifiant RM-XXX sans titre fonctionnel est BLOCKING."""
+        content = _valid_story().replace(
+            "- Règle 1 : L'accès est conditionnel au rôle utilisateur.",
+            "- **RM-101** : Description sans nom de règle.\n",
+        )
+        f = _make_file(content, self.tmp_path)
+        report = self.engine.check_file(f)
+        c10_violations = [v for v in report.violations if v.check_id == "C10"]
+        self.assertEqual(len(c10_violations), 1)
+        self.assertEqual(c10_violations[0].severity, "BLOCKING")
+
 
 if __name__ == "__main__":
     unittest.main()

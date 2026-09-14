@@ -117,7 +117,7 @@ class StructCheckEngine:
 
         Args:
             target_file : Chemin absolu ou relatif du fichier .md à auditer.
-            strict      : Si True, l'absence de gold_standard_ref est BLOCKING (C4).
+            strict      : Si True, les divergences H3/H4 sont BLOCKING (C4).
 
         Returns:
             StructCheckReport avec la liste complète des violations détectées.
@@ -177,9 +177,9 @@ class StructCheckEngine:
         """
         Résout le chemin du Gold Standard selon la logique de fallback :
         1. Chemin direct si ref pointe vers un fichier existant (absolu ou relatif)
-        2. gold_standard_ref dans le frontmatter → glob dans backlog/stories/
-        3. Chercher dans standards/gold_standards/ ou standards/blueprints/
-        4. Fallback : standards/blueprints/story_template.md
+        2. gold_standard_ref dans le frontmatter → glob dans backlog/stories/ (story pilote locale)
+        3. Chercher dans standards/blueprints/
+        4. Fallback universel : standards/blueprints/story_template.md
         5. Si strict et introuvable → None (C4 gérera la violation BLOCKING)
         """
         ref = fm_data.get("gold_standard_ref", "")
@@ -194,14 +194,11 @@ class StructCheckEngine:
                 return abs_p
 
             ref_name = direct_p.name
-            # 2. Chercher dans le backlog du projet
+            # 2. Chercher dans le backlog du projet (story pilote locale)
             candidates = list(self.project_path.glob(f"backlog/stories/**/{ref_name}"))
             if candidates:
                 return candidates[0]
-            # 3. Chercher dans les gold_standards ou blueprints du framework
-            gs_dir = Path("standards") / "gold_standards"
-            if (gs_dir / ref_name).exists():
-                return gs_dir / ref_name
+            # 3. Chercher dans les blueprints du framework
             bp_dir = Path("standards") / "blueprints"
             if (bp_dir / ref_name).exists():
                 return bp_dir / ref_name
@@ -209,7 +206,7 @@ class StructCheckEngine:
             if strict:
                 return None
 
-        # Fallback universel : le gabarit standard
+        # Fallback universel : le gabarit standard auto-portant
         template = Path("standards") / "blueprints" / "story_template.md"
         if template.exists():
             return template
@@ -345,14 +342,14 @@ class StructCheckEngine:
                 )
         return violations
 
-    # ── Check C4 : Diff stylistique vs Gold Standard ──────────────────────────
+    # ── Check C4 : Diff stylistique vs Blueprint de Référence ─────────────────
 
     def _check_c4_gold_standard_diff(
         self, content: str, gold_content: Optional[str], strict: bool
     ) -> list[StructViolation]:
         """
-        C4 : Compare les titres H3/H4 du récit avec ceux du Gold Standard.
-        En mode strict, l'absence de Gold Standard est BLOCKING.
+        C4 : Compare les titres H3/H4 du récit avec ceux du gabarit blueprint (story_template.md).
+        En mode strict, l'absence de gabarit résolu est BLOCKING.
         """
         violations = []
 
@@ -363,9 +360,8 @@ class StructCheckEngine:
                         check_id="C4",
                         severity="BLOCKING",
                         message=(
-                            "Mode --strict activé : aucun Gold Standard résolu "
-                            "(gold_standard_ref absent ou fichier introuvable). "
-                            "Renseigner le champ 'gold_standard_ref' dans le frontmatter YAML."
+                            "Mode --strict activé : aucun gabarit blueprint résolu. "
+                            "Vérifier la présence de standards/blueprints/story_template.md."
                         ),
                     )
                 )
@@ -374,19 +370,34 @@ class StructCheckEngine:
         # Titres canoniques reconnus par le standard mLoop (ADR-0366)
         canonical_titles = {
             "spécifications de l'interface",
+            "spécifications de l'interface & ux",
+            "spécifications de l'interface et ux",
             "liste call to actions",
+            "parcours interactif",
+            "parcours interactif & api",
+            "parcours interactif (frontend / déclencheurs ui)",
+            "parcours interactif (frontend / déclencheurs)",
+            "contrats d'échange api (backend / services)",
+            "contrats d'échange api",
             "opérations métier & logique backend",
+            "spécifications métier",
+            "spécifications métier backend",
             "matrice des réponses http & filtres métier",
             "navigation",
-            "contrats d'échange api",
             "états d'interaction",
             "preuves amont & traçabilité factuelle",
             "spécifications & modèles de données ssot",
             "handoff technique aval & référentiel dev",
             "paquet openspec",
             "paquet openspec (handoff développeur)",
+            "spécifications openspec",
             "handoff technique openspec",
             "navigation / contrats d'échange api",
+            "in-scope",
+            "out-of-scope",
+            "contexte métier",
+            "maquettes ssot",
+            "maquettes",
         }
 
         def _normalize_title(t: str) -> str:
@@ -425,9 +436,9 @@ class StructCheckEngine:
                     check_id="C4",
                     severity=severity,
                     message=(
-                        f"{len(divergent)} titre(s) H3/H4 absent(s) du Gold Standard : "
+                        f"{len(divergent)} titre(s) H3/H4 absent(s) du gabarit blueprint : "
                         f"{', '.join(sorted(divergent)[:5])}{'...' if len(divergent) > 5 else ''}. "
-                        "Vérifier l'alignement stylistique avec le récit de référence."
+                        "Vérifier l'alignement stylistique avec standards/blueprints/story_template.md."
                     ),
                 )
             )
@@ -665,13 +676,16 @@ class StructCheckEngine:
 
         return violations
 
-    # ── Check C10 : Interdiction des préfixes éphémères dans les Règles d'affaires ───
+    # ── Check C10 : Validation des identifiants normés dans les Règles d'affaires ───
 
     def _check_c10_anti_ephemeral_rules(self, content: str) -> list[StructViolation]:
         """
-        C10 : Vérifie l'absence de préfixes éphémères (RM-XXX, REG-XXX, RULE-XXX)
-        dans les titres des règles d'affaires (ADR-0301 Rule #7 Anti-Bruit).
-        Chaque règle d'affaires doit porter un titre fonctionnel pur en gras.
+        C10 : Vérifie la conformité des règles d'affaires selon ADR-0301 (Amendement 2026-09).
+        Chaque règle doit porter :
+        - Soit un identifiant formel standardisé suivi du nom : '- **RM-XXX [Nom de la Règle]** :'
+        - Soit un titre métier pur en gras : '- **[Nom de la Règle]** :'
+        Les préfixes éphémères ad-hoc (RM-TEMP, RM-TODO, WIP) ou les identifiants sans titre
+        métier sont interdits (BLOCKING).
         """
         violations = []
         rules_match = re.search(r"(?i)##\s+Règles\s+d['’]affaires", content)
@@ -683,25 +697,48 @@ class StructCheckEngine:
         if next_h2:
             rules_content = rules_content[: next_h2.start() + 4]
 
-        ephemeral_matches = re.findall(
-            r"(?m)^\s*[-*]\s*\*\*\s*(?:RM|REG|RULE)-[A-Z0-9-]+",
+        # 1. Détection des tags temporaires / placeholders interdits
+        forbidden_matches = re.findall(
+            r"(?m)^\s*[-*]\s*\*\*\s*(?:RM-(?:TEMP|TODO|FIXME|WIP)|TODO|FIXME|WIP)\b",
             rules_content,
             re.IGNORECASE,
         )
-        if ephemeral_matches:
-            bad_prefixes = ", ".join(set(m.strip() for m in ephemeral_matches))
+        if forbidden_matches:
+            bad_prefixes = ", ".join(set(m.strip() for m in forbidden_matches))
             violations.append(
                 StructViolation(
                     check_id="C10",
                     severity="BLOCKING",
                     message=(
-                        f"Identifiants éphémères interdits dans les titres de règles d'affaires : {bad_prefixes}. "
-                        "Conformément à ADR-0301 (Règle #7 Anti-Bruit), les préfixes comme 'RM-XXX' sont strictement "
-                        "interdits. Utiliser un titre fonctionnel métier pur en gras : '- **[Titre Métier Pur]** :'."
+                        f"Identifiants éphémères interdits dans les règles d'affaires : {bad_prefixes}. "
+                        "Conformément à ADR-0301 (Amendement 2026-09), utiliser le standard "
+                        "'- **RM-XXX [Titre Métier Pur]** :' ou '- **[Titre Métier Pur]** :'."
                     ),
                     line_hint=1,
                 )
             )
+
+        # 2. Détection d'identifiants sans titre métier associé (ex: '- **RM-101** :')
+        bare_id_matches = re.findall(
+            r"(?m)^\s*[-*]\s*\*\*\s*RM-[A-Z0-9-]+\s*\*\*\s*:",
+            rules_content,
+        )
+        if bare_id_matches:
+            bad_bare = ", ".join(set(m.strip() for m in bare_id_matches))
+            violations.append(
+                StructViolation(
+                    check_id="C10",
+                    severity="BLOCKING",
+                    message=(
+                        f"Règle d'affaires sans titre fonctionnel : {bad_bare}. "
+                        "Conformément à ADR-0301 (Amendement 2026-09), un identifiant RM-XXX "
+                        "doit être immédiatement suivi du nom de la règle entre crochets : "
+                        "'- **RM-XXX [Nom de la Règle]** :'."
+                    ),
+                    line_hint=1,
+                )
+            )
+
         return violations
 
     # ── Check C11 : Intégration Dynamique RuleEngine (ADR-0328 §2.2) ─────────

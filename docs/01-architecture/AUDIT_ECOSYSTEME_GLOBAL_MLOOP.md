@@ -102,7 +102,7 @@ Le dossier `standards/` représente la **Source Unique de Vérité Constitutionn
    - `sow_evaluation_template.md`, `adr_template.md`.
 4. **Protocoles Opérationnels** :
    - [`standards/protocols/CLI_PIPELINE_GUIDE.md`](file:///c:/Memory%20Loop/standards/protocols/CLI_PIPELINE_GUIDE.md) : Manuel complet des 58 commandes.
-   - `GHERKIN_GUIDELINES.md`, `INTERACTION_MANIFESTO.md`, `gold_standards/`.
+   - `GHERKIN_GUIDELINES.md`, `INTERACTION_MANIFESTO.md`.
 
 **Diagnostic de cohérence** : 🟢 **100% CANONIQUE & CONFORME**.
 

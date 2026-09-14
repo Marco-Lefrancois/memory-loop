@@ -7,6 +7,75 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.25.0] - 2026-09-14
+
+### Added
+- **Refonte Template User Story 2.1 / Spec-Driven Development (SCC)** ([`standards/blueprints/story_template.md`](standards/blueprints/story_template.md)) :
+  - Modernisation structurelle du gabarit de référence : ajout de la délimitation formelle `In-Scope` / `Out-of-Scope` (élimination du scope creep), adaptation étanche des spécifications selon le layer applicatif (`Spécifications de l'Interface & UX` pour Frontend vs `Contrats d'Échange API` pour Backend), formalisation unifiée des règles d'affaires `* **RM-XXX [Nom]** :`, et relégation de la section `## Références` en clôture absolue du document.
+  - Normalisation de l'intitulé canonique OpenSpec : `### 3. Spécifications OpenSpec (Suggestions)`.
+  - Intégration du permalink officiel permanent Azure DevOps Wiki (`https://dev.azure.com/Projet-SIGPA/SIGPA/_wiki/wikis/SIGPA.wiki/196/Structure-de-donn%C3%A9es`) comme unique SSOT de données du projet.
+- **Tests Unitaires & Couverture Linter** ([`tests/test_struct_checker.py`](tests/test_struct_checker.py)) :
+  - 3 nouveaux tests unitaires dédiés au contrôle C10 validant la conformité syntaxique des règles d'affaires (`RM-XXX [Nom]`, rejet des formats non conformes, tolérance des sous-puces descriptives).
+  - Suite de 26 tests unitaires validée à 100 %.
+
+### Changed
+- **Amendement Normatif ADR-0301 (Septembre 2026)** ([`standards/adr-system/0301-standard-gherkin-outlines-4-piliers.md`](standards/adr-system/0301-standard-gherkin-outlines-4-piliers.md)) :
+  - Amendement formel de la Règle #7 : passage de l'interdiction de `RM-XXX [Nom]` à sa **standardisation formelle obligatoire**, alignant le standard architectural avec les prompts système et la taxonomie fonctionnelle.
+- **Linter Structurel (`src/pipelines/struct_checker.py`)** :
+  - Remplacement du contrôle C10 par la vérification stricte de la syntaxe `* **RM-XXX [Nom]** :`.
+  - Élargissement des alias reconnus sous C4/C8 pour la sous-section OpenSpec (`spécifications openspec`, `spécifications métier`).
+- **Moteur d'Audit WikiFix (`src/pipelines/wikifix.py`)** :
+  - Harmonisation du Contrôle 5 (`check_business_rules_format`) avec l'amendement ADR-0301 (reconnaissance native de `RM-XXX [Nom]`).
+  - Élargissement du Contrôle 9 (`check_references_existence`) pour résoudre dynamiquement les références locales sous `backlog/` et `reference/` (0 alerte INVEST).
+- **Récit Pilote & Épure Fonctionnelle** ([`INC-001-BE.md`](Projects/BoireFrere_Segment2/backlog/stories/02-incubation/INC-001-BE.md)) :
+  - Migration complète du récit pilote au standard Story 2.1 : titre pur sans clé Jira redondante, élimination des prédicats SQL/Dataverse (`CurrentlyInBuggy = true`), règles métier `RM-101` à `RM-104` et Scénarios Gherkin 4-Piliers épurés.
+  - Clé Jira officielle fixée à `COUVBOIRE-1044` dans le frontmatter et l'EvidencePack associé.
+
+### Removed
+- **Abandon Définitif de l'Étalonnage (Gold Standards) & Purge de `gold_standard_ref` (Option A)** :
+  - Suppression intégrale du répertoire `standards/gold_standards/` (`GOLD-REC-015-FE.md`, `README.md`) : élimination des risques de circularité, de double maintenance et de désynchronisation. Le gabarit `standards/blueprints/story_template.md` devient l'unique SSOT auto-portante.
+  - Purge intégrale du champ métadonnée `gold_standard_ref` à travers :
+    - Le template officiel [`standards/blueprints/story_template.md`](standards/blueprints/story_template.md).
+    - L'intégralité des 35 récits utilisateurs du backlog `Projects/BoireFrere_Segment2/backlog/stories/`.
+    - L'ensemble des kits d'export (`tools/export/grill-with-docs-kit/`, `tools/export/grill-with-docs/`, `tools/export/mloop-lite/`).
+    - Les documents d'architecture et skills d'archive (`docs/01-architecture/AUDIT_ECOSYSTEME_GLOBAL_MLOOP.md`, `memory/archive-skills/validate/SKILL.md`).
+  - Suppression du contrôle de comparaison C4 (`Gold Standard Diff`) dans `src/pipelines/struct_checker.py`.
+
+### Fixed
+- **Dépôt Git Azure DevOps (`Wiki_AF_Segment2`) & Liens OpenSpec** :
+  - Déblocage de `reference/definition-of-done.md` dans `.gitignore`.
+  - Publication distante (commit `182cec1`) des paquets OpenSpec `backlog/handoff/INC-001-BE/` (`proposal.md`, `specs/api.md`, `tasks.md`, `definition-of-done.md`), résolvant les liens rompus (404).
+- **Synchronisation Jira Cloud (`src/pipelines/jira/sync_engine.py`)** :
+  - Invalidation du cache mtime et synchronisation effective de la User Story [COUVBOIRE-1044](https://nmediainc.atlassian.net/browse/COUVBOIRE-1044) rattachée à l'Epic `COUVBOIRE-505` (Action `MAJ`, manifeste `66c789df`).
+
+---
+
+## [2.24.0] - 2026-09-14
+
+### Added
+- **Pack DevOps Dual-Bridge (`Azure DevOps` & `GitHub Ops`)** :
+  - **Skill Spécialisé Azure DevOps (`.agents/skills/azure-devops-lifecycle/SKILL.md`)** :
+    - Guide d'ingénierie et d'orchestration pour les phases 1, 2, 3 et 5 de mLoop.
+    - Application stricte et déterministe de l'**ADR-0327** (*Standard Canonique de Construction des URLs de Wiki Azure DevOps*) : priorisation des Permalinks avec `pageId`, encodage RFC 3986 strict des `pagePath` sans extension `.md`, neutralisation formelle du paramètre conflictuel `friendlyName=` et traitement de l'encodage `%20-%20` (élimination du piège des erreurs 404 sur les tirets littéraux `-%2D-`).
+    - Procédures de synchronisation des User Stories mLoop (critères Gherkin 4-Piliers) vers Azure Boards (Work Items Scrum/Agile).
+    - Diagnostic chirurgical des runs Azure Pipelines sans saturation du contexte de l'agent.
+    - Aide-mémoire opérationnel [`references/adr-0327-quickref.md`](.agents/skills/azure-devops-lifecycle/references/adr-0327-quickref.md).
+    - Script utilitaire de résolution et validation d'URLs canoniques [`scripts/resolve_wiki_url.py`](.agents/skills/azure-devops-lifecycle/scripts/resolve_wiki_url.py).
+  - **Skill Spécialisé GitHub Ops (`.agents/skills/github-ops/SKILL.md`)** :
+    - Guide d'ingénierie pour le dépôt mLoop (`memory-loop.git`), exploitant le serveur MCP GitHub et le CLI `gh`.
+    - Pré-vol de validation déterministe obligatoire (`python src/swarm.py vibe-check`, `pytest`, `ruff`) avant toute création de Pull Request.
+    - Format normatif de Pull Request avec critères INVEST, résumé EvidencePack et traçabilité des ADRs.
+    - Diagnostic ciblé des workflows GitHub Actions (`gh run view --log-failed` et `summarize_job_log_failures`).
+    - Gestion sécurisée des skills d'agents selon la spécification `agentskills.io` (`gh skill search`, `preview`, `install --pin`, `update`).
+  - **Connectivité MCP Azure DevOps (`.agents/mcp.json`)** :
+    - Déclaration du serveur officiel Microsoft `@azure-devops/mcp` via transport stdio (`npx`).
+    - Documentation des variables d'environnement (`AZURE_DEVOPS_ORG_URL`, `AZURE_DEVOPS_PAT`, `AZURE_DEVOPS_PROJECT`, `AZURE_DEVOPS_WIKI`) dans `.env.example`.
+  - **Onboarding & Instructions Persistantes GitHub Copilot (`.github/copilot-instructions.md`)** :
+    - Fichier d'instructions persistantes racine pour GitHub Copilot (Cloud Agent, Copilot CLI, VS Code Agent Mode).
+    - Synthèse de l'architecture Kernel-Pipeline de mLoop, des 6 phases souveraines, de la matrice des commandes du swarm `src/swarm.py`, des conventions de code et des standards d'intégrité lexicale et documentaire (ADR-0327).
+
+---
+
 ## [2.23.0] - 2026-09-13
 
 ### Added

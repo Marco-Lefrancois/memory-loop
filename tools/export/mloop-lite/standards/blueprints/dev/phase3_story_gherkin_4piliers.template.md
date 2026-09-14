@@ -8,7 +8,6 @@ tags: [power-apps, canvas-app, ui, api, core]
 status: IN_ANALYZE
 layer: frontend
 macrostructure: ""         # Optionnel (FE/Fullstack). Ex: "bento-grid", "workbench", "stat-led" (ADR-0340)
-gold_standard_ref: ""      # Optionnel. Ex: "REC-015-FE.md" — référence stylistique du projet pour struct-check
 ---
 # Titre de la Story
 

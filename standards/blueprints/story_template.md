@@ -3,112 +3,90 @@ id: REC-XXX
 jira_key: PROJECT-XXX
 epic_key: EPIC-XXX
 type: Feature
-title: Titre de la Story
-tags: [power-apps, canvas-app, ui, api, core]
+title: Titre Fonctionnel Pur du Récit
+tags: [core, ui, api]
 status: IN_ANALYZE
-layer: frontend            # frontend | backend | fullstack
-macrostructure: ""         # Optionnel (FE/Fullstack). Ex: "bento-grid", "workbench", "stat-led" (ADR-0340)
-gold_standard_ref: ""      # Optionnel. Ex: "REC-015-FE.md" — référence stylistique du projet pour struct-check
+layer: fullstack            # frontend | backend | fullstack (ADR-0366)
+invest_score: 6/6           # Auto-audité par WikiFix / Sentinel
+macrostructure: "workbench" # Optionnel FE/Fullstack : bento-grid | workbench | stat-led (ADR-0340)
 ---
-# Titre de la Story
+# Titre Fonctionnel Pur du Récit
+
+---
 
 ## Description
-**En tant qu'** [Utilisateur final / Rôle métier / Service backend],  
-**je veux** [Action dans l'interface ou endpoint exposé],  
-**afin de** [Valeur métier ou objectif utilisateur].
+**En tant qu'** [Persona ou Rôle métier],  
+**je veux** [effectuer une action fonctionnelle précise],  
+**afin de** [bénéficier d'une valeur métier concrète et mesurable].
 
 ---
 
-## Contexte
-[Expliquer le contexte métier de manière concise pour les développeurs. Règle Zero-Bruit : Interdiction absolue d'inclure des mentions de traçabilité, noms de personnes, ou références à des réunions/ateliers.]
+## Contexte & Périmètre
+
+### Contexte Métier
+[Description concise en langage naturel de la place du besoin dans le parcours global. Règle Zero-Bruit & No-Code : Exprimer le besoin en langage d'affaires pur. Interdiction absolue d'inclure des noms physiques de tables de données, de colonnes, des prédicats techniques (ex: IS NULL, = true), des mentions de traçabilité, ou des références à des réunions/ateliers.]
+
+### In-Scope
+- [Périmètre fonctionnel inclus dans ce récit : ce que la story accomplit de bout en bout]
+- [Comportements et entités manipulées couverts par ce développement]
+
+### Out-of-Scope
+- [Exclusions explicites pour éliminer tout glissement de périmètre (Scope Creep)]
+- [Actions, cas limites ou fonctionnalités différées. Règle anti-couplage : Décrire la frontière fonctionnelle en langage pur sans citer de clés de tickets internes (ex: proscrire les mentions du type « couvert par REC-002 »)]
 
 ---
 
 ## Critères d'acceptation
 
 > **Règle conditionnelle par `layer` (ADR-0366)** :
-> - **`layer: frontend`** : Renseigner les sections UI et Matrice CTA ci-dessous.
-> - **`layer: backend`** : Renseigner les sections Opérations Métier & Logique Backend et Matrice des Réponses HTTP.
+> - **`layer: frontend`** : Renseigner les Spécifications de l'Interface & UX, Maquettes SSOT et Parcours Interactif.
+> - **`layer: backend`** : Renseigner les Contrats d'Échange API (endpoints, payloads, codes HTTP et règles de persistance).
+> - **`layer: fullstack`** : Renseigner l'ensemble des sections avec symétrie stricte UI/API (ADR-0319).
 
-### Spécifications de l'Interface *(frontend / fullstack)*
+### Spécifications de l'Interface & UX *(frontend / fullstack)*
+- **Macrostructure & États de surface** : L'écran respecte les 4 états de surface : Initial/Vide, Chargement, Erreur et Succès.
+- **États d'Interaction (signifiants)** : [Comportement des composants sur les états d'interaction signifiants : Default, Hover, Focus-Visible, Active, Disabled, Loading, Error, Success. Omettre les états natifs sans règle métier].
+- **Feedback Utilisateur** : [Indicateurs visuels clairs : toasts contextuels, modales, bannières informatives ou désactivation préventive des boutons pendant les requêtes].
 
-#### 1. [Section UI 1]
-* **[Élément]** : [Description]
+### Spécifications Métier *(backend)*
+#### 1. [Nom du Domaine ou Service Métier]
+- **Admissibilité & Traitement** : [Conditions métier d'acceptation, règles de sélection ou calculs]
+- **Données Produites / Résultats** : [Informations restituées ou mutations d'état attendues]
+- **Rejets & Cas Limites** : [Conditions de rejet exprimées en langage d'affaires pur]
 
-#### 2. [Section UI 2]
-* **[Élément]** : [Description]
+### Maquettes SSOT *(frontend / fullstack)*
+- 🔗 **Maquette Validée (SSOT)** : [Nom de l'écran Figma](https://figma.com/file/...) *(ou N/A - Composant Headless)*
+- 📂 **Actif Local Ingéré** : [`docs/05-assets/maquettes/ecran_principal.svg`](../../docs/05-assets/maquettes/ecran_principal.svg)
+- 📌 **Ajustements Visuels Validés** : [Résumé des ajustements de cadrage issus des revues UI, sans contradiction des maquettes SSOT].
 
-#### 3. États d'Interaction (signifiants)
-> **Règle de modulation (anti-remplissage)** : la profondeur de cette section s'adapte à la richesse réelle du composant. Ne documenter que les états qui portent une décision UX ou métier ; ne pas énumérer des états natifs génériques sans contenu spécifique.
-> - **Composant riche** (formulaire multi-champs, liste alimentée par API, carte cliquable, wizard) : documenter la **Matrice complète des 8 États** (référence) : Default/Nominal, Hover, Focus-Visible, Active, Disabled, Loading/Processing, Error, Success.
-> - **Composant simple / écran `minimal-spotlight`** (champ + bouton, saisie unique, action directe) : documenter uniquement les **états signifiants** (ex : champ vide → bouton désactivé ; saisie valide → bouton activé ; validation locale ; succès → transition). Omettre Hover/Active/Focus-Visible lorsqu'ils relèvent du comportement natif par défaut sans règle métier associée.
+---
 
-* **[État 1]** : [Comportement et condition de déclenchement]
-* **[État 2]** : [Comportement et condition de déclenchement]
-* **[État N]** : [Comportement et condition de déclenchement]
+## Parcours Interactif & API
 
-### Liste Call to Actions *(frontend / fullstack)*
+### Parcours Interactif (Frontend / Déclencheurs UI)
+> *Cartographie exhaustive des composants interactifs de l'écran et de leurs transitions d'état.*
 
-| Élément UI | Trigger | Action (Navigation/API) | Feedback & État Final |
+| Élément UI | Déclencheur | Action Déclarative (Navigation / API) | Feedback & Changement d'État |
 | :--- | :--- | :--- | :--- |
-| **[Bouton/Lien]** | `onClick` | [Action] | [Feedback] |
+| `[Bouton Soumettre]` | Clic / Tap | Appel `POST /api/v1/ressource` | Bouton désactivé + spinner, puis toast de confirmation |
+| `[Lien Annuler]` | Clic / Tap | Navigation vers l'écran d'accueil | Réinitialisation des saisies et redirection |
 
-### Opérations Métier & Logique Backend *(backend uniquement)*
+### Contrats d'Échange API (Backend / Services)
+> *Définition déclarative des contrats réseau. Règle anti-invention : interdiction d'inventer des routes non documentées.*
 
-#### 1. [Nom de l'Opération ou Service Métier]
-* **Entrée Métier** : [Paramètres métier obligatoires / optionnels]
-* **Règles d'admissibilité & Validation** : [Contrôles d'éligibilité, statuts autorisés, verrous de concurrence]
-* **Traitement & Algorithme Métier** : [Calculs métier, tri déterministe, logique de priorité biologique/économique]
-* **Résultat Métier & Mutations** : [Structure des données produites, indicateurs calculés et impacts d'inventaire]
-* **Cas de Rejet Métier** : [Conditions de rejet exprimées en langage d'affaires pur, sans codes de transport HTTP]
+| Opération | Route / Endpoint | Intention Métier & Payload (Déclaratif) | Code Statut |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/ressource` | Création d'une entité avec payload `{ identifiant, statut, montant }` | `201 Created` |
+| `GET` | `/api/v1/ressource/{id}` | Lecture des informations métier de l'entité | `200 OK` |
+
+> 📄 **Spécifications formelles détaillées** : Consulter les schémas JSON exhaustifs et routes OpenAPI dans [specs/api.md](../../handoff/<STORY_ID>/specs/api.md).
 
 ---
 
 ## Règles d'affaires
-* **[Titre Métier Pur]** : [Description de la règle]
 
-> **Note** : Le titre est le nom métier de la règle uniquement (ex : « Saisie Limitée »). Zéro numérotation type `Règle-01`/`RG-01` imposée par le SSOT — un identifiant technique n'apporte aucune valeur au dev et introduit du bruit rédactionnel.
-
----
-
-## Maquettes *(frontend uniquement)*
-- 🔗 **Lien Figma** : [Nom de l'écran](https://figma.com/file/...)
-
----
-
-## Navigation / Contrats d'échange API
-> **Règle conditionnelle par `layer` (ADR-0366)** :
-> - **`layer: frontend`** : le contrat d'échange officiel EST la **Matrice CTA** (section précédente). Cette section se limite alors à `## Navigation` (écran cible, navigation amont/aval). Si l'écran consomme réellement des routes backend, les lister en version allégée (méthode + chemin, sans payload).
-> - **`layer: backend` / `layer: fullstack`** : déclarer les endpoints en puces simples sans snippets de code. Tout le détail des payloads et codes HTTP réside dans `specs/api.md`.
-
-### Navigation
-- **Écran cible** : [Type d'app Power Apps ou Frontend Web]
-- **Navigation Amont** : [Origine]
-- **Navigation Aval** : [Destination]
-
-### Contrats d'échange API *(backend/fullstack uniquement, ou FE avec routes réelles consommées)*
-- **[Nom Opération]** : `[METHODE] /api/...`
-
-> 📄 **Contrats techniques détaillés** : Consulter les spécifications formelles OpenAPI et schémas JSON exhaustifs dans [specs/api.md](../../handoff/<STORY_ID>/specs/api.md).
-
----
-
-## Références
-
-### 1. Preuves Amont & Traçabilité Factuelle
-- 📂 **Dossier de Preuves Factuelles** : [Portail Web / Azure DevOps Git](https://...) | [Relatif](../../../memory/evidence/<STORY_ID>_fact_dossier.md)
-
-### 2. Spécifications & Modèles de Données SSOT
-- 🏛️ **Modèle de Données SSOT** : [Structure-de-données.md (Portail Web)](https://...) | [Relatif](../../../reference/Structure-de-donn%C3%A9es.md)
-- 📋 **Cas d'Utilisation Métier** : [Cas-XX — Titre (Wiki)](https://...)
-- 📜 **ADR d'Architecture** : [ADR-XXX — Titre (Wiki)](https://...)
-
-### 3. Paquet OpenSpec (Handoff Développeur)
-- 📄 **Proposition Technique (proposal.md)** : [Portail Web / Azure DevOps Git](https://...) | [Relatif](../../handoff/<STORY_ID>/proposal.md)
-- 📋 **Spécifications d'Échange (specs/api.md)** : [Portail Web / Azure DevOps Git](https://...) | [Relatif](../../handoff/<STORY_ID>/specs/api.md)
-- 🎯 **Plan de Découpage TDD (tasks.md)** : [Portail Web / Azure DevOps Git](https://...) | [Relatif](../../handoff/<STORY_ID>/tasks.md)
-- ✅ **Definition of Done** : [DoD Normative](https://...) | [Relatif](../../../reference/definition-of-done.md)
-
+- **RM-101 [Nom de la Règle]** : [Formulation explicite de la contrainte, du calcul, du seuil ou de la condition d'éligibilité métier].
+- **RM-102 [Gestion des Données Invalides]** : [Comportement attendu et rejet en cas de dépassement de quota, doublon ou format non conforme].
 
 ---
 
@@ -116,29 +94,58 @@ gold_standard_ref: ""      # Optionnel. Ex: "REC-015-FE.md" — référence styl
 
 ```gherkin
 # language: fr
-Fonctionnalité: [Nom métier pur de la fonctionnalité]
+Fonctionnalité: Titre Fonctionnel Pur du Récit
 
-  # 1. Pilier Nominal (Happy Path)
-  Scénario: [Titre explicite nominal]
-    Étant donné [Pré-conditions valides]
-    Quand [Action principale exécutée]
-    Alors [Résultat nominal attendu]
+  # CHEMIN NOMINAL (Happy Path & Persistance)
+  Scénario: Exécution nominale avec persistance des données
+    Étant donné un utilisateur authentifié disposant des droits requis
+    Et que les paramètres du formulaire sont valides et complets
+    Quand l'utilisateur confirme la soumission
+    Alors le statut de l'entité passe à "Confirmé"
+    Et un message de succès s'affiche
+    Et les données sont persistées dans le système
 
-  # 2. Pilier Exceptions & Règles Métier
-  Scénario: [Titre explicite exception]
-    Étant donné [Pré-conditions avec donnée non conforme ou exclue]
-    Quand [Action déclenchée]
-    Alors [Erreur ou rejet métier attendu]
+  # EXCEPTIONS & REJETS MÉTIER (Règles RM-XXX)
+  Scénario: Rejet pour non-respect de la règle RM-101
+    Étant donné un utilisateur initiant une soumission
+    Mais que le montant spécifié enfreint la règle RM-101
+    Quand l'utilisateur tente de valider l'action
+    Alors la soumission est bloquée avec un message d'erreur explicite
+    Et le système n'enregistre aucune modification
+    Et le champ en faute est mis en évidence visuelle
 
-  # 3. Pilier Résilience & Erreurs Techniques
-  Scénario: [Titre explicite résilience]
-    Étant donné [Défaillance de service ou timeout]
-    Quand [Tentative d'appel]
-    Alors [Comportement gracieux sans crash]
+  # RÉSILIENCE TECHNIQUE & MODE DÉGRADÉ (Timeouts, Idempotence, Concurrence)
+  Scénario: Rupture réseau ou indisponibilité du service de traitement
+    Étant donné une requête de validation transmise au serveur
+    Mais que le service distant subit un timeout ou une coupure réseau
+    Quand la temporisation maximale est atteinte
+    Alors l'action est interrompue sans altérer l'état local
+    Et l'utilisateur est invité à réessayer ultérieurement
+    Et un jeton d'idempotence prévient tout double traitement lors du rejeu
 
-  # 4. Pilier UX / Empty State & État Limite
-  Scénario: [Titre explicite cas limite ou résultat vide]
-    Étant donné [Aucune donnée disponible correspondant aux critères]
-    Quand [Consultation demandée]
-    Alors [Retour d'une collection vide et indicateurs à zéro]
+  # UX, OBSERVABILITÉ & EMPTY STATE (Spinners, Retours Écran, Logs)
+  Scénario: Indicateurs de progression, désactivation temporaire et état vide
+    Étant donné le déclenchement d'un traitement asynchrone ou l'absence de données
+    Quand l'opération est en cours d'exécution
+    Alors le bouton de confirmation affiche un indicateur de chargement et devient inactif
+    Et l'interface empêche toute navigation conflictuelle
+    Et un journal d'audit trace l'amorce de la transaction
 ```
+
+---
+
+## Références
+
+### 1. Preuves Amont & Traçabilité Factuelle
+- 📂 **Dossier de Preuves Factuelles** : [Dossier de Preuves Factuelles (Portail Web / Azure DevOps Git)](https://...)
+
+### 2. Spécifications & Modèles de Données SSOT
+- 🏛️ **Modèle de Données SSOT** : [Structure-de-données.md (Portail Web)](https://...)
+- 📋 **Référentiel des Règles d'Affaires** : [docs/02-business-rules/README.md](https://...)
+- 📜 **ADR d'Architecture** : [ADR-0366 — Standard Story 2.0](https://...)
+
+### 3. Spécifications OpenSpec (Suggestions)
+- 📄 **Proposition Technique (proposal.md)** : [proposal.md (Portail Web / Azure DevOps Git)](https://...)
+- 📋 **Spécifications d'Échange (specs/api.md)** : [specs/api.md (Portail Web / Azure DevOps Git)](https://...)
+- 🎯 **Plan de Découpage TDD (tasks.md)** : [tasks.md (Portail Web / Azure DevOps Git)](https://...)
+- ✅ **Definition of Done** : [DoD Normative](https://...)

@@ -193,7 +193,7 @@ COMMANDS: dict[str, dict] = {
     },
     "struct-check": {
         "handler": "analysis:handle_struct_check",
-        "help": "Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence Gold Standard (pré-Sentinel)",
+        "help": "Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence du gabarit blueprint (pré-Sentinel)",
         "args": [
             {
                 "name": "--file",
@@ -203,7 +203,7 @@ COMMANDS: dict[str, dict] = {
             {
                 "name": "--strict",
                 "action": "store_true",
-                "help": "Mode strict : gold_standard_ref obligatoire, écart = BLOCKING",
+                "help": "Mode strict : écarts H3/H4 et séparateurs = BLOCKING",
             },
             {
                 "name": "--verbose",
