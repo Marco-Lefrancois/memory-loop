@@ -92,6 +92,8 @@ lerna-debug.log*
 *.db-wal
 *.db-shm
 .fact_search_index.db
+.fact_search_hashes.json
+memory/.fact_search_hashes.json
 
 # --- 6. PYTHON & BUILD CACHES ---
 __pycache__/

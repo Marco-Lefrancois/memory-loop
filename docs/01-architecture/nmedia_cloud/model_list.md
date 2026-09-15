@@ -52,6 +52,8 @@
 ## Google (Gemini)
 | Modèle | Statut | Coût Input (par 1M tokens) | Coût Output (par 1M tokens) | Context Max In | Max Output |
 | :--- | :---: | :---: | :---: | :---: | :---: |
+| `gemini-3.8-flash` | 🟢 Actif | $0.75 / 1M | $3.75 / 1M | 1048576 | 65536 |
+| `gemini-3.7-flash` | 🟢 Actif | $0.75 / 1M | $3.75 / 1M | 1048576 | 65536 |
 | `gemini-3.5-flash` | 🟢 Actif | $1.50 / 1M | $9.00 / 1M | 1000000 | 65536 |
 | `gemini-3.1-pro-preview` | 🟢 Actif | $2.00 / 1M | $12.00 / 1M | 1048576 | 65536 |
 | `gemini-3.1-pro-preview-thinking` | 🟢 Actif | $2.00 / 1M | $12.00 / 1M | 1048576 | 65536 |
@@ -83,6 +85,7 @@
 | `codestral-2501` | 🟢 Actif | N/A | N/A | N/A | N/A |
 | `mistral-ocr` | 🔴 Inactif | $0.00 / 1M | $0.00 / 1M | N/A | N/A |
 | `mistral-voxtral-mini-2602` | 🔴 Inactif | $0.00 / 1M | $0.00 / 1M | N/A | N/A |
+| `gpt-transcribe` | 🟢 Actif | N/A (Audio) | N/A (Audio) | N/A | N/A |
 | `gpt-image-1` | 🔴 Inactif | $5.00 / 1M | $0.00 / 1M | N/A | N/A |
 | `gpt-image-1.5` | 🔴 Inactif | $5.00 / 1M | $10.00 / 1M | N/A | N/A |
 | `gpt-4o-transcribe` | 🔴 Inactif | $2.50 / 1M | $10.00 / 1M | 16000 | 2000 |

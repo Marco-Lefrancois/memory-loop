@@ -35,19 +35,34 @@ class WikiFixAgent:
         lower_type = callout_type.lower().strip()
         return self.callout_mapping.get(lower_type, None)
 
-    def _stream_markdown_files(self, project_path: Path, interest_dirs: list[str]):
-        """Générateur 'Lazy Evaluation' qui cède les fichiers markdown et leur contenu un par un."""
+    def _collect_markdown_files(self, project_path: Path, interest_dirs: list[str]) -> list[Path]:
+        """Collecte les chemins de fichiers markdown sans chargement I/O inutile du contenu (Zero-I/O Discovery)."""
+        files = []
         for d in interest_dirs:
             dir_path = project_path / d
             if dir_path.exists():
-                for md_file in dir_path.rglob("*.md"):
-                    try:
-                        content = md_file.read_text(encoding="utf-8")
-                        yield md_file, content
-                    except Exception as e:
-                        ZeroFluffConsole.error(f"Erreur de lecture sur {md_file}: {e}")
+                try:
+                    for md_file in dir_path.rglob("*.md"):
+                        try:
+                            # Protection Windows MAX_PATH : test d'accès rapide
+                            if md_file.is_file():
+                                files.append(md_file)
+                        except (OSError, ValueError):
+                            continue
+                except (OSError, PermissionError):
+                    continue
+        return files
 
-    def execute(self, state: LoopState, verbose: bool = False) -> LoopState:
+    def _stream_markdown_files(self, project_path: Path, interest_dirs: list[str]):
+        """Générateur 'Lazy Evaluation' qui cède les fichiers markdown et leur contenu un par un."""
+        for md_file in self._collect_markdown_files(project_path, interest_dirs):
+            try:
+                content = md_file.read_text(encoding="utf-8")
+                yield md_file, content
+            except Exception as e:
+                ZeroFluffConsole.error(f"Erreur de lecture sur {md_file}: {e}")
+
+    def execute(self, state: LoopState, verbose: bool = False, story_filter: str = None) -> LoopState:
         ZeroFluffConsole.step_s1(
             self.name,
             "Démarrage de l'audit de cohérence de la base de connaissances...",
@@ -128,22 +143,38 @@ class WikiFixAgent:
                 except Exception:
                     pass
 
-        # 1. Collecter tous les fichiers Markdown du projet cible via le générateur paresseux
-        interest_dirs = [
-            ProjectLayout.DOCS,
-            ProjectLayout.DIRECTIVES,
-            ProjectLayout.REFERENCE,
-            ProjectLayout.BACKLOG,
-        ]
-        markdown_files = [
-            f for f, _ in self._stream_markdown_files(project_path, interest_dirs)
-        ]
+        # 1. Collecter tous les fichiers Markdown du projet cible
+        all_markdown_files = self._collect_markdown_files(
+            project_path,
+            [
+                ProjectLayout.DOCS,
+                ProjectLayout.DIRECTIVES,
+                ProjectLayout.BACKLOG,
+                ProjectLayout.REFERENCE,
+            ],
+        )
 
-        if not markdown_files:
+        if not all_markdown_files:
             ZeroFluffConsole.step_s1(
                 self.name, "Aucun fichier markdown trouvé dans les répertoires cibles."
             )
             return state
+
+        # Construire une map de tous les basenames pour l'Auto-Healing (incluant reference/ en lecture seule)
+        basename_map = {}
+        for fpath in all_markdown_files:
+            bname = fpath.name.lower()
+            if bname not in basename_map:
+                basename_map[bname] = []
+            basename_map[bname].append(fpath)
+
+        # Les fichiers sous reference/ sont des miroirs Git distants en lecture seule (SSOT) :
+        # ils sont indexés dans basename_map pour la résolution des liens, mais exclus de l'auto-healing et du linting.
+        markdown_files = [
+            f
+            for f in all_markdown_files
+            if not any(part == ProjectLayout.REFERENCE for part in f.parts)
+        ]
 
         # Charger le cache mtime de WikiFix
         import os, json
@@ -157,14 +188,6 @@ class WikiFixAgent:
                 cache_data = json.loads(cache_file.read_text(encoding="utf-8"))
             except Exception:
                 pass
-
-        # Construire une map de tous les basenames pour l'Auto-Healing
-        basename_map = {}
-        for fpath in markdown_files:
-            bname = fpath.name.lower()
-            if bname not in basename_map:
-                basename_map[bname] = []
-            basename_map[bname].append(fpath)
 
         broken_links_alerts = []
         healed_links = []
@@ -356,7 +379,7 @@ class WikiFixAgent:
 
         # 4.6 Linter de Conformité Structurelle (INVEST)
         structural_failures = self._audit_structural_compliance(
-            project_path, markdown_files
+            project_path, markdown_files, story_filter=story_filter
         )
 
         # 4.7 Intégration Dynamique RuleEngine (ADR-0329)
@@ -370,6 +393,8 @@ class WikiFixAgent:
 
         for fpath in markdown_files:
             if "backlog" in fpath.parts and "stories" in fpath.parts:
+                if story_filter and story_filter not in fpath.name:
+                    continue
                 content = fpath.read_text(encoding="utf-8")
                 violations = rule_engine.validate_all(content, target="backlog_stories")
                 for v in violations:
@@ -609,7 +634,7 @@ class WikiFixAgent:
         return leakages
 
     def _audit_structural_compliance(
-        self, project_path: Path, markdown_files: list[Path]
+        self, project_path: Path, markdown_files: list[Path], story_filter: str = None
     ) -> list[dict]:
         """
         Vérifie que les fichiers du backlog contiennent les sections structurelles obligatoires (INVEST)
@@ -624,6 +649,8 @@ class WikiFixAgent:
         for fpath in markdown_files:
             if "backlog" in fpath.parts and "stories" in fpath.parts:
                 if "reference" in fpath.parts or "archive_deprecated" in fpath.parts:
+                    continue
+                if story_filter and story_filter not in fpath.name:
                     continue
                 try:
                     content = fpath.read_text(encoding="utf-8")

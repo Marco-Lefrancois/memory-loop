@@ -23,7 +23,7 @@ class MarkPDFdownConverter:
     """Moteur d'ingestion visuelle haute fidélité pour documents de référence complexes."""
 
     def __init__(self, model_name: Optional[str] = None) -> None:
-        self.model_name = model_name or os.getenv("MLOOP_VISION_MODEL", "gemini-2.0-flash")
+        self.model_name = model_name or os.getenv("MLOOP_VISION_MODEL", "gemini-3.8-flash")
         self.api_key = os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("ANTHROPIC_API_KEY")
 
     def is_supported(self, file_path: Path | str) -> bool:

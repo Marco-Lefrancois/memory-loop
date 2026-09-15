@@ -7,6 +7,39 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.26.0] - 2026-09-15
+
+### Added
+- **Mode Rapide & Ciblé pour les Pipelines (`--fast`, `--story`)** :
+  - Ajout des options déclaratives `--fast` et `--story` dans le registre des commandes (`src/commands/_registry.py`) et les gestionnaires d'analyse (`src/commands/handlers/analysis.py`) pour `sync` et `wikifix`.
+  - `--fast` saute les exports lourds (Graphify) pour fluidifier et accélérer l'inner-loop des agents de développement.
+  - `--story` permet de cibler les vérifications structurelles, l'application du RuleEngine et la génération d'EvidencePacks sur une User Story spécifique.
+- **Gouvernance Multi-Modèles LiteLLM & Flotte d'Agents Élargie** :
+  - Intégration officielle des nouveaux modèles Google `gemini-3.8-flash` ($0.75 in / $3.75 out par 1M tokens), `gemini-3.7-flash`, et `gpt-transcribe` dans le registre des modèles (`docs/01-architecture/nmedia_cloud/model_list.md`), la configuration `opencode.example.json` et la grille tarifaire `TokenLedger` (`src/utils/token_ledger.py`).
+  - Évolution des modèles assignés aux rôles spécialisés : `gemini-3.8-flash` pour l'agent cartographe Explorer (`standards/agents/explorer.toml`), le convertisseur multimodal `MarkPDFdownConverter` (`src/converters/markpdfdown_converter.py`), le worker UI `visual_dissector.py` et l'adaptateur Herdr pour la compaction (`src/core/herdr_adapter.py`).
+  - Harmonisation des règles de gouvernance multi-modèles dans les directives système (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`).
+- **Suite de Tests de Résilience Pipeline** ([`tests/test_sync_resilience.py`](tests/test_sync_resilience.py)) :
+  - 6 nouveaux tests unitaires validant l'enregistrement CLI des options `--fast`/`--story`, le bypass de Graphify en mode rapide, l'isolation des pannes inter-modules, l'inversion de cache SHA-256 et la résilience aux dépassements de délais.
+
+### Changed
+- **Optimisation et Inversion de Cache Graphify (`src/pipelines/graphify/agent.py`)** :
+  - Inversion de flux en mode *Cache-First* : le contrôle des empreintes SHA-256 s'effectue avant toute invocation externe de `graphify update`. En cas de cache hit et si le répertoire `graphify-out/` existe déjà, l'appel sous-processus est entièrement court-circuité.
+  - Sécurisation du sous-processus `graphify update` avec un timeout de 60s et fallback non-bloquant en cas de projet volumineux.
+  - Détection dynamique de l'exécutable sous Windows (`shutil.which`) avec gestion propre du flag `shell`.
+- **Découverte Zero-I/O & Étanche de Fichiers Markdown (`src/pipelines/wikifix.py`)** :
+  - Remplacement de l'évaluation immédiate avec I/O par la fonction `_collect_markdown_files` collectant les chemins physiques avec protection contre les dépassements `MAX_PATH` de Windows.
+  - Ségrégation étanche des miroirs Git distants sous `reference/` : conservés dans la table de résolution des basenames (`basename_map`) pour l'intégrité des hyperliens, mais exclus du linting et de l'auto-healing afin de préserver la règle SSOT en lecture seule.
+
+### Fixed
+- **Isolation des Défaillances dans `run_sync` (`src/pipelines/sync.py`)** :
+  - Encapsulation défensive des étapes `WikiFixAgent.execute()`, `GraphifyAgent.execute()` et `state.save_to_audit()` dans des blocs de gestion d'exceptions non bloquants, garantissant l'intégrité du pipeline de synchronisation même en cas d'erreur ponctuelle.
+- **Résolution du Bug d'Encodage UTF-8 et Chemins WinRT StorageFile** ([`src/converters/svg_ocr_bridge.py`](src/converters/svg_ocr_bridge.py), [`.agents/skills/svg-ocr/ocr_png.ps1`](.agents/skills/svg-ocr/ocr_png.ps1)) :
+  - Correction de la transmission des chemins Windows absolus et de l'encodage de sortie UTF-8 pour l'OCR natif WinRT, éliminant les erreurs sur les caractères accentués et espaces dans les chemins.
+- **Protection Anti-Fuite Runtime** ([`.gitignore`](.gitignore)) :
+  - Exclusion formelle de `.fact_search_hashes.json` et `memory/.fact_search_hashes.json` pour éviter le suivi intempestif des caches d'indexation transitoires.
+
+---
+
 ## [2.25.0] - 2026-09-14
 
 ### Added

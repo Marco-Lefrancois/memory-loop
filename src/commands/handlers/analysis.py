@@ -21,7 +21,9 @@ def handle_sync(args: argparse.Namespace, state: LoopState, project_path: Path) 
         state,
         project_path,
         verbose=getattr(args, "verbose", False),
-        incremental=getattr(args, "incremental", False)
+        incremental=getattr(args, "incremental", False),
+        fast_mode=getattr(args, "fast", False),
+        story_filter=getattr(args, "story", None),
     )
     return 0
 

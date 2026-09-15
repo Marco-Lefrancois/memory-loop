@@ -142,6 +142,16 @@ COMMANDS: dict[str, dict] = {
                 "action": "store_true",
                 "help": "Synchronisation différentielle incrémentale (ADR-0343)",
             },
+            {
+                "name": "--fast",
+                "action": "store_true",
+                "help": "Mode rapide : saute les exports lourds (Graphify) pour l'inner-loop",
+            },
+            {
+                "name": "--story",
+                "type": str,
+                "help": "Cibler la synchronisation et l'EvidencePack sur une User Story spécifique",
+            },
         ],
     },
     "wikifix": {
@@ -153,6 +163,16 @@ COMMANDS: dict[str, dict] = {
                 "name": "--incremental",
                 "action": "store_true",
                 "help": "Synchronisation différentielle incrémentale (ADR-0343)",
+            },
+            {
+                "name": "--fast",
+                "action": "store_true",
+                "help": "Mode rapide : saute les exports lourds (Graphify) pour l'inner-loop",
+            },
+            {
+                "name": "--story",
+                "type": str,
+                "help": "Cibler la synchronisation et l'EvidencePack sur une User Story spécifique",
             },
         ],
     },

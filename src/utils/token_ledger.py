@@ -22,6 +22,9 @@ class TokenLedger:
 
     DEFAULT_PRICING_PER_1M = {
         # Modèle : (Prix Input / 1M, Prix Output / 1M)
+        "gemini-3.8-flash": (0.75, 3.75),
+        "gemini-3.7-flash": (0.75, 3.75),
+        "gpt-transcribe": (0.00, 0.00),
         "gemini-3.1-pro-preview": (1.25, 5.00),
         "gemini-3.1-pro-preview-thinking": (1.25, 5.00),
         "gemini-3.1-pro": (1.25, 5.00),

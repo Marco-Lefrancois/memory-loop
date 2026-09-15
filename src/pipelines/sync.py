@@ -305,7 +305,7 @@ def sync_hypergraph(project_name: str, project_path: Path, incremental: bool = F
         ZeroFluffConsole.warning(f"[Hypergraph Sync] Erreur non-bloquante : {_hg_err}")
 
 
-def run_sync(project_name: str, state: LoopState, project_path: Path, details_msg: str = None, fast_mode: bool = False, verbose: bool = False, incremental: bool = False) -> LoopState:
+def run_sync(project_name: str, state: LoopState, project_path: Path, details_msg: str = None, fast_mode: bool = False, verbose: bool = False, incremental: bool = False, story_filter: str = None) -> LoopState:
     ZeroFluffConsole.section(f"Synchronisation et Validation - {project_name}")
     
     # [Live Git-Sync] Rapatriement en direct des wikis distants dans reference/
@@ -330,6 +330,8 @@ def run_sync(project_name: str, state: LoopState, project_path: Path, details_ms
         story_files = sorted(project_path.glob("backlog/stories/**/*.md"))
         struct_violations_found = False
         for sf in story_files:
+            if story_filter and story_filter not in sf.name:
+                continue
             report = struct_engine.check_file(sf, strict=False)
             for v in report.violations:
                 if v.severity == "BLOCKING":
@@ -350,13 +352,24 @@ def run_sync(project_name: str, state: LoopState, project_path: Path, details_ms
     except Exception as _fs_err:
         ZeroFluffConsole.warning(f"[Fact-Search FTS5] Indexation ignorée : {_fs_err}")
 
-    state = WikiFixAgent().execute(state, verbose=verbose)
+    # [S1] Audit sémantique et génération des EvidencePacks
+    try:
+        state = WikiFixAgent().execute(state, verbose=verbose, story_filter=story_filter)
+    except Exception as _wf_err:
+        ZeroFluffConsole.warning(f"[WikiFix] Erreur non-bloquante lors de l'audit : {_wf_err}")
     
     if not fast_mode:
         # [Sync] Mise à jour du graphe sémantique pour refléter les derniers changements du code
-        state = GraphifyAgent().execute(state)
+        try:
+            state = GraphifyAgent().execute(state)
+        except Exception as _gf_err:
+            ZeroFluffConsole.warning(f"[Graphify] Erreur non-bloquante lors de la modélisation : {_gf_err}")
     
-    state.save_to_audit(project_path)
+    try:
+        state.save_to_audit(project_path)
+    except Exception as _audit_err:
+        ZeroFluffConsole.warning(f"[Audit] Impossible de sauvegarder l'audit : {_audit_err}")
+
     return state
 
 

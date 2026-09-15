@@ -1,6 +1,6 @@
 name = "explorer"
 description = "Cartographe de connaissances et de documentation. Utilise FTS5, Graphify et le WebCrawler pour alimenter la bibliothèque de savoir."
-model = "gemini-3.5-flash-lite"
+model = "gemini-3.8-flash"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

@@ -1,5 +1,7 @@
 import json
+import os
 import re
+import shutil
 from pathlib import Path
 import subprocess
 
@@ -27,33 +29,13 @@ class GraphifyAgent:
             self.name, "Extraction et modelisation du graphe semantique..."
         )
         project_path = Path("Projects") / state.project_name
+        cache_file = project_path / "memory" / "ingest_cache.json"
+        graph_file = project_path / "memory" / "knowledge_graph.json"
+        graphify_out_dir = project_path / "graphify-out"
 
-        # --- 1. Délégué au paquet officiel graphify ---
-        ZeroFluffConsole.info(
-            "[Graphify] Lancement du moteur officiel graphify pour la génération HTML/Obsidian..."
-        )
-        try:
-            # Assure la création du dossier obsidian et html via le CLI officiel
-            subprocess.run(
-                ["graphify", "update", "."],
-                cwd=str(project_path),
-                capture_output=True,
-                check=False,
-                shell=True,
-            )
-            ZeroFluffConsole.success(
-                "[Graphify] Exports interactifs (HTML/Obsidian) mis à jour avec succès."
-            )
-        except Exception as e:
-            ZeroFluffConsole.warning(
-                f"[Graphify] Erreur lors de l'exécution de graphify: {e}"
-            )
-
-        # --- 2. Enrichissement mLoop Custom ---
+        # --- 1. Collecte des sources et contrôle de cache SHA-256 (Inversion Cache-First) ---
         global_docs_cache_dir = Path("memory") / "crawler" / "cache"
-        self.builder.enrich_lexicon(global_docs_cache_dir)
 
-        # Collecte des sources
         file_hashes = {}
         text_sources = []
         source_paths = []
@@ -87,11 +69,6 @@ class GraphifyAgent:
         journal_path = project_path / ProjectLayout.JOURNAL / "JOURNAL.md"
         if journal_path.exists():
             source_paths.append(journal_path)
-
-        import os
-
-        cache_file = project_path / "memory" / "ingest_cache.json"
-        graph_file = project_path / "memory" / "knowledge_graph.json"
 
         old_cache = {}
         if cache_file.exists():
@@ -163,8 +140,8 @@ class GraphifyAgent:
         else:
             changed_details.append("Initialisation complète du graphe.")
 
-        if cache_hit:
-            ZeroFluffConsole.success("Aucun changement detecte (Cache Hit SHA256).")
+        if cache_hit and graphify_out_dir.exists():
+            ZeroFluffConsole.success("[Graphify] Aucun changement détecté (Cache Hit SHA256) — skipping graphify update.")
             try:
                 with open(graph_file, "r", encoding="utf-8") as f:
                     g_data = json.load(f)
@@ -175,7 +152,38 @@ class GraphifyAgent:
             except Exception:
                 pass
 
-        # --- 3. Construction des nÅ“uds mLoop ---
+        # --- 2. Délégué au paquet officiel graphify (Uniquement si cache miss ou out manquant) ---
+        ZeroFluffConsole.info(
+            "[Graphify] Lancement du moteur officiel graphify pour la génération HTML/Obsidian..."
+        )
+        graphify_cmd = shutil.which("graphify") or "graphify"
+        try:
+            # Assure la création du dossier obsidian et html via le CLI officiel
+            subprocess.run(
+                [graphify_cmd, "update", "."],
+                cwd=str(project_path),
+                capture_output=True,
+                check=False,
+                shell=False if graphify_cmd.lower().endswith(".exe") else True,
+                timeout=60,
+            )
+            ZeroFluffConsole.success(
+                "[Graphify] Exports interactifs (HTML/Obsidian) mis à jour avec succès."
+            )
+        except subprocess.TimeoutExpired:
+            ZeroFluffConsole.warning(
+                "[Graphify] 'graphify update' interrompu après 60s (gros projet) — "
+                "exports visuels différés. L'enrichissement mLoop natif se poursuit."
+            )
+        except Exception as e:
+            ZeroFluffConsole.warning(
+                f"[Graphify] Erreur lors de l'exécution de graphify: {e}"
+            )
+
+        # --- 3. Enrichissement mLoop Custom ---
+        self.builder.enrich_lexicon(global_docs_cache_dir)
+
+        # --- 4. Construction des nœuds mLoop ---
         physical_nodes = []
         physical_edges = []
 

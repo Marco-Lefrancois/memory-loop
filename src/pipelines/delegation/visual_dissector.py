@@ -77,7 +77,7 @@ def run_visual_dissector(
         ZeroFluffConsole.info("[Dry Run] Matrice UI des 8 états générée avec succès.")
         return {"success": True, "status": "DISSECTED_SUCCESS", "matrix": sample_matrix}
 
-    # 1. Spawn worker (Gemini 3.5 Flash Lite)
+    # 1. Spawn worker (Gemini 3.8 Flash)
     worker_name = f"worker_ui_{src_asset.stem.lower()}"[:32]
     split_res = herdr.split_pane(target_pane_id="p1", direction="down", no_focus=True)
     pane_id = split_res.get("new_pane_id") or "p_ui_dissect"
@@ -86,7 +86,7 @@ def run_visual_dissector(
         agent_name=worker_name,
         kind="opencode",
         pane_id=str(pane_id),
-        extra_args=["--yolo", "--model", "nmedia_cloud/gemini-3.5-flash-lite"]
+        extra_args=["--yolo", "--model", "nmedia_cloud/gemini-3.8-flash"]
     )
 
     # 2. Formulate Prompt

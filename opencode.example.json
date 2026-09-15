@@ -3,7 +3,7 @@
   "shell": "pwsh",
   "subagent_depth": 2,
   "model": "nmedia_cloud/claude-sonnet-5",
-  "small_model": "nmedia_cloud/gemini-3.5-flash-lite",
+  "small_model": "nmedia_cloud/gemini-3.8-flash",
   "default_agent": "orchestrator",
   "autoupdate": false,
   "lsp": true,
@@ -155,6 +155,15 @@
         },
         "gpt-4o": {
           "name": "gpt-4o"
+        },
+        "gemini-3.8-flash": {
+          "name": "gemini-3.8-flash"
+        },
+        "gemini-3.7-flash": {
+          "name": "gemini-3.7-flash"
+        },
+        "gpt-transcribe": {
+          "name": "gpt-transcribe"
         },
         "gemini-3.5-flash-lite": {
           "name": "gemini-3.5-flash-lite"

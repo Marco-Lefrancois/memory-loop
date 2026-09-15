@@ -641,7 +641,7 @@ class HerdrAdapter:
         "validation": "nmedia_cloud/gpt-5.6-terra-thinking",
         "deepsearch": "nmedia_cloud/claude-sonnet-5",
         "build": "nmedia_cloud/claude-sonnet-4.6",
-        "compaction": "nmedia_cloud/gemini-3.5-flash-lite",
+        "compaction": "nmedia_cloud/gemini-3.8-flash",
     }
 
     def spawn_story_worker(
