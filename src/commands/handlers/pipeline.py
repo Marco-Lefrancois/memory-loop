@@ -54,6 +54,7 @@ def handle_crawl(args: argparse.Namespace, state: LoopState, project_path: Path)
             all_sources=getattr(args, "all_sources", False),
             render_js=getattr(args, "render_js", False),
             github_tree=not getattr(args, "no_github_tree", False),
+            max_github_files=getattr(args, "max_github_files", 60),
         )
         crawler.execute(state, explicit_url=getattr(args, "url", None))
         ZeroFluffConsole.success("Crawl terminé.")

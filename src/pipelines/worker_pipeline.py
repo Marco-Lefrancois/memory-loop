@@ -218,4 +218,44 @@ def run_worker_reap_zombies(project_name: Optional[str] = None) -> Dict[str, Any
     return run_worker_reap(project_name=project_name)
 
 
+def run_frontier_autospawn(
+    project_name: str,
+    max_concurrent: int = 3,
+    dry_run: bool = False
+) -> Dict[str, Any]:
+    """
+    Calcule la Frontier du Task Graph (ADR-0367 / implement-spec) et déclenche
+    les workers Herdr pour toutes les stories débloquées en parallèle.
+    """
+    from src.pipelines.task_graph import TaskGraph
+    ZeroFluffConsole.section(f"HERDR TASK GRAPH FRONTIER - [{project_name}]")
+    proj_path = resolve_project_path(project_name)
+
+    graph = TaskGraph(proj_path)
+    graph.load_stories()
+    frontier = graph.get_frontier()
+
+    if not frontier:
+        ZeroFluffConsole.info("Aucune story dans la Frontier (toutes terminées ou bloquées).")
+        return {"success": True, "frontier": [], "spawned": []}
+
+    ZeroFluffConsole.success(f"Frontier active calculée : {len(frontier)} story(ies) prête(s) -> {', '.join(frontier)}")
+
+    target_stories = frontier[:max_concurrent]
+    spawned = []
+
+    if dry_run:
+        ZeroFluffConsole.info(f"[DRY-RUN] Prêt à instancier {len(target_stories)} worker(s) : {', '.join(target_stories)}")
+        return {"success": True, "frontier": frontier, "spawned": target_stories, "dry_run": True}
+
+    for story_id in target_stories:
+        res = run_worker_spawn(project_name=project_name, story_id=story_id)
+        if res.get("success"):
+            spawned.append(story_id)
+
+    ZeroFluffConsole.success(f"{len(spawned)}/{len(target_stories)} worker(s) instancié(s) sur la Frontier.")
+    return {"success": True, "frontier": frontier, "spawned": spawned}
+
+
+
 

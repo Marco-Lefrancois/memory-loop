@@ -207,6 +207,7 @@ class WebCrawlerAgent:
         max_domain_requests: int = 25,
         render_js: bool = False,
         github_tree: bool = True,
+        max_github_files: int = 60,
     ):
         self.name = "Web Crawler"
         self.max_concurrency = max_concurrency
@@ -223,6 +224,7 @@ class WebCrawlerAgent:
         self.max_domain_requests = max_domain_requests
         self.render_js = render_js
         self.github_tree = github_tree
+        self.max_github_files = max_github_files
         self.domain_request_counts: Dict[str, int] = {}
         self.seen_content_hashes: Set[str] = set()
 
@@ -311,16 +313,17 @@ class WebCrawlerAgent:
         """Sonde et récupère llms.txt ou llms-full.txt si disponible sur le domaine racine."""
         try:
             parsed = urllib.parse.urlparse(url)
-            # Ignorer les plateformes de partage de code ou documents où le root llms.txt ne correspond pas au repo spécifique
+            # Ignorer les plateformes multi-tenants où le root llms.txt ne correspond pas au repo spécifique
             if parsed.netloc.lower() in [
                 "github.com",
+                "www.github.com",
                 "gist.github.com",
                 "gitlab.com",
                 "bitbucket.org",
                 "raw.githubusercontent.com",
                 "huggingface.co",
                 "arxiv.org",
-            ]:
+            ] or any(domain in parsed.netloc.lower() for domain in ["github.com", "gitlab.com"]):
                 return None
 
             origin = f"{parsed.scheme}://{parsed.netloc}"
@@ -394,13 +397,10 @@ class WebCrawlerAgent:
             if not tree_items:
                 return discovered_files
 
-            # Filtrer les cibles documentaires, skills et configurations canoniques
-            target_patterns = [
+            # Filtrer avec stratégie à 2 étages : Priorité 1 (Skills & Manifests), Priorité 2 (Docs)
+            tier1_patterns = [
                 r".*SKILL\.md$",
                 r".*skill\.ya?ml$",
-                r"^docs/.*\.md$",
-                r"^research/.*\.md$",
-                r"^standards/.*\.md$",
                 r"^AGENTS\.md$",
                 r"^CLAUDE\.md$",
                 r"^GEMINI\.md$",
@@ -410,17 +410,30 @@ class WebCrawlerAgent:
                 r"^pyproject\.toml$",
                 r"^llms\.txt$",
             ]
+            tier2_patterns = [
+                r"^docs/.*\.md$",
+                r"^research/.*\.md$",
+                r"^standards/.*\.md$",
+                r"^.*README\.md$",
+            ]
 
-            matched_paths = []
+            tier1_matches = []
+            tier2_matches = []
             for it in tree_items:
                 if it.get("type") == "blob":
                     path_str = it.get("path", "")
-                    if any(re.search(pat, path_str, re.IGNORECASE) for pat in target_patterns):
-                        matched_paths.append(path_str)
+                    if any(re.search(pat, path_str, re.IGNORECASE) for pat in tier1_patterns):
+                        tier1_matches.append(path_str)
+                    elif any(re.search(pat, path_str, re.IGNORECASE) for pat in tier2_patterns):
+                        tier2_matches.append(path_str)
 
-            # Plafond de sauvegarde (max 30 fichiers)
-            matched_paths = matched_paths[:30]
-            ZeroFluffConsole.info(f"[GITHUB-TREE] {len(matched_paths)} fichier(s) documentaire(s)/skill(s) découverts pour {user}/{repo}...")
+            # Priorité absolue aux compétences et manifests (Tier 1), complété par la doc (Tier 2)
+            matched_paths = tier1_matches[:self.max_github_files]
+            remaining_quota = self.max_github_files - len(matched_paths)
+            if remaining_quota > 0:
+                matched_paths.extend(tier2_matches[:remaining_quota])
+
+            ZeroFluffConsole.info(f"[GITHUB-TREE] {len(matched_paths)} fichier(s) prioritaire(s) découverts pour {user}/{repo} (Tier 1: {len(tier1_matches)}, Tier 2: {len(tier2_matches)})...")
 
             for item_path in matched_paths:
                 raw_url = f"https://raw.githubusercontent.com/{user}/{repo}/{active_branch}/{item_path}"

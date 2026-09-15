@@ -1,0 +1,26 @@
+[
+  {
+    "keyword": "placeholder detection",
+    "check_type": "no_placeholders",
+    "msg": "Do not allow // TODO comments",
+    "created_at": "2026-09-15T20:00:03.208950+00:00",
+    "scope": "global",
+    "status": "ACTIVE_DETERMINISTIC"
+  },
+  {
+    "keyword": "test-placeholder-validation",
+    "check_type": "no_placeholders",
+    "msg": "Detect ellipses and TODO comments in code deliveries",
+    "created_at": "2026-09-15T20:35:50.619080+00:00",
+    "scope": "global",
+    "status": "ACTIVE_DETERMINISTIC"
+  },
+  {
+    "keyword": "changelog-validation-stub-check",
+    "check_type": "no_placeholders",
+    "msg": "Detect stub usage",
+    "created_at": "2026-09-15T20:46:38.889630+00:00",
+    "scope": "global",
+    "status": "ACTIVE_DETERMINISTIC"
+  }
+]

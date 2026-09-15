@@ -90,6 +90,42 @@ def get_rejected_hypotheses(project_name: str, scope: str = "project") -> List[D
 def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "project") -> bool:
     ZeroFluffConsole.section("Retrospective Harness Optimization (RHO)")
 
+    # 0. Classification Déterministe vs Jugement (PR #1083 / ADR-0365)
+    from src.pipelines.deterministic_checks import classify_anomaly
+    category, check_type = classify_anomaly(f"{keyword} {msg}")
+
+    if category == "MECHANICAL":
+        ZeroFluffConsole.info(f"[RETRO-DETERMINISTIC] Anomalie mécanique détectée ({check_type}).")
+        ZeroFluffConsole.success(
+            f"Bifurcation active : l'anomalie '{keyword}' est gérée par contrôle déterministe ({check_type}) "
+            "pour préserver l'empreinte de contexte LLM."
+        )
+        det_dir = Path("standards") / "linters"
+        det_dir.mkdir(parents=True, exist_ok=True)
+        det_file = det_dir / "deterministic_rules.json"
+
+        det_rules = []
+        if det_file.exists():
+            try:
+                import json
+                det_rules = json.loads(det_file.read_text(encoding="utf-8"))
+            except Exception:
+                det_rules = []
+
+        if not any(r.get("keyword") == keyword.lower() for r in det_rules):
+            import json
+            det_rules.append({
+                "keyword": keyword.lower(),
+                "check_type": check_type,
+                "msg": msg,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "scope": scope,
+                "status": "ACTIVE_DETERMINISTIC",
+            })
+            det_file.write_text(json.dumps(det_rules, indent=2, ensure_ascii=False), encoding="utf-8")
+            ZeroFluffConsole.success(f"Contrôle déterministe consigné dans {det_file.as_posix()}")
+        return True
+
     # 1. Vérification contre les hypothèses déjà rejetées (WikiSkill Anti-Amnesia)
     rejected = get_rejected_hypotheses(project_name, scope)
     for r in rejected:
