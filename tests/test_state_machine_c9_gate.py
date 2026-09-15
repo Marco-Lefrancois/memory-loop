@@ -53,18 +53,25 @@ def test_c9_gate_blocking_when_dossier_missing_and_strict(tmp_path):
 
 
 def test_c9_gate_passes_when_dossier_exists(tmp_path):
-    """Dossier de preuves présent sous memory/evidence/<STORY_ID>_fact_dossier.md -> passe même en strict."""
+    """Dossier de preuves présent et conforme sous memory/evidence/<STORY_ID>_fact_dossier.md -> passe même en strict."""
     story_file = _write_story(tmp_path)
     project_dir = story_file.parents[2]
     evidence_dir = project_dir / "memory" / "evidence"
     evidence_dir.mkdir(parents=True, exist_ok=True)
+    # Le dossier doit contenir un fait F-01 et au moins 100 bytes (Gate C9 durcie - Chantier 2)
     (evidence_dir / "US-01-TEST_fact_dossier.md").write_text(
-        "# Dossier de Preuves\n", encoding="utf-8"
+        "# Dossier de Preuves US-01-TEST\n\n"
+        "## Section 2 : Faits Vérifiés\n\n"
+        "| F-01 | Le système affiche la liste des affectations | Confirmé |\n"
+        "\n"
+        "➔ **Fait établi** : Le système respecte le contrat de lecture seule.\n",
+        encoding="utf-8",
     )
 
     engine = StateMachineEngine(str(project_dir))
     result = engine.validate_fact_dossier_gate(story_file, strict=True)
     assert result is True
+
 
 
 def test_c9_gate_only_applies_to_ready_statuses(tmp_path):

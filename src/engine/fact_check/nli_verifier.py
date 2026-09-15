@@ -18,6 +18,7 @@ from dataclasses import dataclass, field
 from typing import Dict, Any, List, Optional
 
 from src.engine.fact_check.claim_extractor import AtomicClaim
+from src.engine.fact_check.domain_invariants import DomainInvariantChecker, InvariantSeverity
 from src.engine.fact_search.retriever import FactSearchRetriever
 from src.utils.logger import get_logger
 
@@ -107,28 +108,75 @@ class NLIVerifier:
         if tier1_result is not None:
             return tier1_result
 
-        # 3. Fallback sur le score de pertinence Fact-Search si le snippet corrobore le vocabulaire
-        relevance = top_fact.get("relevance_score", 0.0)
-        if relevance >= 0.8:
+        # 3. Couche «Gros Bon Sens» : Invariants de domaine deterministes (P1+P2+P3)
+        #    Un score BM25 eleve indique un sujet commun, PAS une verite logique.
+        inv_report = DomainInvariantChecker.check_claim(
+            claim_text=statement,
+            ssot_snippet=snippet,
+        )
+        if inv_report.blocking_violations:
+            first = inv_report.blocking_violations[0]
             return NLIVerificationResult(
                 claim_id=claim.claim_id,
                 statement=statement,
-                verdict=VerdictEnum.ENTAILMENT,
-                confidence=min(1.0, relevance / 1.5),
-                rationale=f"Conformité confirmée par {breadcrumb}.",
+                verdict=VerdictEnum.CONTRADICTION,
+                confidence=0.97,
+                rationale=(
+                    f"[{first.code.value} {first.pillar}] {first.message} "
+                    f"(Source : {breadcrumb})"
+                ),
                 proof_source=breadcrumb,
                 proof_doc_path=doc_path,
                 proof_line_range=line_range,
                 proof_snippet=snippet,
-                tier_used="tier1_heuristic",
+                contradiction_detail=first.detail,
+                tier_used="tier1_domain_invariant",
             )
+
+        # 4. Score lexical : ENTAILMENT seulement sans warning d invariant.
+        #    Confiance plafonnee a 0.85 (le BM25 seul n est jamais absolu).
+        relevance = top_fact.get("relevance_score", 0.0)
+        if relevance >= 0.8:
+            if not inv_report.warnings:
+                return NLIVerificationResult(
+                    claim_id=claim.claim_id,
+                    statement=statement,
+                    verdict=VerdictEnum.ENTAILMENT,
+                    confidence=min(0.85, relevance / 1.5),
+                    rationale=(
+                        f"Conformite lexicale elevee (score {relevance:.2f}) "
+                        f"sans violation d invariant. Source : {breadcrumb}."
+                    ),
+                    proof_source=breadcrumb,
+                    proof_doc_path=doc_path,
+                    proof_line_range=line_range,
+                    proof_snippet=snippet,
+                    tier_used="tier1_heuristic",
+                )
+            else:
+                first_warn = inv_report.warnings[0]
+                return NLIVerificationResult(
+                    claim_id=claim.claim_id,
+                    statement=statement,
+                    verdict=VerdictEnum.UNSUPPORTED,
+                    confidence=0.60,
+                    rationale=(
+                        f"Score lexical eleve ({relevance:.2f}) mais alerte invariant : "
+                        f"[{first_warn.code.value}] {first_warn.message}"
+                    ),
+                    proof_source=breadcrumb,
+                    proof_doc_path=doc_path,
+                    proof_line_range=line_range,
+                    proof_snippet=snippet,
+                    tier_used="tier1_heuristic",
+                )
 
         return NLIVerificationResult(
             claim_id=claim.claim_id,
             statement=statement,
             verdict=VerdictEnum.UNSUPPORTED,
             confidence=0.65,
-            rationale=f"Preuve documentaire insuffisante (score {relevance}) dans {breadcrumb}.",
+            rationale=f"Preuve documentaire insuffisante (score {relevance:.2f}) dans {breadcrumb}.",
             proof_source=breadcrumb,
             proof_doc_path=doc_path,
             proof_line_range=line_range,

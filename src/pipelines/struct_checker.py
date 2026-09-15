@@ -28,6 +28,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
+from src.engine.fact_check.domain_invariants import DomainInvariantChecker, InvariantSeverity
+
+
 
 # ─── Dataclasses ──────────────────────────────────────────────────────────────
 
@@ -150,9 +153,11 @@ class StructCheckEngine:
         )
         violations += self._check_c10_anti_ephemeral_rules(content)
         violations += self._check_c11_rule_engine_integration(content)
+        violations += self._check_c12_domain_sanity(content)
 
         passed = all(v.severity != "BLOCKING" for v in violations)
         return StructCheckReport(target_file, gold_std_path, passed, violations)
+
 
     # ── Helpers internes ──────────────────────────────────────────────────────
 
@@ -650,29 +655,119 @@ class StructCheckEngine:
         requires_dossier = fm_data.get("fact_dossier_required", False) or (
             strict and status in ("READY_FOR_DEV", "READY_FOR_GROOMING")
         )
-        if requires_dossier:
-            evidence_dir = self.project_path / "memory" / "evidence"
-            dossier_candidates = (
-                list(evidence_dir.glob(f"**/{story_id}_fact_dossier.md"))
-                if evidence_dir.exists()
-                else []
-            )
-            has_valid_link = any(
-                (target_file.parent / lt).resolve().exists() for _, lt in dossier_links
-            )
-            if not dossier_candidates and not has_valid_link:
-                violations.append(
-                    StructViolation(
-                        check_id="C9",
-                        severity="BLOCKING" if strict else "WARNING",
-                        message=(
-                            f"Dossier de Preuves Documentaires manquant pour {story_id}. "
-                            f"Conformément à DOSSIER_DE_PREUVES_PROTOCOL.md, un fichier "
-                            f"memory/evidence/{story_id}_fact_dossier.md doit être produit avant dev."
-                        ),
-                        line_hint=1,
-                    )
+
+        evidence_dir = self.project_path / "memory" / "evidence"
+        dossier_candidates = (
+            list(evidence_dir.glob(f"**/{story_id}_fact_dossier.md"))
+            if evidence_dir.exists()
+            else []
+        )
+        resolved_linked_dossier = None
+        for _, lt in dossier_links:
+            cand = (target_file.parent / lt).resolve()
+            if cand.exists() and cand.is_file():
+                resolved_linked_dossier = cand
+                break
+
+        target_dossier = dossier_candidates[0] if dossier_candidates else resolved_linked_dossier
+
+        if requires_dossier and not target_dossier:
+            violations.append(
+                StructViolation(
+                    check_id="C9",
+                    severity="BLOCKING" if strict else "WARNING",
+                    message=(
+                        f"Dossier de Preuves Documentaires manquant pour {story_id}. "
+                        f"Conformément à DOSSIER_DE_PREUVES_PROTOCOL.md, un fichier "
+                        f"memory/evidence/{story_id}_fact_dossier.md doit être produit avant dev."
+                    ),
+                    line_hint=1,
                 )
+            )
+
+        # 3. Contrôle de complétude qualitative si un dossier existe (ADR-0320, ADR-0326)
+        if target_dossier and target_dossier.exists():
+            try:
+                dossier_content = target_dossier.read_text(encoding="utf-8", errors="replace")
+                if len(dossier_content.strip()) < 100:
+                    violations.append(
+                        StructViolation(
+                            check_id="C9",
+                            severity="BLOCKING" if strict else "WARNING",
+                            message=(
+                                f"Le Dossier de Preuves '{target_dossier.name}' est anormalement vide ou incomplet "
+                                f"({len(dossier_content.strip())} caractères)."
+                            ),
+                            line_hint=1,
+                        )
+                    )
+                else:
+                    # Vérification statut du dossier
+                    st_m = re.search(r"^dossier_status:\s*(.+)$", dossier_content, re.MULTILINE)
+                    dossier_status = st_m.group(1).strip() if st_m else "CURRENT"
+                    if dossier_status == "DRAFT" and status in ("READY_FOR_DEV", "READY_FOR_GROOMING", "IN_DEV"):
+                        violations.append(
+                            StructViolation(
+                                check_id="C9",
+                                severity="BLOCKING" if strict else "WARNING",
+                                message=(
+                                    f"Le Dossier de Preuves '{target_dossier.name}' est au statut 'DRAFT'. "
+                                    f"Il doit être validé ('CURRENT' ou 'VALIDATED') avant d'entrer en développement."
+                                ),
+                                line_hint=1,
+                            )
+                        )
+
+                    # Vérification Section 2 (Faits & Verbatims)
+                    has_facts = bool(
+                        re.search(
+                            r"(?m)(?:\|\s*\*{0,2}F-\d+|Extrait\s*\d+|➔\s*\*{0,2}Fait établi|\bF-\d{2}\b)",
+                            dossier_content,
+                        )
+                    )
+                    if not has_facts:
+                        violations.append(
+                            StructViolation(
+                                check_id="C9",
+                                severity="BLOCKING" if strict else "WARNING",
+                                message=(
+                                    f"Le Dossier de Preuves '{target_dossier.name}' ne contient aucun fait établi ni verbatim sourcé (Section 2)."
+                                ),
+                                line_hint=1,
+                            )
+                        )
+
+                    # Vérification Section 3 (Schéma relationnel SSOT)
+                    has_schema = "```mermaid" in dossier_content or "Table " in dossier_content or "table " in dossier_content
+                    if not has_schema:
+                        violations.append(
+                            StructViolation(
+                                check_id="C9",
+                                severity="WARNING",
+                                message=(
+                                    f"Le Dossier de Preuves '{target_dossier.name}' ne présente aucun schéma relationnel Mermaid ou DBML (Section 3)."
+                                ),
+                                line_hint=1,
+                            )
+                        )
+
+                    # Vérification Section 4 (Contrats Déclaratifs Cibles)
+                    has_contract = any(
+                        k in dossier_content for k in ("GET ", "POST ", "PUT ", "DELETE ", "Contrats Déclaratifs", "Payload", "Endpoint", "Contrat")
+                    )
+                    if not has_contract:
+                        violations.append(
+                            StructViolation(
+                                check_id="C9",
+                                severity="WARNING",
+                                message=(
+                                    f"Le Dossier de Preuves '{target_dossier.name}' ne formalise aucun contrat déclaratif ou endpoint REST cible (Section 4)."
+                                ),
+                                line_hint=1,
+                            )
+                        )
+            except Exception:
+                pass
 
         return violations
 
@@ -780,5 +875,40 @@ class StructCheckEngine:
         except Exception:
             # Dégradation gracieuse : un ADR malformé ne doit jamais faire
             # échouer l'audit structurel complet.
+            pass
+        return violations
+
+    # ── Check C12 : Domain Sanity — Invariants physiques et temporels ─────────
+
+    def _check_c12_domain_sanity(self, content: str) -> list[StructViolation]:
+        """
+        C12 — Couche «Gros Bon Sens» (ADR-0352).
+
+        Applique les invariants de domaine déterministes sur le corps complet
+        du récit (P2 + P3 via DomainInvariantChecker.check_story_text).
+
+        Violations BLOCKING remontées si :
+        - Température hors plage physique d'incubation SIGPA (95–105 °F)
+        - Quantité d'oeufs dépassant la capacité physique d'un buggy (> 6 000)
+        - Numéro de slot hors plage valide (< 1 ou > 99)
+        - Étapes d'incubation mentionnées dans un ordre causalement impossible
+        - Statuts mutuellement exclusifs co-présents (ex: PLANIFIE et TERMINE)
+
+        Violations WARNING si :
+        - Récit de consultation (GET / lecture seule) contenant des mutations
+        """
+        violations: list[StructViolation] = []
+        try:
+            report = DomainInvariantChecker.check_story_text(content)
+            for inv in report.violations:
+                severity = "BLOCKING" if inv.severity == InvariantSeverity.BLOCKING else "WARNING"
+                violations.append(StructViolation(
+                    check_id="C12",
+                    severity=severity,
+                    message=f"[{inv.code.value}] {inv.message}",
+                    line_hint=None,
+                ))
+        except Exception:
+            # Dégradation gracieuse : ne jamais bloquer l'audit sur une erreur interne.
             pass
         return violations
