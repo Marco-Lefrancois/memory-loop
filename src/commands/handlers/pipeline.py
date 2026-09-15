@@ -1,4 +1,5 @@
 """Handlers Pipeline : ingest, research, crawl, teach, memory-hygiene."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -14,15 +15,19 @@ if TYPE_CHECKING:
 def handle_ingest(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
     """Ingestion documentaire vers Markdown normalisé."""
     from src.pipelines.ingest import run_ingest
-    run_ingest(args.project, state, project_path)
+
+    run_ingest(args.project, state, project_path, initiative=getattr(args, "initiative", None))
     return 0
 
 
 def handle_research(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
     """Session de recherche automatisée."""
     from src.pipelines.research_pipeline import run_research
+
     run_research(
-        args.project, state, project_path,
+        args.project,
+        state,
+        project_path,
         query=getattr(args, "query", ""),
         explicit_url=getattr(args, "url", None),
     )
@@ -32,6 +37,7 @@ def handle_research(args: argparse.Namespace, state: LoopState, project_path: Pa
 def handle_crawl(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
     """Crawl d'une URL externe ou du backlog avec Smart Discovery & Caching."""
     from src.pipelines.crawler import WebCrawlerAgent
+
     try:
         include_paths = [args.include] if getattr(args, "include", None) else None
         exclude_paths = [args.exclude] if getattr(args, "exclude", None) else None
@@ -60,6 +66,7 @@ def handle_crawl(args: argparse.Namespace, state: LoopState, project_path: Path)
 def handle_teach(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
     """Pipeline d'apprentissage."""
     from src.pipelines.teach_pipeline import run_teach
+
     run_teach(args.project, state, project_path)
     return 0
 
@@ -67,6 +74,7 @@ def handle_teach(args: argparse.Namespace, state: LoopState, project_path: Path)
 def handle_memory_hygiene(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
     """Balayage de confiance de la mémoire vive."""
     from src.pipelines.memory_hygiene import MemoryHygieneAgent
+
     agent = MemoryHygieneAgent()
     agent.execute(state)
     return 0
@@ -75,6 +83,7 @@ def handle_memory_hygiene(args: argparse.Namespace, state: LoopState, project_pa
 def handle_update_story(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
     """Mise à jour d'une section H2 spécifique d'un récit (AST-Aware)."""
     from src.pipelines.story_editor import StoryEditorEngine
+
     editor = StoryEditorEngine(project_path)
     success = editor.update_section(args.story, args.section, args.content)
     return 0 if success else 1
@@ -83,7 +92,9 @@ def handle_update_story(args: argparse.Namespace, state: LoopState, project_path
 def handle_dream(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
     """Consolidation nocturne et compression mémorielle (Sleep-Wake)."""
     from src.pipelines.dream_consolidator import run_dream_consolidation
-    res = run_dream_consolidation(project_path)
-    ZeroFluffConsole.success(f"Consolidation terminée [{res['status']}] : {res['evidence_packs_audited']} pack(s) audité(s) en {res['consolidation_duration_ms']} ms.")
-    return 0
 
+    res = run_dream_consolidation(project_path)
+    ZeroFluffConsole.success(
+        f"Consolidation terminée [{res['status']}] : {res['evidence_packs_audited']} pack(s) audité(s) en {res['consolidation_duration_ms']} ms."
+    )
+    return 0

@@ -9,17 +9,24 @@ from src.utils.logger import get_logger
 
 logger = get_logger("state")
 
+
 class LoopStateError(Exception):
     """Exception de base pour le moteur d'état mLoop."""
+
     pass
+
 
 class IntegrityError(LoopStateError):
     """Exception levée en cas de violation d'intégrité de l'état."""
+
     pass
+
 
 class MaxRevisionsReached(LoopStateError):
     """Exception levée par le circuit breaker lors d'un cycle infini."""
+
     pass
+
 
 class LoopPhase(str, Enum):
     SPEC = "spec"
@@ -39,14 +46,9 @@ class ProjectMode(str, Enum):
     MLOOP  : SPEC → PLAN → BUILD → VALIDATE → SHIP (cycle complet 5 phases).
              Avec boucle de révision VALIDATE → PLAN (max 5 révisions).
     """
+
     CLIENT = "client"
     MLOOP = "mloop"
-
-
-
-
-
-
 
 
 class TokenBudget(BaseModel):
@@ -58,9 +60,10 @@ class TokenBudget(BaseModel):
         max_tokens: Seuil au-delà duquel le circuit breaker s'active.
                     Par défaut 50 000. Configurable via `MLOOP_MAX_TOKENS`.
     """
+
     tokens_used: int = 0
     max_tokens: int = Field(
-        default_factory=lambda: int(__import__('os').getenv("MLOOP_MAX_TOKENS", "50000"))
+        default_factory=lambda: int(__import__("os").getenv("MLOOP_MAX_TOKENS", "50000"))
     )
 
     @property
@@ -72,21 +75,23 @@ class TokenBudget(BaseModel):
         """Incrémente le compteur de tokens consommés."""
         self.tokens_used += tokens
 
+
 from src.core.layout import ProjectLayout, load_adr_contracts as _load_adr_contracts
+
 
 class Directives(BaseModel):
     tech: str = ""
     business: str = ""
 
+
 class KnowledgeGraph(BaseModel):
     nodes: List[Dict[str, Any]] = Field(default_factory=list)
     edges: List[Dict[str, Any]] = Field(default_factory=list)
 
+
 class Clarification(BaseModel):
     question: str
     answer: Optional[str] = None
-
-
 
 
 class StoryType(str, Enum):
@@ -94,11 +99,12 @@ class StoryType(str, Enum):
     Types officiels de récits dans mLoop.
     Qualifie la nature du livrable (Frontmatter YAML).
     """
-    FEATURE        = "Feature"
-    ARCHITECTURE   = "Architecture"
+
+    FEATURE = "Feature"
+    ARCHITECTURE = "Architecture"
     TECHNICAL_DEBT = "Technical_Debt"
-    BUG            = "Bug"
-    SPIKE          = "Spike"
+    BUG = "Bug"
+    SPIKE = "Spike"
 
     @classmethod
     def from_raw(cls, raw: str) -> "StoryType":
@@ -131,25 +137,26 @@ class StoryStatus(str, Enum):
 
     ERROR : état terminal d'échec (circuit breaker, audit bloquant).
     """
+
     # ─── Commun aux deux modes ──────────────────────────────────────
-    BACKLOG            = "BACKLOG"
-    OPEN               = "OPEN"
-    IN_ANALYZE         = "IN_ANALYZE"
-    IN_PLAN            = "IN_PLAN"
-    IN_REVIEW          = "IN_REVIEW"
-    IN_VALIDATE        = "IN_VALIDATE"
-    ON_HOLD            = "ON_HOLD"
-    ERROR              = "ERROR"
+    BACKLOG = "BACKLOG"
+    OPEN = "OPEN"
+    IN_ANALYZE = "IN_ANALYZE"
+    IN_PLAN = "IN_PLAN"
+    IN_REVIEW = "IN_REVIEW"
+    IN_VALIDATE = "IN_VALIDATE"
+    ON_HOLD = "ON_HOLD"
+    ERROR = "ERROR"
     # ─── Mode CLIENT (Handoff & Cycle Dev/QA/Prod) ─────────────
     READY_FOR_GROOMING = "READY_FOR_GROOMING"
-    READY_FOR_DEV      = "READY_FOR_DEV"
-    IN_DEV             = "IN_DEV"
-    IN_QA              = "IN_QA"
-    DONE               = "DONE"
-    ACCEPTED           = "ACCEPTED"
+    READY_FOR_DEV = "READY_FOR_DEV"
+    IN_DEV = "IN_DEV"
+    IN_QA = "IN_QA"
+    DONE = "DONE"
+    ACCEPTED = "ACCEPTED"
     # ─── Mode MLOOP uniquement ─────────────────────────────────
-    IN_BUILD           = "IN_BUILD"
-    SHIPPED            = "SHIPPED"
+    IN_BUILD = "IN_BUILD"
+    SHIPPED = "SHIPPED"
 
     @classmethod
     def from_raw(cls, raw: str) -> "StoryStatus":
@@ -202,11 +209,6 @@ class SprintBacklogItem(BaseModel):
         )
 
 
-
-
-
-
-
 class AnalysisResult(BaseModel):
     intent: str = ""
     constraints: List[str] = Field(default_factory=list)
@@ -244,6 +246,7 @@ class SavepointManager:
     Sauvegarde l'état toutes les 60 à 90 secondes ou lors d'actions critiques.
     Maintient une politique FIFO stricte de rétention des 3 derniers instantanés.
     """
+
     MAX_RETAINED = 3
 
     @staticmethod
@@ -260,7 +263,7 @@ class SavepointManager:
         cls,
         state_dict: Dict[str, Any],
         project_path: Optional[Path] = None,
-        reason: str = "in_flight"
+        reason: str = "in_flight",
     ) -> Path:
         target_dir = cls.get_checkpoints_dir(project_path)
         timestamp = int(time.time())
@@ -286,7 +289,9 @@ class SavepointManager:
     @classmethod
     def prune_old_checkpoints(cls, target_dir: Path) -> None:
         try:
-            checkpoints = sorted(target_dir.glob("checkpoint_*.json"), key=lambda p: p.stat().st_mtime)
+            checkpoints = sorted(
+                target_dir.glob("checkpoint_*.json"), key=lambda p: p.stat().st_mtime
+            )
             while len(checkpoints) > cls.MAX_RETAINED:
                 oldest = checkpoints.pop(0)
                 try:
@@ -299,10 +304,14 @@ class SavepointManager:
     @classmethod
     def list_checkpoints(cls, project_path: Optional[Path] = None) -> List[Path]:
         target_dir = cls.get_checkpoints_dir(project_path)
-        return sorted(target_dir.glob("checkpoint_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+        return sorted(
+            target_dir.glob("checkpoint_*.json"), key=lambda p: p.stat().st_mtime, reverse=True
+        )
 
     @classmethod
-    def load_latest_checkpoint(cls, project_path: Optional[Path] = None) -> Optional[Dict[str, Any]]:
+    def load_latest_checkpoint(
+        cls, project_path: Optional[Path] = None
+    ) -> Optional[Dict[str, Any]]:
         checkpoints = cls.list_checkpoints(project_path)
         if not checkpoints:
             return None
@@ -323,7 +332,7 @@ class LoopState(BaseModel):
     previous_phase: Optional[LoopPhase] = None
     current_state_id: Optional[str] = None
     session_start_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    
+
     # ─── IN-FLIGHT CHECKPOINTING (ADR-0352 / HARNESSDEV) ───
     last_checkpoint_timestamp: float = Field(default_factory=lambda: time.time())
     checkpoint_interval_seconds: int = 60  # Intervalle temporel configurable (60 à 90 secondes)
@@ -340,7 +349,7 @@ class LoopState(BaseModel):
 
     # ─── ONTOLOGIE COWORKER (L1) ───
     journal: List[JournalEntry] = Field(default_factory=list)
-    
+
     # ─── NOUVEAUX CHAMPS D'INTÉGRATION ───
     jira_project_key: Optional[str] = None
     jira_epic_key: Optional[str] = None
@@ -349,7 +358,13 @@ class LoopState(BaseModel):
     jira_default_subtasks: List[str] = Field(default_factory=list)
     jira_subtask_mapping: Dict[str, str] = Field(default_factory=dict)
     ingested_sources: List[Dict[str, Any]] = Field(default_factory=list)
-    
+
+    # ─── INGESTION PAR INITIATIVE / MODULE (Voie B — routage scopé) ───
+    # Quand renseigné, l'ingestion scanne uniquement reference/<initiative>/
+    # et écrit sous docs/<initiative>/00-ingested/ (projets à structure par module,
+    # ex: Metro_FOOD → OneTrust, RBC_Avion, PAPERCUTS). Sinon: comportement ADR-0102 plat.
+    ingest_initiative: Optional[str] = None
+
     token_budget: TokenBudget = Field(default_factory=TokenBudget)
 
     # ─── GRAPHIFY INTEGRATION (ADR-0018) ─────────────────────────
@@ -361,25 +376,30 @@ class LoopState(BaseModel):
         return (time.time() - self.last_checkpoint_timestamp) >= target_interval
 
     def checkpoint(
-        self,
-        project_path: Optional[Path] = None,
-        reason: str = "in_flight",
-        force: bool = False
+        self, project_path: Optional[Path] = None, reason: str = "in_flight", force: bool = False
     ) -> Optional[Path]:
         """Crée un point de contrôle atomique sur disque si le délai est atteint ou forcé."""
         if not force and not self.should_checkpoint():
             return None
-        
-        target_proj = project_path or (Path("Projects") / self.project_name if self.project_name else None)
+
+        target_proj = project_path or (
+            Path("Projects") / self.project_name if self.project_name else None
+        )
         state_data = self.model_dump(exclude={"sprint_backlog", "knowledge_graph"})
-        saved_file = SavepointManager.save_checkpoint(state_data, project_path=target_proj, reason=reason)
+        saved_file = SavepointManager.save_checkpoint(
+            state_data, project_path=target_proj, reason=reason
+        )
         self.last_checkpoint_timestamp = time.time()
-        logger.info(f"[CHECKPOINT] État in-flight sauvegardé sous {saved_file.name} (Raison: {reason})")
+        logger.info(
+            f"[CHECKPOINT] État in-flight sauvegardé sous {saved_file.name} (Raison: {reason})"
+        )
         return saved_file
 
     def restore_latest_checkpoint(self, project_path: Optional[Path] = None) -> bool:
         """Restaure l'état depuis le plus récent checkpoint valide."""
-        target_proj = project_path or (Path("Projects") / self.project_name if self.project_name else None)
+        target_proj = project_path or (
+            Path("Projects") / self.project_name if self.project_name else None
+        )
         state_dict = SavepointManager.load_latest_checkpoint(target_proj)
         if not state_dict:
             return False
@@ -432,45 +452,59 @@ class LoopState(BaseModel):
                 if self.analysis is None:
                     raise IntegrityError("AnalysisResult requis pour passer en phase PLAN.")
                 if self.analysis.missing_information:
-                    raise IntegrityError("Des informations manquantes bloquent le passage en phase PLAN.")
-            elif self.current_phase == LoopPhase.VALIDATE and self.project_mode == ProjectMode.MLOOP:
+                    raise IntegrityError(
+                        "Des informations manquantes bloquent le passage en phase PLAN."
+                    )
+            elif (
+                self.current_phase == LoopPhase.VALIDATE and self.project_mode == ProjectMode.MLOOP
+            ):
                 if self.qa_report and self.qa_report.revisions_count > 5:
                     self.current_phase = LoopPhase.ERROR
                     self.current_state_id = LoopPhase.ERROR.value
-                    raise MaxRevisionsReached("Circuit Breaker : Nombre maximal de révisions dépassé (> 5).")
+                    raise MaxRevisionsReached(
+                        "Circuit Breaker : Nombre maximal de révisions dépassé (> 5)."
+                    )
 
-        if target_phase == LoopPhase.VALIDATE and self.current_phase == LoopPhase.PLAN and self.project_mode == ProjectMode.CLIENT:
+        if (
+            target_phase == LoopPhase.VALIDATE
+            and self.current_phase == LoopPhase.PLAN
+            and self.project_mode == ProjectMode.CLIENT
+        ):
             if self.plan is None:
                 raise IntegrityError("PlanResult requis pour passer en phase VALIDATE.")
 
         if target_phase == LoopPhase.BUILD and self.current_phase == LoopPhase.PLAN:
             if self.project_mode == ProjectMode.CLIENT:
-                raise ValueError("Transition de phase invalide : BUILD est interdit en mode CLIENT.")
+                raise ValueError(
+                    "Transition de phase invalide : BUILD est interdit en mode CLIENT."
+                )
             if self.plan is None:
                 raise IntegrityError("PlanResult requis pour passer en phase BUILD.")
 
         if not self.can_transition_to(target_phase):
-            raise ValueError(f"Transition de phase invalide : '{self.current_phase.value}' -> '{target_phase.value}' en mode '{self.project_mode.value}'.")
+            raise ValueError(
+                f"Transition de phase invalide : '{self.current_phase.value}' -> '{target_phase.value}' en mode '{self.project_mode.value}'."
+            )
 
         self.previous_phase = self.current_phase
         self.current_phase = target_phase
         self.current_state_id = target_phase.value
 
-
-
-
     def query_graph(self, question: str) -> str:
         """Recherche in-memory ultra-rapide (remplace l'appel shell coûteux vers graphify)."""
         from src.loop_mem.db import search_in_memory
+
         project_path = Path("Projects") / self.project_name
         results = search_in_memory(project_path, question, limit=10)
         if not results:
             return "Aucun résultat trouvé dans la mémoire."
-        
+
         output = [f"--- Résultats in-memory pour '{question}' ---"]
         for r in results:
-            output.append(f"[{r.get('category', 'Node')}] {r.get('label', r.get('id'))} (ID: {r['id']}) - Score: {r['score']:.1f}")
-            snippet = r.get('snippet', '').replace('\n', ' ')
+            output.append(
+                f"[{r.get('category', 'Node')}] {r.get('label', r.get('id'))} (ID: {r['id']}) - Score: {r['score']:.1f}"
+            )
+            snippet = r.get("snippet", "").replace("\n", " ")
             output.append(f"  > {snippet}")
         return "\n".join(output)
 
@@ -487,7 +521,7 @@ class LoopState(BaseModel):
             with open(graph_file, "r", encoding="utf-8") as f:
                 graph_data = json.load(f)
                 nodes = graph_data.get("nodes", [])
-                
+
                 # Charger l'état global
                 state_node = next((n for n in nodes if n.get("label") == "ML_ACTIVE_STATE"), None)
                 if state_node and "properties" in state_node:
@@ -496,7 +530,7 @@ class LoopState(BaseModel):
                     for field in self.__class__.model_fields:
                         if field not in ("sprint_backlog", "journal", "knowledge_graph"):
                             setattr(self, field, getattr(loaded_state, field))
-                            
+
                 # Charger le journal à partir des nœuds JournalEntry
                 journal_nodes = [n for n in nodes if n.get("category") == "JournalEntry"]
                 journal_entries = []
@@ -506,11 +540,11 @@ class LoopState(BaseModel):
                             journal_entries.append(JournalEntry.model_validate(n["properties"]))
                         except:
                             pass
-                
+
                 # Trier chronologiquement (au cas où)
                 journal_entries.sort(key=lambda x: x.timestamp)
                 self.journal = journal_entries
-                
+
         except Exception as e:
             print("Erreur de chargement depuis le graphe:", e)
 
@@ -522,14 +556,14 @@ class LoopState(BaseModel):
     def save_to_graph(self, project_path: Path) -> None:
         """Sauvegarde l'état actuel et le journal dans le graphe Graphify."""
         graph_file = project_path / self.graph_path
-        
+
         if not graph_file.parent.exists():
             graph_file.parent.mkdir(parents=True, exist_ok=True)
-            
+
         try:
             # Préparation des données (on exclut le backlog lourd)
             state_data = self.model_dump(exclude={"sprint_backlog", "knowledge_graph", "journal"})
-            
+
             graph_data = {"nodes": [], "edges": []}
             if graph_file.exists():
                 try:
@@ -537,53 +571,55 @@ class LoopState(BaseModel):
                         graph_data = json.load(f)
                 except Exception:
                     pass
-            
+
             nodes_list = graph_data.get("nodes", [])
             edges_list = graph_data.get("edges", [])
-            
+
             # Indexation rapide des IDs existants pour éviter le O(N^2)
             existing_node_ids = {n.get("id") for n in nodes_list}
-            
+
             # 1. Persistance du State Global
             state_node = next((n for n in nodes_list if n.get("label") == "ML_ACTIVE_STATE"), None)
             if state_node:
                 state_node["properties"] = state_data
             else:
-                nodes_list.append({
-                    "id": "ml_active_state",
-                    "label": "ML_ACTIVE_STATE",
-                    "category": "LoopState",
-                    "properties": state_data
-                })
-            
+                nodes_list.append(
+                    {
+                        "id": "ml_active_state",
+                        "label": "ML_ACTIVE_STATE",
+                        "category": "LoopState",
+                        "properties": state_data,
+                    }
+                )
+
             # 2. Persistance du Journal (Chaque entrée devient un nœud)
             for entry in self.journal:
                 entry_id = f"journal_{entry.id}"
                 # Vérifier si l'entrée existe déjà
                 if entry_id not in existing_node_ids:
-                    nodes_list.append({
-                        "id": entry_id,
-                        "label": f"Journal: {entry.event}",
-                        "category": "JournalEntry",
-                        "properties": entry.model_dump()
-                    })
+                    nodes_list.append(
+                        {
+                            "id": entry_id,
+                            "label": f"Journal: {entry.event}",
+                            "category": "JournalEntry",
+                            "properties": entry.model_dump(),
+                        }
+                    )
                     # Création des liens d'impact
                     for node_label in entry.impacted_nodes:
-                        edges_list.append({
-                            "source": entry_id,
-                            "target": node_label,
-                            "relation": "IMPACTS"
-                        })
-            
+                        edges_list.append(
+                            {"source": entry_id, "target": node_label, "relation": "IMPACTS"}
+                        )
+
             graph_data["nodes"] = nodes_list
             graph_data["edges"] = edges_list
-            
+
             # Sauvegarde atomique avec fichier temporaire pour prévenir toute corruption
             tmp_graph_file = graph_file.with_suffix(".tmp")
             with open(tmp_graph_file, "w", encoding="utf-8") as f:
                 json.dump(graph_data, f, indent=2, ensure_ascii=False)
             tmp_graph_file.replace(graph_file)
-            
+
             # L'index SQLite FTS5 (graph_index.db) a été retiré au profit du moteur de recherche L3 In-Memory.
             pass
 
@@ -593,6 +629,7 @@ class LoopState(BaseModel):
     def search_nodes(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         """Recherche rapide en mémoire dans le graphe consolidé."""
         from src.loop_mem.db import search_in_memory
+
         project_path = Path("Projects") / self.project_name
         return search_in_memory(project_path, query, limit)
 
@@ -600,19 +637,25 @@ class LoopState(BaseModel):
         """Charge l'état depuis le graphe et la configuration du projet."""
         self.load_from_graph(project_path)
         self.discover_backlog(project_path)
-        
+
         # Charger la configuration Jira propre au projet (Projects/<p>/jira_config.json)
         jira_cfg = project_path / "jira_config.json"
         if jira_cfg.exists():
             try:
                 with open(jira_cfg, "r", encoding="utf-8") as f:
                     cfg = json.load(f)
-                    if "jira_project_key" in cfg: self.jira_project_key = cfg["jira_project_key"]
-                    if "jira_epic_key" in cfg: self.jira_epic_key = cfg["jira_epic_key"]
-                    if "jira_default_billing_id" in cfg: self.jira_default_billing_id = cfg["jira_default_billing_id"]
-                    if "jira_default_component_id" in cfg: self.jira_default_component_id = cfg["jira_default_component_id"]
-                    if "jira_default_subtasks" in cfg: self.jira_default_subtasks = cfg["jira_default_subtasks"]
-                    if "jira_subtask_mapping" in cfg: self.jira_subtask_mapping = cfg["jira_subtask_mapping"]
+                    if "jira_project_key" in cfg:
+                        self.jira_project_key = cfg["jira_project_key"]
+                    if "jira_epic_key" in cfg:
+                        self.jira_epic_key = cfg["jira_epic_key"]
+                    if "jira_default_billing_id" in cfg:
+                        self.jira_default_billing_id = cfg["jira_default_billing_id"]
+                    if "jira_default_component_id" in cfg:
+                        self.jira_default_component_id = cfg["jira_default_component_id"]
+                    if "jira_default_subtasks" in cfg:
+                        self.jira_default_subtasks = cfg["jira_default_subtasks"]
+                    if "jira_subtask_mapping" in cfg:
+                        self.jira_subtask_mapping = cfg["jira_subtask_mapping"]
             except Exception as e:
                 logger.debug(f"Lecture jira_config {jira_cfg} ignorée: {e}")
 
@@ -623,12 +666,10 @@ class LoopState(BaseModel):
                 with open(kg_file, "r", encoding="utf-8") as f:
                     g_data = json.load(f)
                     self.knowledge_graph = KnowledgeGraph(
-                        nodes=g_data.get("nodes", []),
-                        edges=g_data.get("edges", [])
+                        nodes=g_data.get("nodes", []), edges=g_data.get("edges", [])
                     )
             except Exception as e:
                 logger.debug(f"Lecture knowledge_graph {kg_file} ignorée: {e}")
-
 
     def save_to_audit(self, project_path: Path) -> None:
         """Sauvegarde l'état dans le graphe."""
@@ -638,6 +679,7 @@ class LoopState(BaseModel):
         """Scans backlog folder and populates sprint_backlog from Markdown Frontmatter (ADR-0011)."""
         import yaml
         import re
+
         backlog_dir = project_path / "backlog"
         if not backlog_dir.exists():
             return
@@ -647,17 +689,22 @@ class LoopState(BaseModel):
             try:
                 content = md_file.read_text(encoding="utf-8")
                 # Extract YAML block between ---
-                match = re.search(r'^---(.*?)---', content, re.DOTALL | re.MULTILINE)
+                match = re.search(r"^---(.*?)---", content, re.DOTALL | re.MULTILINE)
                 if match:
                     frontmatter = yaml.safe_load(match.group(1))
-                    
+
                     # Extract Title (ADR-0011 fallback or pure title)
-                    title_match = re.search(r'^#\s*(.*)$', content, re.MULTILINE)
+                    title_match = re.search(r"^#\s*(.*)$", content, re.MULTILINE)
                     raw_title = title_match.group(1).strip() if title_match else md_file.stem
                     # Clean all technical prefixes ( [M], ST-XXX, STORY-REC-XXX-BE ) to keep title pure
-                    clean_title = re.sub(r'^(?:\[.*?\]\s*)?(?:STORY|ST|REC)[A-Z0-9\-]*\s*[:\-]\s*', '', raw_title, flags=re.IGNORECASE).strip()
+                    clean_title = re.sub(
+                        r"^(?:\[.*?\]\s*)?(?:STORY|ST|REC)[A-Z0-9\-]*\s*[:\-]\s*",
+                        "",
+                        raw_title,
+                        flags=re.IGNORECASE,
+                    ).strip()
 
-                     # Convert to SprintBacklogItem
+                    # Convert to SprintBacklogItem
                     raw_status = str(frontmatter.get("status", "OPEN"))
                     item = SprintBacklogItem(
                         id=frontmatter.get("id", md_file.stem),
@@ -671,5 +718,5 @@ class LoopState(BaseModel):
                     discovered_items.append(item)
             except Exception:
                 continue
-        
+
         self.sprint_backlog = discovered_items

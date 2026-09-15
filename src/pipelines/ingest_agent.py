@@ -8,27 +8,73 @@ from src.state import LoopState, ProjectLayout
 from src.cli import ZeroFluffConsole
 from src.core.lod_generator import LODGenerator
 
+
 class IngestAgent:
     """
     Système 1 : Ingest Agent.
     Analyse le répertoire reference/ pour parser les PDF, DOCX, XLSX, TXT, SVG, etc.
-    et les consolider de manière déterministe avec Source Manifest canonique, 
+    et les consolider de manière déterministe avec Source Manifest canonique,
     extraction adaptative de vocabulaire (Length-Aware) et auto-alimentation du lexique (ADR-0335).
     """
+
     def __init__(self):
         self.name = "Ingest Engine"
         self.anomalies: list[dict] = []
 
+    # ─── Résolution des racines de sortie (Voie B — routage par initiative) ───
+    def _project_root(self, state: LoopState) -> Path:
+        return Path("Projects") / state.project_name
+
+    def _ref_root(self, state: LoopState) -> Path:
+        """Racine de scan. Scopée à reference/<initiative>/ si une initiative est fournie."""
+        base = self._project_root(state) / ProjectLayout.REFERENCE
+        initiative = getattr(state, "ingest_initiative", None)
+        return (base / initiative) if initiative else base
+
+    def _ingested_root(self, state: LoopState) -> Path:
+        """
+        Racine d'écriture des documents ingérés.
+        - Avec initiative : docs/<initiative>/00-ingested/ (projets à structure par module).
+        - Sans initiative : docs/00-ingested/ (modèle plat ADR-0102).
+        """
+        docs = self._project_root(state) / ProjectLayout.DOCS
+        initiative = getattr(state, "ingest_initiative", None)
+        base = (docs / initiative) if initiative else docs
+        return base / ProjectLayout.DOCS_INGESTED
+
+    def _initiative_docs_root(self, state: LoopState) -> Path:
+        """Racine docs de l'initiative (ou docs/ à plat si non scopé)."""
+        docs = self._project_root(state) / ProjectLayout.DOCS
+        initiative = getattr(state, "ingest_initiative", None)
+        return (docs / initiative) if initiative else docs
+
     def execute(self, state: LoopState) -> LoopState:
-        ZeroFluffConsole.step_s1(self.name, f"Démarrage du scan du répertoire {ProjectLayout.REFERENCE}/...")
+        initiative = getattr(state, "ingest_initiative", None)
+        scope_label = f"reference/{initiative}/" if initiative else f"{ProjectLayout.REFERENCE}/"
+        ZeroFluffConsole.step_s1(self.name, f"Démarrage du scan du répertoire {scope_label}...")
         self.anomalies = []
-        ref_path = Path("Projects") / state.project_name / ProjectLayout.REFERENCE
-        
+        ref_path = self._ref_root(state)
+
         if not ref_path.exists():
             ref_path.mkdir(parents=True, exist_ok=True)
-            
-        supported_extensions = [".pdf", ".docx", ".xlsx", ".csv", ".txt", ".md", ".cs", ".pptx", ".ppt", ".svg", ".vtt", ".jpg", ".jpeg", ".png"]
-        
+
+        supported_extensions = [
+            ".pdf",
+            ".docx",
+            ".xlsx",
+            ".csv",
+            ".txt",
+            ".md",
+            ".cs",
+            ".pptx",
+            ".ppt",
+            ".svg",
+            ".vtt",
+            ".jpg",
+            ".jpeg",
+            ".png",
+        ]
+
         for file in ref_path.rglob("*"):
             if file.is_file() and file.suffix.lower() in supported_extensions:
                 state = self._process_file(file, state)
@@ -39,9 +85,12 @@ class IngestAgent:
         self._write_anomalies_manifest(state)
         self._generate_maquettes_index(state)
         self._generate_ingested_index(state)
-        self._generate_docs_root_index(state)
+        # La carte d'orientation racine docs/index.md décrit le projet entier :
+        # ne pas la (re)générer lors d'une ingestion scopée à une seule initiative.
+        if not getattr(state, "ingest_initiative", None):
+            self._generate_docs_root_index(state)
         self._generate_lod_sidecars(state)
-                
+
         return state
 
     def _extract_sections(self, text: str) -> list[str]:
@@ -72,29 +121,52 @@ class IngestAgent:
 
         # Recherche de motifs terminologiques (Acronymes, PascalCase, CamelCase, [Termes])
         candidates = []
-        
+
         # 1. Termes explicites entre crochets ou backticks
-        bracketed = re.findall(r'`([A-Za-z0-9_\-\.\s]{2,40})`|\[([A-Za-z0-9_\-\.\s]{2,40})\]', text)
+        bracketed = re.findall(r"`([A-Za-z0-9_\-\.\s]{2,40})`|\[([A-Za-z0-9_\-\.\s]{2,40})\]", text)
         for b1, b2 in bracketed:
             val = (b1 or b2).strip()
             if len(val) >= 2 and not val.startswith("http") and not val.startswith("/"):
                 candidates.append(val)
 
         # 2. Acronymes (2 à 8 lettres majuscules consécutives)
-        acronyms = re.findall(r'\b[A-Z]{2,8}\b', text)
-        stopwords_acronyms = {"LE", "LA", "LES", "DES", "DU", "UN", "UNE", "ET", "OU", "PAR", "POUR", "SUR", "DANS", "NON", "OUI", "PAS", "EST", "SONT", "QUE", "QUI", "CE", "CET", "CETTE"}
+        acronyms = re.findall(r"\b[A-Z]{2,8}\b", text)
+        stopwords_acronyms = {
+            "LE",
+            "LA",
+            "LES",
+            "DES",
+            "DU",
+            "UN",
+            "UNE",
+            "ET",
+            "OU",
+            "PAR",
+            "POUR",
+            "SUR",
+            "DANS",
+            "NON",
+            "OUI",
+            "PAS",
+            "EST",
+            "SONT",
+            "QUE",
+            "QUI",
+            "CE",
+            "CET",
+            "CETTE",
+        }
         candidates.extend([a for a in acronyms if a not in stopwords_acronyms])
 
         # 3. Mots en PascalCase / CamelCase (ex: IngestAgent, ZeroFluffConsole, OAuth2)
-        camel_pascal = re.findall(r'\b[A-Z][a-z0-9]+[A-Z][A-Za-z0-9]*\b', text)
+        camel_pascal = re.findall(r"\b[A-Z][a-z0-9]+[A-Z][A-Za-z0-9]*\b", text)
         candidates.extend(camel_pascal)
 
         # Filtrage et dédoublonnage avec conservation de la fréquence
         counts = Counter(candidates)
         # Supprimer les candidats trop courts ou parasites
         filtered = [
-            term for term, count in counts.most_common()
-            if len(term) >= 2 and not term.isdigit()
+            term for term, count in counts.most_common() if len(term) >= 2 and not term.isdigit()
         ]
 
         return filtered[:max_terms]
@@ -105,26 +177,31 @@ class IngestAgent:
             sha256_val = hashlib.sha256(file_content_raw).hexdigest()
         except Exception as e:
             ZeroFluffConsole.error(f"Impossible de lire le fichier {filepath.name} : {e}")
-            self.anomalies.append({
-                "filename": filepath.name,
-                "filepath": str(filepath),
-                "error": f"Erreur I/O: {e}",
-                "timestamp": datetime.now().isoformat()
-            })
+            self.anomalies.append(
+                {
+                    "filename": filepath.name,
+                    "filepath": str(filepath),
+                    "error": f"Erreur I/O: {e}",
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
             return state
-        
+
         # Vérification si déjà ingéré
         for source in state.ingested_sources:
             if source.get("filepath") == str(filepath) and source.get("sha256") == sha256_val:
                 return state
-                
-        ZeroFluffConsole.step_s1(self.name, f"Parsing du fichier {filepath.name} ({filepath.suffix.upper()})...")
+
+        ZeroFluffConsole.step_s1(
+            self.name, f"Parsing du fichier {filepath.name} ({filepath.suffix.upper()})..."
+        )
         extracted_text = ""
-        
+
         # Ingestion multimodale Microsoft MarkItDown & Parsers Déterministes
         ext = filepath.suffix.lower()
         if ext == ".svg":
             from src.converters.svg_to_md import parse_svg_to_md_text
+
             try:
                 raw_svg = filepath.read_text(encoding="utf-8", errors="replace")
                 extracted_text = parse_svg_to_md_text(raw_svg, filepath.name)
@@ -136,7 +213,7 @@ class IngestAgent:
             extracted_text = self._process_image_asset(filepath, state)
         else:
             extracted_text = self._try_markitdown(filepath)
-        
+
         if not extracted_text:
             if ext == ".txt" or ext == ".md" or ext == ".cs":
                 try:
@@ -157,26 +234,28 @@ class IngestAgent:
             elif ext == ".csv":
                 try:
                     from src.converters.csv_engine import csv_to_markdown_summary
+
                     extracted_text = csv_to_markdown_summary(filepath, max_preview_rows=25)
                 except Exception as e:
                     extracted_text = f"[Erreur de lecture CSV : {e}]"
 
-        # Sauvegarde automatique de la version Markdown dans docs/00-ingested/
-        ingested_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED
+        # Sauvegarde automatique de la version Markdown (racine dynamique selon initiative)
+        ingested_dir = self._ingested_root(state)
         ingested_dir.mkdir(parents=True, exist_ok=True)
-        ref_root = Path("Projects") / state.project_name / ProjectLayout.REFERENCE
-        
+        ref_root = self._ref_root(state)
+
         if ext == ".svg":
             target_dir = ingested_dir / "05-maquettes-notes"
             target_dir.mkdir(parents=True, exist_ok=True)
             target_md = target_dir / f"{filepath.stem}.md"
-            
-            # Synchronisation de l'actif visuel sous docs/05-assets/maquettes/ (ADR-0332)
-            assets_maquettes = Path("Projects") / state.project_name / ProjectLayout.DOCS / "05-assets" / "maquettes"
+
+            # Synchronisation de l'actif visuel sous docs/[<initiative>/]05-assets/maquettes/ (ADR-0332)
+            assets_maquettes = self._initiative_docs_root(state) / "05-assets" / "maquettes"
             assets_maquettes.mkdir(parents=True, exist_ok=True)
             target_svg = assets_maquettes / filepath.name
             if not target_svg.exists() or target_svg.resolve() != filepath.resolve():
                 import shutil
+
                 shutil.copy2(filepath, target_svg)
         else:
             subfolder = self._determine_target_subfolder(filepath, ref_root, ext)
@@ -184,10 +263,16 @@ class IngestAgent:
             target_dir.mkdir(parents=True, exist_ok=True)
             target_md = target_dir / f"{filepath.stem}.md"
 
-        if extracted_text and len(extracted_text.strip()) > 0 and not extracted_text.startswith("[Erreur"):
+        if (
+            extracted_text
+            and len(extracted_text.strip()) > 0
+            and not extracted_text.startswith("[Erreur")
+        ):
             sections = self._extract_sections(extracted_text)
             terms = self._extract_length_aware_terms(extracted_text)
-            enriched_text = self._enrich_markdown(extracted_text, filepath, state.project_name, terms=terms)
+            enriched_text = self._enrich_markdown(
+                extracted_text, filepath, state.project_name, terms=terms
+            )
             try:
                 target_md.write_text(enriched_text, encoding="utf-8")
                 ZeroFluffConsole.info(f"Copie Markdown enrichie enregistrée dans : {target_md}")
@@ -204,34 +289,46 @@ class IngestAgent:
                 "word_count": len(extracted_text.split()),
                 "sections": sections,
                 "terms": terms,
-                "extracted_text_summary": extracted_text[:1000],  # Résumé tronqué pour préserver l'espace d'état
-                "timestamp": datetime.now().isoformat()
+                "extracted_text_summary": extracted_text[
+                    :1000
+                ],  # Résumé tronqué pour préserver l'espace d'état
+                "timestamp": datetime.now().isoformat(),
             }
             state.ingested_sources.append(source_meta)
-            ZeroFluffConsole.success(f"Fichier {filepath.name} ingéré avec succès ({len(terms)} termes, {len(sections)} sections).")
+            ZeroFluffConsole.success(
+                f"Fichier {filepath.name} ingéré avec succès ({len(terms)} termes, {len(sections)} sections)."
+            )
         else:
             # En cas d'erreur ou d'extraction vide, ne PAS ajouter au cache des sources ingérées
             if target_md.exists() and target_md.stat().st_size == 0:
                 try:
                     target_md.unlink()
-                    ZeroFluffConsole.warning(f"Fichier vide (0 octet) supprimé sous 00-ingested : {target_md.name}")
+                    ZeroFluffConsole.warning(
+                        f"Fichier vide (0 octet) supprimé sous 00-ingested : {target_md.name}"
+                    )
                 except Exception:
                     pass
-            
-            err_detail = extracted_text if extracted_text and extracted_text.startswith("[Erreur") else "Aucun texte extrait"
+
+            err_detail = (
+                extracted_text
+                if extracted_text and extracted_text.startswith("[Erreur")
+                else "Aucun texte extrait"
+            )
             ZeroFluffConsole.error(f"ÉCHEC D'INGESTION pour {filepath.name} : {err_detail}")
-            self.anomalies.append({
-                "filename": filepath.name,
-                "filepath": str(filepath),
-                "error": err_detail,
-                "timestamp": datetime.now().isoformat()
-            })
-        
+            self.anomalies.append(
+                {
+                    "filename": filepath.name,
+                    "filepath": str(filepath),
+                    "error": err_detail,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
+
         return state
 
     def _write_source_manifest(self, state: LoopState) -> None:
         """Génère le manifeste de source canonique sous docs/00-ingested/source_manifest.json (ADR-0335)."""
-        ingested_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED
+        ingested_dir = self._ingested_root(state)
         ingested_dir.mkdir(parents=True, exist_ok=True)
         manifest_file = ingested_dir / "source_manifest.json"
 
@@ -251,21 +348,23 @@ class IngestAgent:
                     "sections_count": len(s.get("sections", [])),
                     "sections": s.get("sections", []),
                     "terms": s.get("terms", []),
-                    "ingested_at": s.get("timestamp")
+                    "ingested_at": s.get("timestamp"),
                 }
                 for s in state.ingested_sources
-            ]
+            ],
         }
 
         try:
-            manifest_file.write_text(json.dumps(manifest_data, indent=2, ensure_ascii=False), encoding="utf-8")
+            manifest_file.write_text(
+                json.dumps(manifest_data, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
             ZeroFluffConsole.info(f"Source Manifest canonique synchronisé : {manifest_file}")
         except Exception as e:
             ZeroFluffConsole.warning(f"Impossible d'écrire source_manifest.json : {e}")
 
     def _write_anomalies_manifest(self, state: LoopState) -> None:
         """Enregistre le registre d'anomalies d'ingestion sous docs/00-ingested/ingest_anomalies.json (Fail-Closed)."""
-        ingested_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED
+        ingested_dir = self._ingested_root(state)
         anomalies_file = ingested_dir / "ingest_anomalies.json"
 
         if self.anomalies:
@@ -273,11 +372,15 @@ class IngestAgent:
                 "project_name": state.project_name,
                 "recorded_at": datetime.now().isoformat(),
                 "total_anomalies": len(self.anomalies),
-                "anomalies": self.anomalies
+                "anomalies": self.anomalies,
             }
             try:
-                anomalies_file.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-                ZeroFluffConsole.warning(f"Registre des anomalies d'ingestion consigné : {anomalies_file}")
+                anomalies_file.write_text(
+                    json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
+                )
+                ZeroFluffConsole.warning(
+                    f"Registre des anomalies d'ingestion consigné : {anomalies_file}"
+                )
             except Exception as e:
                 ZeroFluffConsole.warning(f"Impossible d'écrire ingest_anomalies.json : {e}")
         else:
@@ -310,19 +413,20 @@ class IngestAgent:
         if not term_counts:
             return
 
-        transverse_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_TRANSVERSE
+        transverse_dir = self._initiative_docs_root(state) / ProjectLayout.DOCS_TRANSVERSE
         transverse_dir.mkdir(parents=True, exist_ok=True)
         lexicon_file = transverse_dir / "lexique_domaine.md"
 
         lines = [
             "# Lexique & Vocabulaire du Domaine Métier (SSOT ADR-0335)",
             "",
-            "> **Statut :** Auto-consolidé par le Moteur d'Ingestion mLoop | **Dernière mise à jour :** " + datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "> **Statut :** Auto-consolidé par le Moteur d'Ingestion mLoop | **Dernière mise à jour :** "
+            + datetime.now().strftime("%Y-%m-%d %H:%M"),
             "",
             "Ce document recense les entités nommées, acronymes et concepts techniques découverts dans les documents sources de référence (`reference/`). Il constitue le vocabulaire officiel du projet.",
             "",
             "| Terme / Concept Métier | Fréquence d'Apparition | Documents Sources Associés |",
-            "| :--- | :---: | :--- |"
+            "| :--- | :---: | :--- |",
         ]
 
         for term, freq in term_counts.most_common():
@@ -332,7 +436,9 @@ class IngestAgent:
         lines.append("")
         try:
             lexicon_file.write_text("\n".join(lines), encoding="utf-8")
-            ZeroFluffConsole.info(f"Dictionnaire de Lexique du Domaine synchronisé : {lexicon_file}")
+            ZeroFluffConsole.info(
+                f"Dictionnaire de Lexique du Domaine synchronisé : {lexicon_file}"
+            )
         except Exception as e:
             ZeroFluffConsole.warning(f"Impossible d'écrire lexique_domaine.md : {e}")
 
@@ -370,29 +476,32 @@ class IngestAgent:
             return "02-guides-et-specs"
         elif any(k in name_lower for k in ["scan", "inventaire", "onetrust", "audit", "rapport"]):
             return "03-scans-et-inventaires"
-        elif any(k in name_lower for k in ["api", "technique", "swagger", "openapi", "sdk", "schema"]):
+        elif any(
+            k in name_lower for k in ["api", "technique", "swagger", "openapi", "sdk", "schema"]
+        ):
             return "04-api-et-techniques"
         elif ext in [".xlsx", ".csv"]:
             return "03-scans-et-inventaires"
-        
+
         return "02-guides-et-specs"
 
     def _generate_ingested_index(self, state: LoopState) -> None:
         """Génère un index sémantique complet des documents sous docs/00-ingested/index.md (ADR-0102)."""
-        ingested_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED
+        ingested_dir = self._ingested_root(state)
         if not ingested_dir.exists():
             return
-        
+
         index_file = ingested_dir / "index.md"
         lines = [
             f"# 📚 Index des Documents Ingérés — {state.project_name}",
             "",
-            "> **Statut :** SSOT Documentaire Ingestion Phase 1 | **Généré le :** " + datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "> **Statut :** SSOT Documentaire Ingestion Phase 1 | **Généré le :** "
+            + datetime.now().strftime("%Y-%m-%d %H:%M"),
             "",
             "Ce document répertorie l'ensemble des sources brutes ingérées depuis `reference/` et converties en Markdown normalisé selon l'ADR-0102 et l'ADR-0335.",
             "",
             "## 🗂️ Sommaire par Catégorie Thématique",
-            ""
+            "",
         ]
 
         categories = {
@@ -412,12 +521,22 @@ class IngestAgent:
                 found_any = True
                 lines.append(f"### {cat_title}")
                 lines.append("")
-                lines.append("| Document Markdown | Fichier Source Original | Termes Clés Identifiés |")
+                lines.append(
+                    "| Document Markdown | Fichier Source Original | Termes Clés Identifiés |"
+                )
                 lines.append("| :--- | :--- | :--- |")
                 for mf in sorted(md_files, key=lambda f: f.name):
-                    matching = [s for s in state.ingested_sources if Path(s.get("filepath", "")).stem == mf.stem]
+                    matching = [
+                        s
+                        for s in state.ingested_sources
+                        if Path(s.get("filepath", "")).stem == mf.stem
+                    ]
                     orig_file = matching[0].get("filename", "N/A") if matching else "reference/"
-                    terms_str = ", ".join(f"`{t}`" for t in (matching[0].get("terms", [])[:5])) if matching else "—"
+                    terms_str = (
+                        ", ".join(f"`{t}`" for t in (matching[0].get("terms", [])[:5]))
+                        if matching
+                        else "—"
+                    )
                     rel_link = f"[{mf.name}]({cat_dir_name}/{mf.name})"
                     lines.append(f"| {rel_link} | `{orig_file}` | {terms_str} |")
                 lines.append("")
@@ -445,9 +564,11 @@ class IngestAgent:
         docs_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS
         if not docs_dir.exists():
             return
-        
+
         index_file = docs_dir / "index.md"
-        if not index_file.exists() or "<!-- MLOOP_AUTO_GENERATED -->" in index_file.read_text(encoding="utf-8", errors="ignore"):
+        if not index_file.exists() or "<!-- MLOOP_AUTO_GENERATED -->" in index_file.read_text(
+            encoding="utf-8", errors="ignore"
+        ):
             content = f"""<!-- MLOOP_AUTO_GENERATED -->
 # 🧭 Carte d'Orientation SSOT & Architecture — {state.project_name}
 
@@ -476,38 +597,46 @@ class IngestAgent:
 """
             try:
                 index_file.write_text(content, encoding="utf-8")
-                ZeroFluffConsole.info(f"Carte d'orientation SSOT racine synchronisée : {index_file}")
+                ZeroFluffConsole.info(
+                    f"Carte d'orientation SSOT racine synchronisée : {index_file}"
+                )
             except Exception as e:
                 ZeroFluffConsole.warning(f"Impossible d'écrire docs/index.md : {e}")
 
     def _generate_maquettes_index(self, state: LoopState) -> None:
         """Génère l'index et cartographie globale des maquettes sous docs/00-ingested/05-maquettes-notes/00-index-maquettes.md."""
-        maquettes_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED / "05-maquettes-notes"
+        maquettes_dir = self._ingested_root(state) / "05-maquettes-notes"
         if not maquettes_dir.exists():
-            maquettes_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED / "maquettes"
+            maquettes_dir = self._ingested_root(state) / "maquettes"
         if maquettes_dir.exists() and any(maquettes_dir.glob("*.md")):
             try:
                 from src.converters.svg_to_md import generate_maquettes_index
+
                 index_path = generate_maquettes_index(maquettes_dir)
-                ZeroFluffConsole.info(f"Index et Cartographie des Maquettes synchronisé : {index_path}")
+                ZeroFluffConsole.info(
+                    f"Index et Cartographie des Maquettes synchronisé : {index_path}"
+                )
             except Exception as e:
                 ZeroFluffConsole.warning(f"Impossible de générer 00-index-maquettes.md : {e}")
 
     def _generate_lod_sidecars(self, state: LoopState) -> None:
         """Génère les sidecars LOD .abstract.md et .overview.md pour docs/00-ingested/ et ses sous-dossiers (ADR-0335)."""
-        ingested_dir = Path("Projects") / state.project_name / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED
+        ingested_dir = self._ingested_root(state)
         if not ingested_dir.exists():
             return
-        
+
         # 1. Générer pour chaque sous-dossier de 00-ingested
         for sub_dir in ingested_dir.iterdir():
             if sub_dir.is_dir() and not sub_dir.name.startswith("."):
-                if any(f.is_file() and f.suffix.lower() == ".md" and not f.name.startswith(".") for f in sub_dir.iterdir()):
+                if any(
+                    f.is_file() and f.suffix.lower() == ".md" and not f.name.startswith(".")
+                    for f in sub_dir.iterdir()
+                ):
                     try:
                         LODGenerator.generate_lod_sidecars(
                             directory_path=sub_dir,
                             source_info={"kind": "ingested_category", "category": sub_dir.name},
-                            project_name=state.project_name
+                            project_name=state.project_name,
                         )
                     except Exception as e:
                         ZeroFluffConsole.warning(f"Erreur sidecar LOD pour {sub_dir.name} : {e}")
@@ -516,8 +645,11 @@ class IngestAgent:
         try:
             LODGenerator.generate_lod_sidecars(
                 directory_path=ingested_dir,
-                source_info={"kind": "ingested_root", "uri": f"mloop://docs/{ProjectLayout.DOCS_INGESTED}"},
-                project_name=state.project_name
+                source_info={
+                    "kind": "ingested_root",
+                    "uri": f"mloop://docs/{ProjectLayout.DOCS_INGESTED}",
+                },
+                project_name=state.project_name,
             )
             ZeroFluffConsole.info("Sidecars LOD (L0/L1) synchronisés sous docs/00-ingested/")
         except Exception as e:
@@ -526,6 +658,7 @@ class IngestAgent:
     def _parse_pdf(self, path: Path) -> str:
         try:
             import pypdf
+
             reader = pypdf.PdfReader(path)
             return "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
         except ImportError:
@@ -540,6 +673,7 @@ class IngestAgent:
     def _parse_xlsx(self, path: Path) -> str:
         try:
             import openpyxl
+
             wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
             sheets_text = []
             for sheetname in wb.sheetnames:
@@ -564,6 +698,7 @@ class IngestAgent:
     def _parse_docx(self, path: Path) -> str:
         try:
             import docx
+
             doc = docx.Document(path)
             paragraphs = [p.text for p in doc.paragraphs if p.text]
             return "\n".join(paragraphs)
@@ -579,6 +714,7 @@ class IngestAgent:
     def _parse_pptx(self, path: Path) -> str:
         try:
             from pptx import Presentation
+
             prs = Presentation(path)
             slides_text = []
             for i, slide in enumerate(prs.slides, start=1):
@@ -602,13 +738,16 @@ class IngestAgent:
         """
         try:
             from markitdown import MarkItDown
+
             md = MarkItDown()
             res = md.convert(str(path))
-            return res.text_content if hasattr(res, 'text_content') else str(res)
+            return res.text_content if hasattr(res, "text_content") else str(res)
         except Exception:
             return ""
 
-    def _enrich_markdown(self, raw_text: str, filepath: Path, project_name: str, terms: list[str] = None) -> str:
+    def _enrich_markdown(
+        self, raw_text: str, filepath: Path, project_name: str, terms: list[str] = None
+    ) -> str:
         """
         Enrichit le document Markdown avec un Frontmatter YAML normatif (Pattern pdf-brain & DeepPaperNote).
         """
@@ -623,7 +762,11 @@ class IngestAgent:
                 break
 
         summary_lines = [l for l in lines if not l.startswith("#") and len(l) > 20][:3]
-        summary = " ".join(summary_lines)[:300] if summary_lines else f"Document de référence pour {filepath.name}."
+        summary = (
+            " ".join(summary_lines)[:300]
+            if summary_lines
+            else f"Document de référence pour {filepath.name}."
+        )
 
         doc_type = "general_doc"
         fname_lower = filepath.name.lower()
@@ -681,7 +824,7 @@ class IngestAgent:
             dialogue = []
             title = path.stem.replace("_", " ")
             dialogue.append(f"# 🎙️ Transcription : {title}\n")
-            
+
             seen_cues = set()
             for line in lines:
                 l = line.strip()
@@ -708,14 +851,15 @@ class IngestAgent:
         """Synchronise l'image dans docs/05-assets/ et génère une note d'artefact."""
         try:
             import shutil
+
             rel_parent = filepath.parent.name
-            target_assets = Path("Projects") / state.project_name / "docs" / "05-assets"
+            target_assets = self._initiative_docs_root(state) / "05-assets"
             if rel_parent in ["01-reception", "02-incubation", "03-ventes"]:
                 target_assets = target_assets / rel_parent
             target_assets.mkdir(parents=True, exist_ok=True)
             target_img = target_assets / filepath.name
             shutil.copy2(filepath, target_img)
-            
+
             return f"# 🖼️ Capture / Maquette : {filepath.stem}\n\n![{filepath.stem}](../05-assets/{rel_parent}/{filepath.name})\n\n- **Fichier source** : `{filepath.name}`\n- **Module associé** : `{rel_parent}`\n"
         except Exception as e:
             return f"[Erreur lors du traitement de l'image ({filepath.name}) : {e}]"

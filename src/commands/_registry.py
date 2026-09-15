@@ -13,13 +13,18 @@ COMMANDS: dict[str, dict] = {
     # ── Projet ─────────────────────────────────────────────
     "guide": {
         "handler": "project:handle_guide",
-        "help": "Afficher le guide d'utilisation du pipeline CLI mLoop par phase",
+        "help": "Afficher le guide d'utilisation du pipeline CLI mLoop par phase ou synchroniser le SSOT",
         "args": [
             {
                 "name": "--phase",
                 "type": str,
                 "choices": ["sow", "spec", "plan", "build", "validate", "ship"],
                 "help": "Filtrer par phase du cycle",
+            },
+            {
+                "name": "--sync",
+                "action": "store_true",
+                "help": "Régénérer standards/protocols/CLI_PIPELINE_GUIDE.md depuis le code Python (ADR-0370)",
             },
         ],
         "no_project": True,
@@ -405,7 +410,14 @@ COMMANDS: dict[str, dict] = {
     "ingest": {
         "handler": "pipeline:handle_ingest",
         "help": "Ingestion documentaire vers Markdown normalisé",
-        "args": [],
+        "args": [
+            {
+                "name": "--initiative",
+                "type": str,
+                "default": None,
+                "help": "Scope l'ingestion à reference/<initiative>/ et écrit sous docs/<initiative>/00-ingested/ (projets à structure par module). Si absent : ingestion globale plate (ADR-0102).",
+            },
+        ],
     },
     "dream": {
         "handler": "pipeline:handle_dream",
@@ -669,7 +681,11 @@ COMMANDS: dict[str, dict] = {
         "aliases": ["ui", "supervision"],
         "args": [
             {"name": "--port", "type": int, "default": 8080, "help": "Port du serveur web local"},
-            {"name": "--no-browser", "action": "store_true", "help": "Ne pas ouvrir automatiquement le navigateur"},
+            {
+                "name": "--no-browser",
+                "action": "store_true",
+                "help": "Ne pas ouvrir automatiquement le navigateur",
+            },
         ],
     },
     "drawdb": {
@@ -747,7 +763,14 @@ COMMANDS: dict[str, dict] = {
                 "name": "--type",
                 "type": str,
                 "default": None,
-                "choices": ["architecture", "workflow", "sequence", "dataflow", "lifecycle", "flow"],
+                "choices": [
+                    "architecture",
+                    "workflow",
+                    "sequence",
+                    "dataflow",
+                    "lifecycle",
+                    "flow",
+                ],
                 "help": "Type de diagramme (architecture, workflow, sequence, dataflow, lifecycle - auto-détecté si omis)",
             },
             {
@@ -1455,6 +1478,23 @@ COMMANDS: dict[str, dict] = {
         ],
         "no_project": True,
     },
+    "dossier-init": {
+        "handler": "analysis:handle_dossier_init",
+        "help": "Initialise le Dossier de Preuves Documentaires (_fact_dossier.md) pour un récit",
+        "args": [
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant ou chemin du récit cible (ex: INC-003-BE)",
+            },
+            {
+                "name": "--force",
+                "action": "store_true",
+                "help": "Écraser si le fichier existe déjà",
+            },
+        ],
+    },
     # ── Verification Leakage Gate (ADR-0354) ────────────────
     "check-leakage": {
         "handler": "gates:handle_check_leakage",
@@ -1570,7 +1610,12 @@ COMMANDS: dict[str, dict] = {
         "handler": "tooling:handle_csv_normalize",
         "help": "Normaliser l'encodage (BOM/CP1252) et les séparateurs d'un CSV vers UTF-8 propre",
         "args": [
-            {"name": "--file", "type": str, "required": True, "help": "Chemin du fichier CSV à normaliser"},
+            {
+                "name": "--file",
+                "type": str,
+                "required": True,
+                "help": "Chemin du fichier CSV à normaliser",
+            },
             {"name": "--out", "type": str, "help": "Chemin du fichier de sortie normalisé"},
         ],
         "no_project": True,
@@ -1579,8 +1624,18 @@ COMMANDS: dict[str, dict] = {
         "handler": "tooling:handle_csv_validate",
         "help": "Valider un fichier CSV en flux continu selon un schéma JSON déclaratif",
         "args": [
-            {"name": "--file", "type": str, "required": True, "help": "Chemin du fichier CSV à valider"},
-            {"name": "--schema", "type": str, "required": True, "help": "Chemin du fichier JSON de schéma"},
+            {
+                "name": "--file",
+                "type": str,
+                "required": True,
+                "help": "Chemin du fichier CSV à valider",
+            },
+            {
+                "name": "--schema",
+                "type": str,
+                "required": True,
+                "help": "Chemin du fichier JSON de schéma",
+            },
         ],
         "no_project": True,
     },
@@ -1588,10 +1643,24 @@ COMMANDS: dict[str, dict] = {
         "handler": "tooling:handle_csv_anonymize",
         "help": "Anonymiser déterministement les colonnes PII sensibles et échantillonner",
         "args": [
-            {"name": "--file", "type": str, "required": True, "help": "Chemin du fichier CSV source"},
-            {"name": "--fields", "type": str, "required": True, "help": "Colonnes sensibles séparées par virgule (ex: 'email,nom')"},
+            {
+                "name": "--file",
+                "type": str,
+                "required": True,
+                "help": "Chemin du fichier CSV source",
+            },
+            {
+                "name": "--fields",
+                "type": str,
+                "required": True,
+                "help": "Colonnes sensibles séparées par virgule (ex: 'email,nom')",
+            },
             {"name": "--out", "type": str, "help": "Chemin du fichier de sortie anonymisé"},
-            {"name": "--sample", "type": int, "help": "Nombre de lignes à échantillonner via Reservoir Sampling"},
+            {
+                "name": "--sample",
+                "type": int,
+                "help": "Nombre de lignes à échantillonner via Reservoir Sampling",
+            },
         ],
         "no_project": True,
     },
@@ -1599,9 +1668,24 @@ COMMANDS: dict[str, dict] = {
         "handler": "tooling:handle_csv_diff",
         "help": "Comparer deux instantanés de CSV et identifier les deltas sur clé primaire",
         "args": [
-            {"name": "--old", "type": str, "required": True, "help": "Chemin de l'ancienne version du CSV"},
-            {"name": "--new", "type": str, "required": True, "help": "Chemin de la nouvelle version du CSV"},
-            {"name": "--key", "type": str, "required": True, "help": "Nom de la colonne clé primaire"},
+            {
+                "name": "--old",
+                "type": str,
+                "required": True,
+                "help": "Chemin de l'ancienne version du CSV",
+            },
+            {
+                "name": "--new",
+                "type": str,
+                "required": True,
+                "help": "Chemin de la nouvelle version du CSV",
+            },
+            {
+                "name": "--key",
+                "type": str,
+                "required": True,
+                "help": "Nom de la colonne clé primaire",
+            },
         ],
         "no_project": True,
     },
