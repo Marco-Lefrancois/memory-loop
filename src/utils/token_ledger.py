@@ -127,10 +127,12 @@ class TokenLedger:
         context_contributors: Optional[List[str]] = None,
         metadata: Optional[Dict[str, Any]] = None,
         root_dir: Optional[Path] = None,
+        source: str = "llm_nmedia_cloud",
     ) -> Dict[str, Any]:
         """
         Enregistre une interaction avec calcul automatique des tokens, coûts et clés.
         Écrit dans memory/token_ledger.jsonl et Projects/<projet>/memory/token_ledger.jsonl.
+        Supporte la distinction bi-source ('llm_nmedia_cloud' vs 'antigravity-chat').
         """
         root = root_dir or Path(".")
         key_info = cls.resolve_active_key_info()
@@ -139,8 +141,18 @@ class TokenLedger:
         total_tokens = prompt_tokens + completion_tokens
         cost_usd = cls.calculate_cost(model, prompt_tokens, completion_tokens)
 
+        # Normalisation stricte de la source LLM : 'llm_nmedia_cloud' vs 'antigravity-chat'
+        src_val = (source or "llm_nmedia_cloud").strip()
+        if src_val.lower() in ("nmedia_cloud", "nmedia", "llm_nmedia_cloud"):
+            norm_source = "llm_nmedia_cloud"
+        elif src_val.lower() in ("google", "antigravity", "antigravity-chat"):
+            norm_source = "antigravity-chat"
+        else:
+            norm_source = src_val
+
         entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
+            "source": norm_source,
             "project": project_name or "Global",
             "key_label": resolved_key_label,
             "key_masked": key_info["key_masked"],

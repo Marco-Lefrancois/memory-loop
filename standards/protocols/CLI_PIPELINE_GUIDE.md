@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 104 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 105 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 104 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 105 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -162,6 +162,7 @@ flowchart LR
 | `python src/swarm.py plugin-export` | Exporter un package Agent Plugin 1.0 portable | [--output <STR>] | Package AP 1.0 redistribuable |
 | `python src/swarm.py plugin-validate` | Valider la conformité Agent Plugin 1.0 | [--plugin-root <STR>] [--strict <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py sync` | WikiFix + Synchronisation d'état et modélisation Hypergraphe | [--verbose <STR>] [--incremental <STR>] [--fast <STR>] [--story <STR>] | Index FTS5 + Graphe sémantique |
+| `python src/swarm.py sync-antigravity` | Synchroniser les tokens et interactions de l'IDE Antigravity vers le Token Ledger | [--conversation-id <STR>] [--all <STR>] | Console / Mémoire d'état |
 
 ---
 

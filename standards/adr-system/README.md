@@ -103,6 +103,8 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0366](0366-standard-story-2.0-handoff-tripartite-et-maillage-referentiel.md)** : Standard Story 2.0, Handoff Tripartite et Maillage Référentiel
 *   **[ADR-0367](0367-structured-concurrency-resource-orchestration.md)** : Orchestration Asynchrone Structurée — Éradication des Tâches Orphelines, Budgets Hiérarchiques & Gestion Dynamique des Ressources
 *   **[ADR-0368](0368-resilient-csv-tabular-engine-and-privacy.md)** : Moteur Tabulaire Résilient & Étanche — Normalisation Multi-Encodage, Streaming à Mémoire Constante, Diff Sémantique et Anonymisation PII
+*   **[ADR-0369](0369-python-senior-robustness-and-resource-governance.md)** : Gouvernance des Ressources & Robustesse Python Senior — Les 7 Standards d'Ingénierie mLoop
+*   **[ADR-0370](0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md)** : Générateur Automatique du Guide CLI SSOT & Gouvernance Anti-Drift Déterministe
 
 ---
-*Dernière consolidation constitutionnelle : 13 septembre 2026 — 82 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 15 septembre 2026 — 84 ADRs Unifiées (Zéro Conflit)*
