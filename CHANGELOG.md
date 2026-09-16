@@ -7,6 +7,44 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.27.0] - 2026-09-16
+
+### Added
+- **Gouvernance & Étanchéité de Phase SOW (ADR-0339 Zero-Premature-Stories)** :
+  - Règle comportementale stricte interdisant la création ou la rédaction de User Stories détaillées avec critères Gherkin sous `backlog/stories/` en Phase 0 (`T-SHIRT-SIZE`) et Phase 1 (`SOW`). Le découpage associé à la demande de SOW réside exclusivement au niveau macro dans `sprint_backlog.md` et Section 4 du SOW.
+  - Directive inscrite dans `AGENTS.md`, `GEMINI.md`, `CLAUDE.md`, `standards/protocols/PROJECT_LIFECYCLE_STAGES.md` et `standards/adr-system/0339-project-lifecycle-stages-governance-gates.md`.
+- **Standards de Robustesse Python Senior (ADR-0369 / SSOT)** :
+  - Protocole normatif `standards/protocols/PYTHON_SENIOR_CODING_STANDARDS.md` et décision `standards/adr-system/0369-python-senior-robustness-and-resource-governance.md`.
+  - 7 piliers d'ingénierie senior : typage structurel (`typing.Protocol`), context managers obligatoires (`with`) sur SQLite/HTTP/Sockets, timeouts explicites sur tous les sous-processus et appels réseau, observabilité structurée (`logger.debug(..., extra={...})`), interdiction formelle du `except Exception: pass` nu, et failure contracts exhaustifs (`pytest.raises`).
+- **Générateur SSOT du Guide CLI & Anti-Drift (ADR-0370)** :
+  - Module `src/pipelines/guide_generator.py` et décision `standards/adr-system/0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md`.
+  - Synchronisation automatique paritaire des 105 commandes réelles dans `standards/protocols/CLI_PIPELINE_GUIDE.md` via `python src/swarm.py guide --sync`.
+  - Contrôle Vibe-Check n°15 vérifiant la parité stricte du guide CLI.
+- **Commande CLI `dossier-init` & Outillage de Cadrage** :
+  - Commande `python src/swarm.py dossier-init --story <ID>` générant le squelette du Dossier de Preuves Documentaires (`_fact_dossier.md` ADR-0361).
+  - Compteurs de tokens et tarification LiteLLM pour `gemini-3.8-flash`, `gemini-3.7-flash` et `gpt-transcribe` (`src/utils/antigravity_meter.py`, `src/utils/token_ledger.py`).
+
+### Changed
+- **Moteur SOW (`src/pipelines/sow_engine.py`)** :
+  - `inspect_project_context` extrait désormais prioritairement les récits macro depuis `backlog/sprint_backlog.md` sans exiger de fichiers `.md` physiques.
+  - `generate_sow` injecte dynamiquement les récits macro de `sprint_backlog.md` dans la Section 4 du SOW.
+  - Alerte informative ADR-0339 émise si des stories physiques sont détectées lors de l'évaluation du SOW.
+- **Détection de Cycle de Vie (`src/pipelines/vibe_check.py:detect_project_lifecycle_stage`)** :
+  - Maintien rigoureux du statut `[Mode: INIT | STAGE_SOW]` lorsqu'un projet dispose d'un SOW et d'un `sprint_backlog.md` dont les items sont `OPEN`/`BACKLOG`, sans basculer prématurément en `STAGE_PLAN_GRILL`.
+  - Transition vers `STAGE_PLAN_GRILL` activée dès qu'un récit passe à `IN_ANALYZE`, `READY_FOR_GROOMING`, `READY_FOR_DEV` ou qu'un récit détaillé physique est engagé.
+- **Skill Grill (`.agents/skills/grill/SKILL.md`)** :
+  - Alignement avec les composantes clés d'ADR-0320 (prise en compte de `CONTEXT.md`, arbitrage Faits vs Décisions, 4 États, 5 Vecteurs de Résilience, Épuisement de Frontière).
+- **Durcissement State Machine (Gate C9)** :
+  - Prévention des sauts d'états illégitimes entre statuts de stories.
+
+### Fixed
+- **Parité Miroir AGENTS.md / GEMINI.md / CLAUDE.md** :
+  - Rétablissement et validation automatique de la parité miroir par le premier contrôle Vibe-Check.
+- **Suites de Tests Unitaires** :
+  - Nouveaux tests ajoutés dans `tests/test_sow_pipeline.py`, `tests/test_vibe_check_lifecycle.py`, `tests/test_guide_parity.py`, `tests/test_python_senior_standards.py`, `tests/test_dossier_init.py`, `tests/test_gate_c9_hardened.py`.
+
+---
+
 ## [2.26.0] - 2026-09-15
 
 ### Added
