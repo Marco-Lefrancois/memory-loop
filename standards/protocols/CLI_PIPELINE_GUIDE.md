@@ -141,7 +141,7 @@ flowchart LR
 | `python src/swarm.py gates` | Exécuter, vérifier ou auditer les portails d'acceptation (Runnable Gates - ADR-0341) | [--file <STR>] [--scope <STR>] [--status <STR>] [--reverify <STR>] [--lint <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py guardian-status` | Afficher l'état du Guardian Auto-Reviewer et du Circuit Breaker | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py hill-climb` | Test Hill-Climbing (mutation-évaluation) | *(Aucun)* | Console / Mémoire d'état |
-| `python src/swarm.py lifecycle-clean` | Supprimer définitivement les stories orphelines créées prématurément (Zéro Ghost Bias) | *(Aucun)* | Nettoyage stories orphelines |
+| `python src/swarm.py lifecycle-clean` | Archiver de manière réversible les stories orphelines créées prématurément (Zéro Ghost Bias / L-08) | [--confirm <STR>] | Nettoyage stories orphelines |
 | `python src/swarm.py lifecycle-status` | Afficher l'état du cycle de vie projet et l'historique des portes (ADR-0339) | *(Aucun)* | Console / Historique du cycle de vie |
 | `python src/swarm.py rubber-duck` | Agent Sentinel — revue contradictoire de fond (Avocat du Diable avec discernement & rigueur) | [--file <STR>] [--suggest-patch <STR>] | Rapport sémantique 4 Piliers |
 | `python src/swarm.py struct-check` | Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence du gabarit blueprint (pré-Sentinel) | [--file <STR>] [--strict <STR>] [--verbose <STR>] | Rapport violations C1–C7 |

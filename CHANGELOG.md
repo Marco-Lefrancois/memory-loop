@@ -5,6 +5,25 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [2.29.0] - 2026-09-16
+
+### Added
+- **Archivage Réversible & Sécurité Anti-Perte de Données (`clean_premature_stories` ADR-0339 / L-08)** :
+  - Remplacement total de l'ancien `unlink()` destructif par un déplacement horodaté sécurisé vers `memory/archive/premature_stories/<timestamp>/` via `shutil.move()`.
+  - Condition de garde `confirm: bool = False` par défaut : refus de toute opération sans accord explicite et journalisation d'alerte `logger.warning`.
+  - Ajout du flag `--confirm` à la commande CLI `lifecycle-clean` dans `src/commands/_registry.py` et `src/commands/handlers/project.py`.
+  - Journalisation détaillée et structurée de chaque story ou preuve déplacée.
+  - Suite de tests unitaires TDD dédiée dans `tests/test_premature_cleanup_safety.py` (3 tests).
+- **Support des Open Questions à 4 Chiffres dans le Critic (`Rubber Duck 2.0` ADR-0319 / L-09)** :
+  - Suite de tests unitaires TDD dédiée dans `tests/test_critic_oq_exemption.py` (5 tests) validant l'exemption de 3 à 4 chiffres (`OQ-001` à `OQ-9999`) et les cas de rejet.
+
+### Fixed
+- **Éradication des Faux Positifs ADR-0319 dans DevilAdvocateCritic (L-09)** :
+  - Élargissement du regex dans `DevilAdvocateCritic._has_oq_exemption` (`src/engine/rubber_duck/critic.py`) de `r"\bOQ-\d{3}\b"` vers `r"\bOQ-\d{3,4}\b"`.
+  - Autorisation immédiate des récits de conception matures portant des questions ouvertes à 4 chiffres (ex. `OQ-1001`, `OQ-2021`).
+- **Parité Guide CLI SSOT (ADR-0370)** :
+  - Synchronisation de `CLI_PIPELINE_GUIDE.md` via `python src/swarm.py guide --sync` intégrant l'argument `--confirm` pour `lifecycle-clean`.
+
 ---
 
 ## [2.28.0] - 2026-09-16

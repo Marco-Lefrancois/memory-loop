@@ -116,8 +116,14 @@ COMMANDS: dict[str, dict] = {
     },
     "lifecycle-clean": {
         "handler": "project:handle_lifecycle_clean",
-        "help": "Supprimer définitivement les stories orphelines créées prématurément (Zéro Ghost Bias)",
-        "args": [],
+        "help": "Archiver de manière réversible les stories orphelines créées prématurément (Zéro Ghost Bias / L-08)",
+        "args": [
+            {
+                "name": "--confirm",
+                "action": "store_true",
+                "help": "Confirmer l'archivage sécurisé des stories et preuves prématurées",
+            },
+        ],
     },
     "sync-antigravity": {
         "handler": "project:handle_sync_antigravity",

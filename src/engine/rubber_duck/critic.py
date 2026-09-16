@@ -301,8 +301,8 @@ class DevilAdvocateCritic:
 
     @classmethod
     def _has_oq_exemption(cls, content: str) -> bool:
-        """Clause d'exemption : question ouverte OQ-XXX + mention déclarative de route à définir."""
-        has_oq = bool(re.search(r"\bOQ-\d{3}\b", content))
+        """Clause d'exemption : question ouverte OQ-XXX/OQ-XXXX + mention déclarative de route à définir (L-09)."""
+        has_oq = bool(re.search(r"\bOQ-\d{3,4}\b", content))
         has_deferred_marker = "[API de soumission à définir]" in content or bool(
             re.search(r"à confirmer|à définir", content, re.IGNORECASE)
         )

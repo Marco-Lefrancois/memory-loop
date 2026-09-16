@@ -452,53 +452,106 @@ class ProjectLifecycleManager:
         return state
 
     @classmethod
-    def clean_premature_stories(cls, project_path: Path) -> Dict[str, Any]:
+    def clean_premature_stories(
+        cls, project_path: Path, confirm: bool = False
+    ) -> Dict[str, Any]:
         """
-        Supprime définitivement les stories créées prématurément et leurs EvidencePacks
-        pour éliminer le 'Ghost Bias' et restaurer la neutralité cognitive du LLM.
+        Déplace et archive de manière réversible les stories créées prématurément
+        et leurs EvidencePacks dans memory/archive/premature_stories/<timestamp>/
+        pour éliminer le 'Ghost Bias' et restaurer la neutralité cognitive du LLM sans perte de données (ADR-0339 / L-08).
         """
+        if not confirm:
+            logger.warning(
+                f"[LIFECYCLE-CLEAN] Nettoyage refusé pour '{project_path.name}' : confirmation explicite requise (confirm=False).",
+                extra={"project": project_path.name},
+            )
+            return {
+                "status": "refused",
+                "deleted_stories": [],
+                "deleted_evidence": [],
+                "archived_stories": [],
+                "archived_evidence": [],
+                "archive_dir": None,
+                "message": "Nettoyage refusé : confirmation explicite requise (passez --confirm).",
+            }
+
         state = cls.get_state(project_path)
         if state.stage_index >= STAGE_ORDER.index(ProjectLifecycleStage.STAGE_2_PLAN_GRILL):
             return {
+                "status": "noop",
                 "deleted_stories": [],
                 "deleted_evidence": [],
+                "archived_stories": [],
+                "archived_evidence": [],
+                "archive_dir": None,
                 "message": "Le projet est en Phase 2 ou supérieure. Aucune suppression de story requise.",
             }
 
         deleted_stories = []
         deleted_evidence = []
 
-        # 1. Suppression des stories sous backlog/stories/
+        # Dossier d'archivage horodaté sécurisé (ZÉRO unlink destructif - L-08)
+        timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        archive_dir = project_path / "memory" / "archive" / "premature_stories" / timestamp_str
+
+        # 1. Déplacement des stories sous backlog/stories/ vers l'archive
         stories_dir = project_path / "backlog" / "stories"
         if stories_dir.exists():
             for sf in list(stories_dir.glob("*.md")):
                 if sf.name.lower() != "readme.md":
+                    archive_dir.mkdir(parents=True, exist_ok=True)
                     sf_name = sf.name
-                    sf.unlink()
+                    target_dest = archive_dir / sf_name
+                    shutil.move(str(sf), str(target_dest))
                     deleted_stories.append(sf_name)
+                    logger.warning(
+                        f"[LIFECYCLE-CLEAN] Story prématurée archivée : {sf_name} -> {target_dest}",
+                        extra={"project": project_path.name, "file": sf_name, "archive": str(target_dest)},
+                    )
 
-        # 2. Suppression des EvidencePacks et fact_dossiers orphelins sous memory/evidence/
+        # 2. Déplacement des EvidencePacks et fact_dossiers sous memory/evidence/ vers l'archive
         evidence_dir = project_path / "memory" / "evidence"
         if evidence_dir.exists():
             for ef in list(evidence_dir.glob("*_evidence.json")) + list(evidence_dir.glob("*_fact_dossier.md")):
+                archive_dir.mkdir(parents=True, exist_ok=True)
                 ef_name = ef.name
-                ef.unlink()
+                target_dest = archive_dir / ef_name
+                shutil.move(str(ef), str(target_dest))
                 deleted_evidence.append(ef_name)
+                logger.warning(
+                    f"[LIFECYCLE-CLEAN] Preuve prématurée archivée : {ef_name} -> {target_dest}",
+                    extra={"project": project_path.name, "file": ef_name, "archive": str(target_dest)},
+                )
 
         # 3. Réalignement macroscopique de sprint_backlog.md
         backlog_file = project_path / "backlog" / "sprint_backlog.md"
         if backlog_file.exists():
-            content = backlog_file.read_text(encoding="utf-8")
-            # Remplacement des statuts engagés par OPEN
-            for kw in ["IN_ANALYZE", "READY_FOR_GROOMING", "READY_FOR_DEV", "IN_DEV"]:
-                content = content.replace(kw, "OPEN")
-            backlog_file.write_text(content, encoding="utf-8")
+            try:
+                with open(backlog_file, "r", encoding="utf-8") as f:
+                    content = f.read()
+                # Remplacement des statuts engagés par OPEN
+                for kw in ["IN_ANALYZE", "READY_FOR_GROOMING", "READY_FOR_DEV", "IN_DEV"]:
+                    content = content.replace(kw, "OPEN")
+                with open(backlog_file, "w", encoding="utf-8") as f:
+                    f.write(content)
+            except Exception as e:
+                logger.debug(f"Erreur mise à jour sprint_backlog.md : {e}", exc_info=True)
 
-        return {
+        res_dict = {
+            "status": "completed",
             "deleted_stories": deleted_stories,
             "deleted_evidence": deleted_evidence,
-            "message": f"Nettoyage effectué : {len(deleted_stories)} story(ies) et {len(deleted_evidence)} EvidencePack(s) supprimés.",
+            "archived_stories": deleted_stories,
+            "archived_evidence": deleted_evidence,
+            "archive_dir": str(archive_dir) if (deleted_stories or deleted_evidence) else None,
+            "message": (
+                f"Nettoyage sécurisé effectué : {len(deleted_stories)} story(ies) et {len(deleted_evidence)} "
+                f"preuve(s) archivée(s) vers {archive_dir}."
+                if (deleted_stories or deleted_evidence)
+                else "Aucune story prématurée à nettoyer."
+            ),
         }
+        return res_dict
 
     @classmethod
     def _compute_stage_deliverables_hash(

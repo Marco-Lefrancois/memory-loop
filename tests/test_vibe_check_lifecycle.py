@@ -152,8 +152,8 @@ def test_vibe_check_fails_on_premature_stories_in_sow_phase():
         assert phase_check["status"] == "FAIL"
         assert "interdit(s) en étape 'STAGE_1_SOW'" in phase_check["check"]
 
-        # Nettoyer les stories prématurées
-        ProjectLifecycleManager.clean_premature_stories(proj_dir)
+        # Nettoyer les stories prématurées avec confirmation explicite
+        ProjectLifecycleManager.clean_premature_stories(proj_dir, confirm=True)
 
         # Re-tester le Vibe-Check -> doit maintenant passer le Check 13
         res_clean = run_vibe_check(proj_name)

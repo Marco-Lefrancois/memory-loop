@@ -154,8 +154,8 @@ def test_clean_premature_stories(temp_project: Path) -> None:
     e1 = temp_project / "memory" / "evidence" / "SHOP-101_evidence.json"
     e1.write_text("{}", encoding="utf-8")
 
-    # Exécuter le nettoyage
-    result = ProjectLifecycleManager.clean_premature_stories(temp_project)
+    # Exécuter le nettoyage avec confirmation explicite
+    result = ProjectLifecycleManager.clean_premature_stories(temp_project, confirm=True)
     assert len(result["deleted_stories"]) == 2
     assert "SHOP-101.md" in result["deleted_stories"]
     assert "SHOP-102.md" in result["deleted_stories"]

@@ -345,17 +345,27 @@ def handle_lifecycle_status(args: argparse.Namespace, state: LoopState, project_
 
 
 def handle_lifecycle_clean(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
-    """Supprime définitivement les stories orphelines créées prématurément (Zéro Ghost Bias)."""
+    """Archive de manière réversible les stories orphelines créées prématurément (Zéro Ghost Bias / L-08)."""
     from src.core.lifecycle import ProjectLifecycleManager
-    res = ProjectLifecycleManager.clean_premature_stories(project_path)
+    confirm = getattr(args, "confirm", False)
+    if not confirm:
+        ZeroFluffConsole.warning(
+            "Opération refusée : le flag --confirm est requis pour archiver les stories prématurées.\n"
+            "Exécutez : python src/swarm.py lifecycle-clean --confirm"
+        )
+        return 1
+    res = ProjectLifecycleManager.clean_premature_stories(project_path, confirm=True)
+    archive_dir = res.get("archive_dir")
     if res.get("deleted_stories"):
         ZeroFluffConsole.success(
-            f"Suppression terminée : {len(res['deleted_stories'])} story(ies) supprimée(s) : {res['deleted_stories']}"
+            f"Archivage terminé : {len(res['deleted_stories'])} story(ies) archivée(s) : {res['deleted_stories']}"
         )
     if res.get("deleted_evidence"):
         ZeroFluffConsole.success(
-            f"EvidencePacks supprimés : {len(res['deleted_evidence'])} fichier(s)."
+            f"EvidencePacks archivés : {len(res['deleted_evidence'])} fichier(s)."
         )
+    if archive_dir:
+        ZeroFluffConsole.info(f"Dossier d'archive sécurisé : {archive_dir}")
     ZeroFluffConsole.info(res.get("message", "Nettoyage complété."))
     return 0
 
