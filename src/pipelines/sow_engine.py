@@ -217,6 +217,14 @@ class SOWEngine:
         out_file = out_dir / f"SOW_{self.project_name}.md"
 
         out_file.write_text(content, encoding="utf-8")
+
+        # Enregistrement de l'étape de phase SOW (ADR-0339)
+        from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
+        l_state = ProjectLifecycleManager.get_state(self.project_path)
+        if l_state.current_stage == ProjectLifecycleStage.STAGE_0_TSHIRT:
+            l_state.current_stage = ProjectLifecycleStage.STAGE_1_SOW
+            ProjectLifecycleManager.save_state(self.project_path, l_state)
+
         return out_file
 
     # ── ADR-0331 §2.2.3 : Interdiction Formelle des Libellés Génériques ──────

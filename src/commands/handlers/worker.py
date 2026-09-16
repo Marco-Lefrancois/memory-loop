@@ -25,9 +25,10 @@ def handle_worker_spawn(args: argparse.Namespace, state: LoopState, project_path
 
 
 def handle_worker_status(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
-    """Affiche le statut de tous les workers Herdr actifs."""
+    """Affiche le statut de tous les workers Herdr actifs ou d'une story spécifique."""
     from src.pipelines.worker_pipeline import run_worker_status
-    res = run_worker_status(getattr(args, "project", None))
+    story_id = getattr(args, "story", None)
+    res = run_worker_status(getattr(args, "project", None), story_id=story_id)
     return 0 if res.get("success") else 1
 
 

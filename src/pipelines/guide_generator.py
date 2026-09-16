@@ -84,6 +84,9 @@ PHASE_MAPPING: Dict[str, str] = {
     "fact-search": "validate",
     "check-leakage": "validate",
     "gates": "validate",
+    "gate-approve": "validate",
+    "lifecycle-status": "validate",
+    "lifecycle-clean": "validate",
     "tree": "validate",
     "guardian-status": "validate",
     "eval": "validate",
@@ -190,6 +193,9 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "plugin-export": "Package AP 1.0 redistribuable",
     "guide-export": "Guide HTML autonome Plannotator",
     "dossier-init": "`memory/evidence/<STORY_ID>_fact_dossier.md`",
+    "gate-approve": "`memory/lifecycle_state.json` (Porte validée)",
+    "lifecycle-status": "Console / Historique du cycle de vie",
+    "lifecycle-clean": "Nettoyage stories orphelines",
 }
 
 

@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 105 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 108 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 105 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 108 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -118,7 +118,7 @@ flowchart LR
 | `python src/swarm.py worker-reap` | Purger les volets et agents orphelins ou inactifs (ADR-0355 Stall Detection) | [--timeout <INT>] [--force <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py worker-shadow-estimate` | Générer un contre-chiffrage contradictoire pessimiste basé sur les risques | [--epic <STR>] [--desc <STR>] [--dry-run <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py worker-spawn` | Instancier un sous-agent Herdr isolé pour un récit spécifique (Clean Slate) | --story <STR> [--kind <STR>] [--model <STR>] [--task-type <STR>] | Terminal PTY Herdr multiplexé |
-| `python src/swarm.py worker-status` | Afficher le statut et la santé des workers Herdr actifs | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py worker-status` | Afficher le statut et la santé des workers Herdr actifs (ou d'un récit spécifique) | [--story <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py worker-visual-dissect` | Dissecter une maquette et extraire la matrice des 8 états UI | --asset <STR> [--dry-run <STR>] | Console / Mémoire d'état |
 
 ---
@@ -137,9 +137,12 @@ flowchart LR
 | `python src/swarm.py eval-harvest` | Moissonner les anomalies d'audit en cas d'évaluation Evals (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py fact-check` | Exécuter l'audit Fact-Check NLI sur une User Story et émettre son certificat | [--story <STR>] [--strict <STR>] | Certificat de véracité NLI |
 | `python src/swarm.py fact-search` | Recherche factuelle haute précision dans l'index FTS5 SSOT documentaire | --query <STR> [--limit <INT>] [--layer <STR>] [--no-synonyms <STR>] [--include-superseded <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py gate-approve` | Valider formellement une Porte de Gouvernance (Gate 0 à 5 - ADR-0339) | --gate <INT> [--approver <STR>] [--notes <STR>] | `memory/lifecycle_state.json` (Porte validée) |
 | `python src/swarm.py gates` | Exécuter, vérifier ou auditer les portails d'acceptation (Runnable Gates - ADR-0341) | [--file <STR>] [--scope <STR>] [--status <STR>] [--reverify <STR>] [--lint <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py guardian-status` | Afficher l'état du Guardian Auto-Reviewer et du Circuit Breaker | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py hill-climb` | Test Hill-Climbing (mutation-évaluation) | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py lifecycle-clean` | Supprimer définitivement les stories orphelines créées prématurément (Zéro Ghost Bias) | *(Aucun)* | Nettoyage stories orphelines |
+| `python src/swarm.py lifecycle-status` | Afficher l'état du cycle de vie projet et l'historique des portes (ADR-0339) | *(Aucun)* | Console / Historique du cycle de vie |
 | `python src/swarm.py rubber-duck` | Agent Sentinel — revue contradictoire de fond (Avocat du Diable avec discernement & rigueur) | [--file <STR>] [--suggest-patch <STR>] | Rapport sémantique 4 Piliers |
 | `python src/swarm.py struct-check` | Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence du gabarit blueprint (pré-Sentinel) | [--file <STR>] [--strict <STR>] [--verbose <STR>] | Rapport violations C1–C7 |
 | `python src/swarm.py tree` | Afficher l'arbre d'exécution Depth Tree et l'état des gates (ADR-0341) | [--file <STR>] [--scope <STR>] | Console / Mémoire d'état |

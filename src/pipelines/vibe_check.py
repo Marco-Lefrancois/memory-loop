@@ -42,6 +42,22 @@ def detect_project_lifecycle_stage(
     if not project_dir or not project_dir.exists():
         return "INIT", "STAGE_INIT"
 
+    # Vérification prioritaire de l'état persistant officiel SSOT (ADR-0339)
+    from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
+    state_file = project_dir / "memory" / "lifecycle_state.json"
+    if state_file.exists():
+        l_state = ProjectLifecycleManager.get_state(project_dir)
+        stage_name = l_state.current_stage.value
+        mode = (
+            "INIT"
+            if l_state.current_stage in (
+                ProjectLifecycleStage.STAGE_0_TSHIRT,
+                ProjectLifecycleStage.STAGE_1_SOW,
+            )
+            else "RUN"
+        )
+        return mode, stage_name
+
     backlog_file = project_dir / "backlog" / "sprint_backlog.md"
     stories_dir = project_dir / "backlog" / "stories"
     stories = (
@@ -427,32 +443,69 @@ def run_vibe_check(
     )
 
     # Check 13 (ADR-0339 §3 — Interdiction de Saut de Phase) : un projet ne
-    # devrait jamais compter de récits détaillés (backlog/stories/) sans
-    # qu'un SOW (docs/01-architecture/SOW_*.md) n'ait été produit au préalable
-    # (Porte 1 franchie). Dérogation explicite via `phase_gate_exempt: true`
-    # dans le frontmatter de sprint_backlog.md pour les petits projets internes.
+    # doit JAMAIS compter de récits détaillés (backlog/stories/) ni de statuts
+    # d'analyse engagés en Phase 0 ou 1 (Porte 1 non franchie).
     phase_gate_ok = True
+    phase_gate_violations = []
     if project_dir.exists():
+        from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
+        l_state = ProjectLifecycleManager.get_state(project_dir)
         stories_dir = project_dir / "backlog" / "stories"
-        has_stories = stories_dir.exists() and any(stories_dir.glob("**/*.md"))
-        if has_stories:
+        detailed_stories = (
+            [s for s in stories_dir.glob("*.md") if s.name.lower() != "readme.md"]
+            if stories_dir.exists()
+            else []
+        )
+
+        # En Phase 0 (T-Shirt) ou Phase 1 (SOW), AUCUN récit détaillé n'est autorisé
+        if l_state.current_stage in (
+            ProjectLifecycleStage.STAGE_0_TSHIRT,
+            ProjectLifecycleStage.STAGE_1_SOW,
+        ):
+            if detailed_stories:
+                phase_gate_ok = False
+                phase_gate_violations.append(
+                    f"{len(detailed_stories)} récit(s) détaillé(s) sous backlog/stories/ interdit(s) en étape '{l_state.current_stage.value}'"
+                )
+
+            # Vérifier qu'aucune story n'est engagée dans sprint_backlog.md
+            backlog_file = project_dir / "backlog" / "sprint_backlog.md"
+            if backlog_file.exists():
+                try:
+                    b_lines = backlog_file.read_text(encoding="utf-8", errors="ignore").splitlines()
+                    table_rows = [
+                        line for line in b_lines
+                        if line.strip().startswith("|")
+                        and not line.strip().startswith("| :---")
+                        and not line.strip().startswith("| ID")
+                        and not line.strip().startswith("| #")
+                        and not line.strip().startswith("| Métrique")
+                    ]
+                    for row in table_rows:
+                        for kw in ["IN_ANALYZE", "READY_FOR_GROOMING", "READY_FOR_DEV", "IN_DEV"]:
+                            if kw in row.upper():
+                                phase_gate_ok = False
+                                phase_gate_violations.append(
+                                    f"Statut engagé '{kw}' détecté dans les récits de sprint_backlog.md interdit avant franchissement de Gate 1"
+                                )
+                                break
+                        if not phase_gate_ok:
+                            break
+                except Exception as e:
+                    logger.debug(f"Erreur lecture sprint_backlog.md pour Check 13: {e}", exc_info=True)
+        else:
+            # En Phase 2 et plus, vérifier qu'un SOW existe si requis
             arch_dir = project_dir / "docs" / "01-architecture"
             has_sow = arch_dir.exists() and any(arch_dir.glob("SOW_*.md"))
-            if not has_sow:
-                # ADR-0339 §3 : l'existence de sprint_backlog.md constitue déjà
-                # une preuve de gouvernance de phase tracée (l'ADR exige que
-                # son en-tête déclare la phase active) — suffisant pour
-                # exempter les projets établis sans exiger de flag explicite
-                # en plus (ex: projets historiques sans SOW jamais produit).
-                sprint_file = project_dir / "backlog" / "sprint_backlog.md"
-                is_exempt = sprint_file.exists()
-                if not is_exempt:
-                    phase_gate_ok = False
+            sprint_file = project_dir / "backlog" / "sprint_backlog.md"
+            if detailed_stories and not has_sow and not sprint_file.exists():
+                phase_gate_ok = False
+                phase_gate_violations.append("Récits détaillés sans SOW ni sprint_backlog préalable")
 
     phase_gate_msg = (
         "Interdiction de Saut de Phase (ADR-0339)"
         if phase_gate_ok
-        else "Interdiction de Saut de Phase (Récits détaillés sans SOW préalable — Porte 1 non franchie, ADR-0339)"
+        else f"Interdiction de Saut de Phase (ADR-0339 : {'; '.join(phase_gate_violations)} — Exécutez 'python src/swarm.py lifecycle-clean --project {project_name}')"
     )
     checks.append(
         {"check": phase_gate_msg, "status": "PASS" if phase_gate_ok else "FAIL"}

@@ -13,6 +13,17 @@ def run_session_resume(project_name: str):
     
     project_dir = Path("Projects") / project_name
     
+    # 0. Lecture de l'état officiel du cycle de vie (ADR-0339)
+    from src.core.lifecycle import ProjectLifecycleManager, STAGE_NAMES
+    l_state = ProjectLifecycleManager.get_state(project_dir)
+    stage_desc = STAGE_NAMES.get(l_state.current_stage, l_state.current_stage.value)
+    next_gate = l_state.stage_index if l_state.stage_index < 5 else 5
+    lifecycle_banner = (
+        f"## 🚦 État du Cycle de Vie Projet (ADR-0339)\n"
+        f"- **Étape Active** : `{l_state.current_stage.value}` ({stage_desc})\n"
+        f"- **Prochaine Porte de Sortie** : Gate {next_gate}\n"
+    )
+
     # 1. Lecture de sprint_backlog.md et STORY_MAPPING.md (Vertical Slicing SSOT)
     backlog_file = project_dir / "backlog" / "sprint_backlog.md"
     story_mapping_file = project_dir / "backlog" / "STORY_MAPPING.md"
@@ -54,6 +65,7 @@ def run_session_resume(project_name: str):
 **Timestamp Restauration**: {time.strftime('%Y-%m-%d %H:%M:%S')}
 **Statut Rétention Contextuelle**: 100% (Anti-Amnesia Active)
 
+{lifecycle_banner}
 ## Découpage Vertical (Story Mapping SSOT)
 {mapping_summary}
 

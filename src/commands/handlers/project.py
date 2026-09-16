@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 from src.cli import ZeroFluffConsole
 from src.state import ProjectLayout
+from src.utils.blueprints import BlueprintLoader
 
 if TYPE_CHECKING:
     import argparse
@@ -21,159 +22,76 @@ def handle_init(args: argparse.Namespace, state: LoopState, project_path: Path) 
 
     idx = p / ProjectLayout.DOCS / "index.md"
     if not idx.exists():
-        idx.write_text(
-            f"# 📚 Table des Matières Dynamique - SSOT Projet '{state.project_name}'\n\n"
-            "## 🗂️ Sommaire de la Base de Connaissances\n",
-            encoding="utf-8",
-        )
+        content = BlueprintLoader.render("project_index_template.md", {"PROJECT_NAME": state.project_name})
+        with open(idx, "w", encoding="utf-8") as f:
+            f.write(content)
 
     (p / ProjectLayout.BACKLOG / "stories").mkdir(parents=True, exist_ok=True)
     sb = p / ProjectLayout.BACKLOG / ProjectLayout.SPRINT_BACKLOG_FILE
     if not sb.exists():
-        sb.write_text(
-            f"# Sprint Backlog - Projet {state.project_name}\n\n"
-            "| ID | Titre | Statut | Key Jira |\n| :--- | :--- | :--- | :--- |\n",
-            encoding="utf-8",
-        )
+        content = BlueprintLoader.render("project_sprint_backlog_template.md", {"PROJECT_NAME": state.project_name})
+        with open(sb, "w", encoding="utf-8") as f:
+            f.write(content)
 
     oq_client = p / ProjectLayout.DOCS / "04-transverse" / "00-questions-ouvertes-client.md"
     if not oq_client.exists():
-        oq_client.write_text(
-            f"# Registre des Questions Ouvertes (Client / Légal) - {state.project_name}\n\n"
-            "Ce document regroupe exclusivement les points d'arbitrage d'affaires et légaux.\n\n"
-            "| ID | Sujet | Statut | Destinataire (Rôle) | Décision / Réponse |\n"
-            "| :--- | :--- | :--- | :--- | :--- |\n",
-            encoding="utf-8",
+        content = BlueprintLoader.render(
+            "project_open_questions_template.md",
+            {
+                "TARGET_AUDIENCE": "Client / Légal",
+                "PROJECT_NAME": state.project_name,
+                "DESCRIPTION": "Ce document regroupe exclusivement les points d'arbitrage d'affaires et légaux.",
+            },
         )
+        with open(oq_client, "w", encoding="utf-8") as f:
+            f.write(content)
 
     oq_dev = p / ProjectLayout.DOCS / "04-transverse" / "00-questions-ouvertes-devteam.md"
     if not oq_dev.exists():
-        oq_dev.write_text(
-            f"# Registre des Questions Ouvertes (Équipe Dev) - {state.project_name}\n\n"
-            "Ce document regroupe exclusivement les défis et verrous techniques.\n\n"
-            "| ID | Sujet | Statut | Destinataire (Rôle) | Décision / Réponse |\n"
-            "| :--- | :--- | :--- | :--- | :--- |\n",
-            encoding="utf-8",
+        content = BlueprintLoader.render(
+            "project_open_questions_template.md",
+            {
+                "TARGET_AUDIENCE": "Équipe Dev",
+                "PROJECT_NAME": state.project_name,
+                "DESCRIPTION": "Ce document regroupe exclusivement les défis et verrous techniques.",
+            },
         )
+        with open(oq_dev, "w", encoding="utf-8") as f:
+            f.write(content)
 
     (p / ProjectLayout.MEMORY).mkdir(parents=True, exist_ok=True)
 
     # 1. README.md racine
     readme_path = p / "README.md"
     if not readme_path.exists():
-        readme_path.write_text(
-            f"# 🚀 {state.project_name} — Documentation & Architecture SSOT\n\n"
-            f"Bienvenue dans le dépôt officiel de documentation d'architecture, de règles d'affaires et de cadrage pour le projet **{state.project_name}**.\n\n"
-            "---\n\n"
-            "## 🎯 Objectifs du Projet\n"
-            "1. Cadrage fonctionnel et découpage vertical des récits utilisateur (Gabarit Gold Standard).\n"
-            "2. Source de Vérité Unique (SSOT) des règles métier et des contrats d'architecture.\n\n"
-            "---\n\n"
-            "## 📂 Architecture du Dépôt (Versionné dans Git)\n\n"
-            "```\n"
-            f"{state.project_name}/\n"
-            "├── 📄 README.md                # Documentation produit et point d'entrée humain\n"
-            "├── 📄 AGENTS.md                # Source de vérité agentique (Boot sequence & guardrails)\n"
-            "├── 📄 opencode.json            # Configuration IDE OpenCode (MCP & commandes)\n"
-            "├── 📄 .gitignore               # Protection Git (exclusion de reference/, .codegraph/)\n"
-            "├── 📂 backlog/                 # User Stories (Gherkin 4 Piliers) & sprint_backlog.md\n"
-            "├── 📂 docs/                    # Architecture SSOT, ADRs, règles métier\n"
-            "└── 📂 memory/                  # EvidencePacks JSON & état de session\n"
-            "```\n\n"
-            "> [!NOTE]\n"
-            "> **Espace Local Staging (`reference/`)** : Le dossier local `reference/` (matière première brute) est exclu de Git par le `.gitignore`. Toute la matière utile est normalisée en Markdown dans `docs/00-ingested/`.\n",
-            encoding="utf-8",
-        )
+        content = BlueprintLoader.render("project_readme_template.md", {"PROJECT_NAME": state.project_name})
+        with open(readme_path, "w", encoding="utf-8") as f:
+            f.write(content)
 
     # 2. AGENTS.md racine (100% Agnostique & Orienté Développeur / Assistant IA)
     agents_path = p / "AGENTS.md"
     if not agents_path.exists():
-        agents_path.write_text(
-            f"# 🛡️ Guide Agentique & Spécifications Développeur — {state.project_name}\n\n"
-            f"Ce document constitue la **Source de Vérité Agentique et Fonctionnelle (SSOT)** pour le projet **{state.project_name}**.\n\n"
-            "Il est conçu pour être consommé directement par l'équipe de développement et par tout assistant de codage IA (Cursor, GitHub Copilot, VS Code, OpenCode, Claude Code, OpenAI Codex).\n\n"
-            "---\n\n"
-            "## 1. Organisation du Dépôt & Source de Vérité\n\n"
-            "Le dépôt est structuré de façon modulaire et étanche (La Loi des 3 Piliers) :\n\n"
-            "```\n"
-            "├── 📂 docs/                          # Source de Vérité Fonctionnelle & Architecturale (SSOT)\n"
-            "│   ├── 📂 00-ingested/               # Analyse normalisée des documents sources & maquettes\n"
-            "│   ├── 📂 01-architecture/           # Énoncé des Travaux (SOW), schémas et décisions d'architecture (ADRs)\n"
-            "│   ├── 📂 02-business-rules/         # Règles d'affaires métier (RM-XXX)\n"
-            "│   ├── 📂 04-transverse/             # Registres de questions ouvertes et arbitrages\n"
-            "│   └── 📂 05-assets/                 # Actifs graphiques versionnés (maquettes, diagrammes)\n"
-            "│\n"
-            "├── 📂 backlog/                       # Terrain d'Exécution & Spécifications Prêtes pour Dev\n"
-            "│   ├── 📄 sprint_backlog.md          # Matrice d'avancement & statut des récits\n"
-            "│   └── 📂 stories/                   # User Stories au Gold Standard (4 Piliers Gherkin)\n"
-            "│\n"
-            "└── 📂 memory/                        # Traçabilité & Preuves de Spécifications\n"
-            "    └── 📂 evidence/                  # EvidencePacks JSON associés à chaque récit\n"
-            "```\n\n"
-            "---\n\n"
-            "## 2. Contrats de Spécification & Règle des 4 Piliers Gherkin\n\n"
-            "Chaque User Story présente sous `backlog/stories/` constitue un **contrat fonctionnel déclaratif complet** structuré autour des **4 Piliers Gherkin** que le code applicatif doit obligatoirement satisfaire :\n\n"
-            "1. **Chemin Nominal (*Happy Path*)** : Le parcours utilisateur standard complété avec succès.\n"
-            "2. **Rejets Métier & Erreurs de Validation** : Données invalides, règles métier non respectées, formulaires incomplets.\n"
-            "3. **Résilience Technique & Cas Limites (*Edge Cases*)** : Comportement hors-ligne, expiration de session (timeout réseau), saturation des requêtes (anti-rebond).\n"
-            "4. **UX, Sécurité & Accessibilité** : Retours visuels clairs, accessibilité (WCAG AA), masquage des données sensibles et états de chargement.\n\n"
-            "---\n\n"
-            "## 3. Directives de Développement & Pureté Fonctionnelle\n\n"
-            "- **Pureté Fonctionnelle & Zéro Code Physique** : Les spécifications décrivent le comportement métier et les flux d'écrans sans couplage rigide à une implémentation physique. Zéro snippet de code physique dans les récits.\n"
-            "- **Doc-First Obligatoire** : Se référer en priorité aux documents d'analyse sous `docs/00-ingested/` pour le détail de chaque parcours.\n",
-            encoding="utf-8",
-        )
+        content = BlueprintLoader.render("project_agents_template.md", {"PROJECT_NAME": state.project_name})
+        with open(agents_path, "w", encoding="utf-8") as f:
+            f.write(content)
 
     # 3. opencode.json racine (100% Agnostique & Propre)
     opencode_path = p / "opencode.json"
     if not opencode_path.exists():
-        import json
-        opencode_config = {
-            "$schema": "https://opencode.ai/schema.json",
-            "project": state.project_name,
-            "version": "1.0.0",
-            "instructions": ["AGENTS.md"],
-            "watcher": {
-                "ignore": [
-                    ".git/**",
-                    "node_modules/**",
-                    "bin/**",
-                    "obj/**",
-                    "memory/cache/**"
-                ]
-            }
-        }
-        opencode_path.write_text(json.dumps(opencode_config, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        content = BlueprintLoader.render("project_opencode_template.json", {"PROJECT_NAME": state.project_name})
+        with open(opencode_path, "w", encoding="utf-8") as f:
+            f.write(content)
 
     # 4. .gitignore racine
     gitignore_path = p / ".gitignore"
     if not gitignore_path.exists():
-        gitignore_path.write_text(
-            "# Python Bytecode & Cache\n"
-            "__pycache__/\n"
-            "*.py[cod]\n"
-            "*$py.class\n"
-            ".pytest_cache/\n\n"
-            "# Graphify & CodeGraph Local AST Caches\n"
-            "graphify-out/\n"
-            ".codegraph/\n"
-            "**/.codegraph/\n\n"
-            "# Memory Machine Caches & Traces (Recalculable localement)\n"
-            "memory/cache/\n"
-            "memory/tmp/\n"
-            "memory/execution_traces.json\n"
-            "memory/ingest_cache.json\n\n"
-            "# Matière Première Brute & Espace Local (Non synchronisé dans le dépôt)\n"
-            "reference/\n\n"
-            "# OS Metadata\n"
-            ".DS_Store\n"
-            "Thumbs.db\n"
-            "desktop.ini\n\n"
-            "# Temporary Office Lock files\n"
-            "~$*.xlsx\n"
-            "*.tmp\n",
-            encoding="utf-8",
-        )
+        content = BlueprintLoader.render("project_gitignore_template.gitignore")
+        with open(gitignore_path, "w", encoding="utf-8") as f:
+            f.write(content)
+
+    # Initialisation déterministe du cycle de vie projet (ADR-0339)
+    from src.core.lifecycle import ProjectLifecycleManager
+    ProjectLifecycleManager.init_lifecycle(p)
 
     ZeroFluffConsole.success(
         f"Projet '{state.project_name}' initialisé avec succès (Structure agnostique prête)."
@@ -233,19 +151,16 @@ def handle_install_hooks(args: argparse.Namespace, state: LoopState, project_pat
     root_dir = project_path.resolve().parent.parent
     swarm_py = root_dir / "src" / "swarm.py"
 
-    hook_content = (
-        "#!/bin/sh\n"
-        "# mLoop Git Pre-Commit Hook (Auto-protection anti-amnésie & hygiène de projet)\n"
-        "echo \"🛡️ [mLoop Pre-Commit] Exécution du Guardrail Vibe-Check...\"\n"
-        f"cd \"{root_dir.as_posix()}\"\n"
-        f"python \"{swarm_py.as_posix()}\" vibe-check --project {state.project_name}\n"
-        "if [ $? -ne 0 ]; then\n"
-        "    echo \"❌ [mLoop Pre-Commit] Commit bloqué : Échec du Guardrail Vibe-Check.\"\n"
-        "    exit 1\n"
-        "fi\n"
-        "exit 0\n"
+    hook_content = BlueprintLoader.render(
+        "git_pre_commit_hook.sh",
+        {
+            "ROOT_DIR": root_dir.as_posix(),
+            "SWARM_PY": swarm_py.as_posix(),
+            "PROJECT_NAME": state.project_name,
+        },
     )
-    pre_commit_file.write_text(hook_content, encoding="utf-8")
+    with open(pre_commit_file, "w", encoding="utf-8") as f:
+        f.write(hook_content)
     ZeroFluffConsole.success(f"Hook Git pre-commit installé avec succès dans {pre_commit_file}")
     return 0
 
@@ -368,5 +283,81 @@ def handle_sync_antigravity(args: argparse.Namespace, state: LoopState, project_
         f"({res.get('total_tokens', 0):,} tokens, ${res.get('total_cost_usd', 0.0):.4f} USD)."
     )
     return 0
+
+
+def handle_gate_approve(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Valide formellement le passage d'une Porte de Gouvernance (Gate 0 à 5)."""
+    from src.core.lifecycle import ProjectLifecycleManager, GATE_DEFINITIONS
+    gate_num = getattr(args, "gate", None)
+    if gate_num is None:
+        ZeroFluffConsole.error("Le paramètre --gate <0..5> est obligatoire.")
+        return 1
+
+    try:
+        gate_num = int(gate_num)
+    except ValueError:
+        ZeroFluffConsole.error(f"Numéro de porte invalide : '{gate_num}'. Doit être un entier entre 0 et 5.")
+        return 1
+
+    approver = getattr(args, "approver", None) or "User"
+    notes = getattr(args, "notes", "") or ""
+
+    try:
+        new_state = ProjectLifecycleManager.approve_gate(
+            project_path=project_path,
+            gate_number=gate_num,
+            approver=approver,
+            notes=notes,
+        )
+        gate_info = GATE_DEFINITIONS.get(gate_num, {})
+        ZeroFluffConsole.success(
+            f"Porte franchie avec succès : {gate_info.get('name', f'Gate {gate_num}')} !"
+        )
+        ZeroFluffConsole.info(
+            f"Nouvelle étape active : {new_state.current_stage.value} pour le projet '{project_path.name}'."
+        )
+        return 0
+    except ValueError as e:
+        ZeroFluffConsole.error(f"[GATE ERROR] {e}")
+        return 1
+
+
+def handle_lifecycle_status(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Affiche le statut d'étape et l'historique des portes du cycle de vie projet."""
+    from src.core.lifecycle import ProjectLifecycleManager, STAGE_NAMES, GATE_DEFINITIONS
+    l_state = ProjectLifecycleManager.get_state(project_path)
+
+    ZeroFluffConsole.section(f"Cycle de Vie Projet : {project_path.name} (ADR-0339)")
+    stage_desc = STAGE_NAMES.get(l_state.current_stage, l_state.current_stage.value)
+    ZeroFluffConsole.info(f"Étape Active : {l_state.current_stage.value} ({stage_desc})")
+
+    print("\n🚪 Historique des Portes de Gouvernance :")
+    for g_num, g_def in sorted(GATE_DEFINITIONS.items()):
+        rec = l_state.gates.get(str(g_num))
+        if rec:
+            print(f"  ✔ [APPROUVÉE] {g_def['name']} — par {rec.approver} le {rec.approved_at_utc[:19]} ({rec.notes or 'Sans note'})")
+        else:
+            is_next = (g_def["from_stage"] == l_state.current_stage)
+            badge = "⏳ [EN COURS]" if is_next else "⚪ [VERROUILLÉE]"
+            print(f"  {badge} {g_def['name']} — {g_def['description']}")
+
+    return 0
+
+
+def handle_lifecycle_clean(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Supprime définitivement les stories orphelines créées prématurément (Zéro Ghost Bias)."""
+    from src.core.lifecycle import ProjectLifecycleManager
+    res = ProjectLifecycleManager.clean_premature_stories(project_path)
+    if res.get("deleted_stories"):
+        ZeroFluffConsole.success(
+            f"Suppression terminée : {len(res['deleted_stories'])} story(ies) supprimée(s) : {res['deleted_stories']}"
+        )
+    if res.get("deleted_evidence"):
+        ZeroFluffConsole.success(
+            f"EvidencePacks supprimés : {len(res['deleted_evidence'])} fichier(s)."
+        )
+    ZeroFluffConsole.info(res.get("message", "Nettoyage complété."))
+    return 0
+
 
 

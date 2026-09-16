@@ -44,9 +44,7 @@ def ensure_windows_agent_binaries() -> None:
         return
 
     # 1. Resolve and install real opencode.exe
-    opencode_real_exe = (
-        npm_dir / "node_modules" / "opencode-ai" / "bin" / "opencode.exe"
-    )
+    opencode_real_exe = npm_dir / "node_modules" / "opencode-ai" / "bin" / "opencode.exe"
     target_exe = npm_dir / "opencode.exe"
 
     if opencode_real_exe.exists():
@@ -63,8 +61,7 @@ def ensure_windows_agent_binaries() -> None:
     # 2. Neutralize conflicting non-PE shims in %APPDATA%/npm
     conflicting_shims = [
         npm_dir / "opencode",  # Extensionless Unix shell script
-        npm_dir
-        / "opencode.ps1",  # PowerShell wrapper prioritized over .exe by Start-Process
+        npm_dir / "opencode.ps1",  # PowerShell wrapper prioritized over .exe by Start-Process
     ]
     for shim in conflicting_shims:
         if shim.exists():
@@ -95,9 +92,7 @@ class HerdrAdapter:
                 cmd, capture_output=True, text=True, timeout=timeout, encoding="utf-8"
             )
             if res.returncode != 0:
-                logger.error(
-                    f"Herdr command failed (code {res.returncode}): {res.stderr}"
-                )
+                logger.error(f"Herdr command failed (code {res.returncode}): {res.stderr}")
                 return {
                     "success": False,
                     "exit_code": res.returncode,
@@ -154,16 +149,14 @@ class HerdrAdapter:
         if self._is_server_running():
             return True
 
-        logger.warning(
-            "Daemon Herdr non démarré — tentative d'auto-heal via 'herdr server'."
-        )
+        logger.warning("Daemon Herdr non démarré — tentative d'auto-heal via 'herdr server'.")
         try:
             kwargs: Dict[str, Any] = {}
             if sys.platform == "win32":
                 # Détache le process serveur pour qu'il survive au process CLI courant
-                kwargs["creationflags"] = getattr(
-                    subprocess, "CREATE_NO_WINDOW", 0
-                ) | getattr(subprocess, "DETACHED_PROCESS", 0)
+                kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0) | getattr(
+                    subprocess, "DETACHED_PROCESS", 0
+                )
             else:
                 kwargs["start_new_session"] = True
             subprocess.Popen(
@@ -202,9 +195,9 @@ class HerdrAdapter:
         res = self._exec(args)
         if res.get("success") and isinstance(res.get("result"), dict):
             data = res["result"]
-            root_pane = data.get("result", {}).get("root_pane", {}).get(
-                "pane_id"
-            ) or data.get("root_pane", {}).get("pane_id")
+            root_pane = data.get("result", {}).get("root_pane", {}).get("pane_id") or data.get(
+                "root_pane", {}
+            ).get("pane_id")
             res["root_pane_id"] = root_pane
         return res
 
@@ -221,9 +214,9 @@ class HerdrAdapter:
         res = self._exec(args)
         if res.get("success") and isinstance(res.get("result"), dict):
             data = res["result"]
-            new_pane = data.get("result", {}).get("pane", {}).get(
-                "pane_id"
-            ) or data.get("pane", {}).get("pane_id")
+            new_pane = data.get("result", {}).get("pane", {}).get("pane_id") or data.get(
+                "pane", {}
+            ).get("pane_id")
             res["new_pane_id"] = new_pane
         return res
 
@@ -300,9 +293,7 @@ class HerdrAdapter:
                 exe_candidate = Path(appdata) / "npm" / "opencode.exe"
                 if exe_candidate.exists():
                     resolved_bin = str(exe_candidate)
-                    logger.info(
-                        f"Windows fallback: résolution vers exe absolu '{resolved_bin}'"
-                    )
+                    logger.info(f"Windows fallback: résolution vers exe absolu '{resolved_bin}'")
                 else:
                     # Dernier recours : shutil.which avec extension forcée
                     found = shutil.which("opencode.exe") or shutil.which("opencode")
@@ -408,7 +399,8 @@ class HerdrAdapter:
             err_msg = str(res.get("stderr", "")) + str(res.get("error", ""))
             if "agent_not_idle" in err_msg or "cannot read while working" in err_msg:
                 logger.debug(
-                    f"Agent '{agent_name_or_pane}' is working. Falling back to 'visible' read source."
+                    f"Agent '{agent_name_or_pane}' is working. Falling back to 'visible' read source.",
+                    extra={"agent": agent_name_or_pane, "requested_source": source},
                 )
                 res = self._exec(
                     [
@@ -423,6 +415,9 @@ class HerdrAdapter:
                 )
                 if res.get("success"):
                     res["source_fallback"] = "visible"
+                    # L-02 : signaler que le worker était encore actif pendant la lecture,
+                    # afin que les appelants (ex. harvest) distinguent une capture partielle.
+                    res["worker_was_active"] = True
         return res
 
     # --- 4. ADVANCED HERDR v0.8.2 PRIMITIVES ---
@@ -534,9 +529,7 @@ class HerdrAdapter:
             args.append("--verbose")
         return self._exec(args)
 
-    def plugin_invoke(
-        self, action_id: str, plugin_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+    def plugin_invoke(self, action_id: str, plugin_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Invokes an installed Herdr plugin action.
         """
@@ -545,9 +538,7 @@ class HerdrAdapter:
             args.extend(["--plugin", plugin_id])
         return self._exec(args)
 
-    def audit_and_reap_zombies(
-        self, project_name: Optional[str] = None
-    ) -> Dict[str, Any]:
+    def audit_and_reap_zombies(self, project_name: Optional[str] = None) -> Dict[str, Any]:
         """
         Teardown Gate (Zero Zombie Policy - ADR-0306 / ADR-0345):
         Audits all running agents and purges orphan/idle worker panes that are no longer assigned.
@@ -662,18 +653,14 @@ class HerdrAdapter:
         cwd = root_dir or os.getcwd()
         clean_id = re.sub(r"[^a-zA-Z0-9_]", "_", story_id).lower()
         worker_name = f"worker_{clean_id}"[:32]
-        logger.info(
-            f"Spawning Herdr story worker '{worker_name}' for project '{project_name}'..."
-        )
+        logger.info(f"Spawning Herdr story worker '{worker_name}' for project '{project_name}'...")
 
         # 0. Auto-heal du daemon Herdr (Zero-Fail Carryover) : évite le fallback fantôme
         # 'p_fallback_1' quand le serveur headless n'est pas démarré (server_not_running).
         self.ensure_server_running()
 
         # 1. Resolve optimal model based on task_type or explicit override
-        target_model = model or (
-            self.TASK_MODEL_MAP.get(task_type.lower()) if task_type else None
-        )
+        target_model = model or (self.TASK_MODEL_MAP.get(task_type.lower()) if task_type else None)
 
         # 2. Guardrail: redirect unauthenticated standalone Claude Code to OpenCode + Claude on LiteLLM
         if kind == "claude":
@@ -695,24 +682,18 @@ class HerdrAdapter:
 
         if not pane_id:
             # Fallback to workspace create
-            ws_res = self.create_workspace(
-                cwd=cwd, label=f"mloop-{story_id}", no_focus=True
-            )
+            ws_res = self.create_workspace(cwd=cwd, label=f"mloop-{story_id}", no_focus=True)
             pane_id = ws_res.get("root_pane_id")
 
         if not pane_id:
             pane_id = "p_fallback_1"
-            logger.warning(
-                f"Could not retrieve pane_id from Herdr, using fallback '{pane_id}'"
-            )
+            logger.warning(f"Could not retrieve pane_id from Herdr, using fallback '{pane_id}'")
 
         # 4. Configure agent flags with resolved model
         flags = (
             list(extra_args)
             if extra_args
-            else (
-                ["--yolo"] if kind == "opencode" else ["--dangerously-skip-permissions"]
-            )
+            else (["--yolo"] if kind == "opencode" else ["--dangerously-skip-permissions"])
         )
         if target_model:
             if kind == "opencode" and "--model" not in flags and "-m" not in flags:
@@ -731,13 +712,9 @@ class HerdrAdapter:
         time.sleep(3)  # Délai fixe minimal pour laisser OpenCode démarrer son UI
         # Tentative de wait_agent pour confirmer l'état idle (non-bloquant si timeout)
         try:
-            self.wait_agent(
-                worker_name, until_states=["idle", "done", "blocked"], timeout_ms=5000
-            )
+            self.wait_agent(worker_name, until_states=["idle", "done", "blocked"], timeout_ms=5000)
         except Exception:
-            logger.debug(
-                f"wait_agent timeout pour '{worker_name}' — envoi du prompt quand même."
-            )
+            logger.debug(f"wait_agent timeout pour '{worker_name}' — envoi du prompt quand même.")
 
         # 6. Formulate enriched self-contained prompt (Fix: worker clean-slate sans contexte projet)
         clean_target = (
@@ -756,9 +733,7 @@ class HerdrAdapter:
         if clean_target in ["sprint_backlog", "backlog"]:
             story_file_rel = f"Projects/{project_name}/backlog/sprint_backlog.md"
         else:
-            story_file_rel = (
-                f"Projects/{project_name}/backlog/stories/{clean_target}.md"
-            )
+            story_file_rel = f"Projects/{project_name}/backlog/stories/{clean_target}.md"
 
         task_label = (task_type or "build").upper()
         prompt_text = (
@@ -776,7 +751,13 @@ class HerdrAdapter:
             f"- Respecte le gabarit Gold Standard (story_template.md) et les 4 Piliers Gherkin\n"
             f"- Arrêt STRICT de la story après '## Scénarios de test' (ZÉRO section de traçabilité, ZÉRO note IA dans le .md)\n"
             f"- La traçabilité réside exclusivement dans `memory/evidence/<STORY_ID>_evidence.json`\n"
+            f"- Nommage des dossiers de preuves (L-03) : Si tu rédiges un dossier de preuves, nomme impérativement le fichier "
+            f"`Projects/{project_name}/memory/evidence/<STORY_ID>_fact_dossier.md` en utilisant l'identifiant métier SSOT 'id' "
+            f"(ex: `{clean_target}_fact_dossier.md`) et JAMAIS la clé Jira (ex: SHOP-303)\n"
+            f"- Format des citations de preuve (L-04) : Cite obligatoirement tes sources sous forme de liens Markdown "
+            f"`[NomFichier.md (Lignes X-Y)](file:///chemin/absolu/vers/fichier.md)`. L'ancre '#L' est formellement INTERDITE car non supportée par file://\n"
             f"- Écris tes livrables uniquement sous `Projects/{project_name}/`\n"
+            f"- Interdiction formelle d'exécuter `init` ou d'altérer `memory/lifecycle_state.json` (L-05)\n"
             f"- Termine par `python src/swarm.py sync --project {project_name}` pour persister\n"
             f"- Protocole de statut sidecar (ADR-0355) : Dépose ton statut dans `.mloop/status` ou `Projects/{project_name}/memory/worker_{story_id}.status` :\n"
             f"  * Si terminé avec succès : `STATUS: COMPLETED`\n"
@@ -815,21 +796,19 @@ class HerdrAdapter:
         """
         clean_id = re.sub(r"[^a-zA-Z0-9_]", "_", story_id).lower()
         worker_name = f"worker_{clean_id}"[:32]
-        read_res = self.read_agent_output(
-            worker_name, lines=lines, source="recent-unwrapped"
-        )
+        read_res = self.read_agent_output(worker_name, lines=lines, source="recent-unwrapped")
         raw_output = read_res.get("raw_output") or ""
         if isinstance(read_res.get("result"), dict):
             raw_output = read_res["result"].get("content") or raw_output
 
+        # L-02 : une capture obtenue par repli 'visible' pendant que le worker travaillait
+        # encore est PARTIELLE. On le signale explicitement au lieu de rapporter un succès net.
+        worker_active = bool(read_res.get("worker_was_active"))
+
         cleaned_output = self.filter_terminal_bloat(raw_output)
 
         # Update evidence file if project path available
-        proj_dir = (
-            Path(project_path)
-            if project_path
-            else Path.cwd() / "Projects" / project_name
-        )
+        proj_dir = Path(project_path) if project_path else Path.cwd() / "Projects" / project_name
         if not proj_dir.exists() and (Path.cwd() / "backlog").exists():
             proj_dir = Path.cwd()
 
@@ -849,7 +828,7 @@ class HerdrAdapter:
         existing_data["execution_summary"] = (
             cleaned_output[-2000:] if len(cleaned_output) > 2000 else cleaned_output
         )
-        existing_data["harvest_status"] = "COMPLETED"
+        existing_data["harvest_status"] = "PARTIAL" if worker_active else "COMPLETED"
 
         evidence_file.write_text(
             json.dumps(existing_data, indent=2, ensure_ascii=False), encoding="utf-8"
@@ -860,6 +839,8 @@ class HerdrAdapter:
             "story_id": story_id,
             "worker_name": worker_name,
             "evidence_file": str(evidence_file),
+            "partial_harvest": worker_active,
+            "worker_active_during_harvest": worker_active,
             "cleaned_lines": len(cleaned_output.splitlines()),
             "summary_preview": existing_data["execution_summary"][:300],
         }
@@ -871,11 +852,7 @@ class HerdrAdapter:
             agents_res = self.list_agents()
             if agents_res.get("success"):
                 agents_data = agents_res.get("result", {})
-                inner = (
-                    agents_data.get("result", {})
-                    if isinstance(agents_data, dict)
-                    else {}
-                )
+                inner = agents_data.get("result", {}) if isinstance(agents_data, dict) else {}
                 agents_list = inner.get("agents", []) if isinstance(inner, dict) else []
                 if not agents_list and isinstance(agents_data, dict):
                     agents_list = agents_data.get("agents", [])
@@ -935,9 +912,7 @@ class HerdrAdapter:
 
         return stalled
 
-    def reap_zombie_workers(
-        self, timeout_sec: int = 300, force: bool = False
-    ) -> Dict[str, Any]:
+    def reap_zombie_workers(self, timeout_sec: int = 300, force: bool = False) -> Dict[str, Any]:
         """
         Ferme automatiquement tous les volets/agents orphelins ou inactifs.
         Garantit la règle Teardown Gate 'Zéro Session Zombie' (ADR-0355).
@@ -953,13 +928,9 @@ class HerdrAdapter:
                 continue
             close_res = self.close_pane(pane_id)
             if close_res.get("success"):
-                reaped.append(
-                    {"name": name, "pane_id": pane_id, "reason": ag.get("reason")}
-                )
+                reaped.append({"name": name, "pane_id": pane_id, "reason": ag.get("reason")})
             else:
-                errors.append(
-                    {"name": name, "pane_id": pane_id, "error": close_res.get("error")}
-                )
+                errors.append({"name": name, "pane_id": pane_id, "error": close_res.get("error")})
 
         return {
             "success": len(errors) == 0,

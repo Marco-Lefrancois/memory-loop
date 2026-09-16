@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from src.cli import ZeroFluffConsole
+from src.utils.blueprints import BlueprintLoader
 
 if TYPE_CHECKING:
     import argparse
@@ -651,62 +652,18 @@ def handle_dossier_init(args: argparse.Namespace, state: LoopState, project_path
 
     now_iso = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    template = (
-        "---\n"
-        f"story_id: {story_id}\n"
-        f"jira_key: {jira_key}\n"
-        "dossier_status: CURRENT\n"
-        f'last_verified_at: "{now_iso}"\n'
-        "ssot_source: docs/03-models/\n"
-        "sources_hashes:\n"
-        "  # Renseignez ici les fichiers sources physiques de vérité\n"
-        "  # ex: modele.md: sha256_hash\n"
-        "---\n\n"
-        f"# 📂 Dossier de Preuves Documentaires & Cadrage SSOT — {story_id}\n\n"
-        f"**Titre Métier** : {title}  \n"
-        f"**Identifiant Story** : `{story_id}`  \n"
-        f"**Clé Jira Officielle** : `{jira_key}`  \n"
-        f"**Date d'Extraction & Cadrage** : {now_iso[:10]}  \n"
-        "**Auditeur mLoop** : Agentic Pair Programmer  \n\n"
-        "---\n\n"
-        "## 🧭 1. Sources Physiques & Matrice de Vérité\n\n"
-        "* 🗄️ **Modèle de données SSOT (référence canonique)** :  \n"
-        "* 📋 **Cas d'affaires (Analyse Fonctionnelle)** :  \n"
-        "* 🎨 **Maquette Figma Interactive (Live SSOT Visuel)** :  \n\n"
-        "### 1.1 Hiérarchie de Vérité\n"
-        "1. **Niveau 1 (Suprême)** : Arbitrage formel PO.\n"
-        "2. **Niveau 2 (Structure de données SSOT)** : Modèle de données canonique.\n"
-        "3. **Niveau 3 (Visuel SSOT)** : Maquettes Figma officielles.\n"
-        "4. **Niveau 4 (Cas d'affaires AF)** : Spécifications fonctionnelles.\n\n"
-        "---\n\n"
-        "## 🔬 2. Faits Extraits & Verbatims (Passage-Level Grounding)\n\n"
-        "| # | Table / Source | Définition DBML Exacte | Rôle dans le Payload API |\n"
-        "| :---: | :--- | :--- | :--- |\n"
-        "| **F-01** | `table_source` | `Table table_source { id uuid [pk] }` | Description de la règle métier ou verbatim... |\n\n"
-        "---\n\n"
-        "## 🗄️ 3. Schéma Relationnel SSOT\n\n"
-        "```mermaid\n"
-        "erDiagram\n"
-        '    table_source ||--o{ table_target : "relation"\n'
-        "```\n\n"
-        "---\n\n"
-        "## 🎯 4. Contrats Déclaratifs Cibles (Endpoints REST 1:1)\n\n"
-        "* **Méthode** : `GET`\n"
-        "* **Route** : `/api/v1/...`\n"
-        "* **Query Parameters** :\n"
-        "  * `id` : `uuid` (obligatoire)\n\n"
-        "* **Réponse 200 OK** :\n"
-        "```json\n"
-        "{\n"
-        '  "id": "00000000-0000-0000-0000-000000000000"\n'
-        "}\n"
-        "```\n\n"
-        "---\n\n"
-        "## 🏁 5. Évaluation de la Frontière Active (Frontier Design Tree)\n\n"
-        "* **Arbitrages retenus** :\n"
-        "  * Zéro extrapolation : toutes les tables et règles proviennent du modèle SSOT.\n"
+    template = BlueprintLoader.render(
+        "project_fact_dossier_template.md",
+        {
+            "STORY_ID": story_id,
+            "JIRA_KEY": jira_key,
+            "NOW_ISO": now_iso,
+            "TITLE": title,
+            "DATE": now_iso[:10],
+        },
     )
 
-    dossier_file.write_text(template, encoding="utf-8")
+    with open(dossier_file, "w", encoding="utf-8") as f:
+        f.write(template)
     ZeroFluffConsole.success(f"Dossier de Preuves Documentaires initialisé : {dossier_file}")
     return 0

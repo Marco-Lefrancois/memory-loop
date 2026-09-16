@@ -87,6 +87,38 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "gate-approve": {
+        "handler": "project:handle_gate_approve",
+        "help": "Valider formellement une Porte de Gouvernance (Gate 0 à 5 - ADR-0339)",
+        "args": [
+            {
+                "name": "--gate",
+                "type": int,
+                "required": True,
+                "help": "Numéro de porte (0: Enveloppe T-Shirt, 1: SOW, 2: DoR, 3: DoD, 4: Recette QA, 5: Clôture)",
+            },
+            {
+                "name": "--approver",
+                "type": str,
+                "help": "Nom de l'approbateur (ex: 'Marco')",
+            },
+            {
+                "name": "--notes",
+                "type": str,
+                "help": "Justification ou notes contractuelles d'approbation",
+            },
+        ],
+    },
+    "lifecycle-status": {
+        "handler": "project:handle_lifecycle_status",
+        "help": "Afficher l'état du cycle de vie projet et l'historique des portes (ADR-0339)",
+        "args": [],
+    },
+    "lifecycle-clean": {
+        "handler": "project:handle_lifecycle_clean",
+        "help": "Supprimer définitivement les stories orphelines créées prématurément (Zéro Ghost Bias)",
+        "args": [],
+    },
     "sync-antigravity": {
         "handler": "project:handle_sync_antigravity",
         "help": "Synchroniser les tokens et interactions de l'IDE Antigravity vers le Token Ledger",
@@ -1265,8 +1297,15 @@ COMMANDS: dict[str, dict] = {
     },
     "worker-status": {
         "handler": "worker:handle_worker_status",
-        "help": "Afficher le statut et la santé des workers Herdr actifs",
-        "args": [],
+        "help": "Afficher le statut et la santé des workers Herdr actifs (ou d'un récit spécifique)",
+        "args": [
+            {
+                "name": "--story",
+                "type": str,
+                "required": False,
+                "help": "Identifiant du récit pour inspection ciblée et non-bloquante via PTY read",
+            },
+        ],
     },
     "worker-harvest": {
         "handler": "worker:handle_worker_harvest",

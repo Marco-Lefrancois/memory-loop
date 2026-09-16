@@ -7,6 +7,41 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 
 ---
 
+## [2.28.0] - 2026-09-16
+
+### Added
+- **Gouvernance Fine & Délégation en Phase 2 (`worker-spawn` ADR-0339 / L-07)** :
+  - Introduction de la matrice de délégation `WORKER_TASK_TYPE_MIN_STAGE` dans `src/core/lifecycle.py`.
+  - Autorisation des missions d'investigation et d'analyse documentaire (`deepening`, `deepsearch`, `validation`) dès **`STAGE_2_PLAN_GRILL`** (Phase 2), tout en conservant la restriction stricte de la génération de code physique (`build`, `compaction`) ou de l'absence de type de tâche à **`STAGE_3_BUILD`** (Phase 3).
+  - Déblocage des commandes de cycle de vie worker (`worker-status`, `worker-close`, `worker-harvest`) dès Phase 2.
+  - Tests unitaires TDD dédiés dans `tests/test_worker_spawn_lifecycle_gating.py` (8 tests).
+- **Inspection PTY Non-Bloquante & Observabilité Worker (L-01)** :
+  - Extension de la commande `worker-status` avec l'argument `--story <ID>` (`src/commands/_registry.py`, `src/commands/handlers/worker.py`, `src/pipelines/worker_pipeline.py`) permettant de sonder les logs PTY récents (`recent-unwrapped`) et le signal sidecar (`memory/worker_<ID>.status`) sans blocage ni faux timeouts.
+  - Documentation normative du contournement des timeouts du binaire Herdr natif dans `docs/06-knowledge/01-agentic-patterns/KN-002_herdr_pty_multiplexing.md`.
+- **Tests de Non-Régression et Idempotence Lifecycle (L-05)** :
+  - Suite de tests unitaires TDD dans `tests/test_lifecycle_persistence.py` (4 tests) validant l'idempotence, l'anti-régression et la sauvegarde d'urgence des fichiers corrompus.
+
+### Changed
+- **Harmonisation du Prompt de Délégation Worker (L-03, L-04, L-05)** :
+  - Mise à jour du template `prompt_text` dans `src/core/herdr_adapter.py` :
+    - Nommage obligatoire des dossiers de preuves sous le format SSOT `Projects/{project}/memory/evidence/<STORY_ID>_fact_dossier.md` par l'`id` métier (ex: `SHOP-E3-03`) et jamais par la clé Jira (`SHOP-303`).
+    - Format de citation Markdown standardisé `[Titre.md (Lignes X-Y)](file:///...)` sans ancre `#L`.
+    - Interdiction formelle dans les directives injectées d'exécuter `init` ou de régresser `memory/lifecycle_state.json`.
+
+### Fixed
+- **Idempotence & Barrière Anti-Régression du Cycle de Vie Projet (L-05)** :
+  - `ProjectLifecycleManager.init_lifecycle` (`src/core/lifecycle.py`) préserve désormais intégralement l'état existant s'il est sain et valide (`force=False`), empêchant toute réinitialisation intempestive à `STAGE_1_SOW`.
+  - `ProjectLifecycleManager.save_state` bloque toute régression vers un stage inférieur ou perte de portes déjà franchies sans accord explicite (`allow_regression=False`), avec journalisation d'alerte contextuelle.
+  - `ProjectLifecycleManager.get_state` archive automatiquement les fichiers corrompus en `lifecycle_state.json.corrupt.<timestamp>` avant tout ré-amorçage.
+  - Utilisation systématique de context managers `with open(...)` pour les lectures/écritures atomiques.
+- **Robustesse Défensive du Registre CLI sous Concurrence (L-06)** :
+  - Sécurisation de `_build_parser` dans `src/commands/router.py` avec vérification de présence des commandes vitales de gouvernance (`gate-approve`, `resume`, `vibe-check`, `sync`, `lifecycle-status`, `worker-spawn`) et rechargement atomique via `importlib.reload` en cas de registre partiel transitoire.
+- **Parité Guide CLI SSOT (ADR-0370)** :
+  - Intégration des commandes `gate-approve`, `lifecycle-status` et `lifecycle-clean` dans `PHASE_MAPPING` et `ARTEFACTS_MAP` de `src/pipelines/guide_generator.py`.
+  - Régénération déterministe via `guide --sync` maintenant le Vibe-Check à 17/17.
+
+---
+
 ## [2.27.0] - 2026-09-16
 
 ### Added

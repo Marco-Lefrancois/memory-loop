@@ -1,0 +1,32 @@
+# =============================================================================
+# Gitignore Client — Protection du Dépôt & Confidentialité (ADR-0319 / ADR-0332)
+# =============================================================================
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Graphify & CodeGraph Local AST Caches (Recalculables localement)
+graphify-out/
+.codegraph/
+**/.codegraph/
+
+# Memory Machine Caches & Traces
+memory/cache/
+memory/tmp/
+memory/execution_traces.json
+memory/ingest_cache.json
+
+# Matière Première Brute & Espace Local Staging (Non synchronisé dans Git)
+reference/
+
+# OS Metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary Office Lock files
+~$*.xlsx
+*.tmp

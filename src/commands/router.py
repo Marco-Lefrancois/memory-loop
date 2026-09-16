@@ -40,7 +40,16 @@ def _build_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest="command", required=True, help="Pipeline à exécuter")
 
-    for cmd_name, cmd_def in COMMANDS.items():
+    # Chargement défensif et résilient du registre sous accès concurrent (L-06 / ADR-0370)
+    import src.commands._registry as reg_mod
+    cmds = dict(reg_mod.COMMANDS)
+    vital_commands = {"gate-approve", "resume", "vibe-check", "sync", "lifecycle-status", "worker-spawn"}
+    missing_vital = vital_commands - set(cmds.keys())
+    if missing_vital:
+        importlib.reload(reg_mod)
+        cmds = dict(reg_mod.COMMANDS)
+
+    for cmd_name, cmd_def in sorted(cmds.items()):
         aliases = cmd_def.get("aliases", [])
         sub = subparsers.add_parser(cmd_name, aliases=aliases, parents=[project_parser], help=cmd_def.get("help", ""))
         for arg_def in cmd_def.get("args", []):
@@ -79,6 +88,16 @@ def execute_cli() -> None:
     state, project_path = get_project_context(args.project, create_if_missing=(args.command == "init"))
     args.project = state.project_name
     os.environ["MLOOP_ACTIVE_PROJECT"] = state.project_name
+
+    # Contrôle de cycle de vie déterministe (Quality Gate Enforcement - ADR-0339)
+    from src.core.lifecycle import ProjectLifecycleManager
+    task_type = getattr(args, "task_type", None)
+    allowed, reason = ProjectLifecycleManager.can_execute_command(
+        project_path, args.command, task_type=task_type
+    )
+    if not allowed:
+        ZeroFluffConsole.error(f"[LIFECYCLE GATE VIOLATION] {reason}")
+        sys.exit(1)
 
     # Dispatch vers le handler résolu
     handler = _resolve_handler(args._handler_ref)

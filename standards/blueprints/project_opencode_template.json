@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/schema.json",
+  "project": "{{PROJECT_NAME}}",
+  "version": "1.0.0",
+  "instructions": [
+    "AGENTS.md"
+  ],
+  "watcher": {
+    "ignore": [
+      ".git/**",
+      "node_modules/**",
+      "bin/**",
+      "obj/**",
+      "reference/**",
+      "memory/cache/**",
+      "memory/tmp/**"
+    ]
+  }
+}
