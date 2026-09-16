@@ -10,6 +10,23 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 ## [2.28.0] - 2026-09-16
 
 ### Added
+- **Moteur de Gabarits Déclaratifs & Blueprint SSOT (`src/utils/blueprints.py` ADR-0319 / ADR-0330 / ADR-0369)** :
+  - Création du chargeur centralisé `BlueprintLoader` avec gestionnaires de contexte `with open(...)`, injection déclarative (`{{VARIABLE}}`), résolution ascendante du workspace root et levée d'exception explicite `BlueprintNotFoundError`.
+  - Découplage et normalisation de 12 gabarits officiels sous `standards/blueprints/` :
+    - `project_agents_template.md` : Guide agentique universel & agnostique (*Universal Dev Handoff* - ADR-0319 / ADR-0301).
+    - `project_readme_template.md` : Documentation produit racine normalisée.
+    - `project_opencode_template.json` : Configuration IDE OpenCode (MCP & règles d'exclusion).
+    - `project_gitignore_template.gitignore` : Protection Git du staging local `reference/` et caches.
+    - `project_index_template.md` : Table des matières SSOT dynamique.
+    - `project_sprint_backlog_template.md` : Matrice de suivi du backlog initial.
+    - `project_open_questions_template.md` : Registres Client/Légal et Équipe Dev.
+    - `project_spec_template.md` : Spécification technique d'architecture (`to-spec`).
+    - `project_adr_template.md` : Registre de décision architecturale ADR.
+    - `project_tracer_bullet_story_template.md` : Récit tracer-bullet 4 piliers Gherkin (`to-tickets`).
+    - `project_fact_dossier_template.md` : Dossier de preuves factuelles FTS5 (`dossier-init`).
+    - `git_pre_commit_hook.sh` : Script de hook git pre-commit anti-amnésie.
+  - Éradication de 100% des templates multi-lignes hardcodés inline dans le code source Python (`src/commands/handlers/project.py`, `src/pipelines/ticket_pipeline.py`, `src/commands/handlers/analysis.py`).
+  - Suite de tests unitaires TDD dédiée dans `tests/test_blueprints.py` (4 tests).
 - **Gouvernance Fine & Délégation en Phase 2 (`worker-spawn` ADR-0339 / L-07)** :
   - Introduction de la matrice de délégation `WORKER_TASK_TYPE_MIN_STAGE` dans `src/core/lifecycle.py`.
   - Autorisation des missions d'investigation et d'analyse documentaire (`deepening`, `deepsearch`, `validation`) dès **`STAGE_2_PLAN_GRILL`** (Phase 2), tout en conservant la restriction stricte de la génération de code physique (`build`, `compaction`) ou de l'absence de type de tâche à **`STAGE_3_BUILD`** (Phase 3).
