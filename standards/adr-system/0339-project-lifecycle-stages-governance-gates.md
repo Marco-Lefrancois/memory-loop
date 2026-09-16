@@ -51,7 +51,7 @@ Nous actons la structure séquentielle formelle en **6 Phases et 6 Portes d'Éta
 
 ## 3. Règle d'Injonction Comportementale pour les Agents
 
-* **Interdiction de Saut de Phase** : Un agent opérant dans un projet sous statut `T-SHIRT-SIZE` a l'interdiction formelle de rédiger des récits détaillés ou du code avant le passage franchi de la Porte 1 (`SOW`).
+* **Interdiction de Saut de Phase** : Un agent opérant dans un projet sous statut `T-SHIRT-SIZE` ou `SOW` (Phase 0 / Phase 1) a l'interdiction formelle de rédiger des récits détaillés sous `backlog/stories/` ou du code avant le passage franchi de la Porte 1 (`SOW`). Le découpage associé à la demande de SOW doit résider exclusivement au niveau macroscopique dans `backlog/sprint_backlog.md` et dans la Section 4 du SOW.
 * **Traçabilité du Statut** : L'en-tête de `backlog/sprint_backlog.md` doit obligatoirement déclarer la phase active du projet.
 
 ---

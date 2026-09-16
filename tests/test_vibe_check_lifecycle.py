@@ -47,6 +47,34 @@ def test_detect_auto_sow_phase(temp_project_dir):
     assert stage == "STAGE_SOW"
 
 
+def test_detect_auto_sow_phase_with_macro_backlog(temp_project_dir):
+    """Vérifie la détection de STAGE_SOW en présence d'un SOW et d'un sprint_backlog aux statuts OPEN/BACKLOG."""
+    sow_file = temp_project_dir / "docs" / "01-architecture" / "SOW_TestLifecycleProject.md"
+    sow_file.write_text("# SOW Document", encoding="utf-8")
+    backlog_file = temp_project_dir / "backlog" / "sprint_backlog.md"
+    backlog_file.write_text(
+        "# Backlog\n\n| ID | Titre | Composant | Statut |\n| :--- | :--- | :--- | :--- |\n| US-01 | Test | Auth | OPEN |\n| US-02 | Test 2 | Profil | BACKLOG |\n",
+        encoding="utf-8",
+    )
+    mode, stage = detect_project_lifecycle_stage(temp_project_dir)
+    assert mode == "INIT"
+    assert stage == "STAGE_SOW"
+
+
+def test_detect_auto_plan_grill_when_story_engaged_in_backlog(temp_project_dir):
+    """Vérifie que la transition d'un récit vers IN_ANALYZE fait basculer le projet vers STAGE_PLAN_GRILL."""
+    sow_file = temp_project_dir / "docs" / "01-architecture" / "SOW_TestLifecycleProject.md"
+    sow_file.write_text("# SOW Document", encoding="utf-8")
+    backlog_file = temp_project_dir / "backlog" / "sprint_backlog.md"
+    backlog_file.write_text(
+        "# Backlog\n\n| ID | Titre | Composant | Statut |\n| :--- | :--- | :--- | :--- |\n| US-01 | Test | Auth | IN_ANALYZE |\n",
+        encoding="utf-8",
+    )
+    mode, stage = detect_project_lifecycle_stage(temp_project_dir)
+    assert mode == "RUN"
+    assert stage == "STAGE_PLAN_GRILL"
+
+
 def test_detect_auto_run_with_stories(temp_project_dir):
     """Vérifie la détection du mode RUN en présence de récits physiques."""
     story_file = temp_project_dir / "backlog" / "stories" / "US-01.md"

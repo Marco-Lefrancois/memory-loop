@@ -41,11 +41,14 @@ flowchart LR
 * **Objectif** : Transformer l'enveloppe macro en engagement contractuel formel.
 * **Activités** :
   - Formalisation du périmètre d'affaires, des jalons de livraison et du calendrier prévisionnel.
+  - Découpage macroscopique du périmètre dans le tableau `backlog/sprint_backlog.md` (statuts `OPEN` et `BACKLOG` exclusivement) et dans la Section 4 du SOW.
   - Définition des hypothèses techniques, contraintes légales (ex: Loi 25) et prérequis tiers (ex: RxPro, SSO).
   - Clarification de la matrice des responsabilités (RACI).
 * **Livrables Autorisés** :
   - Document SOW officiel sous `docs/01-architecture/SOW_<NOM_PROJET>.md`.
-* **🚪 Porte 1 (*Exit Criteria*)** : Signature et approbation formelle du SOW par le client.
+  - Tableau de bord macroscopique sous `backlog/sprint_backlog.md`.
+* **🚫 Interdictions** : Interdiction formelle de créer ou de rédiger des User Stories détaillées avec critères Gherkin sous `backlog/stories/`. Tout récit détaillé doit impérativement attendre l'approbation du SOW (Porte 1) et l'entrevue interactive de Grilling (Phase 2).
+* **🚪 Porte 1 (*Exit Criteria*)** : Signature et approbation formelle du SOW par le client / PO.
 
 ---
 

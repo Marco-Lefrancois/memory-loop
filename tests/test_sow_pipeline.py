@@ -44,6 +44,39 @@ def test_sow_engine_generates_sow(tmp_path: Path):
     assert "760" in content  # 95 * 8 = 760 h
 
 
+def test_sow_engine_reads_macro_stories_from_sprint_backlog(tmp_path: Path):
+    """Vérifie que le SOWEngine extrait les récits macro de sprint_backlog.md sans exiger de fichiers de stories."""
+    project_dir = tmp_path / "Projects" / "Shopify_Test"
+    (project_dir / "docs" / "00-ingested").mkdir(parents=True)
+    (project_dir / "backlog").mkdir(parents=True)
+
+    backlog_file = project_dir / "backlog" / "sprint_backlog.md"
+    backlog_file.write_text(
+        """# Sprint Backlog
+| ID | Titre | Composant | Statut |
+| :--- | :--- | :--- | :--- |
+| **SHOP-01** | Ingestion catalogue | Ingestion | OPEN |
+| **SHOP-02** | Normalisation IA | Moteur IA | OPEN |
+""",
+        encoding="utf-8",
+    )
+
+    engine = SOWEngine(project_dir)
+    ctx = engine.inspect_project_context()
+
+    assert len(ctx["macro_stories"]) == 2
+    assert ctx["macro_stories"][0]["id"] == "SHOP-01"
+    assert ctx["macro_stories"][0]["title"] == "Ingestion catalogue"
+    assert ctx["macro_stories"][0]["component"] == "Ingestion"
+    assert ctx["detailed_stories_count"] == 0
+
+    sow_file = engine.generate_sow(title="Shopify Test AI", target_size="M")
+    assert sow_file.exists()
+    sow_content = sow_file.read_text(encoding="utf-8")
+    assert "SHOP-01" in sow_content
+    assert "Ingestion catalogue" in sow_content
+
+
 # ── ADR-0331 §2.2.3 : Interdiction Formelle des Libellés Génériques ──────────
 
 

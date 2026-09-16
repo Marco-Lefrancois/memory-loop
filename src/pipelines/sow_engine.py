@@ -80,16 +80,59 @@ class SOWEngine:
         if "food" in self.project_name.lower():
             context["has_food"] = True
 
-        # 2. Backlog stories check
+        # 2. Backlog check (ADR-0339 : Découpage macro dans sprint_backlog.md en Phase 1)
+        context["macro_stories"] = []
+        backlog_file = self.project_path / "backlog" / "sprint_backlog.md"
+        if backlog_file.exists():
+            try:
+                b_lines = backlog_file.read_text(encoding="utf-8", errors="ignore").splitlines()
+                for line in b_lines:
+                    line_s = line.strip()
+                    if (
+                        line_s.startswith("|")
+                        and not line_s.startswith("| :---")
+                        and not line_s.startswith("| ID")
+                        and not line_s.startswith("| #")
+                        and not line_s.startswith("| Métrique")
+                    ):
+                        cols = [c.strip() for c in line_s.split("|")[1:-1]]
+                        if len(cols) >= 3:
+                            story_id = cols[0].replace("**", "").replace("`", "").strip()
+                            story_title = cols[1].strip()
+                            story_comp = cols[2].strip() if len(cols) > 2 else ""
+                            story_status = cols[3].strip() if len(cols) > 3 else "OPEN"
+                            context["macro_stories"].append(
+                                {
+                                    "id": story_id,
+                                    "title": story_title,
+                                    "component": story_comp,
+                                    "status": story_status,
+                                }
+                            )
+            except Exception as e:
+                logger.debug(f"Erreur lecture sprint_backlog.md : {e}", exc_info=True)
+
+        # 3. Check récits physiques détaillés (Avertissement ADR-0339)
         stories_dir = self.project_path / "backlog" / "stories"
+        context["detailed_stories_count"] = 0
         if stories_dir.exists():
-            for sf in sorted(stories_dir.glob("*.md")):
-                if sf.name == "README.md":
-                    continue
+            detailed_files = [
+                sf for sf in stories_dir.glob("*.md") if sf.name != "README.md"
+            ]
+            context["detailed_stories_count"] = len(detailed_files)
+            for sf in sorted(detailed_files):
                 c = sf.read_text(encoding="utf-8", errors="ignore")
                 m_title = re.search(r"^#\s+(.+)$", c, re.MULTILINE)
                 stitle = m_title.group(1).strip() if m_title else sf.stem
                 context["stories_found"].append({"id": sf.stem, "title": stitle})
+
+            if detailed_files:
+                logger.warning(
+                    "[ADR-0339 Notice] %d récit(s) détaillé(s) détecté(s) sous backlog/stories/ "
+                    "pendant l'évaluation SOW. En Phase 1 (SOW), le découpage doit demeurer "
+                    "macroscopique dans sprint_backlog.md.",
+                    len(detailed_files),
+                )
 
         return context
 
@@ -147,6 +190,27 @@ class SOWEngine:
             "| **Valeur Monétaire Estimée** | **[N] $** |",
             f"| **Valeur Monétaire Estimée** | **{formatted_cost}** |",
         )
+
+        # Injection dynamique des récits macro dans Section 4 si présents
+        if ctx.get("macro_stories"):
+            macro_rows = []
+            for s in ctx["macro_stories"]:
+                macro_rows.append(
+                    f"| `{s['id']}` | {s['component'] or 'Composant'} | 3 | **{s['title']}** : Découpage macro en attente de cadrage fin (Gate 2). |"
+                )
+            if macro_rows:
+                macro_table_block = (
+                    "| ID | Parcours / Composant | SP | Titre & Description Sommaire (*INVEST*) |\n"
+                    "| :--- | :--- | :---: | :--- |\n"
+                    + "\n".join(macro_rows)
+                )
+                # Remplacer le bloc par défaut dans le template s'il existe
+                default_table_pattern = (
+                    r"\| ID \| Parcours / Composant \| SP \| Titre & Description Sommaire \(\*INVEST\*\) \|\n"
+                    r"\| :--- \| :--- \| :---: \| :--- \|\n"
+                    r"(?:\| `.+` \| .+ \| \d+ \| .+ \|\n?)+"
+                )
+                content = re.sub(default_table_pattern, macro_table_block + "\n", content)
 
         out_dir = self.project_path / "docs" / "01-architecture"
         out_dir.mkdir(parents=True, exist_ok=True)

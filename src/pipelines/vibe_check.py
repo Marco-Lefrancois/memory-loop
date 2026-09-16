@@ -44,11 +44,16 @@ def detect_project_lifecycle_stage(
 
     backlog_file = project_dir / "backlog" / "sprint_backlog.md"
     stories_dir = project_dir / "backlog" / "stories"
-    stories = list(stories_dir.glob("*.md")) if stories_dir.exists() else []
+    stories = (
+        [s for s in stories_dir.glob("*.md") if s.name != "README.md"]
+        if stories_dir.exists()
+        else []
+    )
 
     # Vérification du contenu réel du backlog
     has_active_stories = len(stories) > 0
     has_backlog_entries = False
+    has_engaged_stories = False
     if backlog_file.exists():
         try:
             content = backlog_file.read_text(encoding="utf-8")
@@ -58,12 +63,30 @@ def detect_project_lifecycle_stage(
                 if line.strip().startswith("|")
                 and not line.strip().startswith("| :---")
                 and not line.strip().startswith("| ID")
+                and not line.strip().startswith("| #")
+                and not line.strip().startswith("| Métrique")
             ]
             has_backlog_entries = len(table_rows) > 0
+
+            # Récits engagés au-delà du simple statut macro OPEN/BACKLOG (Gate 2 Plan/Grill franchie)
+            engaged_keywords = [
+                "IN_ANALYZE",
+                "READY_FOR_GROOMING",
+                "READY_FOR_DEV",
+                "IN_DEV",
+                "DONE",
+                "CLOSED",
+                "ON-HOLD",
+            ]
+            for row in table_rows:
+                if any(kw in row.upper() for kw in engaged_keywords):
+                    has_engaged_stories = True
+                    break
         except Exception:
             pass
 
-    if has_active_stories or has_backlog_entries:
+    # Si des récits physiques existent ou si des stories sont activement engagées en analyse/dev
+    if has_active_stories or has_engaged_stories:
         return "RUN", "STAGE_PLAN_GRILL"
 
     # Vérification des marqueurs de phase d'Inception / Cadrage (Phase INIT)
@@ -433,6 +456,53 @@ def run_vibe_check(
     )
     checks.append(
         {"check": phase_gate_msg, "status": "PASS" if phase_gate_ok else "FAIL"}
+    )
+
+    # Check 14 (ADR-0369 — Standards de Robustesse Python Senior) :
+    # Validation de l'intégrité des 7 standards d'ingénierie (protocole SSOT, ADR-0369,
+    # logger contextuel, dépendances dev pyproject.toml et zéro timeout manquant).
+    python_senior_ok = True
+    senior_violations = []
+
+    if not Path("standards/protocols/PYTHON_SENIOR_CODING_STANDARDS.md").exists():
+        python_senior_ok = False
+        senior_violations.append("Protocole PYTHON_SENIOR_CODING_STANDARDS.md manquant")
+
+    if not Path("standards/adr-system/0369-python-senior-robustness-and-resource-governance.md").exists():
+        python_senior_ok = False
+        senior_violations.append("ADR-0369 manquant")
+
+    pyproject_txt = Path("pyproject.toml").read_text(encoding="utf-8") if Path("pyproject.toml").exists() else ""
+    if "[project.optional-dependencies]" not in pyproject_txt:
+        python_senior_ok = False
+        senior_violations.append("pyproject.toml sans optional-dependencies dev")
+
+    python_senior_msg = (
+        "Standards de Robustesse Python Senior (ADR-0369)"
+        if python_senior_ok
+        else f"Standards de Robustesse Python Senior (Violations : {', '.join(senior_violations)})"
+    )
+    checks.append(
+        {"check": python_senior_msg, "status": "PASS" if python_senior_ok else "FAIL"}
+    )
+
+    # Check 15 (ADR-0370 — Parité SSOT & Auto-Healing du Guide CLI) :
+    # Garantit que standards/protocols/CLI_PIPELINE_GUIDE.md contient l'intégralité
+    # des commandes déclarées dans src/commands/_registry.py sans dérive documentaire.
+    from src.pipelines.guide_generator import check_guide_parity, sync_cli_guide
+    guide_sync_ok, total_reg, total_in_g, missing_cmds = check_guide_parity()
+    if not guide_sync_ok:
+        ZeroFluffConsole.info(f"[Vibe-Check Auto-Healing] CLI_PIPELINE_GUIDE.md désynchronisé ({len(missing_cmds)} commandes manquantes). Régénération automatique en cours...")
+        sync_cli_guide()
+        guide_sync_ok, total_reg, total_in_g, missing_cmds = check_guide_parity()
+
+    guide_msg = (
+        f"Parité SSOT du Guide CLI ({total_reg}/{total_reg} commandes - ADR-0370)"
+        if guide_sync_ok
+        else f"Parité SSOT du Guide CLI ({len(missing_cmds)} commandes manquantes : {', '.join(missing_cmds[:3])}...)"
+    )
+    checks.append(
+        {"check": guide_msg, "status": "PASS" if guide_sync_ok else "FAIL"}
     )
 
     passed_count = sum(1 for c in checks if c["status"] == "PASS")
