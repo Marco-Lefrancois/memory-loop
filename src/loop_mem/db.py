@@ -150,7 +150,13 @@ def get_observation_db_session(db_path: Path = _OBSERVATION_DB_PATH):
 
 
 def _get_observation_conn() -> sqlite3.Connection:
-    """Retourne une connexion à la base des observations (Legacy helper)."""
+    """Retourne une connexion à la base des observations (Legacy helper déprécié — ADR-0369)."""
+    import warnings
+    warnings.warn(
+        "_get_observation_conn() is deprecated (ADR-0369); use 'with get_observation_db_session() as conn:' instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     _OBSERVATION_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(_OBSERVATION_DB_PATH), timeout=20.0)
     conn.row_factory = sqlite3.Row
@@ -417,17 +423,16 @@ def add_rho_rule(
     embed_vector = get_embedding(error_trace)
     embed_json = json.dumps(embed_vector) if embed_vector else "[]"
 
-    conn = _get_observation_conn()
-    cursor = conn.cursor()
-    cursor.execute(
-        """
-        INSERT INTO rho_memory (project_name, keyword, error_trace, solution, embedding_json)
-        VALUES (?, ?, ?, ?, ?)
-    """,
-        (project_name, keyword, error_trace, solution, embed_json),
-    )
-    conn.commit()
-    return cursor.lastrowid
+    with get_observation_db_session() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO rho_memory (project_name, keyword, error_trace, solution, embedding_json)
+            VALUES (?, ?, ?, ?, ?)
+        """,
+            (project_name, keyword, error_trace, solution, embed_json),
+        )
+        return cursor.lastrowid
 
 
 def search_rho_solution(
@@ -440,31 +445,30 @@ def search_rho_solution(
     if not query_embed:
         return []
 
-    conn = _get_observation_conn()
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT id, project_name, keyword, error_trace, solution, embedding_json FROM rho_memory"
-    )
-
     results = []
-    for row in cursor.fetchall():
-        try:
-            db_embed = json.loads(row["embedding_json"])
-            if db_embed:
-                score = cosine_similarity(query_embed, db_embed)
-                if score >= threshold:
-                    results.append(
-                        {
-                            "id": row["id"],
-                            "project_name": row["project_name"],
-                            "keyword": row["keyword"],
-                            "error_trace": row["error_trace"],
-                            "solution": row["solution"],
-                            "score": score,
-                        }
-                    )
-        except Exception:
-            pass
+    with get_observation_db_session() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, project_name, keyword, error_trace, solution, embedding_json FROM rho_memory"
+        )
+        for row in cursor.fetchall():
+            try:
+                db_embed = json.loads(row["embedding_json"])
+                if db_embed:
+                    score = cosine_similarity(query_embed, db_embed)
+                    if score >= threshold:
+                        results.append(
+                            {
+                                "id": row["id"],
+                                "project_name": row["project_name"],
+                                "keyword": row["keyword"],
+                                "error_trace": row["error_trace"],
+                                "solution": row["solution"],
+                                "score": score,
+                            }
+                        )
+            except Exception:
+                pass
 
     # Tri par score décroissant
     results.sort(key=lambda x: x["score"], reverse=True)

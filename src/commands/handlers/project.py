@@ -201,7 +201,14 @@ def handle_focus(args: argparse.Namespace, state: LoopState, project_path: Path)
     from src.pipelines.focus import set_focus
     from src.pipelines.sync import run_sync
     set_focus(args.project, args.story)
-    run_sync(args.project, state, project_path, fast_mode=True, verbose=getattr(args, "verbose", False))
+    run_sync(
+        args.project,
+        state,
+        project_path,
+        fast_mode=True,
+        story_filter=getattr(args, "story", None),
+        verbose=getattr(args, "verbose", False),
+    )
     return 0
 
 
@@ -244,7 +251,17 @@ def handle_install_hooks(args: argparse.Namespace, state: LoopState, project_pat
 
 
 def handle_guide(args: argparse.Namespace, state: LoopState | None, project_path: Path | None) -> int:
-    """Affiche le guide d'utilisation du pipeline CLI mLoop par phase."""
+    """Affiche le guide d'utilisation du pipeline CLI mLoop par phase ou synchronise le guide SSOT."""
+    if getattr(args, "sync", False):
+        from src.pipelines.guide_generator import sync_cli_guide
+        ok, msg = sync_cli_guide()
+        if ok:
+            ZeroFluffConsole.success(msg)
+            return 0
+        else:
+            ZeroFluffConsole.error(msg)
+            return 1
+
     ZeroFluffConsole.section("GUIDE D'UTILISATION DU PIPELINE CLI — MEMORY LOOP (mLoop)")
 
     phases_data = {
@@ -337,4 +354,19 @@ def handle_guide(args: argparse.Namespace, state: LoopState | None, project_path
     print("⌨️  OpenCode Dispatcher   : /loop <action> [arguments] (ex: /loop sync)")
     print("═" * 70 + "\n")
     return 0
+
+
+def handle_sync_antigravity(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Synchronise les tokens et interactions de l'IDE Antigravity vers le Token Ledger."""
+    from src.utils.antigravity_meter import AntigravityMeter
+    ZeroFluffConsole.info("Synchronisation des sessions Antigravity (Google DeepMind)...")
+    conv_id = getattr(args, "conversation_id", None)
+    all_convs = getattr(args, "all", False)
+    res = AntigravityMeter.sync(conversation_id=conv_id, all_conversations=all_convs)
+    ZeroFluffConsole.success(
+        f"Synchronisation terminée : {res.get('synced_turns', 0)} tour(s) synchronisé(s) "
+        f"({res.get('total_tokens', 0):,} tokens, ${res.get('total_cost_usd', 0.0):.4f} USD)."
+    )
+    return 0
+
 

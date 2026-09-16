@@ -1,4 +1,4 @@
-﻿"""
+"""
 Handlers Code Intelligence : Integration de CodeGraph dans le framework mLoop (ADR-0204 et ADR-0363).
 Fournit une passerelle deterministe pour l'exploration AST, l'analyse d'impact et les tests affectes
 avec support autonome de projet (no_project: True), cache memoire et Token Budget Guardrail (--compact).
@@ -78,21 +78,32 @@ def _get_codegraph_binary() -> Optional[str]:
     return shutil.which("codegraph")
 
 
-def _run_codegraph_command(args_list: list[str], cwd: Optional[Path] = None) -> subprocess.CompletedProcess:
-    """Execute une commande CodeGraph de facon multi-plateforme (Windows & Unix)."""
+def _run_codegraph_command(
+    args_list: list[str], cwd: Optional[Path] = None, timeout: float = 30.0
+) -> subprocess.CompletedProcess:
+    """Execute une commande CodeGraph avec deadline stricte (ADR-0369)."""
     bin_path = _get_codegraph_binary() or "codegraph"
     full_cmd = [bin_path] + args_list
     use_shell = sys.platform == "win32"
-    return subprocess.run(
-        full_cmd,
-        cwd=str(cwd) if cwd else None,
-        capture_output=True,
-        text=True,
-        check=False,
-        shell=use_shell,
-        encoding="utf-8",
-        errors="replace",
-    )
+    try:
+        return subprocess.run(
+            full_cmd,
+            cwd=str(cwd) if cwd else None,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=use_shell,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired as e:
+        return subprocess.CompletedProcess(
+            args=full_cmd,
+            returncode=124,
+            stdout="",
+            stderr=f"[CodeGraph Timeout] Délai d'attente de {timeout}s expiré pour {' '.join(full_cmd)}",
+        )
 
 
 def _compact_explore_output(raw: str, max_code_lines: int = 8) -> str:

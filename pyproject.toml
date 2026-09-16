@@ -24,6 +24,15 @@ dependencies = [
     "python-docx>=1.0.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.4.0",
+    "mypy>=1.9.0",
+]
+
 [project.scripts]
 loop = "src.swarm:main"
 
@@ -38,3 +47,10 @@ packages = ["src"]
 testpaths = ["tests"]
 pythonpath = ["."]
 python_files = ["test_*.py"]
+filterwarnings = [
+    "default::DeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

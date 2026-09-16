@@ -16,10 +16,11 @@ Ce skill régit la discipline d'interrogatoire sans concession (*Relentless Inte
 
 ## Déroulé Opérationnel en 4 Étapes
 
-### Étape 0 : « Search-Before-Ask » & Fact-Search FTS5
-1. Interroger l'index SQLite FTS5 (`.fact_search_index.db`) pour identifier les maquettes SVG validées (`docs/05-assets/`), règles métier (`RM-XXX`) et schémas DBML.
-2. Si un fait est consigné dans la documentation, **interdiction absolue de poser la question à l'humain**.
-3. Rédiger le Dossier de Preuves selon le gabarit normatif [`standards/blueprints/dossier_de_preuves_template.md`](../../standards/blueprints/dossier_de_preuves_template.md).
+### Étape 0 : « Search-Before-Ask », CONTEXT.md & Fact-Search FTS5
+1. Interroger l'index SQLite FTS5 (`.fact_search_index.db`) et `CONTEXT.md` pour identifier les maquettes SVG validées (`docs/05-assets/`), règles métier (`RM-XXX`), schémas DBML et vocabulaire ubique.
+2. Arbitrer **Faits vs Décisions** : si un fait est consigné dans la documentation ou le code existant, **interdiction absolue de poser la question à l'humain**.
+3. Rédiger le Dossier de Preuves selon le gabarit normatif [`standards/blueprints/dossier_de_preuves_template.md`](../../standards/blueprints/dossier_de_preuves_template.md) en couvrant la **Matrice des 4 États** et les **5 Vecteurs de Résilience**. Utiliser `to-questionnaire` si un export structuré est requis.
+4. Viser l'**Épuisement de Frontière** (*Frontier Exhaustion*) sur le récit sous focus.
 
 ### Étape 1 : Roast à Froid & Hypothèse Explicite avec Confiance
 Avant la première question, l'agent livre un avis sans complaisance (*Anti-Sycophancy*) :
@@ -44,7 +45,7 @@ Poser la question brise-glace de désencombrement :
 > *« Si vous n'aviez de comptes à rendre à personne et aucune contrainte d'héritage, que voudriez-vous réellement construire ici ? »*
 
 ### Étape 4 : Clôture de Frontière (Frontier Empty)
-La session se termine lorsque l'arbre de décision ne contient plus aucune zone d'ombre. Si la décision est de Type 1 (irréversible), générer l'ADR correspondant via [`.agents/references/adr-decision-checklist.md`](../references/adr-decision-checklist.md).
+La session se termine lorsque l'arbre de décision ne contient plus aucune zone d'ombre (épuisement de frontière). L'agent valide la complétude et avance automatiquement vers le récit suivant. Si la décision est de Type 1 (irréversible), générer l'ADR correspondant via [`.agents/references/adr-decision-checklist.md`](../references/adr-decision-checklist.md).
 
 ---
 

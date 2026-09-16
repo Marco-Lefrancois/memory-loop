@@ -513,6 +513,11 @@ class IngestAgent:
             "maquettes": "🎨 05. Maquettes & Transcriptions d'Écrans",
         }
 
+        # Découverte dynamique de tout autre sous-dossier (ex: T-Shirt Size - Initiatives)
+        for sub in sorted(ingested_dir.iterdir(), key=lambda d: d.name):
+            if sub.is_dir() and sub.name not in categories and not sub.name.startswith("."):
+                categories[sub.name] = f"📦 {sub.name.replace('-', ' ').title()}"
+
         found_any = False
         for cat_dir_name, cat_title in categories.items():
             cat_path = ingested_dir / cat_dir_name

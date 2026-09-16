@@ -184,6 +184,21 @@ class FactCheckCertificateGenerator:
             except Exception:
                 evidence_data = {}
 
+        if not evidence_data or not evidence_data.get("facts_verified"):
+            try:
+                from src.pipelines.evidence_pack import EvidencePackEngine
+                proj_dir = Path("Projects") / cert.project_name
+                if not proj_dir.exists():
+                    proj_dir = Path.cwd()
+                engine = EvidencePackEngine(proj_dir)
+                cand_stories = list((proj_dir / "backlog" / "stories").rglob(f"*{cert.story_id}*.md"))
+                if cand_stories:
+                    base_pack = engine.extract_evidence(cand_stories[0])
+                    base_pack.update(evidence_data)
+                    evidence_data = base_pack
+            except Exception:
+                pass
+
         # Mise à jour de la section fact_check_certificate
         evidence_data["story_id"] = cert.story_id
         evidence_data["project_name"] = cert.project_name

@@ -42,11 +42,16 @@ def resolve_project_name(raw_name: str, create_if_missing: bool = False) -> str:
         _physical_index = {
             _p.name.lower(): _p.name
             for _p in _direct_projects_dir.iterdir()
-            if _p.is_dir() and not _p.name.startswith(".") and not _p.name.endswith("_DEPRECATED")
+            if _p.is_dir() and not _p.name.startswith(".") and not _p.name.startswith("_") and not _p.name.endswith("_DEPRECATED")
         }
         _exact_match = _physical_index.get(clean_name.lower())
         if _exact_match:
             return _exact_match
+
+    # Si création explicitement demandée et aucun dossier physique existant,
+    # ne pas détourner vers un autre projet existant via la résolution sémantique
+    if create_if_missing:
+        return clean_name
 
     # 0. Résolution sémantique par table d'alias métiers
     from src.utils.lexicon_resolver import SemanticLexiconResolver

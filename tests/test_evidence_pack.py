@@ -211,3 +211,112 @@ status: READY_FOR_GROOMING
         "La régénération ne doit pas écraser la validation humaine existante."
     )
     assert pack2["socle_factuel_validated_at"] == "2026-09-10T10:52:00+00:00"
+
+
+def test_evidence_pack_projection_from_fact_dossier(tmp_path):
+    """
+    Vérifie la projection du Dossier de Preuves Documentaires dans l'EvidencePack :
+    - Extraction des faits F-01..F-NN sans duplication de prose
+    - Rehaussement en ssot_dossier_grounded avec confidence HIGH/1.0
+    - Hachage cryptographique du dossier et des sources canoniques déclarées
+    """
+    project_dir = tmp_path / "TestProjectDossier"
+    project_dir.mkdir()
+    stories_dir = project_dir / "backlog" / "stories"
+    stories_dir.mkdir(parents=True)
+    evidence_dir = project_dir / "memory" / "evidence"
+    evidence_dir.mkdir(parents=True)
+    models_dir = project_dir / "docs" / "03-models"
+    models_dir.mkdir(parents=True)
+
+    # 1. Source canonique SSOT physique
+    (models_dir / "modele-incubation.md").write_text(
+        "Table boire_ref_incubator { id uuid, code varchar(50) }", encoding="utf-8"
+    )
+
+    # 2. Dossier de Preuves Documentaires
+    dossier_file = evidence_dir / "INC-003-BE_fact_dossier.md"
+    dossier_file.write_text(
+        """---
+story_id: INC-003-BE
+jira_key: COUVBOIRE-1064
+dossier_status: CURRENT
+sources_hashes:
+  modele-incubation.md: dummyhash123
+---
+# Dossier de Preuves — INC-003-BE
+
+## 🔬 2. Faits Extraits & Verbatims
+
+| # | Table / Source | Définition DBML Exacte | Rôle dans le Payload API |
+| :---: | :--- | :--- | :--- |
+| **F-01** | `boire_ref_incubator` | `Table boire_ref_incubator { id uuid }` | Machine d'incubation : code et type. |
+| **F-02** | `IncubationAssignment` | `Table IncubationAssignment { id uuid }` | Affectation physique rattachée au coup. |
+
+## 🗄️ 3. Schéma Relationnel SSOT
+```mermaid
+erDiagram
+    boire_ref_incubator ||--o{ IncubationAssignment : heberge
+```
+
+## 🎯 4. Contrats Déclaratifs Cibles
+`GET /api/v1/incubation/assignments`
+""",
+        encoding="utf-8",
+    )
+
+    # 3. User Story Gherkin pure (sans section technique)
+    story_file = stories_dir / "INC-003-BE.md"
+    story_file.write_text(
+        """---
+id: INC-003-BE
+jira_key: COUVBOIRE-1064
+status: READY_FOR_DEV
+---
+# INC-003-BE : Consultation des assignations
+
+## Critères d'acceptation
+- Critère 1 : Consultation par date
+
+## Scénarios de test
+### Pilier 1 : Nominal
+- Scénario : Consultation avec succès
+""",
+        encoding="utf-8",
+    )
+
+    engine = EvidencePackEngine(project_dir)
+    evidence = engine.extract_evidence(story_file)
+
+    # Validations du contrat d'architecture
+    assert evidence["story_id"] == "INC-003-BE"
+    assert evidence["confidence"] == "HIGH"
+    assert evidence["confidence_score"] == 1.0
+    assert evidence["status"] == "VALIDATED"
+
+    # Vérification des faits projetés
+    assert len(evidence["facts_verified"]) == 2
+    f1 = evidence["facts_verified"][0]
+    assert f1["fact_id"] == "F-01"
+    assert f1["source_ref"] == "boire_ref_incubator"
+    assert f1["rule_summary"] == "Machine d'incubation : code et type."
+    assert f1["status"] == "VERIFIED"
+
+    f2 = evidence["facts_verified"][1]
+    assert f2["fact_id"] == "F-02"
+    assert f2["source_ref"] == "IncubationAssignment"
+
+    # Vérification des empreintes
+    assert "INC-003-BE_fact_dossier.md" in evidence["source_hashes_sha256"]
+    assert "modele-incubation.md" in evidence["source_hashes_sha256"]
+    assert len(evidence["source_hashes_sha256"]["modele-incubation.md"]) == 64
+
+    # Preuve rehaussée en ssot_dossier_grounded
+    dossier_proofs = [
+        p for p in evidence["fact_search_proofs"] if p["source_file"] == "modele-incubation.md"
+    ]
+    assert len(dossier_proofs) == 1
+    assert dossier_proofs[0]["verification_method"] == "ssot_dossier_grounded"
+    assert dossier_proofs[0]["confidence"] == "HIGH"
+    assert dossier_proofs[0]["confidence_score"] == 1.0
+

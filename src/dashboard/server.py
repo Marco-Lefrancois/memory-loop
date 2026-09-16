@@ -9,6 +9,7 @@ Supporte la résolution canonique des projets (ex: Boire & Frères) et la récur
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import unicodedata
@@ -55,8 +56,13 @@ def _resolve_project_canonical_name(project_name: Optional[str]) -> str:
         return _get_active_project()
 
     clean = project_name.strip()
-    if clean in ("Memory Loop", "mLoop", "global", "All"):
+    if clean.upper() in ("ALL", "GLOBAL", "TOUS", "*") or clean in ("Memory Loop", "mLoop", "global", "All"):
+        if clean.upper() in ("ALL", "GLOBAL", "TOUS", "*") or clean == "All":
+            return "ALL"
         return clean
+
+    if clean.lower() == "default":
+        return "Memory Loop"
 
     # Utiliser le résolveur officiel mLoop si disponible
     try:
@@ -72,7 +78,7 @@ def _resolve_project_canonical_name(project_name: Optional[str]) -> str:
     if projects_dir.exists():
         target_canon = _canonical_key(clean)
         for p in projects_dir.iterdir():
-            if p.is_dir() and not p.name.startswith("."):
+            if p.is_dir() and not p.name.startswith(".") and not p.name.startswith("_"):
                 p_canon = _canonical_key(p.name)
                 if target_canon == p_canon or (target_canon and (target_canon in p_canon or p_canon in target_canon)):
                     return p.name
@@ -91,7 +97,10 @@ def _get_active_project() -> str:
         try:
             data = json.loads(active_json.read_text(encoding="utf-8"))
             if data.get("active_project"):
-                return _resolve_project_canonical_name(data["active_project"])
+                val = data["active_project"]
+                if str(val).lower() == "default":
+                    return "Memory Loop"
+                return _resolve_project_canonical_name(val)
         except Exception:
             pass
 
@@ -118,24 +127,32 @@ def _list_available_projects() -> List[str]:
     """Retourne la liste de tous les projets disponibles dans le dépôt."""
     projects = set()
     projects_dir = REPO_ROOT / "Projects"
+    excluded = {"default", "cacheproj", "timeoutproj", "testproject", "testspecial"}
     if projects_dir.exists():
         for p in projects_dir.iterdir():
-            if p.is_dir() and not p.name.startswith(".") and not p.name.endswith("_DEPRECATED"):
+            if (
+                p.is_dir()
+                and not p.name.startswith(".")
+                and not p.name.startswith("_")
+                and not p.name.endswith("_DEPRECATED")
+                and p.name.lower() not in excluded
+            ):
                 projects.add(p.name)
 
     # Toujours inclure le projet cadre mLoop
     projects.add("Memory Loop")
 
-    # Trier avec le projet actif en tête
+    # Trier les projets spécifiques
     active = _get_active_project()
-    sorted_projects = sorted(list(projects), key=lambda x: (x != active, x.lower()))
-    return sorted_projects
+    sorted_projects = sorted(list(projects), key=lambda x: (x != active and active != "ALL", x.lower()))
+    # Placer l'option globale consolidée "ALL" en tête
+    return ["ALL"] + [p for p in sorted_projects if p != "ALL"]
 
 
 def _get_project_root(project_name: Optional[str]) -> Path:
     """Résout le chemin racine d'un projet cible."""
     canon = _resolve_project_canonical_name(project_name)
-    if not canon or canon in ("Memory Loop", "mLoop", "global"):
+    if not canon or canon in ("Memory Loop", "mLoop", "global", "ALL"):
         return REPO_ROOT
     p_path = REPO_ROOT / "Projects" / canon
     if p_path.exists():
@@ -147,6 +164,8 @@ def _match_project_alias(candidate: str, target: str) -> bool:
     """Vérifie si deux noms de projets correspondent au même projet (alias tolérant)."""
     if not candidate or not target:
         return False
+    if target.upper() in ("ALL", "GLOBAL", "*"):
+        return True
     if candidate.lower() == target.lower():
         return True
     c_canon = _canonical_key(candidate)
@@ -184,6 +203,7 @@ def get_projects() -> Dict[str, Any]:
     """Liste tous les projets connus et identifie le projet actif."""
     projs = _list_available_projects()
     friendly_names = {
+        "ALL": "📊 Tous les projets (Global)",
         "BoireFrere_Segment2": "🐣 Boire & Frères (Segment 2)",
         "Metro_SANTE": "🏥 Metro - Santé",
         "Metro_FOOD": "🛒 Metro - Alimentation",
@@ -255,7 +275,7 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
                         entry_proj = entry.get("project", "")
 
                         # Si le fichier provient directement du dossier du projet cible, tout appartient au projet !
-                        if not is_dedicated and target_project not in ("Memory Loop", "mLoop", "global", "All"):
+                        if not is_dedicated and target_project not in ("Memory Loop", "mLoop", "global", "All", "ALL", "*"):
                             # Filtre tolérant pour le fichier global
                             if not _match_project_alias(entry_proj, target_project):
                                 continue
@@ -305,6 +325,27 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
     for a in actions_stats.values():
         a["cost_usd"] = round(a["cost_usd"], 4)
 
+    # Ventilation bi-source (llm_nmedia_cloud vs antigravity-chat)
+    sources_stats: Dict[str, Dict[str, Any]] = {
+        "llm_nmedia_cloud": {"calls": 0, "tokens": 0, "cost_usd": 0.0},
+        "antigravity-chat": {"calls": 0, "tokens": 0, "cost_usd": 0.0},
+    }
+    for e in entries:
+        s_raw = (e.get("source") or "").strip()
+        if s_raw in ("antigravity-chat", "Google", "antigravity") or (e.get("key_label") == "Google Workspace / Enterprise"):
+            s_name = "antigravity-chat"
+        else:
+            s_name = "llm_nmedia_cloud"
+
+        if s_name not in sources_stats:
+            sources_stats[s_name] = {"calls": 0, "tokens": 0, "cost_usd": 0.0}
+        sources_stats[s_name]["calls"] += 1
+        sources_stats[s_name]["tokens"] += e.get("total_tokens_est", 0)
+        sources_stats[s_name]["cost_usd"] += e.get("cost_usd_est", 0.0)
+
+    for s in sources_stats.values():
+        s["cost_usd"] = round(s["cost_usd"], 4)
+
     entries.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
     recent_interactions = entries[:30]
 
@@ -317,7 +358,255 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
         "total_cost_usd": round(total_cost_usd, 4),
         "models_breakdown": models_stats,
         "top_actions": sorted(actions_stats.items(), key=lambda x: x[1]["tokens"], reverse=True)[:8],
+        "sources_breakdown": sources_stats,
         "recent_interactions": recent_interactions,
+    }
+
+
+@app.get("/api/ledger")
+def get_ledger(
+    project: Optional[str] = None,
+    page: int = Query(1, ge=1),
+    page_size: int = Query(50, ge=10, le=200),
+    model: Optional[str] = None,
+    action: Optional[str] = None,
+    source: Optional[str] = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    search: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Retourne le journal détaillé de consommation de jetons (Token Ledger) avec pagination,
+    recherche multi-critères, plage de dates, distinction bi-source (nmedia_cloud vs Google)
+    et synthèse globale.
+    """
+    # Auto-synchronisation légère des sessions Antigravity
+    try:
+        from src.utils.antigravity_meter import AntigravityMeter
+        AntigravityMeter.sync()
+    except Exception:
+        pass
+
+    target_project = _resolve_project_canonical_name(project)
+    p_root = _get_project_root(target_project)
+
+    ledger_files: List[tuple[Path, bool]] = []
+
+    # 1. Fichier spécifique projet si existant
+    if p_root != REPO_ROOT and target_project != "ALL":
+        proj_ledger = p_root / "memory" / "token_ledger.jsonl"
+        if proj_ledger.exists():
+            ledger_files.append((proj_ledger, True))
+
+    # 2. Fichier global racine
+    global_ledger = REPO_ROOT / "memory" / "token_ledger.jsonl"
+    if global_ledger.exists():
+        ledger_files.append((global_ledger, False))
+
+    # Si ALL ou racine, scanner aussi les dossiers de projets pour exhaustivité
+    if target_project in ("ALL", "Memory Loop"):
+        projects_dir = REPO_ROOT / "Projects"
+        if projects_dir.exists():
+            for p in projects_dir.iterdir():
+                if p.is_dir() and not p.name.startswith(".") and not p.name.startswith("_") and p.name.lower() not in {"default", "cacheproj", "timeoutproj"}:
+                    pl = p / "memory" / "token_ledger.jsonl"
+                    if pl.exists() and (pl, False) not in ledger_files and (pl, True) not in ledger_files:
+                        ledger_files.append((pl, False))
+
+    raw_entries = []
+    seen_fingerprints = set()
+
+    for l_path, is_dedicated in ledger_files:
+        try:
+            with open(l_path, "r", encoding="utf-8", errors="ignore") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        entry = json.loads(line)
+                        entry_proj = entry.get("project", "") or "Memory Loop"
+                        
+                        fp = f"{entry.get('timestamp')}_{entry.get('action')}_{entry.get('total_tokens_est')}_{entry.get('model')}_{entry.get('target')}"
+                        if fp in seen_fingerprints:
+                            continue
+                        seen_fingerprints.add(fp)
+
+                        # Normalisation stricte de la source (nmedia_cloud vs Google)
+                        src_val = entry.get("source")
+                        if not src_val:
+                            if "gemini" in (entry.get("model") or "").lower() and entry.get("key_label") == "Google Workspace / Enterprise":
+                                src_val = "Google"
+                            elif (entry.get("action") or "").startswith("antigravity-"):
+                                src_val = "Google"
+                            else:
+                                src_val = "nmedia_cloud"
+                        entry["source"] = src_val
+
+                        entry["project_display"] = entry_proj
+                        raw_entries.append(entry)
+                    except Exception:
+                        continue
+        except Exception:
+            pass
+
+    # Trier par timestamp décroissant (plus récents en tête)
+    raw_entries.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+
+    # Collecter les filtres disponibles et la synthèse globale (tous projets)
+    all_models = set()
+    all_actions = set()
+    all_projects = set()
+    all_sources = {"llm_nmedia_cloud", "antigravity-chat"}
+    global_total_tokens = 0
+    global_total_cost = 0.0
+    by_project_summary: Dict[str, Dict[str, Any]] = {}
+    by_source_summary: Dict[str, Dict[str, Any]] = {
+        "llm_nmedia_cloud": {"calls": 0, "tokens": 0, "cost_usd": 0.0},
+        "antigravity-chat": {"calls": 0, "tokens": 0, "cost_usd": 0.0},
+    }
+
+    for e in raw_entries:
+        p_name = e.get("project") or "Memory Loop"
+        is_tmp = p_name.startswith("tmp") or p_name.lower() in ("default", "cacheproj", "timeoutproj")
+        summary_key = "🧪 Tests & Éphémères" if is_tmp else p_name
+
+        if not is_tmp:
+            all_projects.add(p_name)
+        else:
+            all_projects.add("🧪 Tests & Éphémères")
+
+        m_name = e.get("model") or "unknown"
+        all_models.add(m_name)
+        act_name = e.get("action") or "chat_turn"
+        all_actions.add(act_name)
+
+        s_raw = (e.get("source") or "").strip()
+        if s_raw in ("antigravity-chat", "Google", "antigravity") or (e.get("key_label") == "Google Workspace / Enterprise"):
+            s_name = "antigravity-chat"
+        else:
+            s_name = "llm_nmedia_cloud"
+        e["source"] = s_name
+        all_sources.add(s_name)
+
+        toks = e.get("total_tokens_est", 0)
+        cost = e.get("cost_usd_est", 0.0)
+        global_total_tokens += toks
+        global_total_cost += cost
+
+        # Synthèse par projet
+        if summary_key not in by_project_summary:
+            by_project_summary[summary_key] = {"calls": 0, "tokens": 0, "cost_usd": 0.0}
+        by_project_summary[summary_key]["calls"] += 1
+        by_project_summary[summary_key]["tokens"] += toks
+        by_project_summary[summary_key]["cost_usd"] += cost
+
+        # Synthèse par source
+        if s_name not in by_source_summary:
+            by_source_summary[s_name] = {"calls": 0, "tokens": 0, "cost_usd": 0.0}
+        by_source_summary[s_name]["calls"] += 1
+        by_source_summary[s_name]["tokens"] += toks
+        by_source_summary[s_name]["cost_usd"] += cost
+
+    for bp in by_project_summary.values():
+        bp["cost_usd"] = round(bp["cost_usd"], 4)
+    for bs in by_source_summary.values():
+        bs["cost_usd"] = round(bs["cost_usd"], 4)
+
+    # Filtrage des entrées selon les critères de la requête
+    filtered = []
+    for e in raw_entries:
+        entry_proj = e.get("project") or "Memory Loop"
+
+        # Filtre projet si un projet spécifique est sélectionné et non ALL
+        if target_project not in ("ALL", "Memory Loop", "global", "All", "*"):
+            if not _match_project_alias(entry_proj, target_project):
+                continue
+
+        # Filtre Source LLM (Tous | antigravity-chat | llm_nmedia_cloud)
+        if source and source.strip() and source.strip() not in ("ALL", "Tous", "*"):
+            req_source = source.strip().lower()
+            entry_source = (e.get("source") or "").lower()
+            if req_source in ("antigravity-chat", "google", "antigravity"):
+                if entry_source != "antigravity-chat":
+                    continue
+            elif req_source in ("llm_nmedia_cloud", "nmedia_cloud", "nmedia"):
+                if entry_source != "llm_nmedia_cloud":
+                    continue
+            elif entry_source != req_source:
+                continue
+
+        # Filtre modèle
+        if model and model.strip():
+            if model.lower() not in (e.get("model") or "").lower():
+                continue
+
+        # Filtre action
+        if action and action.strip():
+            if action.lower() != (e.get("action") or "").lower():
+                continue
+
+        # Filtre date de début
+        ts = e.get("timestamp", "")
+        if start_date and start_date.strip():
+            if ts < start_date.strip():
+                continue
+
+        # Filtre date de fin
+        if end_date and end_date.strip():
+            e_clean = end_date.strip()
+            if len(e_clean) == 10:
+                e_clean = f"{e_clean}T23:59:59.999999"
+            if ts > e_clean:
+                continue
+
+        # Recherche textuelle libre (incluant la source)
+        if search and search.strip():
+            s_term = search.strip().lower()
+            haystack = f"{e.get('target', '')} {e.get('action', '')} {e.get('model', '')} {entry_proj} {e.get('key_label', '')} {e.get('source', '')}".lower()
+            if s_term not in haystack:
+                continue
+
+        filtered.append(e)
+
+    # Métriques filtrées
+    filtered_tokens = sum(e.get("total_tokens_est", 0) for e in filtered)
+    filtered_cost_usd = sum(e.get("cost_usd_est", 0.0) for e in filtered)
+    filtered_prompt_tokens = sum(e.get("prompt_tokens_est", 0) for e in filtered)
+    filtered_completion_tokens = sum(e.get("completion_tokens_est", 0) for e in filtered)
+
+    # Pagination
+    p_num = int(getattr(page, "default", page) or 1)
+    p_size = int(getattr(page_size, "default", page_size) or 50)
+    total_entries = len(filtered)
+    total_pages = max(1, math.ceil(total_entries / p_size))
+    current_page = max(1, min(p_num, total_pages))
+    start_idx = (current_page - 1) * p_size
+    end_idx = start_idx + p_size
+    page_entries = filtered[start_idx:end_idx]
+
+    return {
+        "project": target_project,
+        "page": current_page,
+        "page_size": p_size,
+        "total_entries": total_entries,
+        "total_pages": total_pages,
+        "filtered_tokens": filtered_tokens,
+        "filtered_prompt_tokens": filtered_prompt_tokens,
+        "filtered_completion_tokens": filtered_completion_tokens,
+        "filtered_cost_usd": round(filtered_cost_usd, 4),
+        "global_summary": {
+            "total_calls": len(raw_entries),
+            "total_tokens": global_total_tokens,
+            "total_cost_usd": round(global_total_cost, 4),
+            "by_project": dict(sorted(by_project_summary.items(), key=lambda x: x[1]["tokens"], reverse=True)),
+            "by_source": by_source_summary,
+        },
+        "available_models": sorted(list(all_models)),
+        "available_actions": sorted(list(all_actions)),
+        "available_projects": sorted(list(all_projects)),
+        "available_sources": sorted(list(all_sources)),
+        "entries": page_entries,
     }
 
 
@@ -356,7 +645,7 @@ def get_events(
                         continue
                     try:
                         ev = json.loads(line)
-                        if not is_dedicated and target_project not in ("Memory Loop", "mLoop", "global", "All"):
+                        if not is_dedicated and target_project not in ("Memory Loop", "mLoop", "global", "All", "ALL", "*"):
                             if not _match_project_alias(ev.get("project", ""), target_project):
                                 continue
 
@@ -396,10 +685,18 @@ def get_stories(project: Optional[str] = None) -> Dict[str, Any]:
     backlog_root = p_root / "backlog"
     # Si racine mLoop, inclure aussi Projects/mLoop-Dashboard/backlog
     backlog_roots = [backlog_root]
-    if target_project == "Memory Loop":
+    if target_project in ("Memory Loop", "ALL"):
         dash_b = REPO_ROOT / "Projects" / "mLoop-Dashboard" / "backlog"
         if dash_b.exists():
             backlog_roots.append(dash_b)
+        if target_project == "ALL":
+            projects_dir = REPO_ROOT / "Projects"
+            if projects_dir.exists():
+                for p in projects_dir.iterdir():
+                    if p.is_dir() and not p.name.startswith(".") and not p.name.startswith("_") and p.name.lower() not in {"default", "cacheproj", "timeoutproj"}:
+                        pb = p / "backlog"
+                        if pb.exists() and pb not in backlog_roots:
+                            backlog_roots.append(pb)
 
     # 1. Scanner le sprint_backlog.md pour extraire la table de métadonnées officielles
     sprint_table: Dict[str, Dict[str, str]] = {}

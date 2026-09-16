@@ -110,7 +110,7 @@ async def main():
         ]
 
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300.0)
             if result.returncode == 0:
                 # Le script original sauvegarde dans debate_transcript.md. On va le renommer.
                 original_output = project_dir / "memory" / "debate_transcript.md"

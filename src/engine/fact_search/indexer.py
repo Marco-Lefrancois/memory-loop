@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -47,6 +48,20 @@ class FactSearchIndexer:
             except Exception:
                 return {}
         return {}
+
+    @classmethod
+    def _read_file_safe(cls, file_path: Path) -> str:
+        """Lit un fichier texte UTF-8 avec contournement transparent de la limite Windows MAX_PATH (260 caractères)."""
+        try:
+            return file_path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            if os.name == "nt":
+                resolved = file_path.resolve()
+                p_str = str(resolved)
+                if not p_str.startswith("\\\\?\\"):
+                    p_str = "\\\\?\\" + p_str
+                return Path(p_str).read_text(encoding="utf-8", errors="ignore")
+            raise
 
     @classmethod
     def _save_hashes(cls, cache_path: Path, hashes: Dict[str, str]) -> None:
@@ -108,7 +123,7 @@ class FactSearchIndexer:
             if folder_path.exists():
                 for md_file in folder_path.rglob("*.md"):
                     try:
-                        content = md_file.read_text(encoding="utf-8", errors="ignore")
+                        content = cls._read_file_safe(md_file)
                         rel_path = md_file.relative_to(docs_dir.parent).as_posix()
                         raw_files.append((md_file, rel_path, layer_key, content))
                     except Exception as e:
@@ -117,7 +132,7 @@ class FactSearchIndexer:
         # Fichiers Markdown racine sous docs/
         for md_file in docs_dir.glob("*.md"):
             try:
-                content = md_file.read_text(encoding="utf-8", errors="ignore")
+                content = cls._read_file_safe(md_file)
                 rel_path = md_file.relative_to(docs_dir.parent).as_posix()
                 raw_files.append((md_file, rel_path, "01-architecture", content))
             except Exception as e:
@@ -128,7 +143,7 @@ class FactSearchIndexer:
         if ref_dir.exists():
             for md_file in ref_dir.rglob("*.md"):
                 try:
-                    content = md_file.read_text(encoding="utf-8", errors="ignore")
+                    content = cls._read_file_safe(md_file)
                     rel_path = md_file.relative_to(docs_dir.parent).as_posix()
                     raw_files.append((md_file, rel_path, "06-knowledge", content))
                 except Exception as e:
@@ -140,7 +155,7 @@ class FactSearchIndexer:
             if standards_dir.exists():
                 for md_file in standards_dir.rglob("*.md"):
                     try:
-                        content = md_file.read_text(encoding="utf-8", errors="ignore")
+                        content = cls._read_file_safe(md_file)
                         rel_path = md_file.as_posix()
                         layer_val = "01-architecture" if "adr" in rel_path.lower() else "02-business-rules"
                         raw_files.append((md_file, rel_path, layer_val, content))

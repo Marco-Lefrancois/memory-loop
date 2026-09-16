@@ -48,8 +48,11 @@ def handle_notebooklm(args: "argparse.Namespace", state: "LoopState" = None, pro
             return 1
         ZeroFluffConsole.info("Lancement de la fenêtre Chrome pour connexion à Google NotebookLM...")
         try:
-            res = subprocess.run(["node", str(script_path)], check=True)
+            res = subprocess.run(["node", str(script_path)], check=True, timeout=120.0)
             return res.returncode
+        except subprocess.TimeoutExpired:
+            ZeroFluffConsole.error("Délai de connexion Google NotebookLM expiré (120s).")
+            return 124
         except Exception as e:
             ZeroFluffConsole.error(f"Erreur lors de l'exécution de node : {e}")
             return 1

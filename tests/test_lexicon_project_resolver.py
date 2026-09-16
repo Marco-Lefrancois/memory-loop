@@ -66,11 +66,19 @@ def test_resolve_project_alias_camelcase_and_symbols():
     res1 = SemanticLexiconResolver.resolve_project_alias("BoireEtFrere")
     assert res1 == "BoireFrere_Segment2"
 
+    # Mot agglutiné en minuscules (ex: prompt utilisateur / LLM sans CamelCase)
+    res_glued = SemanticLexiconResolver.resolve_project_alias("boireetfrere")
+    assert res_glued == "BoireFrere_Segment2"
+
     res2 = SemanticLexiconResolver.resolve_project_alias("Boire & Frère")
     assert res2 == "BoireFrere_Segment2"
 
     res3 = SemanticLexiconResolver.resolve_project_alias("boire-frere")
     assert res3 == "BoireFrere_Segment2"
+
+    # Requête avec zéro pertinence textuelle/sémantique : ne doit PAS renvoyer le premier projet par défaut
+    res_none = SemanticLexiconResolver.resolve_project_alias("totalement_inconnu_xyz_999")
+    assert res_none is None
 
 
 def test_resolve_project_alias_prefers_ssot_over_empty_stub(tmp_path):
@@ -78,3 +86,4 @@ def test_resolve_project_alias_prefers_ssot_over_empty_stub(tmp_path):
     # Test avec resolve_project_name
     canonical = resolve_project_name("BoireEtFrere")
     assert canonical == "BoireFrere_Segment2"
+    assert resolve_project_name("boireetfrere") == "BoireFrere_Segment2"

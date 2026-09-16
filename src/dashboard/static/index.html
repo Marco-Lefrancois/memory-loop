@@ -38,6 +38,11 @@
         ::-webkit-scrollbar-track { background: #0b0f19; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        /* Sélecteur de projet — harmonisation dark theme */
+        select#project-selector { background-color: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 6px; padding: 4px 8px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; padding-right: 24px; }
+        select#project-selector:focus { border-color: #334155; outline: none; box-shadow: 0 0 0 2px rgba(51, 65, 85, 0.4); }
+        select#project-selector option { background-color: #0f172a; color: #cbd5e1; padding: 6px 10px; }
+        select#project-selector option:hover, select#project-selector option:checked { background-color: #1e293b; color: #f1f5f9; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -62,7 +67,7 @@
             <div class="flex items-center gap-3 flex-wrap">
                 <div class="flex items-center gap-2 bg-darkcard px-3 py-1.5 rounded-lg border border-darkborder">
                     <span class="text-xs text-gray-400">Projet :</span>
-                    <select id="project-selector" onchange="onProjectChange()" class="bg-transparent text-sm font-medium text-cyan-300 focus:outline-none cursor-pointer">
+                    <select id="project-selector" onchange="onProjectChange()" class="text-sm font-medium cursor-pointer">
                         <option value="" disabled selected>Chargement...</option>
                     </select>
                 </div>
@@ -96,6 +101,9 @@
             </button>
             <button onclick="switchTab('graph')" id="tab-btn-graph" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
                 <span>🧠</span> Ground Truth (Graphe)
+            </button>
+            <button onclick="switchTab('ledger')" id="tab-btn-ledger" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
+                <span>💎</span> Token Ledger
             </button>
         </nav>
     </div>
@@ -282,6 +290,187 @@
             </div>
         </section>
 
+        <!-- ════════ VUE 5 : TOKEN LEDGER & CONSOMMATION ═══════════════ -->
+        <section id="tab-ledger" class="hidden space-y-6">
+            <!-- 3 CARTES SYNTHÈSE GLOBALE & PAR PROJET -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- CARTE 1 : SYNTHÈSE GLOBALE & BI-SOURCE -->
+                <div class="glass-card p-5 rounded-xl border border-cyan-900/40 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">🌐</div>
+                    <div>
+                        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Consommation Globale (Tous Projets)</div>
+                        <div class="mt-2 flex items-baseline gap-2">
+                            <span id="ledger-global-tokens" class="text-2xl font-bold text-cyan-400 font-mono">0</span>
+                            <span class="text-xs text-gray-400 font-mono">tokens</span>
+                        </div>
+                        <div class="mt-1 text-xs text-gray-400 flex items-center justify-between">
+                            <span>Coût cumulé : <b id="ledger-global-cost" class="text-emerald-400 font-mono">$0.0000</b></span>
+                            <span id="ledger-global-calls" class="font-mono text-gray-500">0 appels</span>
+                        </div>
+                    </div>
+                    <!-- VENTILATION BI-SOURCE : LLM_NMEDIA_CLOUD VS ANTIGRAVITY-CHAT -->
+                    <div class="mt-3 pt-2.5 border-t border-darkborder/60 grid grid-cols-2 gap-2 text-[11px] font-mono">
+                        <div onclick="filterBySource('llm_nmedia_cloud')" class="p-1.5 rounded bg-darkcard/60 border border-indigo-900/40 hover:border-indigo-500 cursor-pointer transition" title="Filtrer sur llm_nmedia_cloud">
+                            <div class="text-indigo-400 font-semibold flex items-center gap-1 truncate text-[10px]">☁️ llm_nmedia_cloud</div>
+                            <div id="ledger-source-nmedia" class="text-gray-200 font-bold text-[11px] mt-0.5">0 tok</div>
+                            <div id="ledger-source-nmedia-cost" class="text-gray-400 text-[10px]">$0.0000</div>
+                        </div>
+                        <div onclick="filterBySource('antigravity-chat')" class="p-1.5 rounded bg-darkcard/60 border border-emerald-900/40 hover:border-emerald-500 cursor-pointer transition" title="Filtrer sur antigravity-chat">
+                            <div class="text-emerald-400 font-semibold flex items-center gap-1 truncate text-[10px]">🌐 antigravity-chat</div>
+                            <div id="ledger-source-google" class="text-gray-200 font-bold text-[11px] mt-0.5">0 tok</div>
+                            <div id="ledger-source-google-cost" class="text-gray-400 text-[10px]">$0.0000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARTE 2 : SÉLECTION FILTRÉE -->
+                <div class="glass-card p-5 rounded-xl border border-indigo-900/40 relative overflow-hidden">
+                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">🎯</div>
+                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Vue Filtrée Active</div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="ledger-filtered-tokens" class="text-2xl font-bold text-indigo-400 font-mono">0</span>
+                        <span class="text-xs text-gray-400 font-mono">tokens</span>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-400 flex items-center justify-between">
+                        <span>Coût filtré : <b id="ledger-filtered-cost" class="text-cyan-300 font-mono">$0.0000</b></span>
+                        <span id="ledger-filtered-entries" class="font-mono text-gray-400">0 entrées</span>
+                    </div>
+                </div>
+
+                <!-- CARTE 3 : VENTILATION PAR PROJET -->
+                <div class="glass-card p-5 rounded-xl border border-purple-900/40 flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center justify-between">
+                            <span>Top Projets (Tokens)</span>
+                            <span class="text-[10px] text-gray-500 font-normal">Cliquer pour filtrer</span>
+                        </div>
+                        <div id="ledger-projects-breakdown" class="mt-2 space-y-1 max-h-24 overflow-y-auto pr-1">
+                            <div class="text-xs text-gray-500 italic">Chargement des données...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BARRE DE FILTRES AVANCÉS & DATE RANGE -->
+            <div class="glass-card p-4 rounded-xl space-y-3">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <span class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <span>🔍</span> Filtres & Plage Temporelle
+                    </span>
+                    <button onclick="resetLedgerFilters()" class="text-xs text-gray-400 hover:text-cyan-400 transition flex items-center gap-1">
+                        <span>↺</span> Réinitialiser les filtres
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs">
+                    <!-- DATE DÉBUT -->
+                    <div class="space-y-1">
+                        <label class="text-gray-400 text-[11px]">Date Début :</label>
+                        <input type="date" id="ledger-date-start" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
+                    </div>
+
+                    <!-- DATE FIN -->
+                    <div class="space-y-1">
+                        <label class="text-gray-400 text-[11px]">Date Fin :</label>
+                        <input type="date" id="ledger-date-end" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
+                    </div>
+
+                    <!-- SOURCE LLM -->
+                    <div class="space-y-1">
+                        <label class="text-gray-400 text-[11px]">Source LLM :</label>
+                        <select id="ledger-source-select" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
+                            <option value="">Tous</option>
+                            <option value="antigravity-chat">antigravity-chat</option>
+                            <option value="llm_nmedia_cloud">llm_nmedia_cloud</option>
+                        </select>
+                    </div>
+
+                    <!-- MODÈLE -->
+                    <div class="space-y-1">
+                        <label class="text-gray-400 text-[11px]">Modèle :</label>
+                        <select id="ledger-model-select" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
+                            <option value="">Tous les modèles</option>
+                        </select>
+                    </div>
+
+                    <!-- ACTION -->
+                    <div class="space-y-1">
+                        <label class="text-gray-400 text-[11px]">Action :</label>
+                        <select id="ledger-action-select" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
+                            <option value="">Toutes les actions</option>
+                        </select>
+                    </div>
+
+                    <!-- RECHERCHE TEXTE -->
+                    <div class="space-y-1">
+                        <label class="text-gray-400 text-[11px]">Recherche :</label>
+                        <input type="text" id="ledger-search-input" placeholder="Cible, clé, projet..." oninput="onLedgerSearchInput()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
+                    </div>
+
+                    <!-- PAGE SIZE -->
+                    <div class="space-y-1">
+                        <label class="text-gray-400 text-[11px]">Lignes / page :</label>
+                        <select id="ledger-pagesize-select" onchange="onLedgerPageSizeChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
+                            <option value="25">25 par page</option>
+                            <option value="50" selected>50 par page (défaut)</option>
+                            <option value="100">100 par page</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLEAU DU LEDGER -->
+            <div class="glass-card rounded-xl overflow-hidden border border-darkborder">
+                <div class="p-4 border-b border-darkborder flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span>📋</span> Journal Détaillé des Interactions LLM
+                        </h2>
+                        <span id="ledger-status-badge" class="px-2 py-0.5 rounded text-[11px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">0 entrées</span>
+                    </div>
+                    <!-- CONTROLES PAGINATION HAUT -->
+                    <div class="flex items-center gap-2 text-xs">
+                        <button id="ledger-prev-btn" onclick="ledgerGoPage(ledgerCurrentPage - 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">◀ Précédent</button>
+                        <span id="ledger-page-indicator" class="font-mono text-gray-400">Page 1 / 1</span>
+                        <button id="ledger-next-btn" onclick="ledgerGoPage(ledgerCurrentPage + 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">Suivant ▶</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-darkborder bg-black/20 text-xs text-gray-400 font-mono">
+                                <th class="p-3">Horodatage</th>
+                                <th class="p-3">Source LLM</th>
+                                <th class="p-3">Projet</th>
+                                <th class="p-3">Modèle</th>
+                                <th class="p-3">Action</th>
+                                <th class="p-3">Cible / Contenu</th>
+                                <th class="p-3 text-right">Tokens (Prompt/Comp)</th>
+                                <th class="p-3 text-right">Coût ($ USD)</th>
+                                <th class="p-3 text-center">Détails</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-table-body" class="divide-y divide-darkborder font-mono text-xs">
+                            <tr><td colspan="9" class="p-6 text-center text-gray-500 font-sans">Chargement du journal token...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- CONTROLES PAGINATION BAS -->
+                <div class="p-3 bg-black/20 border-t border-darkborder flex items-center justify-between flex-wrap gap-2 text-xs">
+                    <span id="ledger-footer-info" class="text-gray-400 font-mono">Affichage de 0 à 0 sur 0 entrées</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="ledgerGoPage(1)" class="px-2 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-400" title="Première page">⇤</button>
+                        <button id="ledger-prev-btn-bottom" onclick="ledgerGoPage(ledgerCurrentPage - 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">◀ Précédent</button>
+                        <span id="ledger-page-indicator-bottom" class="font-mono text-gray-400">1 / 1</span>
+                        <button id="ledger-next-btn-bottom" onclick="ledgerGoPage(ledgerCurrentPage + 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">Suivant ▶</button>
+                        <button id="ledger-last-btn" onclick="ledgerGoPage(ledgerTotalPages)" class="px-2 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-400" title="Dernière page">⇥</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- ── FOOTER DISCRET ─────────────────────────────────────────── -->
@@ -295,7 +484,75 @@
         let autoRefreshTimer = null;
         let activeEventType = "ALL";
 
+        // 6. Paramètres d'état Token Ledger (déclarés tôt pour la restauration)
+        let ledgerCurrentPage = 1;
+        let ledgerPageSize = 50;
+        let ledgerTotalPages = 1;
+        let ledgerSearchDebounce = null;
+
+        function restoreUiPreferences() {
+            // 1. Onglet actif (Priorité : Hash URL > localStorage > 'overview')
+            const validTabs = ['overview', 'events', 'stories', 'graph', 'ledger'];
+            const hash = (window.location.hash || '').replace('#', '').trim();
+            const savedTab = (hash && validTabs.includes(hash)) ? hash : (localStorage.getItem('mloop_active_tab') || 'overview');
+            switchTab(validTabs.includes(savedTab) ? savedTab : 'overview', false);
+
+            // 2. Auto-refresh (Live 5s)
+            const autoRefreshVal = localStorage.getItem('mloop_auto_refresh');
+            const autoRefreshEl = document.getElementById('auto-refresh');
+            if (autoRefreshEl && autoRefreshVal !== null) {
+                autoRefreshEl.checked = (autoRefreshVal === 'true');
+            }
+
+            // 3. Filtre d'événements
+            const savedEventFilter = localStorage.getItem('mloop_events_filter');
+            if (savedEventFilter) {
+                activeEventType = savedEventFilter;
+                document.querySelectorAll('.event-filter-btn').forEach(btn => {
+                    if (btn.getAttribute('data-type') === activeEventType) {
+                        btn.classList.add('bg-cyan-600', 'text-white');
+                        btn.classList.remove('bg-darkcard', 'text-gray-300');
+                    } else {
+                        btn.classList.remove('bg-cyan-600', 'text-white');
+                        btn.classList.add('bg-darkcard', 'text-gray-300');
+                    }
+                });
+            }
+
+            // 4. Préférences Token Ledger (dates, source, recherche, pagination)
+            const dStart = localStorage.getItem('mloop_ledger_date_start');
+            const dEnd = localStorage.getItem('mloop_ledger_date_end');
+            const source = localStorage.getItem('mloop_ledger_source');
+            const search = localStorage.getItem('mloop_ledger_search');
+            const pageSize = localStorage.getItem('mloop_ledger_pagesize');
+            const page = localStorage.getItem('mloop_ledger_page');
+
+            const elStart = document.getElementById('ledger-date-start');
+            const elEnd = document.getElementById('ledger-date-end');
+            const elSource = document.getElementById('ledger-source-select');
+            const elSearch = document.getElementById('ledger-search-input');
+            const elPageSize = document.getElementById('ledger-pagesize-select');
+
+            if (elStart && dStart) elStart.value = dStart;
+            if (elEnd && dEnd) elEnd.value = dEnd;
+            if (elSource && source) {
+                let normSource = source;
+                if (normSource === 'nmedia_cloud') normSource = 'llm_nmedia_cloud';
+                if (normSource === 'Google') normSource = 'antigravity-chat';
+                elSource.value = normSource;
+            }
+            if (elSearch && search) elSearch.value = search;
+            if (elPageSize && pageSize) {
+                elPageSize.value = pageSize;
+                ledgerPageSize = parseInt(pageSize, 10) || 50;
+            }
+            if (page) {
+                ledgerCurrentPage = parseInt(page, 10) || 1;
+            }
+        }
+
         async function init() {
+            restoreUiPreferences();
             await loadProjects();
             await refreshAll();
             toggleAutoRefresh();
@@ -309,7 +566,11 @@
                 sel.innerHTML = "";
 
                 // Priorité de présélection : localStorage > active_project renvoyé par l'API
-                const savedProject = localStorage.getItem('mloop_selected_project') || data.active_project;
+                let savedProject = localStorage.getItem('mloop_selected_project') || data.active_project;
+                if (savedProject && savedProject.toLowerCase() === 'default') {
+                    savedProject = 'ALL';
+                    localStorage.setItem('mloop_selected_project', 'ALL');
+                }
 
                 const list = data.projects_formatted || data.projects.map(p => ({id: p, name: p}));
                 let matched = false;
@@ -375,26 +636,51 @@
                 loadStories(),
                 loadGraph(),
                 loadState(),
+                loadLedger(),
             ]);
         }
 
         function toggleAutoRefresh() {
             const isChecked = document.getElementById('auto-refresh').checked;
+            localStorage.setItem('mloop_auto_refresh', isChecked ? 'true' : 'false');
             if (autoRefreshTimer) clearInterval(autoRefreshTimer);
             if (isChecked) {
                 autoRefreshTimer = setInterval(refreshAll, 5000);
             }
         }
 
-        function switchTab(tabName) {
-            ['overview', 'events', 'stories', 'graph'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).classList.remove('active-tab');
-                document.getElementById(`tab-btn-${t}`).classList.add('text-gray-400');
+        function switchTab(tabName, loadData = true) {
+            const validTabs = ['overview', 'events', 'stories', 'graph', 'ledger'];
+            if (!validTabs.includes(tabName)) tabName = 'overview';
+
+            validTabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (el) el.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('active-tab');
+                    btn.classList.add('text-gray-400');
+                }
             });
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tabName}`).classList.add('active-tab');
-            document.getElementById(`tab-btn-${tabName}`).classList.remove('text-gray-400');
+            const activeEl = document.getElementById(`tab-${tabName}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            if (activeEl) activeEl.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.classList.add('active-tab');
+                activeBtn.classList.remove('text-gray-400');
+            }
+
+            // Persistance de l'onglet actif
+            localStorage.setItem('mloop_active_tab', tabName);
+            try {
+                if (window.location.hash !== '#' + tabName) {
+                    history.replaceState(null, '', '#' + tabName);
+                }
+            } catch (e) {}
+
+            if (loadData && tabName === 'ledger') {
+                loadLedger();
+            }
         }
 
         // 1. Charger Métriques
@@ -510,6 +796,7 @@
 
         function filterEvents(type) {
             activeEventType = type;
+            localStorage.setItem('mloop_events_filter', type);
             document.querySelectorAll('.event-filter-btn').forEach(btn => {
                 if (btn.getAttribute('data-type') === type) {
                     btn.classList.add('bg-cyan-600', 'text-white');
@@ -634,6 +921,327 @@
                 console.error("Erreur state:", err);
             }
         }
+
+        // 6. Charger Token Ledger
+        async function loadLedger() {
+            try {
+                const dateStart = document.getElementById('ledger-date-start')?.value || '';
+                const dateEnd = document.getElementById('ledger-date-end')?.value || '';
+                const source = document.getElementById('ledger-source-select')?.value || localStorage.getItem('mloop_ledger_source') || '';
+                const model = document.getElementById('ledger-model-select')?.value || localStorage.getItem('mloop_ledger_model') || '';
+                const action = document.getElementById('ledger-action-select')?.value || localStorage.getItem('mloop_ledger_action') || '';
+                const search = document.getElementById('ledger-search-input')?.value || '';
+
+                const params = new URLSearchParams({
+                    project: currentProject,
+                    page: ledgerCurrentPage,
+                    page_size: ledgerPageSize,
+                });
+                if (dateStart) params.append('start_date', dateStart);
+                if (dateEnd) params.append('end_date', dateEnd);
+                if (source) params.append('source', source);
+                if (model) params.append('model', model);
+                if (action) params.append('action', action);
+                if (search) params.append('search', search);
+
+                const res = await fetch(`/api/ledger?${params.toString()}`);
+                const data = await res.json();
+
+                // 1. Synthèse globale & bi-source
+                if (data.global_summary) {
+                    const gTok = document.getElementById('ledger-global-tokens');
+                    const gCost = document.getElementById('ledger-global-cost');
+                    const gCalls = document.getElementById('ledger-global-calls');
+                    if (gTok) gTok.textContent = data.global_summary.total_tokens.toLocaleString();
+                    if (gCost) gCost.textContent = `$${data.global_summary.total_cost_usd.toFixed(4)}`;
+                    if (gCalls) gCalls.textContent = `${data.global_summary.total_calls.toLocaleString()} appels`;
+
+                    // Ventilation bi-source
+                    if (data.global_summary.by_source) {
+                        const nm = data.global_summary.by_source.llm_nmedia_cloud || data.global_summary.by_source.nmedia_cloud || {tokens: 0, cost_usd: 0};
+                        const gg = data.global_summary.by_source['antigravity-chat'] || data.global_summary.by_source.Google || {tokens: 0, cost_usd: 0};
+                        const elNm = document.getElementById('ledger-source-nmedia');
+                        const elNmC = document.getElementById('ledger-source-nmedia-cost');
+                        const elGg = document.getElementById('ledger-source-google');
+                        const elGgC = document.getElementById('ledger-source-google-cost');
+                        if (elNm) elNm.textContent = `${nm.tokens.toLocaleString()} tok`;
+                        if (elNmC) elNmC.textContent = `$${nm.cost_usd.toFixed(4)}`;
+                        if (elGg) elGg.textContent = `${gg.tokens.toLocaleString()} tok`;
+                        if (elGgC) elGgC.textContent = `$${gg.cost_usd.toFixed(4)}`;
+                    }
+
+                    // Ventilation top projets
+                    const projBreakdown = document.getElementById('ledger-projects-breakdown');
+                    if (projBreakdown) {
+                        projBreakdown.innerHTML = '';
+                        const projs = Object.entries(data.global_summary.by_project || {});
+                        if (projs.length === 0) {
+                            projBreakdown.innerHTML = '<div class="text-xs text-gray-500 italic">Aucune donnée projet.</div>';
+                        } else {
+                            projs.slice(0, 6).forEach(([pName, pStats]) => {
+                                const isCurrent = (currentProject === pName);
+                                projBreakdown.innerHTML += `
+                                    <div onclick="selectLedgerProject('${pName}')" class="flex items-center justify-between text-xs py-0.5 px-1.5 rounded cursor-pointer transition ${isCurrent ? 'bg-cyan-950/80 border border-cyan-800' : 'hover:bg-darkcard'}" title="Filtrer sur ${pName}">
+                                        <span class="text-gray-300 font-semibold truncate max-w-[130px]">${pName}</span>
+                                        <span class="text-gray-400 font-mono text-[11px]">${pStats.tokens.toLocaleString()} tok <b class="text-emerald-400">($${pStats.cost_usd.toFixed(3)})</b></span>
+                                    </div>
+                                `;
+                            });
+                        }
+                    }
+                }
+
+                // 2. Synthèse filtrée
+                const fTok = document.getElementById('ledger-filtered-tokens');
+                const fCost = document.getElementById('ledger-filtered-cost');
+                const fEntries = document.getElementById('ledger-filtered-entries');
+                const sBadge = document.getElementById('ledger-status-badge');
+                if (fTok) fTok.textContent = data.filtered_tokens.toLocaleString();
+                if (fCost) fCost.textContent = `$${data.filtered_cost_usd.toFixed(4)}`;
+                if (fEntries) fEntries.textContent = `${data.total_entries.toLocaleString()} entrées`;
+                if (sBadge) sBadge.textContent = `${data.total_entries.toLocaleString()} entrées répertoriées`;
+
+                // 3. Dropdowns de filtres
+                updateLedgerDropdowns(data.available_models, data.available_actions);
+
+                // 4. Pagination
+                ledgerCurrentPage = data.page;
+                ledgerTotalPages = data.total_pages;
+                const pInd = document.getElementById('ledger-page-indicator');
+                const pIndBot = document.getElementById('ledger-page-indicator-bottom');
+                if (pInd) pInd.textContent = `Page ${data.page} / ${data.total_pages}`;
+                if (pIndBot) pIndBot.textContent = `${data.page} / ${data.total_pages}`;
+
+                const prev1 = document.getElementById('ledger-prev-btn');
+                const prev2 = document.getElementById('ledger-prev-btn-bottom');
+                const next1 = document.getElementById('ledger-next-btn');
+                const next2 = document.getElementById('ledger-next-btn-bottom');
+                if (prev1) prev1.disabled = (data.page <= 1);
+                if (prev2) prev2.disabled = (data.page <= 1);
+                if (next1) next1.disabled = (data.page >= data.total_pages);
+                if (next2) next2.disabled = (data.page >= data.total_pages);
+
+                const startIdx = (data.page - 1) * data.page_size + (data.entries.length > 0 ? 1 : 0);
+                const endIdx = startIdx + data.entries.length - (data.entries.length > 0 ? 1 : 0);
+                const footInfo = document.getElementById('ledger-footer-info');
+                if (footInfo) footInfo.textContent = `Affichage de ${startIdx.toLocaleString()} à ${endIdx.toLocaleString()} sur ${data.total_entries.toLocaleString()} entrées`;
+
+                // 5. Table des interactions
+                const tbody = document.getElementById('ledger-table-body');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                if (data.entries.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-gray-500 font-sans italic">Aucune interaction LLM ne correspond aux filtres sélectionnés.</td></tr>`;
+                    return;
+                }
+
+                data.entries.forEach(e => {
+                    const date = new Date(e.timestamp);
+                    const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    const pName = e.project_display || e.project || 'Memory Loop';
+                    const cost = typeof e.cost_usd_est === 'number' ? e.cost_usd_est.toFixed(4) : (e.cost_usd_est || '0.0000');
+                    const totalToks = (e.total_tokens_est || 0).toLocaleString();
+                    const promptToks = (e.prompt_tokens_est || 0).toLocaleString();
+                    const compToks = (e.completion_tokens_est || 0).toLocaleString();
+                    const action = e.action || 'llm-call';
+                    const model = e.model || 'unknown';
+                    const target = e.target || '—';
+                    const sourceVal = e.source || 'llm_nmedia_cloud';
+
+                    let sourceBadge = `<span class="px-2 py-0.5 rounded border text-[10px] font-bold bg-indigo-950/80 text-indigo-300 border-indigo-700/60" title="Proxy LiteLLM d'entreprise (Nmédia Solutions)">☁️ llm_nmedia_cloud</span>`;
+                    if (sourceVal === 'antigravity-chat' || sourceVal === 'Google') {
+                        sourceBadge = `<span class="px-2 py-0.5 rounded border text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border-emerald-700/60" title="Session IDE Antigravity (Google DeepMind)">🌐 antigravity-chat</span>`;
+                    }
+
+                    let actBadge = 'bg-gray-800 text-gray-300 border-gray-700';
+                    if (action.includes('rubber-duck')) actBadge = 'bg-amber-950/80 text-amber-300 border-amber-800';
+                    else if (action.includes('grill')) actBadge = 'bg-rose-950/80 text-rose-300 border-rose-800';
+                    else if (action.includes('sentinel')) actBadge = 'bg-purple-950/80 text-purple-300 border-purple-800';
+                    else if (action.includes('vibe')) actBadge = 'bg-emerald-950/80 text-emerald-300 border-emerald-800';
+                    else if (action.includes('plan')) actBadge = 'bg-blue-950/80 text-blue-300 border-blue-800';
+                    else if (action.includes('sync') || action.includes('notebooklm')) actBadge = 'bg-cyan-950/80 text-cyan-300 border-cyan-800';
+                    else if (action.includes('chat_turn') || action.includes('chat')) actBadge = 'bg-teal-950/80 text-teal-300 border-teal-800';
+                    else if (action.includes('command') || action.includes('run_command')) actBadge = 'bg-orange-950/80 text-orange-300 border-orange-800';
+                    else if (action.includes('file') || action.includes('grep') || action.includes('write')) actBadge = 'bg-sky-950/80 text-sky-300 border-sky-800';
+                    else if (action.includes('browser') || action.includes('subagent')) actBadge = 'bg-fuchsia-950/80 text-fuchsia-300 border-fuchsia-800';
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-darkcard/50 transition">
+                            <td class="p-3 text-gray-400 whitespace-nowrap text-[11px]">${dateStr}</td>
+                            <td class="p-3 whitespace-nowrap">${sourceBadge}</td>
+                            <td class="p-3">
+                                <span class="px-2 py-0.5 rounded bg-darkcard border border-darkborder text-gray-300 text-[11px] font-semibold">${pName}</span>
+                            </td>
+                            <td class="p-3 text-cyan-300 font-semibold whitespace-nowrap">${model}</td>
+                            <td class="p-3">
+                                <span class="px-2 py-0.5 rounded border text-[10px] font-bold ${actBadge}">${action}</span>
+                            </td>
+                            <td class="p-3 text-gray-300 font-sans max-w-xs truncate" title="${target}">
+                                ${target}
+                            </td>
+                            <td class="p-3 text-right">
+                                <span class="font-bold text-indigo-400">${totalToks}</span>
+                                <div class="text-[10px] text-gray-500">${promptToks}p / ${compToks}c</div>
+                            </td>
+                            <td class="p-3 text-right font-bold text-emerald-400 font-mono whitespace-nowrap">
+                                $${cost}
+                            </td>
+                            <td class="p-3 text-center">
+                                ${(e.context_contributors && e.context_contributors.length > 0) || e.metadata ? `
+                                    <details class="text-[10px] text-gray-500 cursor-pointer">
+                                        <summary class="hover:text-cyan-400 select-none">Détails</summary>
+                                        <div class="bg-black/80 p-2 rounded mt-1 text-left text-gray-400 font-mono max-w-xs overflow-x-auto">
+                                            ${e.key_label ? `<div class="text-[10px] text-gray-400 mb-1">Source: ${sourceVal} • Clé: ${e.key_label} (${e.key_masked || ''})</div>` : ''}
+                                            ${e.context_contributors ? `<div class="text-gray-400 font-semibold mb-1">Sources (${e.context_contributors.length}):</div><ul class="list-disc pl-3 text-[10px] space-y-0.5">${e.context_contributors.map(c => `<li>${c}</li>`).join('')}</ul>` : ''}
+                                        </div>
+                                    </details>
+                                ` : '<span class="text-gray-600">—</span>'}
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Erreur chargement ledger:", err);
+            }
+        }
+
+        function updateLedgerDropdowns(models, actions) {
+            const modelSel = document.getElementById('ledger-model-select');
+            const actSel = document.getElementById('ledger-action-select');
+            if (!modelSel || !actSel) return;
+
+            const savedModel = localStorage.getItem('mloop_ledger_model') || '';
+            const savedAct = localStorage.getItem('mloop_ledger_action') || '';
+            const currentModel = modelSel.value || savedModel;
+            const currentAct = actSel.value || savedAct;
+
+            if (models && modelSel.options.length <= 1) {
+                models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m;
+                    opt.textContent = m;
+                    if (m === currentModel) opt.selected = true;
+                    modelSel.appendChild(opt);
+                });
+                if (currentModel) modelSel.value = currentModel;
+            }
+
+            if (actions && actSel.options.length <= 1) {
+                actions.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a;
+                    if (a === currentAct) opt.selected = true;
+                    actSel.appendChild(opt);
+                });
+                if (currentAct) actSel.value = currentAct;
+            }
+        }
+
+        function onLedgerFilterChange() {
+            const dStart = document.getElementById('ledger-date-start')?.value || '';
+            const dEnd = document.getElementById('ledger-date-end')?.value || '';
+            const source = document.getElementById('ledger-source-select')?.value || '';
+            const model = document.getElementById('ledger-model-select')?.value || '';
+            const action = document.getElementById('ledger-action-select')?.value || '';
+
+            localStorage.setItem('mloop_ledger_date_start', dStart);
+            localStorage.setItem('mloop_ledger_date_end', dEnd);
+            localStorage.setItem('mloop_ledger_source', source);
+            localStorage.setItem('mloop_ledger_model', model);
+            localStorage.setItem('mloop_ledger_action', action);
+
+            ledgerCurrentPage = 1;
+            localStorage.setItem('mloop_ledger_page', '1');
+            loadLedger();
+        }
+
+        function onLedgerPageSizeChange() {
+            const sel = document.getElementById('ledger-pagesize-select');
+            ledgerPageSize = parseInt(sel.value, 10) || 50;
+            localStorage.setItem('mloop_ledger_pagesize', ledgerPageSize.toString());
+            ledgerCurrentPage = 1;
+            localStorage.setItem('mloop_ledger_page', '1');
+            loadLedger();
+        }
+
+        function onLedgerSearchInput() {
+            const searchVal = document.getElementById('ledger-search-input')?.value || '';
+            localStorage.setItem('mloop_ledger_search', searchVal);
+            if (ledgerSearchDebounce) clearTimeout(ledgerSearchDebounce);
+            ledgerSearchDebounce = setTimeout(() => {
+                ledgerCurrentPage = 1;
+                localStorage.setItem('mloop_ledger_page', '1');
+                loadLedger();
+            }, 350);
+        }
+
+        function ledgerGoPage(p) {
+            if (p < 1 || p > ledgerTotalPages) return;
+            ledgerCurrentPage = p;
+            localStorage.setItem('mloop_ledger_page', p.toString());
+            loadLedger();
+        }
+
+        function resetLedgerFilters() {
+            const dStart = document.getElementById('ledger-date-start');
+            const dEnd = document.getElementById('ledger-date-end');
+            const sSrc = document.getElementById('ledger-source-select');
+            const mSel = document.getElementById('ledger-model-select');
+            const aSel = document.getElementById('ledger-action-select');
+            const sInput = document.getElementById('ledger-search-input');
+            const pSize = document.getElementById('ledger-pagesize-select');
+
+            if (dStart) dStart.value = '';
+            if (dEnd) dEnd.value = '';
+            if (sSrc) sSrc.value = '';
+            if (mSel) mSel.value = '';
+            if (aSel) aSel.value = '';
+            if (sInput) sInput.value = '';
+            if (pSize) pSize.value = '50';
+
+            localStorage.removeItem('mloop_ledger_date_start');
+            localStorage.removeItem('mloop_ledger_date_end');
+            localStorage.removeItem('mloop_ledger_source');
+            localStorage.removeItem('mloop_ledger_model');
+            localStorage.removeItem('mloop_ledger_action');
+            localStorage.removeItem('mloop_ledger_search');
+            localStorage.removeItem('mloop_ledger_pagesize');
+            localStorage.removeItem('mloop_ledger_page');
+
+            ledgerCurrentPage = 1;
+            ledgerPageSize = 50;
+            loadLedger();
+        }
+
+        function filterBySource(srcName) {
+            const sSel = document.getElementById('ledger-source-select');
+            if (sSel) {
+                if (sSel.value === srcName) {
+                    sSel.value = "";
+                } else {
+                    sSel.value = srcName;
+                }
+                onLedgerFilterChange();
+            }
+        }
+
+        function selectLedgerProject(pName) {
+            const sel = document.getElementById('project-selector');
+            if (sel) {
+                sel.value = pName;
+                onProjectChange();
+            }
+        }
+
+        // Support navigation boutons retour / avant du navigateur
+        window.addEventListener('hashchange', () => {
+            const hash = (window.location.hash || '').replace('#', '').trim();
+            if (hash && ['overview', 'events', 'stories', 'graph', 'ledger'].includes(hash)) {
+                switchTab(hash, true);
+            }
+        });
 
         // Lancement au chargement de la page
         document.addEventListener('DOMContentLoaded', init);

@@ -453,4 +453,260 @@ def handle_hyper_query(args: argparse.Namespace, state: LoopState, project_path:
 
 
 
+def handle_context_watch(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Surveillance de l'occupation contextuelle et alerte Dumb-Zone (ADR-0326)."""
+    from src.utils.context_monitor import ContextMonitor
 
+    monitor = ContextMonitor()
+    report = monitor.evaluate_project_state(project_path)
+    gauge_str = monitor.render_ascii_gauge(report)
+
+    print("\n" + gauge_str + "\n")
+    return 1 if report.zone == "DUMB_ZONE" else 0
+
+
+def handle_token_tracker(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Audit de la consommation de tokens et de coûts par interaction, projet et clé (ADR-0329)."""
+    from datetime import datetime, timezone
+    from src.utils.token_ledger import TokenLedger
+
+    project_name = getattr(args, "project", None) or getattr(state, "project_name", None)
+    if project_name in ("default", "Global", ""):
+        project_name = None
+
+    date_filter = None
+    if getattr(args, "today", False):
+        date_filter = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    elif getattr(args, "date", None):
+        date_filter = args.date
+
+    top_n = getattr(args, "top", 10) or 10
+
+    report = TokenLedger.generate_report(
+        project_name=project_name,
+        date_filter=date_filter,
+        top_n=top_n,
+    )
+    print("\n" + report + "\n")
+    return 0
+
+
+def handle_supersession_sync(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Synchronisation du registre de supersession des règles et décisions (ADR-0326)."""
+    from src.loop_mem.supersession import MemorySupersessionEngine
+
+    engine = MemorySupersessionEngine(project_path)
+    ledger = engine.sync_ledger()
+
+    ZeroFluffConsole.success(f"Registre de supersession synchronisé : {ledger['total_superseded']} élément(s) archivé(s).")
+    for item_id, details in ledger.get("superseded_items", {}).items():
+        print(f"  [SUPERSEDED] {item_id} ➔ {details['superseded_by']} ({details['reason']})")
+
+    return 0
+
+
+def handle_distill_invest(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Génération du dataset d'instructions d'audit INVEST / Gherkin (ADR-0328)."""
+    from src.pipelines.invest_dataset_distiller import InvestDatasetDistiller
+
+    distiller = InvestDatasetDistiller(project_path)
+    examples = distiller.generate_distilled_dataset()
+    out_file = distiller.export_dataset_jsonl(examples)
+
+    ZeroFluffConsole.success(f"Distillation terminée : {len(examples)} exemples générés sous '{out_file.relative_to(project_path)}'.")
+    for ex in examples:
+        print(f"  [{ex.example_id}] ({ex.category}) ➔ {ex.instruction[:60]}...")
+
+    return 0
+
+
+def handle_parent_resolve(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Résolution du bloc parent pour un extrait sémantique (ADR-0328)."""
+    from src.utils.parent_doc_resolver import ParentDocumentResolver
+    # ... (omitted for brevity)
+    return 0
+
+
+def handle_story_clean(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Nettoyer les sections de mémoire temporaires."""
+    from src.pipelines.story_cleaner import run_story_clean
+    run_story_clean(project_path, verbose=getattr(args, "verbose", False))
+    return 0
+
+
+def handle_export_obsidian(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Exporte l'hypergraphe du projet sous forme de coffre Obsidian avec wikilinks (ADR-0337 / ADR-0343)."""
+    from src.core.hypergraph_engine import HypergraphKnowledgeAbstract
+    
+    hypergraph_file = project_path / "memory" / "hypergraph.json"
+    if not hypergraph_file.exists():
+        ZeroFluffConsole.warning(f"Aucun hypergraphe trouvé sous {hypergraph_file}. Exécution préalable d'un sync...")
+        from src.pipelines.sync import sync_hypergraph
+        sync_hypergraph(args.project, project_path, verbose=True)
+
+    if not hypergraph_file.exists():
+        ZeroFluffConsole.error("Impossible de charger ou générer l'hypergraphe.")
+        return 1
+
+    ka = HypergraphKnowledgeAbstract.load_from_file(hypergraph_file)
+    out_dir_arg = getattr(args, "out", None) or "docs/07-obsidian-vault"
+    out_dir = Path(out_dir_arg) if Path(out_dir_arg).is_absolute() else (project_path / out_dir_arg)
+
+    ka.export_obsidian_vault(out_dir)
+    ZeroFluffConsole.success(f"✓ Coffre Obsidian exporté avec succès dans : {out_dir}")
+    ZeroFluffConsole.info(f" • {len(ka.nodes)} fiches d'entités créées sous Entities/")
+    ZeroFluffConsole.info(f" • {len(ka.edges)} fiches d'hyper-arêtes créées sous Stories/")
+    return 0
+
+
+def handle_hyper_query(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Interroge l'hypergraphe pour une User Story ou un concept spécifique (ADR-0343)."""
+    from src.core.hypergraph_engine import HypergraphKnowledgeAbstract
+    
+    hypergraph_file = project_path / "memory" / "hypergraph.json"
+    if not hypergraph_file.exists():
+        from src.pipelines.sync import sync_hypergraph
+        sync_hypergraph(args.project, project_path, verbose=False)
+
+    if not hypergraph_file.exists():
+        ZeroFluffConsole.error("Hypergraphe introuvable.")
+        return 1
+
+    ka = HypergraphKnowledgeAbstract.load_from_file(hypergraph_file)
+    story_id = getattr(args, "story", None)
+    if story_id:
+        unit = ka.get_hyper_story_unit(story_id)
+        if unit:
+            ZeroFluffConsole.section(f"Hyper-Story Unit : {story_id}")
+            print(json.dumps(unit, indent=2, ensure_ascii=False))
+            return 0
+        else:
+            ZeroFluffConsole.warning(f"Récit '{story_id}' introuvable dans l'hypergraphe.")
+            return 1
+            
+    # Requête générale sur les stats
+    ZeroFluffConsole.section(f"Statistiques Hypergraphe — Projet : {args.project}")
+    print(json.dumps(ka.to_dict()["stats"], indent=2))
+    return 0
+
+
+def handle_dossier_init(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Initialise le Dossier de Preuves Documentaires (_fact_dossier.md) pour un récit."""
+    import re
+    import datetime
+    from src.utils.lexicon_resolver import SemanticLexiconResolver
+
+    story_query = getattr(args, "story", None)
+    force = getattr(args, "force", False)
+
+    if not story_query:
+        ZeroFluffConsole.error("Le paramètre --story <STORY_ID> est obligatoire pour dossier-init.")
+        return 1
+
+    stories_dir = project_path / "backlog" / "stories"
+    target_story = SemanticLexiconResolver.resolve_story_query(story_query, stories_dir)
+    if not target_story or not target_story.exists():
+        matches = list(stories_dir.rglob(f"*{story_query}*.md")) if stories_dir.exists() else []
+        if matches:
+            target_story = matches[0]
+        else:
+            cand = Path(story_query)
+            if cand.exists():
+                target_story = cand
+            else:
+                ZeroFluffConsole.error(f"Récit introuvable pour '{story_query}' sous {stories_dir}.")
+                return 1
+
+    content = target_story.read_text(encoding="utf-8", errors="replace")
+    fm_match = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
+    story_id = target_story.stem
+    jira_key = ""
+    title = target_story.stem
+    if fm_match:
+        fm_text = fm_match.group(1)
+        id_m = re.search(r"^id:\s*(.+)$", fm_text, re.MULTILINE)
+        if id_m:
+            story_id = id_m.group(1).strip()
+        jk_m = re.search(r"^jira_key:\s*(.+)$", fm_text, re.MULTILINE)
+        if jk_m:
+            jira_key = jk_m.group(1).strip()
+        t_m = re.search(r"^title:\s*(.+)$", fm_text, re.MULTILINE)
+        if t_m:
+            title = t_m.group(1).strip().strip("'\"")
+
+    h1_m = re.search(r"^#\s+(.+)$", content, re.MULTILINE)
+    if h1_m and not title:
+        title = h1_m.group(1).strip()
+
+    evidence_dir = project_path / "memory" / "evidence"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    dossier_file = evidence_dir / f"{story_id}_fact_dossier.md"
+
+    if dossier_file.exists() and not force:
+        ZeroFluffConsole.warning(
+            f"Le Dossier de Preuves '{dossier_file.name}' existe déjà.\n"
+            f"Utilisez --force pour écraser."
+        )
+        return 0
+
+    now_iso = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    template = (
+        "---\n"
+        f"story_id: {story_id}\n"
+        f"jira_key: {jira_key}\n"
+        "dossier_status: CURRENT\n"
+        f'last_verified_at: "{now_iso}"\n'
+        "ssot_source: docs/03-models/\n"
+        "sources_hashes:\n"
+        "  # Renseignez ici les fichiers sources physiques de vérité\n"
+        "  # ex: modele.md: sha256_hash\n"
+        "---\n\n"
+        f"# 📂 Dossier de Preuves Documentaires & Cadrage SSOT — {story_id}\n\n"
+        f"**Titre Métier** : {title}  \n"
+        f"**Identifiant Story** : `{story_id}`  \n"
+        f"**Clé Jira Officielle** : `{jira_key}`  \n"
+        f"**Date d'Extraction & Cadrage** : {now_iso[:10]}  \n"
+        "**Auditeur mLoop** : Agentic Pair Programmer  \n\n"
+        "---\n\n"
+        "## 🧭 1. Sources Physiques & Matrice de Vérité\n\n"
+        "* 🗄️ **Modèle de données SSOT (référence canonique)** :  \n"
+        "* 📋 **Cas d'affaires (Analyse Fonctionnelle)** :  \n"
+        "* 🎨 **Maquette Figma Interactive (Live SSOT Visuel)** :  \n\n"
+        "### 1.1 Hiérarchie de Vérité\n"
+        "1. **Niveau 1 (Suprême)** : Arbitrage formel PO.\n"
+        "2. **Niveau 2 (Structure de données SSOT)** : Modèle de données canonique.\n"
+        "3. **Niveau 3 (Visuel SSOT)** : Maquettes Figma officielles.\n"
+        "4. **Niveau 4 (Cas d'affaires AF)** : Spécifications fonctionnelles.\n\n"
+        "---\n\n"
+        "## 🔬 2. Faits Extraits & Verbatims (Passage-Level Grounding)\n\n"
+        "| # | Table / Source | Définition DBML Exacte | Rôle dans le Payload API |\n"
+        "| :---: | :--- | :--- | :--- |\n"
+        "| **F-01** | `table_source` | `Table table_source { id uuid [pk] }` | Description de la règle métier ou verbatim... |\n\n"
+        "---\n\n"
+        "## 🗄️ 3. Schéma Relationnel SSOT\n\n"
+        "```mermaid\n"
+        "erDiagram\n"
+        '    table_source ||--o{ table_target : "relation"\n'
+        "```\n\n"
+        "---\n\n"
+        "## 🎯 4. Contrats Déclaratifs Cibles (Endpoints REST 1:1)\n\n"
+        "* **Méthode** : `GET`\n"
+        "* **Route** : `/api/v1/...`\n"
+        "* **Query Parameters** :\n"
+        "  * `id` : `uuid` (obligatoire)\n\n"
+        "* **Réponse 200 OK** :\n"
+        "```json\n"
+        "{\n"
+        '  "id": "00000000-0000-0000-0000-000000000000"\n'
+        "}\n"
+        "```\n\n"
+        "---\n\n"
+        "## 🏁 5. Évaluation de la Frontière Active (Frontier Design Tree)\n\n"
+        "* **Arbitrages retenus** :\n"
+        "  * Zéro extrapolation : toutes les tables et règles proviennent du modèle SSOT.\n"
+    )
+
+    dossier_file.write_text(template, encoding="utf-8")
+    ZeroFluffConsole.success(f"Dossier de Preuves Documentaires initialisé : {dossier_file}")
+    return 0

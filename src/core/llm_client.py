@@ -27,11 +27,15 @@ except ImportError:
 
 from src.core.semantic_cache import SemanticCache
 from src.utils.token_ledger import TokenLedger
+from src.utils.logger import get_logger
+
+logger = get_logger("llm_client")
 
 
 class AsyncLLMClient:
     """
     Client LLM asynchrone haute performance avec cache déterministe et gestion de flux.
+    Supporte l'injection de dépendances et le protocole contextuel async with (ADR-0369).
     """
 
     def __init__(
@@ -41,6 +45,8 @@ class AsyncLLMClient:
         max_concurrency: int = 20,
         enable_cache: bool = True,
         cache_db_path: Optional[Path] = None,
+        cache: Optional[SemanticCache] = None,
+        openai_client: Optional[Any] = None,
     ):
         self.base_url = (
             base_url
@@ -50,27 +56,50 @@ class AsyncLLMClient:
         self.api_key = api_key or self._resolve_api_key()
         self.semaphore = asyncio.Semaphore(max_concurrency)
         self.enable_cache = enable_cache
-        self.cache = SemanticCache(cache_db_path) if enable_cache else None
+        self.cache = cache or (SemanticCache(cache_db_path) if enable_cache else None)
 
-        self._openai_client: Optional[Any] = None
-        if AsyncOpenAI is not None:
+        self._http_client: Optional[Any] = None
+        self._openai_client: Optional[Any] = openai_client
+        if self._openai_client is None and AsyncOpenAI is not None:
             # Initialisation AsyncOpenAI avec HTTP/2 si disponible
-            http_client = None
             if httpx is not None:
                 try:
-                    http_client = httpx.AsyncClient(
+                    self._http_client = httpx.AsyncClient(
                         http2=True,
                         limits=httpx.Limits(max_keepalive_connections=50, max_connections=100),
                         timeout=60.0,
                     )
                 except Exception:
-                    http_client = httpx.AsyncClient(timeout=60.0)
+                    self._http_client = httpx.AsyncClient(timeout=60.0)
 
             self._openai_client = AsyncOpenAI(
                 api_key=self.api_key or "sk-dummy",
                 base_url=self.base_url,
-                http_client=http_client,
+                http_client=self._http_client,
             )
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.aclose()
+
+    async def aclose(self):
+        """Ferme proprement les sessions HTTP et clients asynchrones (ADR-0369)."""
+        if self._openai_client and hasattr(self._openai_client, "close"):
+            try:
+                await self._openai_client.close()
+            except Exception as e:
+                logger.debug("Échec non bloquant fermeture client openai", exc_info=True)
+        if (
+            self._http_client
+            and hasattr(self._http_client, "aclose")
+            and not getattr(self._http_client, "is_closed", False)
+        ):
+            try:
+                await self._http_client.aclose()
+            except Exception as e:
+                logger.debug("Échec non bloquant fermeture http_client", exc_info=True)
 
     def _resolve_api_key(self) -> str:
         """Résout la clé API active depuis les variables d'environnement ou les secrets."""
@@ -205,8 +234,17 @@ class AsyncLLMClient:
                 completion_tokens=c_tok,
                 target=target_name or "N/A",
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Échec non bloquant de l'enregistrement dans TokenLedger",
+                exc_info=True,
+                extra={
+                    "project": project_name,
+                    "action": action_name,
+                    "model": model,
+                    "target": target_name or "N/A",
+                },
+            )
 
         return {
             "text": res_text,

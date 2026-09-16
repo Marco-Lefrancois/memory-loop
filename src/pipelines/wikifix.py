@@ -91,6 +91,8 @@ class WikiFixAgent:
         stories_dir = project_path / ProjectLayout.BACKLOG / "stories"
         if stories_dir.exists():
             for sf in stories_dir.glob("**/*.md"):
+                if story_filter and story_filter not in sf.name:
+                    continue
                 try:
                     txt = sf.read_text(encoding="utf-8")
                     if txt.startswith("---"):

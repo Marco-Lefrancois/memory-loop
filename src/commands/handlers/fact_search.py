@@ -71,9 +71,31 @@ def handle_fact_search(
     print(f"\n🔍 {len(results)} fait(s) probant(s) extrait(s) :")
     for idx, item in enumerate(results, 1):
         substantive_tag = " [Substantif]" if item.get("is_substantive", True) else " [Faible densité]"
-        print(f"\n[{idx}] {item.get('breadcrumb', 'Document')}{substantive_tag}")
+        raw_doc_path = item.get("doc_path", "")
+        resolved_full = None
+        if project_path:
+            p_cand = (project_path / raw_doc_path).resolve()
+            if p_cand.exists():
+                resolved_full = p_cand
+        if not resolved_full and canonical_project:
+            p_cand = (Path("Projects") / canonical_project / raw_doc_path).resolve()
+            if p_cand.exists():
+                resolved_full = p_cand
+        if not resolved_full:
+            p_cand = Path(raw_doc_path).resolve()
+            if p_cand.exists():
+                resolved_full = p_cand
+
+        line_start = item.get("line_start", 1)
+        line_end = item.get("line_end", line_start)
+        if resolved_full:
+            uri_path = str(resolved_full).replace("\\", "/")
+            source_display = f"[{raw_doc_path}](file:///{uri_path}#L{line_start}-L{line_end})"
+        else:
+            source_display = f"{raw_doc_path} (L{line_start}-L{line_end})"
+
         print(f"    • Score FTS5 : {item.get('relevance_score', 0.0):.3f} | Couche : {item.get('ssot_layer', 'inconnue')}")
-        print(f"    • Source    : {item.get('doc_path', '')} (L{item.get('line_start')}-L{item.get('line_end')})")
+        print(f"    • Source    : {source_display}")
         
         snippet = item.get("snippet", "").strip()
         if snippet:

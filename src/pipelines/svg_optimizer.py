@@ -126,7 +126,7 @@ class SVGOptimizerEngine:
         # Execute SVGO via npx
         try:
             cmd = ["npx", "svgo", str(svg_path), "-o", str(out), "--multipass"]
-            subprocess.run(cmd, capture_output=True, text=True, shell=True, check=True)
+            subprocess.run(cmd, capture_output=True, text=True, shell=True, check=True, timeout=30.0)
             new_size = out.stat().st_size
             savings_pct = ((original_size - new_size) / original_size * 100) if original_size > 0 else 0
 

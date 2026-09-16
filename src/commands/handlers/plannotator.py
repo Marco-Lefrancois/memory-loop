@@ -190,7 +190,13 @@ def handle_guide_export(args: argparse.Namespace, state: LoopState, project_path
     else:
         patch_file = project_path / "memory" / "temp_review.patch"
         try:
-            diff_res = subprocess.run(["git", "diff", "HEAD~1...HEAD"], capture_output=True, text=True, cwd=project_path)
+            diff_res = subprocess.run(
+                ["git", "diff", "HEAD~1...HEAD"],
+                capture_output=True,
+                text=True,
+                cwd=project_path,
+                timeout=15.0,
+            )
             if diff_res.returncode == 0 and diff_res.stdout.strip():
                 patch_file.write_text(diff_res.stdout, encoding="utf-8")
                 guide_json = project_path / "memory" / "temp_guide.json"
@@ -214,7 +220,7 @@ def handle_guide_export(args: argparse.Namespace, state: LoopState, project_path
     cmd.extend(["--out", out_file])
     ZeroFluffConsole.info(f"Génération du guide de revue portable : {out_file}...")
     try:
-        res = subprocess.run(cmd)
+        res = subprocess.run(cmd, timeout=60.0)
         if res.returncode == 0:
             ZeroFluffConsole.success(f"Guide exporté avec succès : {out_file}")
         return res.returncode

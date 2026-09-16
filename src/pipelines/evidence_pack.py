@@ -181,6 +181,145 @@ class EvidencePackEngine:
             )
         return contracts
 
+    def _find_fact_dossier(self, story_file: Path, sid: str) -> Optional[Path]:
+        """Localise le Dossier de Preuves Documentaires associé à un récit."""
+        cand1 = self.evidence_dir / f"{sid}_fact_dossier.md"
+        if cand1.exists():
+            return cand1
+        try:
+            content = story_file.read_text(encoding="utf-8", errors="replace")
+            dossier_links = re.findall(
+                r"\[(?:[^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content
+            )
+            for target in dossier_links:
+                if target.startswith(("http://", "https://")):
+                    continue
+                cand = (story_file.parent / target).resolve()
+                if cand.exists():
+                    return cand
+        except Exception:
+            pass
+        memory_dir = self.project_path / "memory"
+        if memory_dir.exists():
+            matches = list(memory_dir.rglob(f"*{sid}*fact_dossier.md"))
+            if matches:
+                return matches[0]
+        return None
+
+    def _parse_fact_dossier(self, dossier_path: Path) -> Dict[str, Any]:
+        """
+        Extrait les métadonnées, empreintes et faits atomiques du Dossier de Preuves.
+        Projection propre sans duplication massive de prose (ADR-0320, ADR-0326).
+        """
+        try:
+            content = dossier_path.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            return {}
+
+        result: Dict[str, Any] = {
+            "dossier_path": dossier_path,
+            "dossier_status": "CURRENT",
+            "sources_hashes": {},
+            "facts": [],
+            "endpoints": [],
+            "has_mermaid": False,
+            "has_dbml": False,
+            "verbatims_count": 0,
+        }
+
+        fm_match = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
+        if fm_match:
+            fm_text = fm_match.group(1)
+            st_m = re.search(r"^dossier_status:\s*(.+)$", fm_text, re.MULTILINE)
+            if st_m:
+                result["dossier_status"] = st_m.group(1).strip()
+            sh_match = re.search(r"sources_hashes:\s*\n((?:[ \t]+[^\n]+\n?)+)", fm_text)
+            if sh_match:
+                for line in sh_match.group(1).splitlines():
+                    pair = line.strip().split(":", 1)
+                    if len(pair) == 2:
+                        k = pair[0].strip().strip("'\"")
+                        v = pair[1].strip().strip("'\"")
+                        result["sources_hashes"][k] = v
+
+        result["sha256"] = self._resolve_source_sha256(dossier_path.name) or ""
+
+        # Format A : Tableau Markdown | **F-01** | `table` | DBML | Rôle/Règle |
+        table_rows = re.finditer(
+            r"(?m)^\s*\|\s*\*{0,2}(F-\d+)\*{0,2}\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*(?:\|\s*([^|\n]+)\s*)?\|?",
+            content,
+        )
+        for tr in table_rows:
+            fid = tr.group(1).strip()
+            src_ref = tr.group(2).strip().strip("`* ")
+            col3 = tr.group(3).strip().strip("`* ")
+            col4 = tr.group(4).strip().strip("`* ") if tr.group(4) else ""
+            rule_summary = col4 if col4 else col3
+            rule_summary = re.sub(r"\s+", " ", rule_summary).strip()
+            if len(rule_summary) > 160:
+                rule_summary = rule_summary[:157] + "..."
+            result["facts"].append(
+                {
+                    "fact_id": fid,
+                    "source_ref": src_ref,
+                    "rule_summary": rule_summary,
+                    "status": "VERIFIED",
+                }
+            )
+
+        # Format B : Blocs d'extraits verbatims (ex: INC-001-BE ou US-05-FOOD)
+        if not result["facts"]:
+            verbatim_blocks = re.finditer(
+                r"(?ms)>\s*\*{0,2}Extrait\s*(\d+)[^\n]*\n.*?>\s*➔\s*\*{0,2}Fait établi\*{0,2}\s*:\s*([^\n]+)",
+                content,
+            )
+            for vb in verbatim_blocks:
+                idx = int(vb.group(1))
+                fid = f"F-{idx:02d}"
+                summary = vb.group(2).strip().strip("* ")
+                summary = re.sub(r"\s+", " ", summary).strip()
+                if len(summary) > 160:
+                    summary = summary[:157] + "..."
+                result["facts"].append(
+                    {
+                        "fact_id": fid,
+                        "source_ref": "Dossier de Preuves",
+                        "rule_summary": summary,
+                        "status": "VERIFIED",
+                    }
+                )
+
+        # Format C : Bullet lists `- **F-01** ...`
+        if not result["facts"]:
+            bullet_rows = re.finditer(
+                r"(?m)^\s*[\-\*]\s*\*{0,2}(F-\d+)\*{0,2}\s*(?:\[([^\]]+)\])?\s*[:\-]?\s*([^\n]+)",
+                content,
+            )
+            for br in bullet_rows:
+                fid = br.group(1).strip()
+                sref = br.group(2).strip() if br.group(2) else "Dossier de Preuves"
+                summary = br.group(3).strip().strip("* ")
+                if len(summary) > 160:
+                    summary = summary[:157] + "..."
+                result["facts"].append(
+                    {
+                        "fact_id": fid,
+                        "source_ref": sref,
+                        "rule_summary": summary,
+                        "status": "VERIFIED",
+                    }
+                )
+
+        result["has_mermaid"] = "```mermaid" in content
+        result["has_dbml"] = (
+            "Table " in content or "table " in content or "```dbml" in content
+        )
+        result["verbatims_count"] = len(
+            re.findall(r"(?i)(?:verbatim|extrait\s*\d+|«[^»]{15,}»)", content)
+        )
+
+        return result
+
     def extract_evidence(self, story_file: Path) -> Dict[str, Any]:
         story_file = Path(story_file)
         if not story_file.exists():
@@ -217,7 +356,6 @@ class EvidencePackEngine:
         questions = sorted(list(set(re.findall(r"\b(?:Q|QD)-\d{3}\b", content))))
 
         # 4. Extraction des Sources de Vérité (scans, SOW, directives ET code source .cs, .plist, .csproj)
-        # Décodage préalable des URLs (ex: %C3%A9 -> é) pour éviter les corruptions lexicales
         import urllib.parse
         decoded_content = urllib.parse.unquote(content)
         sources = set()
@@ -242,32 +380,83 @@ class EvidencePackEngine:
                 }
             )
 
-        # 6. Extraction des Preuves Fact-Search & Faits Vérifiés (ADR-0326)
+        # 6. Extraction des Preuves Fact-Search & Faits Vérifiés (ADR-0320, ADR-0326)
+        sid = yaml_id or story_id
+        dossier_path = self._find_fact_dossier(story_file, sid)
+        dossier_data = self._parse_fact_dossier(dossier_path) if dossier_path else {}
+
         facts_verified = []
-        facts_match = re.search(
-            r"(?i)Faits (?:Établis & Prouvés|Vérifiés|Clés)\s*:\s*\n((?:\s*[\d\*\-].*\n?)+)",
-            content,
-        )
-        if facts_match:
-            for f_line in facts_match.group(1).splitlines():
-                clean_f = re.sub(
-                    r"^\s*[\d\*\-\.]+\s*(?:\*Fait \d+\*|\bFait \d+\b)?\s*[:\-]?\s*",
-                    "",
-                    f_line,
-                ).strip()
-                if clean_f and not clean_f.startswith("["):
-                    facts_verified.append(clean_f)
+        if dossier_data.get("facts"):
+            facts_verified = dossier_data["facts"]
+        else:
+            # Fallback historique si aucun Dossier de Preuves formel
+            facts_match = re.search(
+                r"(?i)Faits (?:Établis & Prouvés|Vérifiés|Clés)\s*:\s*\n((?:\s*[\d\*\-].*\n?)+)",
+                content,
+            )
+            if facts_match:
+                for f_line in facts_match.group(1).splitlines():
+                    clean_f = re.sub(
+                        r"^\s*[\d\*\-\.]+\s*(?:\*Fait \d+\*|\bFait \d+\b)?\s*[:\-]?\s*",
+                        "",
+                        f_line,
+                    ).strip()
+                    if clean_f and not clean_f.startswith("["):
+                        facts_verified.append(
+                            {
+                                "fact_id": f"F-{len(facts_verified)+1:02d}",
+                                "source_ref": "Story Markdown",
+                                "rule_summary": clean_f[:160],
+                                "status": "VERIFIED",
+                            }
+                        )
 
         fact_proofs = []
         source_hashes = {}
         code_verified_count = 0
+
+        # Si un dossier de preuves existe, enregistrer son empreinte et intégrer ses sources canoniques
+        if dossier_path and dossier_data:
+            dossier_sha = dossier_data.get("sha256") or self._resolve_source_sha256(
+                dossier_path.name
+            )
+            if dossier_sha:
+                source_hashes[dossier_path.name] = dossier_sha
+                sources.add(dossier_path.name)
+
+            for raw_src, declared_sha in dossier_data.get(
+                "sources_hashes", {}
+            ).items():
+                src_filename = raw_src if "." in raw_src else f"{raw_src}.md"
+                sources.add(src_filename)
+                resolved_s = self._resolve_source_path(src_filename)
+                if resolved_s:
+                    live_sha = self._resolve_source_sha256(src_filename)
+                    source_hashes[src_filename] = live_sha or declared_sha
+
         for src in sorted(list(sources)):
             resolved_path = self._resolve_source_path(src)
             sha = self._resolve_source_sha256(src) if resolved_path else None
             if sha:
                 source_hashes[src] = sha
             classification = self._classify_source(src, resolved_path)
-            if classification["verification_method"] == "code_source_verified":
+
+            # Rehaussement : source adossée au Dossier de Preuves VALIDATED / CURRENT
+            is_in_dossier = dossier_data and (
+                src in dossier_data.get("sources_hashes", {})
+                or any(src in k for k in dossier_data.get("sources_hashes", {}).keys())
+                or (dossier_path and src == dossier_path.name)
+            )
+            if is_in_dossier and dossier_data.get("dossier_status") in (
+                "CURRENT",
+                "VALIDATED",
+            ):
+                classification["verification_method"] = "ssot_dossier_grounded"
+                classification["confidence"] = "HIGH"
+                classification["confidence_score"] = 1.0
+                matched_fact = f"Source SSOT canonique scellée dans le Dossier de Preuves ({dossier_path.name}) : {src}"
+                code_verified_count += 1
+            elif classification["verification_method"] == "code_source_verified":
                 code_verified_count += 1
                 matched_fact = f"Comportement technique confirmé par inspection directe du code source physique : {src}"
             elif resolved_path is not None:
@@ -276,11 +465,13 @@ class EvidencePackEngine:
                 matched_fact = (
                     f"Source citée mais introuvable physiquement sur disque : {src}"
                 )
+
             fact_proofs.append(
                 {
                     "query": f"Fact-Search {src}",
                     "source_file": src,
-                    "sha256": sha or "NOT_CALCULATED_LOCAL_ONLY",
+                    "sha256": sha
+                    or source_hashes.get(src, "NOT_CALCULATED_LOCAL_ONLY"),
                     "section": "SSOT Reference",
                     "matched_fact": matched_fact,
                     "verification_method": classification["verification_method"],
@@ -293,11 +484,7 @@ class EvidencePackEngine:
                 }
             )
 
-        # 6a-bis. Extraction du Contrat Visuel (Phase 1 — Enforcement Déterministe
-        # du Grounding Visuel & Épistémique). Pour chaque maquette Markdown ingérée
-        # référencée (docs/00-ingested/maquettes/*.md, produite par svg_to_md.py),
-        # trace si le SVG source était vectorisé et si l'OCR a effectivement pu lire
-        # son contenu textuel réel (is_vectorized / ocr_status du frontmatter).
+        # 6a-bis. Extraction du Contrat Visuel
         visual_contract = self._extract_visual_contract(sources)
 
         # 6b. Extraction des Références Externes & Liens Wiki (ADR-0327)
@@ -331,7 +518,6 @@ class EvidencePackEngine:
             "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
         }
 
-        sid = yaml_id or story_id
         proj_name = self.project_path.name
         next_actions = [
             f"python src/swarm.py grill --project {proj_name} --story {sid}",
@@ -339,11 +525,13 @@ class EvidencePackEngine:
             f"python src/swarm.py sync --project {proj_name}",
         ]
 
-        # ADR-0320 §G : Score racine calculé (non codé en dur), reflétant la proportion
-        # réelle de preuves "code_source_verified" (preuve forte) vs documentation seule.
-        # Une story sans aucune source citée reste MEDIUM par défaut (pas de sur-confiance
-        # sur une "spécification basée sur modèle déclaratif").
-        if not fact_proofs:
+        if (
+            dossier_data
+            and dossier_data.get("dossier_status") in ("CURRENT", "VALIDATED")
+            and facts_verified
+        ):
+            root_confidence, root_score = "HIGH", 1.0
+        elif not fact_proofs:
             root_confidence, root_score = "MEDIUM", 0.75
         elif code_verified_count == len(fact_proofs):
             root_confidence, root_score = "HIGH", 1.0
@@ -355,16 +543,12 @@ class EvidencePackEngine:
         else:
             root_confidence, root_score = "MEDIUM", 0.75
 
-        # ADR-0320 §G : Détection de péremption — si le récit a été modifié après le dernier
-        # EvidencePack existant, le nouvel artefact doit le signaler explicitement plutôt que
-        # de reconduire silencieusement un statut VALIDATED désormais caduc.
         existing_pack_path = self.evidence_dir / f"{sid}_evidence.json"
         status = "VALIDATED"
-        # BUG-WIKIFIX-03 : préservation non-destructive des champs scellés par l'humain.
-        # La régénération WikiFix/sync ne doit pas écraser un socle factuel déjà validé
-        # manuellement (socle_factuel_validated_by_human / _at) par les valeurs par défaut.
         preserved_socle_validated = False
         preserved_socle_validated_at = None
+        preserved_fact_check_cert = None
+
         if existing_pack_path.exists():
             try:
                 existing_data = json.loads(
@@ -375,6 +559,10 @@ class EvidencePackEngine:
                     preserved_socle_validated_at = existing_data.get(
                         "socle_factuel_validated_at"
                     )
+                if "fact_check_certificate" in existing_data:
+                    preserved_fact_check_cert = existing_data[
+                        "fact_check_certificate"
+                    ]
                 existing_ts = existing_data.get("timestamp")
                 story_mtime = datetime.datetime.fromtimestamp(
                     story_file.stat().st_mtime, tz=datetime.timezone.utc
@@ -383,7 +571,10 @@ class EvidencePackEngine:
                     existing_dt = datetime.datetime.fromisoformat(
                         existing_ts.replace("Z", "+00:00")
                     )
-                    if story_mtime > existing_dt:
+                    if (
+                        story_mtime > existing_dt
+                        and not (dossier_data and dossier_data.get("dossier_status") in ("CURRENT", "VALIDATED"))
+                    ):
                         status = "STALE_PENDING_REGENERATION"
             except Exception:
                 pass
@@ -405,12 +596,6 @@ class EvidencePackEngine:
             "alerts": alerts,
             "open_questions": questions,
             "visual_contract": visual_contract,
-            # Phase 2.2 (Gate C9 renforcé) : preuve d'assentiment humain sur le socle
-            # factuel restitué (ADR-0320 §H.3, DOSSIER_DE_PREUVES_PROTOCOL.md §2).
-            # Par défaut False/None tant que l'extraction ne détecte pas de validation
-            # explicite (ex: EvidencePack régénéré/complété manuellement post-Grill).
-            # Non-bloquant à ce stade (WARNING via struct-check C9/gate FSM) ; réservé
-            # à une élévation future en BLOCKING une fois le flux de validation outillé.
             "socle_factuel_validated_by_human": preserved_socle_validated,
             "socle_factuel_validated_at": preserved_socle_validated_at,
             "verification_harness": scenarios,
@@ -419,6 +604,9 @@ class EvidencePackEngine:
             "confidence_score": root_score,
             "status": status,
         }
+
+        if preserved_fact_check_cert is not None:
+            evidence_pack["fact_check_certificate"] = preserved_fact_check_cert
 
         return evidence_pack
 

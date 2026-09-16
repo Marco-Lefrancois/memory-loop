@@ -21,21 +21,29 @@ rules:
     des fichiers critiques (ex: scans d''apps dans des sous-dossiers).'
 - keyword: section_preservation
   msg: '[RHO] Préservation Structurelle Obligatoire: Lors de tout refactoring ou enrichissement
-    d''un récit (ex: standard OKF v0.1), l''agent a l''interdiction stricte de supprimer ou d''omettre
-    la section ## Contexte. Tout ajout s''effectue de façon strictement cumulative sans détruire le Contexte d''origine.'
+    d''un récit (ex: standard OKF v0.1), l''agent a l''interdiction stricte de supprimer
+    ou d''omettre la section ## Contexte. Tout ajout s''effectue de façon strictement
+    cumulative sans détruire le Contexte d''origine.'
 - keyword: technology_alignment
-  msg: '[RHO] Alignement Technologique & Neutralité des Outils: Les récits du backlog doivent coller
-    strictement à la stack technique officielle du projet (.NET 10 MAUI, C#, iOS, Android) et employer
-    des termes génériques pour les outillages de test et d''audit (ex: Proxy d''analyse réseau, Harnais de test).
-    Interdiction formelle de prescrire des outils tiers spécifiques non-standard.'
+  msg: '[RHO] Alignement Technologique & Neutralité des Outils: Les récits du backlog
+    doivent coller strictement à la stack technique officielle du projet (.NET 10
+    MAUI, C#, iOS, Android) et employer des termes génériques pour les outillages
+    de test et d''audit (ex: Proxy d''analyse réseau, Harnais de test). Interdiction
+    formelle de prescrire des outils tiers spécifiques non-standard.'
 - keyword: persona_purity
-  msg: '[RHO] Pureté du Persona Métier: La clause ''En tant que'' de la Description doit désigner exclusivement
-    le rôle métier ou organisationnel (ex: PO du vertical SANTÉ, développeur mobile). Interdiction d''y insérer
-    du jargon ou de la stack technologique (ex: pas de (.NET 10) dans l''intitulé du rôle persona).'
+  msg: '[RHO] Pureté du Persona Métier: La clause ''En tant que'' de la Description
+    doit désigner exclusivement le rôle métier ou organisationnel (ex: PO du vertical
+    SANTÉ, développeur mobile). Interdiction d''y insérer du jargon ou de la stack
+    technologique (ex: pas de (.NET 10) dans l''intitulé du rôle persona).'
 - keyword: zero_meta_comments
-  msg: '[RHO] Zero Fluff Meta-Comments: Interdiction absolue d''inclure des notes méta-agentiques ou des commentaires système
-    (ex: Note mLoop Stricte...) dans le corps des récits rédigés. Le récit doit rester 100% propre pour l''équipe dev.'
+  msg: '[RHO] Zero Fluff Meta-Comments: Interdiction absolue d''inclure des notes
+    méta-agentiques ou des commentaires système (ex: Note mLoop Stricte...) dans le
+    corps des récits rédigés. Le récit doit rester 100% propre pour l''équipe dev.'
 - keyword: okf_separation
-  msg: '[RHO] Séparation des Artefacts OKF: Les Registres d''Entités Typées OKF et les graphes de connaissances
-    ne doivent JAMAIS figurer dans le corps des User Stories (backlog/stories/). Ils sont exclusivement conservés
-    sous docs/01-architecture/ (ex: REGISTRE_ENTITES_OKF.md).'
+  msg: '[RHO] Séparation des Artefacts OKF: Les Registres d''Entités Typées OKF et
+    les graphes de connaissances ne doivent JAMAIS figurer dans le corps des User
+    Stories (backlog/stories/). Ils sont exclusivement conservés sous docs/01-architecture/
+    (ex: REGISTRE_ENTITES_OKF.md).'
+- keyword: test-judgement-complex-pricing
+  msg: '[RHO] Complex business pricing logic: discuss with team when unsure'
+  status: ACTIVE

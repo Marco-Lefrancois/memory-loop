@@ -339,7 +339,51 @@ class StateMachineEngine:
             else []
         )
 
-        if dossier_candidates or has_valid_link:
+        target_dossier = None
+        if dossier_candidates:
+            target_dossier = dossier_candidates[0]
+        else:
+            for _, link_target in dossier_links:
+                cand = (story_file.parent / link_target).resolve()
+                if cand.exists() and cand.is_file():
+                    target_dossier = cand
+                    break
+
+        if target_dossier and target_dossier.exists():
+            try:
+                dossier_txt = target_dossier.read_text(encoding="utf-8", errors="replace")
+                st_m = re.search(r"^dossier_status:\s*(.+)$", dossier_txt, re.MULTILINE)
+                dossier_status = st_m.group(1).strip() if st_m else "CURRENT"
+                has_facts = bool(
+                    re.search(
+                        r"(?m)(?:\|\s*\*{0,2}F-\d+|Extrait\s*\d+|➔\s*\*{0,2}Fait établi|\bF-\d{2}\b)",
+                        dossier_txt,
+                    )
+                )
+
+                if dossier_status == "DRAFT":
+                    msg = (
+                        f"[GATE C9 — DOSSIER DE PREUVES] Le dossier '{target_dossier.name}' du récit '{story_file.name}' "
+                        f"est encore au statut 'DRAFT'. Il doit être validé ('CURRENT' ou 'VALIDATED')."
+                    )
+                    if strict:
+                        raise StateTransitionError(msg)
+                    from src.cli import ZeroFluffConsole
+                    ZeroFluffConsole.warning(msg)
+
+                if not has_facts or len(dossier_txt.strip()) < 100:
+                    msg = (
+                        f"[GATE C9 — DOSSIER DE PREUVES] Le dossier '{target_dossier.name}' du récit '{story_file.name}' "
+                        f"est incomplet ou ne contient aucun fait vérifié (Section 2)."
+                    )
+                    if strict:
+                        raise StateTransitionError(msg)
+                    from src.cli import ZeroFluffConsole
+                    ZeroFluffConsole.warning(msg)
+            except StateTransitionError:
+                raise
+            except Exception:
+                pass
             return True
 
         message = (

@@ -87,6 +87,23 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "sync-antigravity": {
+        "handler": "project:handle_sync_antigravity",
+        "help": "Synchroniser les tokens et interactions de l'IDE Antigravity vers le Token Ledger",
+        "args": [
+            {
+                "name": "--conversation-id",
+                "type": str,
+                "help": "ID d'une conversation spécifique à synchroniser",
+            },
+            {
+                "name": "--all",
+                "action": "store_true",
+                "help": "Scanner toutes les conversations de l'historique Antigravity",
+            },
+        ],
+        "no_project": True,
+    },
     "install-hooks": {
         "handler": "project:handle_install_hooks",
         "help": "Installer les hooks Git de protection (pre-commit vibe-check)",

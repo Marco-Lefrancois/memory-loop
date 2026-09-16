@@ -65,8 +65,22 @@ class SemanticLexiconResolver:
             "with",
             "a",
             "an",
+            "projet",
+            "project",
         }
-        return [t for t in tokens if len(t) > 1 and t not in stopwords]
+        res = []
+        for t in tokens:
+            if len(t) > 1 and t not in stopwords:
+                res.append(t)
+            # Découpage supplémentaire si un mot composé contient des stopwords collés (ex: boireetfrere -> boire, frere)
+            if len(t) > 5 and any(sw in t for sw in ("et", "and", "de", "du")):
+                sub_parts = [
+                    p for p in re.split(r"(?:et|and|de|du|des|le|la)", t)
+                    if len(p) > 1 and p not in stopwords
+                ]
+                if len(sub_parts) > 1:
+                    res.extend(sub_parts)
+        return res
 
     # ──────────────────────────────────────────────────────────────────────────
     # 1. RÉSOLUTION DYNAMIQUE DU PROJET (Zéro Hardcoding & Support Lexique)
@@ -90,7 +104,7 @@ class SemanticLexiconResolver:
         # 0-bis. Correspondance exacte case-insensitive directe sur le nom de dossier (priorité absolue)
         # Exclure les dossiers _DEPRECATED pour éviter les collisions
         for p in projects_dir.iterdir():
-            if not p.is_dir() or p.name.startswith("."):
+            if not p.is_dir() or p.name.startswith(".") or p.name.startswith("_"):
                 continue
             if p.name.endswith("_DEPRECATED"):
                 continue
@@ -113,7 +127,7 @@ class SemanticLexiconResolver:
             logger.debug(f"Recherche FTS5 lexique non disponible ou échouée: {e}")
 
         for p in projects_dir.iterdir():
-            if not p.is_dir() or p.name.startswith("."):
+            if not p.is_dir() or p.name.startswith(".") or p.name.startswith("_"):
                 continue
             # Ignorer les projets archivés (suffixe _DEPRECATED)
             if p.name.endswith("_DEPRECATED"):
@@ -137,7 +151,10 @@ class SemanticLexiconResolver:
                 score += len(token_overlap) * 25
 
             # 3. Correspondance par sous-chaîne
-            if clean_query in norm_folder:
+            clean_query_no_stopwords = re.sub(r"(?:et|and|de|du|des|le|la|les)", "", clean_query)
+            if clean_query in norm_folder or (
+                len(clean_query_no_stopwords) >= 4 and clean_query_no_stopwords in norm_folder
+            ):
                 score += 40
             elif (
                 norm_folder in clean_query
@@ -203,11 +220,22 @@ class SemanticLexiconResolver:
                         )
                         if ingested_overlap == query_tokens:
                             break  # Couverture totale déjà atteinte, inutile de continuer.
-                    score += len(ingested_overlap) * 18
+                    if len(ingested_overlap) >= 2 or (
+                        query_tokens and len(ingested_overlap) / len(query_tokens) >= 0.5
+                    ):
+                        score += len(ingested_overlap) * 18
                 except Exception as e:
                     logger.debug(f"Inspection ingested {ingested_dir} ignorée: {e}")
 
             # 7. Bonus de Viabilité SSOT & Pénalité Coquille Vide
+            # RÈGLE D'OR : Le bonus de viabilité SSOT (+40 / +15) ne s'applique que si le projet
+            # a au moins un signal de pertinence textuelle/sémantique réel (score > 0).
+            # Cela élimine le piège où tout projet avec un backlog obtient 55 points et où le
+            # premier par ordre alphabétique (Agenda_Etudiant_PostSecondaire) est sélectionné
+            # à tort pour une requête qui ne le concerne pas du tout.
+            if score == 0:
+                continue
+
             has_backlog = (p / "backlog" / "sprint_backlog.md").exists() or (
                 p / "backlog" / "stories"
             ).is_dir()
