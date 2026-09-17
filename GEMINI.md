@@ -215,6 +215,7 @@ Charger les directives opérationnelles via `view_file` uniquement lors de l'ent
 - **Interdiction du Silence d'Exception Nu (ADR-0369 Zero-Silent-Pass)** : Interdiction d'engloutir une exception avec `except Exception: pass` sans consigner au minimum un log de niveau `DEBUG` contextualisé (`logger.debug(..., exc_info=True, extra={...})`).
 - **Zéro Poursuite sur Erreur CLI (Zero-Fail Carryover)** : Si une commande mLoop échoue (Exit Code ≠ 0), interdiction formelle de continuer sans corriger la cause ou alerter l'utilisateur.
 - **Zéro Binaire Externe Non Configuré** : Passer exclusivement par le proxy LiteLLM (`nmedia_cloud/<modele>`).
+- **Bascule de Clé LiteLLM (Zéro Désynchronisation)** : Ne jamais modifier manuellement un seul fichier de clé. Pour changer de clé (ex: budget dépassé), exécuter impérativement la commande unifiée : `python tools/budget/switch_key.py <boire|metro|perso>`.
 - **Zéro Autoupdate npm (OpenCode Windows)** : Configurer impérativement `"autoupdate": false` dans `~/.config/opencode/opencode.json` et `<projet>/opencode.json` (la valeur `"notify"` forçant la mise à jour intempestive sur Windows).
 
 #### 📐 Récits, Spécifications & Design

@@ -313,6 +313,29 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "multi-draft": {
+        "handler": "multi_draft:handle_multi_draft",
+        "help": "Challenge d'évaluation comparative locale multi-branches (struct-check + Sentinel) — ADR-0373",
+        "args": [
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit (ex: REC-010-BE)",
+            },
+            {
+                "name": "--eval-only",
+                "action": "store_true",
+                "help": "Évaluer les drafts existants sans en générer de nouveaux",
+            },
+            {
+                "name": "--strict",
+                "action": "store_true",
+                "default": True,
+                "help": "Mode strict : violations struct-check = BLOCKING (défaut: True)",
+            },
+        ],
+    },
     "memo-search": {
         "handler": "memo_search:handle_memo_search",
         "help": "Sélectionner la stratégie mémoire ALMA optimale",
@@ -1751,4 +1774,72 @@ COMMANDS: dict[str, dict] = {
         ],
         "no_project": True,
     },
+    # ── Résilience Agentique & Point-in-Time Recovery (ADR-0371) ──────────
+    "agent-resilience": {
+        "handler": "resilience:handle_agent_resilience",
+        "help": "Audit de la posture de cyber-résilience agentique (ADR-0371)",
+        "args": [
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie au format JSON brut",
+            },
+        ],
+    },
+    "topology": {
+        "handler": "resilience:handle_topology",
+        "help": "Cartographie topologique des agents et calcul du Blast Radius (ADR-0371)",
+        "args": [
+            {
+                "name": "--agent",
+                "type": str,
+                "help": "Rôle spécifique d'agent à analyser (ex: orchestrator, worker, research, qa, crawler, sentinel)",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie au format JSON brut",
+            },
+        ],
+    },
+    "rollback": {
+        "handler": "resilience:handle_rollback",
+        "help": "Restauration déterministe point-in-time de l'état et de la mémoire (ADR-0371)",
+        "args": [
+            {
+                "name": "--step",
+                "type": int,
+                "help": "Numéro d'étape du checkpoint à restaurer (1 = plus récent)",
+            },
+            {
+                "name": "--target",
+                "type": str,
+                "help": "Partition de mémoire spécifique à restaurer sélectivement",
+            },
+        ],
+    },
+    # ── Dream RSI — Simulateur Replay Hors-Ligne & Auto-Amélioration (ADR-0372) ─
+    "dream-rsi": {
+        "handler": "dream_rsi:handle_dream_rsi",
+        "help": "Exécuter le cycle Dream RSI (simulateur replay hors-ligne & optimisation de politique)",
+        "args": [
+            {
+                "name": "--simulate",
+                "action": "store_true",
+                "help": "Simuler le cycle d'évaluation sur les traces sans persistance",
+            },
+            {
+                "name": "--apply",
+                "action": "store_true",
+                "help": "Sauvegarder la méta-politique sélectionnée dans la configuration du harnais (.mloop/dream_policy.json)",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie au format JSON brut",
+            },
+        ],
+    },
 }
+
+

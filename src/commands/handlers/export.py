@@ -8,7 +8,11 @@ from pathlib import Path
 from typing import TYPE_CHECKING, List
 
 from src.cli import ZeroFluffConsole
-from src.pipelines.jira.sync_engine import build_sync_preview, sync_targeted_to_jira
+from src.pipelines.jira.sync_engine import (
+    build_sync_preview,
+    sync_targeted_to_jira,
+    is_jira_status_closed,
+)
 from src.pipelines.sync import run_sync
 
 if TYPE_CHECKING:
@@ -106,40 +110,84 @@ def handle_jira_sync(
     eligible_items = []
     rejected_items = []
 
-    for item in state.sprint_backlog:
-        item_jira_key = (getattr(item, "jira_key", None) or "").strip()
+    # ── Client Jira optionnel pour vérification préventive des statuts ───────
+    import os
+    jira_url = os.getenv("JIRA_URL")
+    jira_email = os.getenv("JIRA_EMAIL")
+    jira_token = os.getenv("JIRA_API_TOKEN")
+    live_jira_client = None
+    if jira_url and jira_email and jira_token:
+        try:
+            import httpx
+            live_jira_client = httpx.Client(
+                base_url=jira_url,
+                auth=(jira_email, jira_token),
+                headers={"Accept": "application/json"},
+                timeout=5.0,
+            )
+        except Exception:
+            live_jira_client = None
 
-        # Filtre par cible (si mode ciblé)
-        if target_keys:
-            if item.id not in target_keys and item_jira_key not in target_keys:
+    try:
+        for item in state.sprint_backlog:
+            item_jira_key = (getattr(item, "jira_key", None) or "").strip()
+
+            # Filtre par cible (si mode ciblé)
+            if target_keys:
+                if item.id not in target_keys and item_jira_key not in target_keys:
+                    continue
+
+            # Blocage clé temporaire TEMP-*
+            if item_jira_key.startswith(_TEMP_KEY_PREFIX) or item.id.startswith(
+                _TEMP_KEY_PREFIX
+            ):
+                rejected_items.append(
+                    (item, f"Clé temporaire {_TEMP_KEY_PREFIX}* non synchronisable")
+                )
                 continue
 
-        # Blocage clé temporaire TEMP-*
-        if item_jira_key.startswith(_TEMP_KEY_PREFIX) or item.id.startswith(
-            _TEMP_KEY_PREFIX
-        ):
-            rejected_items.append(
-                (item, f"Clé temporaire {_TEMP_KEY_PREFIX}* non synchronisable")
-            )
-            continue
+            # Règle constitutionnelle : si un récit est au statut FERMÉ dans Jira, ne jamais sync
+            if live_jira_client and item_jira_key:
+                try:
+                    r_st = live_jira_client.get(f"/rest/api/3/issue/{item_jira_key}?fields=status")
+                    if r_st.status_code == 200:
+                        st_data = r_st.json().get("fields", {}).get("status", {})
+                        st_name = st_data.get("name", "")
+                        st_cat = st_data.get("statusCategory", {}).get("key", "")
+                        if is_jira_status_closed(st_name, st_cat):
+                            rejected_items.append(
+                                (
+                                    item,
+                                    f"Ticket Jira {item_jira_key} est au statut FERMÉ ('{st_name}') — synchronisation strictement interdite (règle constitutionnelle)",
+                                )
+                            )
+                            continue
+                except Exception:
+                    pass
 
-        # Blocage statut OPEN / IN_ANALYZE
-        status_val = getattr(item.status, "value", str(item.status))
-        if status_val in _BLOCKED_STATUSES_WITHOUT_FLAG and not allow_in_analyze:
-            rejected_items.append(
-                (item, f"Statut {status_val} bloqué (utilisez --allow-in-analyze)")
-            )
-            continue
+            # Blocage statut OPEN / IN_ANALYZE
+            status_val = getattr(item.status, "value", str(item.status))
+            if status_val in _BLOCKED_STATUSES_WITHOUT_FLAG and not allow_in_analyze:
+                rejected_items.append(
+                    (item, f"Statut {status_val} bloqué (utilisez --allow-in-analyze)")
+                )
+                continue
 
-        # Eligibilité standard
-        if (
-            not getattr(item, "jira_sync_eligible", item.grilled)
-            and not allow_in_analyze
-        ):
-            rejected_items.append((item, "Non éligible (statut insuffisant)"))
-            continue
+            # Eligibilité standard
+            if (
+                not getattr(item, "jira_sync_eligible", item.grilled)
+                and not allow_in_analyze
+            ):
+                rejected_items.append((item, "Non éligible (statut insuffisant)"))
+                continue
 
-        eligible_items.append(item)
+            eligible_items.append(item)
+    finally:
+        if live_jira_client:
+            try:
+                live_jira_client.close()
+            except Exception:
+                pass
 
     # ── Rapport de prévisualisation (toujours affiché) ───────────────────────
     preview = build_sync_preview(

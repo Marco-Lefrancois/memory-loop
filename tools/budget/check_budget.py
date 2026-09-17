@@ -229,10 +229,6 @@ def main():
         or get_secret_file_key("litellm-key-metro")
         or get_secret_file_key("nmedia-key-metro")
     )
-    active_key = os.getenv("LITELLM_API_KEY") or get_secret_file_key("litellm-key")
-    metro_label = "Metro [ACTIVE]" if (active_key and metro_key and active_key == metro_key) else "Metro"
-    if metro_key:
-        known_keys[metro_label] = metro_key
 
     # 3. Clé Boire et Frère
     boire_key = (
@@ -240,6 +236,19 @@ def main():
         or get_secret_file_key("litellm-key-boire")
         or get_secret_file_key("nmedia-key-boire")
     )
+
+    active_key = os.getenv("LITELLM_API_KEY") or get_secret_file_key("litellm-key")
+    if active_key in ["LITELLM_API_KEY_BOIRE", "${LITELLM_API_KEY_BOIRE}", "boire", "BOIRE"]:
+        active_key = boire_key
+    elif active_key in ["LITELLM_API_KEY_METRO", "${LITELLM_API_KEY_METRO}", "metro", "METRO"]:
+        active_key = metro_key
+    elif active_key in ["LITELLM_API_KEY_PERSO", "${LITELLM_API_KEY_PERSO}", "perso", "PERSO"]:
+        active_key = perso_key
+
+    metro_label = "Metro [ACTIVE]" if (active_key and metro_key and active_key == metro_key) else "Metro"
+    if metro_key:
+        known_keys[metro_label] = metro_key
+
     boire_label = "Boire et Frère [ACTIVE]" if (active_key and boire_key and active_key == boire_key) else "Boire et Frère"
     if boire_key:
         known_keys[boire_label] = boire_key

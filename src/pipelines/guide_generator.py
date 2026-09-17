@@ -132,6 +132,10 @@ PHASE_MAPPING: Dict[str, str] = {
     "role-list": "transverse",
     "graph-run": "transverse",
     "optimize": "transverse",
+    "agent-resilience": "transverse",
+    "topology": "plan",
+    "rollback": "transverse",
+    "dream-rsi": "transverse",
 }
 
 PHASE_HEADERS: Dict[str, Dict[str, str]] = {
@@ -196,6 +200,10 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "gate-approve": "`memory/lifecycle_state.json` (Porte validée)",
     "lifecycle-status": "Console / Historique du cycle de vie",
     "lifecycle-clean": "Nettoyage stories orphelines",
+    "agent-resilience": "Score & Audit de Cyber-Résilience (ADR-0371)",
+    "topology": "Cartographie Blast Radius & Surface d'Exposition",
+    "rollback": "Restauration PITR de l'état et mémoire saine",
+    "dream-rsi": "Méta-Politique Optimale (.mloop/dream_policy.json)",
 }
 
 

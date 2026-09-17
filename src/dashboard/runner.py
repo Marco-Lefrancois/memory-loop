@@ -7,7 +7,6 @@ Gère l'initialisation du serveur FastAPI et l'ouverture automatique du navigate
 from __future__ import annotations
 
 import os
-import sys
 import threading
 import webbrowser
 from typing import Optional

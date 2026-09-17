@@ -127,6 +127,11 @@ _RE_TEMP_CONTEXT = re.compile(
 )
 _RE_EGG_COUNT = re.compile(r'(\d[\d\s]*)\s*(?:oeufs?|eggs?)', re.IGNORECASE)
 _RE_SLOT = re.compile(r'\bslot[_\s#-]*(\d+)\b', re.IGNORECASE)
+_RE_STATUS_MATCH = re.compile(
+    r'\b(PLANIFI[EÉ]|EN_COURS|TRANSF[EÉ]R[EÉ]_[EÉ]CLOSOIR|TERMIN[EÉ]|ANNUL[EÉ]|'
+    r'EN_INCUBATION|D[EÉ]SINFECT[EÉ]|DISPONIBLE|AU_REBUT)\b',
+    re.IGNORECASE
+)
 _RE_STATUS = re.compile(
     r'\b(PLANIFIE|EN_COURS|TRANSFERE_ECLOSOIR|TERMINE|ANNULE|'
     r'EN_INCUBATION|DESINFECTE|DISPONIBLE|AU_REBUT)\b'
@@ -136,6 +141,45 @@ _MUTEX_STATE_GROUPS: List[List[str]] = [
     ["PLANIFIE", "EN_COURS", "TRANSFERE_ECLOSOIR", "TERMINE", "ANNULE"],
     ["EN_INCUBATION", "DESINFECTE", "DISPONIBLE", "AU_REBUT"],
 ]
+
+_RE_TRANSITION = re.compile(
+    r'\b(?:pass(?:e|er|ant|era)|bascul(?:e|er|ant|era)|transition|transit(?:er|ant|era)|'
+    r'mutation|mut(?:er|ant|era)|chang(?:e|er|ant|era)|deven(?:ir|u|ant)|redev(?:enir|enu|ent)|'
+    r'r[eé]tabli(?:r|t)?|restitu(?:er|e|[eé]e?)|r[eé]cup[eé]r(?:er|e|[eé]e?)|'
+    r'modifi(?:er|e|[eé]e?)|[eé]volu(?:er|e|[eé]e?)|'
+    r'de\s+(?:statut\s+)?[A-Z_]+\s+(?:[aà]|vers)\b|vers\s+[A-Z_]+\b|'
+    r'statut\s+initial|ancien\s+statut|nouveau\s+statut|'
+    r'statut\s+(?:initial|pr[eé]c[eé]dent|actuel|cible))\b',
+    re.IGNORECASE
+)
+
+
+def _extract_statuses_from_sentence(sentence: str) -> set[str]:
+    """Extrait les statuts metier d une phrase en evitant les faux positifs sur les adjectifs francais."""
+    statuses = set()
+    for m in _RE_STATUS_MATCH.finditer(sentence):
+        raw = m.group(0)
+        prefix = sentence[:m.start()]
+        suffix = sentence[m.end():]
+
+        # Si le statut est explicitement nie (ex: "n'est pas EN_COURS", "le statut EN_COURS n'est pas emprunte")
+        if re.search(r"\b(?:n[e\'’\u2019]\s*(?:est|soit|sont)?\s*(?:pas|jamais)?|sans|non)\s*$", prefix, re.IGNORECASE):
+            continue
+        if re.search(r"^\s*(?:n[e\'’\u2019]\s*(?:est|soit|sont)?\s*(?:pas|jamais)?\s*(?:emprunt[eé]|utilis[eé]|appliqu[eé]))\b", suffix, re.IGNORECASE):
+            continue
+
+        # Si 'disponible' est en minuscules ou casse mixte, exiger un marqueur de statut explicite
+        if raw.lower() == "disponible" and not raw.isupper():
+            if not re.search(r'\b(?:statuts?|status|[eé]tats?|currentStatus)\s*[:=]?\s*$', prefix, re.IGNORECASE):
+                continue
+        # Idem pour 'planifie', 'termine', 'annule' en minuscules (ex: l horaire planifie)
+        if raw.islower():
+            if not re.search(r'\b(?:statuts?|status|[eé]tats?|currentStatus)\s*[:=]?\s*$', prefix, re.IGNORECASE):
+                continue
+        norm = raw.upper().replace("\u00c9", "E").replace("\u00e9", "E").replace("\u00c8", "E").replace("\u00e8", "E")
+        statuses.add(norm)
+    return statuses
+
 
 # Sequence causale des etapes d incubation (ordre physique obligatoire)
 INCUBATION_STAGE_ORDER: List[Tuple[str, str]] = [
@@ -167,10 +211,11 @@ _RE_MUTATION_INDICATOR = re.compile(
     r'\b(supprim(?:er|[eé][e]?)|effac(?:er|[eé][e]?)|modifi(?:er|[eé][e]?|cation)|'
     r'mis(?:e)?\s+[aà]\s+jour|updat(?:e|ed?|ing)|delet(?:e|ed?|ing)|'
     r'archiv(?:er|[eé][e]?)|cr[eé](?:er|[eé][e]?)|insert(?:er|ed?|ion)?|'
-    r'sauvegard(?:er|[eé][e]?)|enregistr(?:er|[eé][e]?)|persist(?:er|[eé][e]?)|'
-    r'POST\b|PUT\b|PATCH\b|DELETE\b)\b',
+    r'sauvegard(?:er|[eé][e]?)|enregistr(?:er|[eé][e]?)|persist(?:er|[eé][e]?))\b',
     re.IGNORECASE
 )
+_RE_WRITE_HTTP_METHOD = re.compile(r'\b(POST|PUT|PATCH|DELETE)\b')
+
 
 
 # ─── DomainInvariantChecker ───────────────────────────────────────────────────
@@ -311,24 +356,32 @@ class DomainInvariantChecker:
     def check_mutual_exclusion(cls, text: str) -> List[InvariantViolation]:
         """Detecte la co-occurrence de statuts mutuellement exclusifs."""
         violations: List[InvariantViolation] = []
-        # Normaliser les accents pour la detection
-        normalized = text.upper().replace("\u00c9", "E").replace("\u00e9", "E")
-        found_statuses = set(_RE_STATUS.findall(normalized))
 
-        for group in _MUTEX_STATE_GROUPS:
-            present = [s for s in group if s in found_statuses]
-            if len(present) >= 2:
-                violations.append(InvariantViolation(
-                    code=InvariantCode.DI_STATE_MUTUAL_EXCLUSION,
-                    severity=InvariantSeverity.BLOCKING,
-                    pillar="P2",
-                    message=(
-                        f"Etats mutuellement exclusifs co-presents : "
-                        f"{' et '.join(present)}. Un lot/batch ne peut etre dans "
-                        f"deux etats simultanement."
-                    ),
-                    detail=f"Groupe d exclusion : {group}",
-                ))
+        # Analyser phrase par phrase / clause par clause pour eviter les faux positifs globaux
+        sentences = [s.strip() for s in re.split(r'(?:[\r\n]+|[;()]+|(?<=[.!?])\s+)', text) if s.strip()]
+
+        for sentence in sentences:
+            found_statuses = _extract_statuses_from_sentence(sentence)
+
+            # Si la phrase decrit une transition d'etat valide (ex: passe de X a Y, retabli a Z),
+            # ce n'est pas une violation d'exclusion mutuelle simultanee
+            if _RE_TRANSITION.search(sentence):
+                continue
+
+            for group in _MUTEX_STATE_GROUPS:
+                present = [s for s in group if s in found_statuses]
+                if len(present) >= 2:
+                    violations.append(InvariantViolation(
+                        code=InvariantCode.DI_STATE_MUTUAL_EXCLUSION,
+                        severity=InvariantSeverity.BLOCKING,
+                        pillar="P2",
+                        message=(
+                            f"Etats mutuellement exclusifs co-presents : "
+                            f"{' et '.join(present)}. Un lot/batch ne peut etre dans "
+                            f"deux etats simultanement."
+                        ),
+                        detail=f"Groupe d exclusion : {group}\nPhrase : <<{sentence[:120]}>>",
+                    ))
         return violations
 
     @classmethod
@@ -336,54 +389,157 @@ class DomainInvariantChecker:
         """Detecte les inversions de causalite chronologique dans le pipeline d incubation."""
         violations: List[InvariantViolation] = []
 
-        found_stages: List[Tuple[int, str, int]] = []
-        for stage_idx, (stage_name, stage_re) in enumerate(_STAGE_PATTERNS):
-            m = stage_re.search(text)
-            if m:
-                found_stages.append((stage_idx, stage_name, m.start()))
+        # Analyser phrase par phrase
+        sentences = [s.strip() for s in re.split(r'(?:[\r\n]+|(?<=[.!?])\s+)', text) if s.strip()]
 
-        found_stages.sort(key=lambda x: x[2])  # trier par position dans le texte
+        for sentence in sentences:
+            found_stages: List[Tuple[int, str, int, int]] = []
+            for stage_idx, (stage_name, stage_re) in enumerate(_STAGE_PATTERNS):
+                for m in stage_re.finditer(sentence):
+                    found_stages.append((stage_idx, stage_name, m.start(), m.end()))
 
-        for i in range(len(found_stages) - 1):
-            curr_idx, curr_name, _ = found_stages[i]
-            next_idx, next_name, _ = found_stages[i + 1]
-            if curr_idx > next_idx:
-                violations.append(InvariantViolation(
-                    code=InvariantCode.DI_TMP_CAUSAL_ORDER,
-                    severity=InvariantSeverity.BLOCKING,
-                    pillar="P2",
-                    message=(
-                        f"Inversion de causalite temporelle : <<{next_name}>> "
-                        f"(etape {next_idx + 1}) precede <<{curr_name}>> (etape {curr_idx + 1}) "
-                        f"alors que l ordre physique est inverse."
-                    ),
-                    detail="Sequence physique : " + " -> ".join(s[0] for s in INCUBATION_STAGE_ORDER),
-                ))
+            if len(found_stages) < 2:
+                continue
+
+            found_stages.sort(key=lambda x: x[2])  # Trier par position dans la phrase
+
+            for i in range(len(found_stages) - 1):
+                curr_idx, curr_name, curr_start, curr_end = found_stages[i]
+                next_idx, next_name, next_start, next_end = found_stages[i + 1]
+
+                if curr_idx == next_idx:
+                    continue
+
+                between = sentence[curr_end:next_start]
+                prefix = sentence[:curr_start]
+
+                # 1. "A ... avant ... B" ou "A precède B" : A est affirme avant B
+                # Si curr_idx > next_idx, c'est une inversion physique
+                if re.search(r'\b(?:avant(?:\s+d[e\'])?|pr[eé]c[eè]d(?:e|er|ent)|ant[eé]rieur\s+[aà])\b', between, re.IGNORECASE):
+                    if curr_idx > next_idx:
+                        violations.append(InvariantViolation(
+                            code=InvariantCode.DI_TMP_CAUSAL_ORDER,
+                            severity=InvariantSeverity.BLOCKING,
+                            pillar="P2",
+                            message=(
+                                f"Inversion de causalite temporelle : <<{curr_name}>> "
+                                f"(etape {curr_idx + 1}) est affirme avant <<{next_name}>> (etape {next_idx + 1}) "
+                                f"alors que l ordre physique est inverse."
+                            ),
+                            detail="Sequence physique : " + " -> ".join(s[0] for s in INCUBATION_STAGE_ORDER),
+                        ))
+
+                # 2. "A ... après ... B" : B est affirme avant A
+                # Si next_idx > curr_idx, c'est une inversion physique
+                elif re.search(r'\b(?:apr[eè]s|post[eé]rieur\s+[aà]|suite\s+[aà])\b', between, re.IGNORECASE):
+                    if next_idx > curr_idx:
+                        violations.append(InvariantViolation(
+                            code=InvariantCode.DI_TMP_CAUSAL_ORDER,
+                            severity=InvariantSeverity.BLOCKING,
+                            pillar="P2",
+                            message=(
+                                f"Inversion de causalite temporelle : <<{next_name}>> "
+                                f"(etape {next_idx + 1}) est affirme avant <<{curr_name}>> (etape {curr_idx + 1}) "
+                                f"alors que l ordre physique est inverse."
+                            ),
+                            detail="Sequence physique : " + " -> ".join(s[0] for s in INCUBATION_STAGE_ORDER),
+                        ))
+
+                # 3. "Apres A, ... B" : A est affirme avant B
+                elif re.search(r'\b(?:apr[eè]s|suite\s+[aà])\b', prefix, re.IGNORECASE):
+                    if curr_idx > next_idx:
+                        violations.append(InvariantViolation(
+                            code=InvariantCode.DI_TMP_CAUSAL_ORDER,
+                            severity=InvariantSeverity.BLOCKING,
+                            pillar="P2",
+                            message=(
+                                f"Inversion de causalite temporelle : <<{curr_name}>> "
+                                f"(etape {curr_idx + 1}) est affirme avant <<{next_name}>> (etape {next_idx + 1}) "
+                                f"alors que l ordre physique est inverse."
+                            ),
+                            detail="Sequence physique : " + " -> ".join(s[0] for s in INCUBATION_STAGE_ORDER),
+                        ))
+
+                # 4. "A puis B", "A suivi de B", "A -> B" : A est affirme avant B
+                elif re.search(r'\b(?:puis|ensuite|suivi\s+d[e\']|\->|=>)\b', between, re.IGNORECASE):
+                    if curr_idx > next_idx:
+                        violations.append(InvariantViolation(
+                            code=InvariantCode.DI_TMP_CAUSAL_ORDER,
+                            severity=InvariantSeverity.BLOCKING,
+                            pillar="P2",
+                            message=(
+                                f"Inversion de causalite temporelle : <<{curr_name}>> "
+                                f"(etape {curr_idx + 1}) precede <<{next_name}>> (etape {next_idx + 1}) "
+                                f"alors que l ordre physique est inverse."
+                            ),
+                            detail="Sequence physique : " + " -> ".join(s[0] for s in INCUBATION_STAGE_ORDER),
+                        ))
+
         return violations
 
     @classmethod
     def check_crud_intention(cls, text: str) -> List[InvariantViolation]:
         """Detecte un effet de bord dans un recit de consultation (GET / lecture seule)."""
         violations: List[InvariantViolation] = []
-        is_read_context = bool(_RE_GET_INDICATOR.search(text))
-        has_mutation    = bool(_RE_MUTATION_INDICATOR.search(text))
 
-        if is_read_context and has_mutation:
-            mutations_found = _RE_MUTATION_INDICATOR.findall(text)
-            mutations_str = ", ".join(f"<<{m}>>" for m in mutations_found[:5])
-            violations.append(InvariantViolation(
-                code=InvariantCode.DI_CRUD_GET_MUTATION,
-                severity=InvariantSeverity.WARNING,
-                pillar="P3",
-                message=(
-                    f"Recit de consultation contient des verbes de mutation : {mutations_str}. "
-                    f"Violation de la purete d intention (GET with side-effects)."
-                ),
-                detail=(
-                    "Un endpoint GET ne doit avoir aucun effet de bord. "
-                    "Si une action est requise, elle doit etre portee par un recit POST/PUT/DELETE."
-                ),
-            ))
+        has_write_method = bool(_RE_WRITE_HTTP_METHOD.search(text))
+        lines = [line.strip() for line in text.splitlines() if line.strip()]
+
+        for line in lines:
+            line_is_read_explicit = bool(re.search(r'\b(GET\s+/\S+|read[\-\s]?only|lecture\s+seule)\b', line, re.IGNORECASE))
+            line_has_write = bool(_RE_WRITE_HTTP_METHOD.search(line))
+
+            if line_is_read_explicit and not line_has_write:
+                mutations = []
+                for m in _RE_MUTATION_INDICATOR.finditer(line):
+                    prefix = line[:m.start()]
+                    if re.search(r'\b(?:ne\s+(?:peut|peuvent|doit|doivent)?\s*(?:plus|pas|jamais)?\s*(?:[eê]tre)?|sans|aucun[e]?)\s*$', prefix, re.IGNORECASE):
+                        continue
+                    mutations.append(m.group(0))
+
+                if mutations:
+                    mutations_str = ", ".join(f"<<{m}>>" for m in mutations[:5])
+                    violations.append(InvariantViolation(
+                        code=InvariantCode.DI_CRUD_GET_MUTATION,
+                        severity=InvariantSeverity.WARNING,
+                        pillar="P3",
+                        message=(
+                            f"Recit de consultation contient des verbes de mutation : {mutations_str}. "
+                            f"Violation de la purete d intention (GET with side-effects)."
+                        ),
+                        detail=(
+                            "Un endpoint GET ne doit avoir aucun effet de bord. "
+                            "Si une action est requise, elle doit etre portee par un recit POST/PUT/DELETE."
+                        ),
+                    ))
+
+        # Pour les claims courts sans méthode HTTP déclarée (ex: check_claim)
+        if not violations and not has_write_method:
+            is_read = bool(_RE_GET_INDICATOR.search(text))
+            if is_read:
+                mutations = []
+                for m in _RE_MUTATION_INDICATOR.finditer(text):
+                    prefix = text[:m.start()]
+                    if re.search(r'\b(?:ne\s+(?:peut|peuvent|doit|doivent)?\s*(?:plus|pas|jamais)?\s*(?:[eê]tre)?|sans|aucun[e]?)\s*$', prefix, re.IGNORECASE):
+                        continue
+                    mutations.append(m.group(0))
+
+                if mutations:
+                    mutations_str = ", ".join(f"<<{m}>>" for m in mutations[:5])
+                    violations.append(InvariantViolation(
+                        code=InvariantCode.DI_CRUD_GET_MUTATION,
+                        severity=InvariantSeverity.WARNING,
+                        pillar="P3",
+                        message=(
+                            f"Recit de consultation contient des verbes de mutation : {mutations_str}. "
+                            f"Violation de la purete d intention (GET with side-effects)."
+                        ),
+                        detail=(
+                            "Un endpoint GET ne doit avoir aucun effet de bord. "
+                            "Si une action est requise, elle doit etre portee par un recit POST/PUT/DELETE."
+                        ),
+                    ))
+
         return violations
 
     @classmethod

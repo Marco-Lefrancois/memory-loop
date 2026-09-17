@@ -103,8 +103,44 @@ class AsyncLLMClient:
 
     def _resolve_api_key(self) -> str:
         """Résout la clé API active depuis les variables d'environnement ou les secrets."""
+        try:
+            from dotenv import load_dotenv
+            env_file = Path(__file__).resolve().parents[2] / ".env"
+            if env_file.exists():
+                load_dotenv(dotenv_path=env_file, override=True)
+            else:
+                load_dotenv(override=True)
+        except Exception:
+            pass
+
+        active_val = os.environ.get("LITELLM_API_KEY")
+        if active_val:
+            active_val = active_val.strip()
+            alias_map = {
+                "LITELLM_API_KEY_BOIRE": "LITELLM_API_KEY_BOIRE",
+                "${LITELLM_API_KEY_BOIRE}": "LITELLM_API_KEY_BOIRE",
+                "boire": "LITELLM_API_KEY_BOIRE",
+                "BOIRE": "LITELLM_API_KEY_BOIRE",
+                "LITELLM_API_KEY_METRO": "LITELLM_API_KEY_METRO",
+                "${LITELLM_API_KEY_METRO}": "LITELLM_API_KEY_METRO",
+                "metro": "LITELLM_API_KEY_METRO",
+                "METRO": "LITELLM_API_KEY_METRO",
+                "LITELLM_API_KEY_PERSO": "LITELLM_API_KEY_PERSO",
+                "${LITELLM_API_KEY_PERSO}": "LITELLM_API_KEY_PERSO",
+                "perso": "LITELLM_API_KEY_PERSO",
+                "PERSO": "LITELLM_API_KEY_PERSO",
+            }
+            if active_val in alias_map:
+                target = os.environ.get(alias_map[active_val])
+                if target:
+                    return target.strip()
+            elif not active_val.startswith("sk-"):
+                clean_ref = active_val.strip("${}").strip()
+                if clean_ref in os.environ:
+                    return os.environ[clean_ref].strip()
+            return active_val
+
         for env_var in [
-            "LITELLM_API_KEY",
             "LITELLM_API_KEY_BOIRE",
             "LITELLM_API_KEY_METRO",
             "LITELLM_API_KEY_PERSO",

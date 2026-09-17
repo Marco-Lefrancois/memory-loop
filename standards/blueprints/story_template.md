@@ -40,7 +40,7 @@ macrostructure: "workbench" # Optionnel FE/Fullstack : bento-grid | workbench | 
 
 > **Règle conditionnelle par `layer` (ADR-0366)** :
 > - **`layer: frontend`** : Renseigner les Spécifications de l'Interface & UX, Maquettes SSOT et Parcours Interactif.
-> - **`layer: backend`** : Renseigner les Contrats d'Échange API (endpoints, payloads, codes HTTP et règles de persistance).
+> - **`layer: backend`** : Renseigner les Opérations Métier & Logique Backend (avec les 5 sous-titres normés) et Contrats d'échange API.
 > - **`layer: fullstack`** : Renseigner l'ensemble des sections avec symétrie stricte UI/API (ADR-0319).
 
 ### Spécifications de l'Interface & UX *(frontend / fullstack)*
@@ -48,11 +48,13 @@ macrostructure: "workbench" # Optionnel FE/Fullstack : bento-grid | workbench | 
 - **États d'Interaction (signifiants)** : [Comportement des composants sur les états d'interaction signifiants : Default, Hover, Focus-Visible, Active, Disabled, Loading, Error, Success. Omettre les états natifs sans règle métier].
 - **Feedback Utilisateur** : [Indicateurs visuels clairs : toasts contextuels, modales, bannières informatives ou désactivation préventive des boutons pendant les requêtes].
 
-### Spécifications Métier *(backend)*
-#### 1. [Nom du Domaine ou Service Métier]
-- **Admissibilité & Traitement** : [Conditions métier d'acceptation, règles de sélection ou calculs]
-- **Données Produites / Résultats** : [Informations restituées ou mutations d'état attendues]
-- **Rejets & Cas Limites** : [Conditions de rejet exprimées en langage d'affaires pur]
+### Opérations Métier & Logique Backend *(backend / fullstack)*
+#### 1. [Nom de l'Opération ou Service Métier]
+* **Entrée Métier** : [Paramètres métier d'entrée, filtres, identifiants d'entité ciblée, motif managérial]
+* **Règles d'admissibilité & Validation** : [Conditions métier d'acceptation, vérification de statut, conformité des plages]
+* **Traitement & Algorithme Métier** : [Logique d'exécution, mutations d'état, calculs déterministes, atomicité transactionnelle tout-ou-rien]
+* **Résultat Métier & Mutations** : [Structure des données produites, réconciliation de stock/inventaire, indicateurs calculés]
+* **Cas de Rejet Métier** : [Conditions de rejet exprimées en langage d'affaires pur, sans codes de transport HTTP]
 
 ### Maquettes SSOT *(frontend / fullstack)*
 - 🔗 **Maquette Validée (SSOT)** : [Nom de l'écran Figma](https://figma.com/file/...) *(ou N/A - Composant Headless)*
@@ -74,19 +76,35 @@ macrostructure: "workbench" # Optionnel FE/Fullstack : bento-grid | workbench | 
 ### Contrats d'Échange API (Backend / Services)
 > *Définition déclarative des contrats réseau. Règle anti-invention : interdiction d'inventer des routes non documentées.*
 
-| Opération | Route / Endpoint | Intention Métier & Payload (Déclaratif) | Code Statut |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/ressource` | Création d'une entité avec payload `{ identifiant, statut, montant }` | `201 Created` |
-| `GET` | `/api/v1/ressource/{id}` | Lecture des informations métier de l'entité | `200 OK` |
+- **[Nom de l'Opération 1]** : `GET /api/v1/ressource`
+- **[Nom de l'Opération 2]** : `POST /api/v1/ressource`
 
-> 📄 **Spécifications formelles détaillées** : Consulter les schémas JSON exhaustifs et routes OpenAPI dans [specs/api.md](../../handoff/<STORY_ID>/specs/api.md).
+> 📄 **Spécifications formelles détaillées** : Consulter les schémas JSON exhaustifs et routes OpenAPI dans [Azure DevOps Git (specs/api.md)](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/specs/api.md&version=GBmain&_a=preview).
 
 ---
 
 ## Règles d'affaires
 
-- **RM-101 [Nom de la Règle]** : [Formulation explicite de la contrainte, du calcul, du seuil ou de la condition d'éligibilité métier].
-- **RM-102 [Gestion des Données Invalides]** : [Comportement attendu et rejet en cas de dépassement de quota, doublon ou format non conforme].
+- **[Nom de la Règle Métier Pure]** : [Formulation explicite de la contrainte, du calcul, du seuil ou de la condition d'éligibilité métier. Règle absolue : proscrire tout préfixe artificiel du type RM-XXX ou RG-XXX (ADR-0301 Rule #7 / Directive #11)].
+- **[Gestion des Données Invalides]** : [Comportement attendu et rejet en cas de dépassement de quota, doublon ou format non conforme].
+
+---
+
+## Références
+
+### 1. Preuves Amont & Traçabilité Factuelle
+- 📂 **Dossier de Preuves Factuelles** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/memory/evidence/<STORY_ID>_fact_dossier.md&version=GBmain&_a=preview)
+
+### 2. Spécifications & Modèles de Données SSOT
+- 🏛️ **Modèle de Données SSOT** : [Structure-de-données (Wiki SIGPA)](https://dev.azure.com/Projet-SIGPA/SIGPA/_wiki/wikis/SIGPA.wiki/196/Structure-de-donn%C3%A9es)
+- 📋 **Cas d'Utilisation Métier** : [Cas XX — Titre (Wiki SIGPA)](https://dev.azure.com/Projet-SIGPA/SIGPA/_wiki/wikis/SIGPA.wiki/...)
+- 📜 **ADR d'Architecture** : [ADR-0366 — Standard Story 2.0 (Azure DevOps Git)](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/standards/adr-system/...)
+
+### 3. Paquet OpenSpec (Handoff Développeur)
+- 📄 **Proposition Technique (proposal.md)** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/proposal.md&version=GBmain&_a=preview)
+- 📋 **Spécifications d'Échange (specs/api.md)** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/specs/api.md&version=GBmain&_a=preview)
+- 🎯 **Plan de Découpage TDD (tasks.md)** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/tasks.md&version=GBmain&_a=preview)
+- ✅ **Definition of Done** : [DoD Normative (Azure DevOps Git)](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/reference/definition-of-done.md&version=GBmain&_a=preview)
 
 ---
 
@@ -105,10 +123,10 @@ Fonctionnalité: Titre Fonctionnel Pur du Récit
     Et un message de succès s'affiche
     Et les données sont persistées dans le système
 
-  # EXCEPTIONS & REJETS MÉTIER (Règles RM-XXX)
-  Scénario: Rejet pour non-respect de la règle RM-101
+  # EXCEPTIONS & REJETS MÉTIER (Règles d'affaires)
+  Scénario: Rejet pour non-respect de la règle d'éligibilité
     Étant donné un utilisateur initiant une soumission
-    Mais que le montant spécifié enfreint la règle RM-101
+    Mais que les paramètres enfreignent la règle d'éligibilité
     Quand l'utilisateur tente de valider l'action
     Alors la soumission est bloquée avec un message d'erreur explicite
     Et le système n'enregistre aucune modification
@@ -131,21 +149,3 @@ Fonctionnalité: Titre Fonctionnel Pur du Récit
     Et l'interface empêche toute navigation conflictuelle
     Et un journal d'audit trace l'amorce de la transaction
 ```
-
----
-
-## Références
-
-### 1. Preuves Amont & Traçabilité Factuelle
-- 📂 **Dossier de Preuves Factuelles** : [Dossier de Preuves Factuelles (Portail Web / Azure DevOps Git)](https://...)
-
-### 2. Spécifications & Modèles de Données SSOT
-- 🏛️ **Modèle de Données SSOT** : [Structure-de-données.md (Portail Web)](https://...)
-- 📋 **Référentiel des Règles d'Affaires** : [docs/02-business-rules/README.md](https://...)
-- 📜 **ADR d'Architecture** : [ADR-0366 — Standard Story 2.0](https://...)
-
-### 3. Spécifications OpenSpec (Suggestions)
-- 📄 **Proposition Technique (proposal.md)** : [proposal.md (Portail Web / Azure DevOps Git)](https://...)
-- 📋 **Spécifications d'Échange (specs/api.md)** : [specs/api.md (Portail Web / Azure DevOps Git)](https://...)
-- 🎯 **Plan de Découpage TDD (tasks.md)** : [tasks.md (Portail Web / Azure DevOps Git)](https://...)
-- ✅ **Definition of Done** : [DoD Normative](https://...)

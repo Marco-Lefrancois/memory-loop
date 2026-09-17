@@ -105,6 +105,9 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0368](0368-resilient-csv-tabular-engine-and-privacy.md)** : Moteur Tabulaire Résilient & Étanche — Normalisation Multi-Encodage, Streaming à Mémoire Constante, Diff Sémantique et Anonymisation PII
 *   **[ADR-0369](0369-python-senior-robustness-and-resource-governance.md)** : Gouvernance des Ressources & Robustesse Python Senior — Les 7 Standards d'Ingénierie mLoop
 *   **[ADR-0370](0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md)** : Générateur Automatique du Guide CLI SSOT & Gouvernance Anti-Drift Déterministe
+*   **[ADR-0371](0371-paradigme-dual-harnais-preventif-et-point-in-time-recovery-agentique.md)** : Paradigme Dual Harnais Préventif & Point-in-Time Recovery Agentique (Synthèse Cohesity Agent Resilience)
+*   **[ADR-0372](0372-replay-simulator-hors-ligne-et-auto-amelioration-recursive-du-harnais.md)** : Replay Simulator Hors-Ligne & Auto-Amélioration Récursive du Harnais (Synthèse Dream RSI)
 
 ---
-*Dernière consolidation constitutionnelle : 15 septembre 2026 — 84 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 17 septembre 2026 — 87 ADRs Unifiées (Zéro Conflit)*
+| 0373 | [Génération Multi-Branches (Multi-Draft Challenge) & Auto-Évaluation Déterministe Locale](0373-generation-multi-draft-et-tournoi-auto-evaluatif-local.md) | Approuvé |

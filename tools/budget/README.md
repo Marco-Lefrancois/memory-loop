@@ -1,10 +1,34 @@
-# 📓 Outil de Suivi de Budget LiteLLM (Nmédia Cloud)
+# 📓 Outil de Suivi & Bascule de Budget LiteLLM (Nmédia Cloud)
 
-Ce sous-répertoire regroupe l'utilitaire de monitoring et la documentation de suivi de budget pour votre clé virtuelle d'API LiteLLM (Nmédia Cloud).
+Ce sous-répertoire regroupe l'utilitaire de monitoring, le script de bascule automatique de clé et la documentation opérationnelle pour vos clés virtuelles LiteLLM (Nmédia Cloud).
 
 ---
 
-## 🛠️ Usage du Script
+## 🔄 Bascule Rapide de Clé Active (Commande Unique)
+
+Pour changer de clé sans risque de désynchronisation entre OpenCode, `.env` et Windows :
+
+```bash
+# Basculer vers Boire et Frère :
+python tools/budget/switch_key.py boire
+
+# Basculer vers Metro :
+python tools/budget/switch_key.py metro
+
+# Basculer vers la clé Perso :
+python tools/budget/switch_key.py perso
+
+# Mode interactif (menu avec solde) :
+python tools/budget/switch_key.py
+
+# Raccourci Windows natif :
+tools\budget\switch_key.bat boire
+```
+> 📖 Consultez la [Procédure Opérationnelle Détaillée](../../docs/procedures/PROCEDURE_CHANGEMENT_CLE_LITELLM.md).
+
+---
+
+## 🛠️ Usage du Script de Monitoring (`check_budget.py`)
 
 Vous pouvez interroger votre budget en direct depuis le terminal à la racine de votre workspace :
 
@@ -151,17 +175,17 @@ Le script résout automatiquement les variables d'environnement en inspectant le
 # ==============================================
 LITELLM_BASE_URL=https://api-ia.nmedia.ca
 
-# Clé active du moment (Metro)
-LITELLM_API_KEY=sk-m3N2J1ZmFikJdzteZmFdAA
+# Clé active du moment (Boire et Frère) — Référencement direct supporté
+LITELLM_API_KEY=LITELLM_API_KEY_BOIRE
 
 # Inventaire des 3 clés disponibles :
-LITELLM_API_KEY_PERSO=sk-jeUj9M6ytuflFD-SgV7Uqw
-LITELLM_API_KEY_METRO=sk-m3N2J1ZmFikJdzteZmFdAA
-LITELLM_API_KEY_BOIRE=sk-o2o16a6O6wd6nq2Qxkpbwg
+LITELLM_API_KEY_PERSO=sk-perso-xxxxxx
+LITELLM_API_KEY_METRO=sk-metro-xxxxxx
+LITELLM_API_KEY_BOIRE=sk-boire-xxxxxx
 ```
 
 ### Stockage dans la voûte de secrets (`~/.secrets/`) :
-- `~/.secrets/litellm-key` (ou `nmedia-key`) : Clé active par défaut (Metro)
+- `~/.secrets/litellm-key` : Clé brute active (utilisée dynamiquement par `opencode.json`)
 - `~/.secrets/litellm-key-perso` : Clé Personnelle / Générale
 - `~/.secrets/litellm-key-metro` : Clé Metro
 - `~/.secrets/litellm-key-boire` : Clé Boire et Frère

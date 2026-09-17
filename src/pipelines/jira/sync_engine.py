@@ -91,6 +91,28 @@ def _fetch_allowed_subtask_types(client: httpx.Client, project_key: str) -> dict
         pass
     return allowed_subtasks
 
+def is_jira_status_closed(status_name: str, status_category_key: str = "") -> bool:
+    """
+    Détermine si un statut Jira correspond à un état FERMÉ / TERMINÉ / ARCHIVÉ.
+    Règle constitutionnelle mLoop : 'si un récit est au statut FERMÉ dans jira ne jamais sync'.
+    """
+    if not status_name and not status_category_key:
+        return False
+
+    # 1. statusCategory Jira Cloud ("done" regroupe Fermé, Terminé, Closed, Done, Resolved, etc.)
+    if status_category_key and status_category_key.strip().lower() == "done":
+        return True
+
+    # 2. Correspondance textuelle explicite multilingue (FR / EN)
+    normalized = status_name.strip().lower()
+    closed_keywords = {
+        "fermé", "fermee", "fermée", "ferme", "closed", "close", "clos",
+        "terminé", "terminee", "terminée", "termine", "done", "resolved",
+        "résolu", "resolu", "archived", "archivé", "archive",
+        "abandonné", "abandonne", "cancelled", "canceled", "annulé", "annule"
+    }
+    return normalized in closed_keywords
+
 def _fetch_existing_stories(client: httpx.Client, state: LoopState) -> dict:
     existing_stories_map = {}
     try:
@@ -98,7 +120,7 @@ def _fetch_existing_stories(client: httpx.Client, state: LoopState) -> dict:
         start_at = 0
         max_results = 100
         while start_at < 500:
-            r_search = client.get(f"/rest/api/3/search/jql?jql={jql}&startAt={start_at}&maxResults={max_results}&fields=summary")
+            r_search = client.get(f"/rest/api/3/search/jql?jql={jql}&startAt={start_at}&maxResults={max_results}&fields=summary,status")
             if r_search.status_code == 200:
                 search_data = r_search.json()
                 issues = search_data.get("issues", [])
@@ -106,11 +128,14 @@ def _fetch_existing_stories(client: httpx.Client, state: LoopState) -> dict:
                     break
                 for issue in issues:
                     summary = issue.get("fields", {}).get("summary", "")
+                    status_obj = issue.get("fields", {}).get("status", {})
                     for story_item in state.sprint_backlog:
                         if story_item.id in summary or _clean_title(story_item.title).lower() == _clean_title(summary).lower():
                             existing_stories_map[story_item.id] = {
                                 "key": issue.get("key"),
-                                "id": issue.get("id")
+                                "id": issue.get("id"),
+                                "status": status_obj.get("name", ""),
+                                "status_category": status_obj.get("statusCategory", {}).get("key", ""),
                             }
                 if len(issues) < max_results:
                     break
@@ -550,12 +575,46 @@ def sync_targeted_to_jira(
             current_billing_id = billing_id
             current_components = components_payload[:]
 
+            if already_exists and item.id in existing_stories_map:
+                map_entry = existing_stories_map[item.id]
+                if is_jira_status_closed(map_entry.get("status", ""), map_entry.get("status_category", "")):
+                    s_name = map_entry.get("status", "Fermé")
+                    ZeroFluffConsole.warning(
+                        f"🔒 Story {story_key} ({item.id}) est au statut FERMÉ ('{s_name}') dans Jira — synchronisation strictement ignorée (règle constitutionnelle)."
+                    )
+                    actions_log.append({
+                        "type": "Story",
+                        "id": story_key or map_entry.get("key"),
+                        "title": _clean_title(item.title),
+                        "action": "IGNORE_FERME",
+                        "details": f"Statut Jira '{s_name}' (FERMÉ) — synchronisation interdite (règle constitutionnelle)",
+                    })
+                    continue
+
             if story_key:
                 try:
                     r_existing = client.get(f"/rest/api/3/issue/{story_key}")
                     if r_existing.status_code == 200:
                         existing_data = r_existing.json()
                         e_fields = existing_data.get("fields", {})
+
+                        # ── Garde constitutionnelle : Statut FERMÉ dans Jira ────
+                        e_status = e_fields.get("status", {})
+                        s_name = e_status.get("name", "")
+                        s_cat = e_status.get("statusCategory", {}).get("key", "")
+                        if is_jira_status_closed(s_name, s_cat):
+                            ZeroFluffConsole.warning(
+                                f"🔒 Story {story_key} ({item.id}) est au statut FERMÉ ('{s_name}') dans Jira — synchronisation strictement ignorée (règle constitutionnelle)."
+                            )
+                            actions_log.append({
+                                "type": "Story",
+                                "id": story_key,
+                                "title": _clean_title(item.title),
+                                "action": "IGNORE_FERME",
+                                "details": f"Statut Jira '{s_name}' (FERMÉ) — synchronisation interdite (règle constitutionnelle)",
+                            })
+                            continue
+
                         if not current_components:
                             epic_comps = e_fields.get("components", [])
                             if epic_comps:

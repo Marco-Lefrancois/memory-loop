@@ -5,7 +5,39 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [2.30.0] - 2026-09-17
+
+### Added
+- **Commande CLI `multi-draft` — Challenge Multi-Branches & Auto-Évaluation (ADR-0373)** :
+  - Création de `src/pipelines/multi_draft.py` : moteur `MultiDraftChallengeEngine` qui orchestre le challenge d'évaluation comparative locale sur les brouillons physiques sous `memory/drafts/<STORY>/`.
+  - Création de `src/commands/handlers/multi_draft.py` : handler CLI `handle_multi_draft` avec affichage des 3 statuts Sentinel (`APPROVED`, `ACTION_REQUIRED`, `REJECTED`).
+  - Enregistrement de la commande `multi-draft` dans `src/commands/_registry.py` (paramètres : `--story`, `--eval-only`, `--strict`).
+  - Autorisation de `multi-draft` dès `STAGE_2_PLAN_GRILL` dans la matrice `COMMAND_MIN_STAGE` de `src/core/lifecycle.py`.
+  - Génération de `challenge_matrix.json` et `challenge_report.md` sous `memory/drafts/<STORY>/` à chaque exécution.
+- **Garde Constitutionnelle Jira — Statut FERMÉ** :
+  - Ajout de `is_jira_status_closed()` dans `src/pipelines/jira/sync_engine.py` — détection multilingue (FR/EN) basée sur `statusCategory.key == "done"`.
+  - Double garde dans `sync_targeted_to_jira` : pré-rejet via le map `_fetch_existing_stories` + re-vérification live `GET /rest/api/3/issue/{key}?fields=status`.
+  - Pré-rejet préemptif dans `src/commands/handlers/export.py:handle_jira_sync` avant même l'aperçu.
+  - 3 tests unitaires ajoutés dans `tests/test_jira_sync_safe.py` (total : 37 passants) : `test_is_jira_status_closed_multilingual`, `test_jira_sync_rejects_closed_ticket_in_preview`, `test_sync_targeted_skips_closed_jira_issue`.
+
+### Changed
+- **Terminologie : `tournoi` → `challenge`** dans tout le code multi-draft et la documentation :
+  - `TournamentReport` → `ChallengeReport`, `MultiDraftTournamentEngine` → `MultiDraftChallengeEngine`, `run_tournament()` → `run_challenge()`.
+  - Fichiers de sortie : `tournament_matrix.json` → `challenge_matrix.json`, `tournament_report.md` → `challenge_report.md`.
+  - Fichiers physiques existants sous `memory/drafts/REC-010-BE/` et `REC-011-BE/` renommés.
+- **ADR-0373 mis à jour** (`standards/adr-system/0373-generation-multi-draft-et-tournoi-auto-evaluatif-local.md`) :
+  - Titre et contenu alignés sur la terminologie `challenge`.
+  - Ajout section §4 (modèle unique vs angles architecturaux) et §5 (garde constitutionnelle Jira FERMÉ).
+  - Tableau des 3 statuts Sentinel (`APPROVED` / `ACTION_REQUIRED` / `REJECTED`) + éligibilité Pareto.
+- **CLI_PIPELINE_GUIDE.md** (`standards/protocols/CLI_PIPELINE_GUIDE.md`) :
+  - Compteur : 113 → 114 commandes actives.
+  - Ajout de la ligne `multi-draft` dans la Phase 4 (VALIDATE/QA, disponible depuis Phase 2).
+  - Date de synchronisation : 15 → 17 septembre 2026.
+
+---
+
 ## [2.29.0] - 2026-09-16
+
 
 ### Added
 - **Archivage Réversible & Sécurité Anti-Perte de Données (`clean_premature_stories` ADR-0339 / L-08)** :

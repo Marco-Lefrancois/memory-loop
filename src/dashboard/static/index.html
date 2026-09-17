@@ -3,657 +3,625 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mLoop Sovereign Observability Hub</title>
-    <!-- Tailwind CSS CDN avec Fallback -->
+    <title>mLoop Sovereign Hub — Agentic Cockpit 2.0</title>
+    <meta name="description" content="mLoop Sovereign Observability Hub — Pure Local State-Graph Engine">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN pour Radar et Télémétrie -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#ecfeff',
-                            400: '#22d3ee',
-                            500: '#06b6d4',
-                            600: '#0891b2',
-                            900: '#164e63',
-                        },
-                        darkbg: '#0b0f19',
-                        darkcard: '#111827',
-                        darkborder: '#1f2937',
+                        void: '#040711',
+                        cybercard: '#0a101f',
+                        cyberborder: 'rgba(56, 189, 248, 0.15)',
+                        cybercyan: '#00f2fe',
+                        cyberviolet: '#a855f7',
+                        cyberemerald: '#00ff9d',
+                        cyberamber: '#f59e0b',
+                        cyberrose: '#ff3366',
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #0b0f19; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
-        .glass-header { background: rgba(11, 15, 25, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-        .glass-card { background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255, 255, 255, 0.06); box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5); }
-        .active-tab { border-bottom: 2px solid #06b6d4; color: #22d3ee; font-weight: 600; }
-        pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-        /* Scrollbar moderne */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0b0f19; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #374151; }
-        /* Sélecteur de projet — harmonisation dark theme */
-        select#project-selector { background-color: #111827; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 6px; padding: 4px 8px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; padding-right: 24px; }
-        select#project-selector:focus { border-color: #334155; outline: none; box-shadow: 0 0 0 2px rgba(51, 65, 85, 0.4); }
-        select#project-selector option { background-color: #0f172a; color: #cbd5e1; padding: 6px 10px; }
-        select#project-selector option:hover, select#project-selector option:checked { background-color: #1e293b; color: #f1f5f9; }
+        body { background-color: #040711; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif; }
+        .glass-cyber { background: rgba(10, 16, 31, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(56, 189, 248, 0.12); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6); }
+        .glass-header { background: rgba(4, 7, 17, 0.94); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(56, 189, 248, 0.15); }
+        .active-tab { border-bottom: 2px solid #00f2fe; color: #00f2fe; font-weight: 600; text-shadow: 0 0 10px rgba(0, 242, 254, 0.5); }
+        pre, code, .font-tech { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+        .cyber-glow-cyan { box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        .cyber-glow-violet { box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
+        .cyber-glow-emerald { box-shadow: 0 0 15px rgba(0, 255, 157, 0.2); }
+        /* Scrollbar cybernétique */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #040711; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+        /* Sélecteur de projet épuré */
+        select.cyber-select { background-color: #0d1527; color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 6px; padding: 4px 10px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 26px; }
+        select.cyber-select:focus { outline: none; border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.3); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-cyan-500/30 selection:text-cyan-200">
 
     <!-- ── BARRE DE NAVIGATION & CONTRÔLE FIGÉE (STICKY TOP) ───────── -->
-    <div class="sticky top-0 z-50 glass-header shadow-xl shadow-black/50">
-        <!-- HEADER SOUVERAIN -->
-        <header class="px-6 py-3 flex flex-wrap items-center justify-between gap-4 border-b border-darkborder/50">
+    <div class="sticky top-0 z-50 glass-header shadow-2xl shadow-black/80">
+        <header class="px-6 py-2.5 flex flex-wrap items-center justify-between gap-4">
+            <!-- LOGO & TITRE SOUVERAIN -->
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 text-xl">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-lg cyber-glow-cyan">
                     🌀
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
-                        Memory Loop <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono">mLoop Hub</span>
+                    <h1 class="text-sm font-bold text-white tracking-wider flex items-center gap-2">
+                        MEMORY LOOP <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950/80 text-cybercyan border border-cyan-500/30 font-tech">COCKPIT 2.0</span>
                     </h1>
-                    <p class="text-xs text-gray-400">Observabilité Souveraine & Supervision Pure State-Graph</p>
+                    <p class="text-[11px] text-gray-400 font-tech flex items-center gap-1.5">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                        Sovereign Agentic Swarm & Resilience Hub
+                    </p>
                 </div>
             </div>
 
-            <!-- CONTRÔLES : SÉLECTEUR DE PROJET & STATUS -->
+            <!-- TÉLÉMÉTRIE D'ÉTAT & CONTRÔLES -->
             <div class="flex items-center gap-3 flex-wrap">
-                <div class="flex items-center gap-2 bg-darkcard px-3 py-1.5 rounded-lg border border-darkborder">
-                    <span class="text-xs text-gray-400">Projet :</span>
-                    <select id="project-selector" onchange="onProjectChange()" class="text-sm font-medium cursor-pointer">
+                <!-- BALISE ACTIVE GATE FSM -->
+                <div id="header-gate-badge" class="px-2.5 py-1 rounded bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-xs font-tech flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping"></span>
+                    <span id="header-gate-label">Gate ...</span>
+                </div>
+
+                <!-- SELECTEUR DE PROJET -->
+                <div class="flex items-center gap-1.5 text-xs font-tech text-gray-400">
+                    <span>PROJET :</span>
+                    <select id="project-selector" onchange="onProjectChange()" class="cyber-select text-xs font-medium cursor-pointer">
                         <option value="" disabled selected>Chargement...</option>
                     </select>
                 </div>
 
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 text-xs font-mono">
-                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Zéro-Docker / Local
+                <!-- SELECTEUR DE MODULE / EPIC -->
+                <div class="flex items-center gap-1.5 text-xs font-tech text-gray-400">
+                    <span>MODULE :</span>
+                    <select id="module-selector" onchange="onModuleChange()" class="cyber-select text-xs font-medium cursor-pointer max-w-[200px]">
+                        <option value="ALL" selected>Tous les modules</option>
+                    </select>
                 </div>
 
-                <button onclick="refreshAll()" class="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium transition flex items-center gap-1.5 shadow-sm">
-                    <span>↻</span> Actualiser
+                <!-- HORLOGE FUSEAU HORAIRE LOCAL -->
+                <div id="header-local-clock" class="px-2.5 py-1 rounded bg-cyan-950/40 border border-cyan-500/30 text-cybercyan text-[11px] font-tech flex items-center gap-1.5" title="Horodatage dynamique calé sur le fuseau horaire local du poste">
+                    <span>🕒</span>
+                    <span id="header-clock-time" class="font-bold font-mono">--:--:--</span>
+                    <span id="header-clock-tz" class="text-[10px] text-gray-400 font-mono">Local</span>
+                </div>
+
+                <!-- BADGE SOUVERAIN ZÉRO DOCKER -->
+                <div class="px-2.5 py-1 rounded bg-emerald-950/50 border border-emerald-500/30 text-cyberemerald text-[11px] font-tech flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyberemerald animate-pulse"></span>
+                    ZÉRO-DOCKER LOCAL
+                </div>
+
+                <!-- BOUTON REFRESH -->
+                <button onclick="refreshCurrentTab()" class="px-2.5 py-1 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cybercyan text-xs font-tech transition flex items-center gap-1 shadow-sm">
+                    ↻ <span class="hidden sm:inline">ACTUALISER</span>
                 </button>
 
-                <label class="flex items-center gap-1.5 text-xs text-gray-400 cursor-pointer select-none">
-                    <input type="checkbox" id="auto-refresh" checked onchange="toggleAutoRefresh()" class="rounded bg-darkcard border-gray-700 text-cyan-500 focus:ring-0">
-                    Live (5s)
+                <!-- AUTO REFRESH -->
+                <label class="flex items-center gap-1.5 text-[11px] text-gray-400 cursor-pointer select-none font-tech">
+                    <input type="checkbox" id="auto-refresh" checked onchange="toggleAutoRefresh()" class="rounded bg-cybercard border-gray-700 text-cyan-500 focus:ring-0">
+                    LIVE 5s
                 </label>
             </div>
         </header>
 
-        <!-- ── NAVIGATION ONGLETS ──────────────────────────────────── -->
-        <nav class="px-6 flex gap-6 text-sm">
-            <button onclick="switchTab('overview')" id="tab-btn-overview" class="py-2.5 px-1 active-tab transition flex items-center gap-2">
-                <span>📊</span> Vue d'Ensemble
+        <!-- ── NAVIGATION ONGLETS (8 VUES SPÉCIALISÉES) ─────────────── -->
+        <nav class="px-6 flex gap-6 text-xs font-tech overflow-x-auto border-t border-cyberborder/40">
+            <button onclick="switchTab('overview')" id="tab-btn-overview" class="py-2.5 px-1 active-tab transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>🎯</span> COCKPIT OVERVIEW
             </button>
-            <button onclick="switchTab('events')" id="tab-btn-events" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
-                <span>⚡</span> Journal Live & Spans
+            <button onclick="switchTab('backlog')" id="tab-btn-backlog" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>📚</span> BACKLOG & MODULES
             </button>
-            <button onclick="switchTab('stories')" id="tab-btn-stories" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
-                <span>📋</span> Backlog & EvidencePacks
+            <button onclick="switchTab('swarm')" id="tab-btn-swarm" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>🤖</span> SWARM & TOPOLOGIE
             </button>
-            <button onclick="switchTab('graph')" id="tab-btn-graph" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
-                <span>🧠</span> Ground Truth (Graphe)
+            <button onclick="switchTab('traces')" id="tab-btn-traces" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>🧠</span> TRACES & DÉLIBÉRATION
             </button>
-            <button onclick="switchTab('ledger')" id="tab-btn-ledger" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
-                <span>💎</span> Token Ledger
+            <button onclick="switchTab('resilience')" id="tab-btn-resilience" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>🛡️</span> RÉSILIENCE & PITR
+            </button>
+            <button onclick="switchTab('dream-rsi')" id="tab-btn-dream-rsi" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>🧪</span> LABO DREAM RSI
+            </button>
+            <button onclick="switchTab('governance')" id="tab-btn-governance" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>🚪</span> PORTES & GOUVERNANCE
+            </button>
+            <button onclick="switchTab('ledger')" id="tab-btn-ledger" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>💎</span> TOKEN LEDGER
             </button>
         </nav>
     </div>
 
-    <!-- ── CONTENU PRINCIPAL ───────────────────────────────────────── -->
+    <!-- ── CONTENU DU COCKPIT ───────────────────────────────────────── -->
     <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
 
-        <!-- ════════ VUE 1 : VUE D'ENSEMBLE (OVERVIEW) ═════════════════ -->
+        <!-- ════════ VUE 1 : COCKPIT OVERVIEW ═══════════════════════════ -->
         <section id="tab-overview" class="space-y-6">
-            <!-- 4 CARTES KPI MAJEURES -->
+            <!-- BANDEAU D'ÉTAT DU SWARM (6 MINI-PILLS) -->
+            <div class="glass-cyber p-3.5 rounded-xl flex items-center justify-between flex-wrap gap-3">
+                <div class="text-xs font-tech text-gray-400 uppercase flex items-center gap-1.5">
+                    <span>⚡</span> État de l'Essaim :
+                </div>
+                <div id="overview-swarm-strip" class="flex items-center gap-2 flex-wrap">
+                    <!-- Rempli dynamiquement -->
+                    <span class="text-xs text-gray-500 font-tech">Chargement de l'essaim...</span>
+                </div>
+            </div>
+
+            <!-- 4 TUILES KPI SYSTÉMIQUES MAJEURES -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- KPI 1 : COÛT TOTAL -->
-                <div class="glass-card p-5 rounded-xl border border-cyan-900/40 relative overflow-hidden">
-                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">💵</div>
-                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Coût Estimé LLM</div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-cost" class="text-3xl font-bold text-cyan-400 font-mono">$0.0000</span>
-                        <span class="text-xs text-gray-400 font-mono">USD</span>
+                <!-- KPI 1 : CYBER-RÉSILIENCE PITR -->
+                <div class="glass-cyber p-5 rounded-xl border-l-4 border-l-cyan-400 relative overflow-hidden group hover:border-cyan-400/50 transition">
+                    <div class="flex items-center justify-between text-xs text-gray-400 font-tech mb-2">
+                        <span>CYBER-RÉSILIENCE (ADR-0371)</span>
+                        <span id="kpi-res-status" class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 text-[10px] font-bold">...</span>
                     </div>
-                    <div class="mt-2 text-xs text-gray-400 flex items-center gap-1.5">
-                        <span class="text-cyan-300" id="kpi-calls">0</span> interactions répertoriées
-                    </div>
-                </div>
-
-                <!-- KPI 2 : JETONS TOTAUX -->
-                <div class="glass-card p-5 rounded-xl border border-indigo-900/40 relative overflow-hidden">
-                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">⚡</div>
-                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Jetons Consommés</div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-tokens" class="text-3xl font-bold text-indigo-400 font-mono">0</span>
-                        <span class="text-xs text-gray-400 font-mono">tokens</span>
-                    </div>
-                    <div class="mt-2 text-xs text-gray-400 flex items-center justify-between">
-                        <span>Prompt: <b class="text-gray-300 font-mono" id="kpi-prompt-tokens">0</b></span>
-                        <span>Completion: <b class="text-gray-300 font-mono" id="kpi-completion-tokens">0</b></span>
+                    <div class="text-3xl font-extrabold text-white font-tech mb-1" id="kpi-res-score">--/100</div>
+                    <div class="text-xs text-gray-400 font-tech flex items-center justify-between pt-2 border-t border-gray-800">
+                        <span id="kpi-res-checkpoints">-- Checkpoints</span>
+                        <span id="kpi-res-evidence">Evidence: --%</span>
                     </div>
                 </div>
 
-                <!-- KPI 3 : ÉVÉNEMENTS AUDITÉS -->
-                <div class="glass-card p-5 rounded-xl border border-purple-900/40 relative overflow-hidden">
-                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">🛡️</div>
-                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Événements Streamés</div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-events-count" class="text-3xl font-bold text-purple-400 font-mono">0</span>
-                        <span class="text-xs text-gray-400">événements</span>
+                <!-- KPI 2 : DREAM RSI SELF-IMPROVEMENT -->
+                <div class="glass-cyber p-5 rounded-xl border-l-4 border-l-violet-400 relative overflow-hidden group hover:border-violet-400/50 transition">
+                    <div class="flex items-center justify-between text-xs text-gray-400 font-tech mb-2">
+                        <span>DREAM RSI GAIN (ADR-0372)</span>
+                        <span class="px-1.5 py-0.5 rounded bg-violet-950 text-violet-300 text-[10px] font-bold">NON-RÉGRESSION</span>
                     </div>
-                    <div class="mt-2 text-xs text-gray-400 flex items-center gap-1.5">
-                        <span>Journal FTS5 :</span>
-                        <span class="text-emerald-400 font-medium">Synchronisé</span>
+                    <div class="text-3xl font-extrabold text-cyberviolet font-tech mb-1" id="kpi-rsi-gain">+0.0%</div>
+                    <div class="text-xs text-gray-400 font-tech flex items-center justify-between pt-2 border-t border-gray-800">
+                        <span id="kpi-rsi-policy">Politique: --</span>
+                        <span id="kpi-rsi-score">Harnais: --/100</span>
                     </div>
                 </div>
 
-                <!-- KPI 4 : STORIES & CONTRATS -->
-                <div class="glass-card p-5 rounded-xl border border-emerald-900/40 relative overflow-hidden">
-                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">📑</div>
-                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Récits du Backlog</div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-stories-count" class="text-3xl font-bold text-emerald-400 font-mono">0</span>
-                        <span class="text-xs text-gray-400">stories</span>
+                <!-- KPI 3 : PORTE ACTIVE FSM -->
+                <div class="glass-cyber p-5 rounded-xl border-l-4 border-l-emerald-400 relative overflow-hidden group hover:border-emerald-400/50 transition">
+                    <div class="flex items-center justify-between text-xs text-gray-400 font-tech mb-2">
+                        <span>CYCLE FSM (ADR-0339)</span>
+                        <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px] font-bold">GOUVERNANCE</span>
                     </div>
-                    <div class="mt-2 text-xs text-gray-400 flex items-center gap-1.5">
-                        <span>Avec EvidencePack :</span>
-                        <span id="kpi-evidence-count" class="text-emerald-300 font-bold font-mono">0</span>
+                    <div class="text-xl font-bold text-white font-tech mb-1 truncate" id="kpi-fsm-stage">STAGE_...</div>
+                    <div class="text-xs text-gray-400 font-tech flex items-center justify-between pt-2 border-t border-gray-800">
+                        <span>Gate Runway: 6 Portes</span>
+                        <span class="text-emerald-400 cursor-pointer hover:underline" onclick="switchTab('governance')">Inspecter →</span>
+                    </div>
+                </div>
+
+                <!-- KPI 4 : COÛTS & TOKENS ÉCONOMISÉS -->
+                <div class="glass-cyber p-5 rounded-xl border-l-4 border-l-amber-400 relative overflow-hidden group hover:border-amber-400/50 transition">
+                    <div class="flex items-center justify-between text-xs text-gray-400 font-tech mb-2">
+                        <span>ÉCONOMIE D'INFÉRENCE</span>
+                        <span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px] font-bold">REPLAY SIM</span>
+                    </div>
+                    <div class="text-3xl font-extrabold text-cyberamber font-tech mb-1" id="kpi-tokens-saved">-- k</div>
+                    <div class="text-xs text-gray-400 font-tech flex items-center justify-between pt-2 border-t border-gray-800">
+                        <span>Tokens évalués à 0$</span>
+                        <span class="text-cyan-400 cursor-pointer hover:underline" onclick="switchTab('dream-rsi')">Simulateur →</span>
                     </div>
                 </div>
             </div>
 
-            <!-- CYCLE DE VIE MLOOP (PIPELINE STEPPER) -->
-            <div class="glass-card p-5 rounded-xl">
-                <h2 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                    <span>🔁</span> Cycle de Vie Logiciel mLoop (ADR-0103 & ADR-0339)
-                </h2>
-                <div id="phases-stepper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-                    <!-- Généré dynamiquement -->
-                </div>
-            </div>
-
-            <!-- RÉPARTITION PAR MODÈLE & ACTIONS LOURDES -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- MODÈLES -->
-                <div class="glass-card p-5 rounded-xl space-y-4">
-                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
-                        <span>🤖</span> Ventilation des Coûts par Modèle LLM
-                    </h2>
-                    <div id="models-list" class="space-y-3">
-                        <div class="text-xs text-gray-400 italic">Chargement des données...</div>
-                    </div>
-                </div>
-
-                <!-- TOP ACTIONS -->
-                <div class="glass-card p-5 rounded-xl space-y-4">
-                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
-                        <span>⚙️</span> Top Actions Consommatrices de Jetons
-                    </h2>
-                    <div id="actions-list" class="space-y-3">
-                        <div class="text-xs text-gray-400 italic">Chargement des actions...</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ════════ VUE 2 : JOURNAL LIVE & SPANS ═════════════════════ -->
-        <section id="tab-events" class="hidden space-y-4">
-            <div class="glass-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2 flex-wrap" id="event-type-filters">
-                    <button onclick="filterEvents('ALL')" class="px-2.5 py-1 rounded-md text-xs font-medium bg-cyan-600 text-white event-filter-btn" data-type="ALL">Tous</button>
-                    <button onclick="filterEvents('STEP_S1')" class="px-2.5 py-1 rounded-md text-xs font-medium bg-darkcard text-gray-300 hover:bg-gray-800 event-filter-btn" data-type="STEP_S1">Système 1</button>
-                    <button onclick="filterEvents('STEP_S2')" class="px-2.5 py-1 rounded-md text-xs font-medium bg-darkcard text-gray-300 hover:bg-gray-800 event-filter-btn" data-type="STEP_S2">Système 2</button>
-                    <button onclick="filterEvents('MCP_CALL')" class="px-2.5 py-1 rounded-md text-xs font-medium bg-darkcard text-gray-300 hover:bg-gray-800 event-filter-btn" data-type="MCP_CALL">MCP Tools</button>
-                    <button onclick="filterEvents('VERIFICATION_GATE')" class="px-2.5 py-1 rounded-md text-xs font-medium bg-darkcard text-gray-300 hover:bg-gray-800 event-filter-btn" data-type="VERIFICATION_GATE">Gates</button>
-                </div>
-                <div class="text-xs text-gray-400" id="events-stats-bar">
-                    Affichage des 100 derniers événements
-                </div>
-            </div>
-
-            <!-- LISTE D'ÉVÉNEMENTS STREAMÉS -->
-            <div id="events-timeline" class="space-y-2">
-                <div class="text-center py-8 text-xs text-gray-400">Chargement des événements live...</div>
-            </div>
-        </section>
-
-        <!-- ════════ VUE 3 : BACKLOG & EVIDENCEPACKS ══════════════════ -->
-        <section id="tab-stories" class="hidden space-y-4">
-            <div class="glass-card p-4 rounded-xl flex items-center justify-between">
-                <div>
-                    <h2 class="text-sm font-bold text-white">Récits du Backlog & Handoff Déclaratif</h2>
-                    <p class="text-xs text-gray-400">Contrats fonctionnels Gherkin 4 Piliers & Sidecars d'EvidencePacks</p>
-                </div>
-                <div class="text-xs font-mono text-cyan-300" id="stories-summary-badge">
-                    0 Récits
-                </div>
-            </div>
-
-            <!-- TABLE DES STORIES -->
-            <div class="glass-card rounded-xl overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-darkcard border-b border-darkborder text-gray-400 uppercase tracking-wider font-semibold">
-                            <tr>
-                                <th class="p-3.5">ID Récit</th>
-                                <th class="p-3.5">Titre</th>
-                                <th class="p-3.5">Statut</th>
-                                <th class="p-3.5">Type</th>
-                                <th class="p-3.5">Gherkin</th>
-                                <th class="p-3.5">EvidencePack</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stories-table-body" class="divide-y divide-darkborder font-mono text-xs">
-                            <tr><td colspan="6" class="p-4 text-center text-gray-500 font-sans">Chargement des récits...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ════════ VUE 4 : GROUND TRUTH GRAPH ══════════════════════ -->
-        <section id="tab-graph" class="hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="glass-card p-5 rounded-xl">
-                    <div class="text-xs text-gray-400 uppercase font-semibold">Nœuds du Graphe</div>
-                    <div class="mt-2 text-3xl font-bold text-cyan-400 font-mono" id="graph-total-nodes">0</div>
-                    <div class="mt-1 text-xs text-gray-400">Entités architecturales & ADRs</div>
-                </div>
-                <div class="glass-card p-5 rounded-xl">
-                    <div class="text-xs text-gray-400 uppercase font-semibold">Relations (Edges)</div>
-                    <div class="mt-2 text-3xl font-bold text-indigo-400 font-mono" id="graph-total-edges">0</div>
-                    <div class="mt-1 text-xs text-gray-400">Liens sémantiques 1-hop</div>
-                </div>
-                <div class="glass-card p-5 rounded-xl">
-                    <div class="text-xs text-gray-400 uppercase font-semibold">Source Principale</div>
-                    <div class="mt-2 text-lg font-bold text-emerald-400 font-mono">SQLite + JSON</div>
-                    <div class="mt-1 text-xs text-gray-400">Ground Truth mLoop</div>
-                </div>
-            </div>
-
-            <div class="glass-card p-5 rounded-xl space-y-4">
-                <h2 class="text-sm font-bold text-white flex items-center gap-2">
-                    <span>📑</span> Échantillon des Nœuds Référencés
-                </h2>
-                <div id="graph-sample-nodes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <div class="text-xs text-gray-400 italic">Chargement des données du graphe...</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ════════ VUE 5 : TOKEN LEDGER & CONSOMMATION ═══════════════ -->
-        <section id="tab-ledger" class="hidden space-y-6">
-            <!-- 3 CARTES SYNTHÈSE GLOBALE & PAR PROJET -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- CARTE 1 : SYNTHÈSE GLOBALE & BI-SOURCE -->
-                <div class="glass-card p-5 rounded-xl border border-cyan-900/40 relative overflow-hidden flex flex-col justify-between">
-                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">🌐</div>
+            <!-- SECTION : MODULES & BACKLOGS MÉTIERS DU PROJET -->
+            <div class="glass-cyber p-5 rounded-xl space-y-3.5">
+                <div class="flex items-center justify-between border-b border-cyberborder/40 pb-2.5 flex-wrap gap-2">
                     <div>
-                        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Consommation Globale (Tous Projets)</div>
-                        <div class="mt-2 flex items-baseline gap-2">
-                            <span id="ledger-global-tokens" class="text-2xl font-bold text-cyan-400 font-mono">0</span>
-                            <span class="text-xs text-gray-400 font-mono">tokens</span>
-                        </div>
-                        <div class="mt-1 text-xs text-gray-400 flex items-center justify-between">
-                            <span>Coût cumulé : <b id="ledger-global-cost" class="text-emerald-400 font-mono">$0.0000</b></span>
-                            <span id="ledger-global-calls" class="font-mono text-gray-500">0 appels</span>
-                        </div>
+                        <h3 class="text-xs font-bold text-white uppercase font-tech flex items-center gap-1.5">
+                            <span>🧭</span> Modules Métiers & Backlogs du Projet (Initiatives & Epics)
+                        </h3>
+                        <p class="text-[11px] text-gray-400 font-tech mt-0.5">Sous-modules fonctionnels, avancement des récits INVEST et preuve EvidencePack.</p>
                     </div>
-                    <!-- VENTILATION BI-SOURCE : LLM_NMEDIA_CLOUD VS ANTIGRAVITY-CHAT -->
-                    <div class="mt-3 pt-2.5 border-t border-darkborder/60 grid grid-cols-2 gap-2 text-[11px] font-mono">
-                        <div onclick="filterBySource('llm_nmedia_cloud')" class="p-1.5 rounded bg-darkcard/60 border border-indigo-900/40 hover:border-indigo-500 cursor-pointer transition" title="Filtrer sur llm_nmedia_cloud">
-                            <div class="text-indigo-400 font-semibold flex items-center gap-1 truncate text-[10px]">☁️ llm_nmedia_cloud</div>
-                            <div id="ledger-source-nmedia" class="text-gray-200 font-bold text-[11px] mt-0.5">0 tok</div>
-                            <div id="ledger-source-nmedia-cost" class="text-gray-400 text-[10px]">$0.0000</div>
-                        </div>
-                        <div onclick="filterBySource('antigravity-chat')" class="p-1.5 rounded bg-darkcard/60 border border-emerald-900/40 hover:border-emerald-500 cursor-pointer transition" title="Filtrer sur antigravity-chat">
-                            <div class="text-emerald-400 font-semibold flex items-center gap-1 truncate text-[10px]">🌐 antigravity-chat</div>
-                            <div id="ledger-source-google" class="text-gray-200 font-bold text-[11px] mt-0.5">0 tok</div>
-                            <div id="ledger-source-google-cost" class="text-gray-400 text-[10px]">$0.0000</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CARTE 2 : SÉLECTION FILTRÉE -->
-                <div class="glass-card p-5 rounded-xl border border-indigo-900/40 relative overflow-hidden">
-                    <div class="absolute -right-2 -bottom-2 text-6xl opacity-5 select-none">🎯</div>
-                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Vue Filtrée Active</div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="ledger-filtered-tokens" class="text-2xl font-bold text-indigo-400 font-mono">0</span>
-                        <span class="text-xs text-gray-400 font-mono">tokens</span>
-                    </div>
-                    <div class="mt-2 text-xs text-gray-400 flex items-center justify-between">
-                        <span>Coût filtré : <b id="ledger-filtered-cost" class="text-cyan-300 font-mono">$0.0000</b></span>
-                        <span id="ledger-filtered-entries" class="font-mono text-gray-400">0 entrées</span>
-                    </div>
-                </div>
-
-                <!-- CARTE 3 : VENTILATION PAR PROJET -->
-                <div class="glass-card p-5 rounded-xl border border-purple-900/40 flex flex-col justify-between">
-                    <div>
-                        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center justify-between">
-                            <span>Top Projets (Tokens)</span>
-                            <span class="text-[10px] text-gray-500 font-normal">Cliquer pour filtrer</span>
-                        </div>
-                        <div id="ledger-projects-breakdown" class="mt-2 space-y-1 max-h-24 overflow-y-auto pr-1">
-                            <div class="text-xs text-gray-500 italic">Chargement des données...</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BARRE DE FILTRES AVANCÉS & DATE RANGE -->
-            <div class="glass-card p-4 rounded-xl space-y-3">
-                <div class="flex items-center justify-between flex-wrap gap-3">
-                    <span class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                        <span>🔍</span> Filtres & Plage Temporelle
-                    </span>
-                    <button onclick="resetLedgerFilters()" class="text-xs text-gray-400 hover:text-cyan-400 transition flex items-center gap-1">
-                        <span>↺</span> Réinitialiser les filtres
+                    <button onclick="switchTab('backlog')" class="px-2.5 py-1 rounded bg-cyan-950 border border-cyan-500/30 text-cybercyan hover:bg-cyan-900 text-xs font-tech transition flex items-center gap-1">
+                        <span>📚</span> Ouvrir le Backlog Détaillé →
                     </button>
                 </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs">
-                    <!-- DATE DÉBUT -->
-                    <div class="space-y-1">
-                        <label class="text-gray-400 text-[11px]">Date Début :</label>
-                        <input type="date" id="ledger-date-start" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
-                    </div>
-
-                    <!-- DATE FIN -->
-                    <div class="space-y-1">
-                        <label class="text-gray-400 text-[11px]">Date Fin :</label>
-                        <input type="date" id="ledger-date-end" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
-                    </div>
-
-                    <!-- SOURCE LLM -->
-                    <div class="space-y-1">
-                        <label class="text-gray-400 text-[11px]">Source LLM :</label>
-                        <select id="ledger-source-select" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
-                            <option value="">Tous</option>
-                            <option value="antigravity-chat">antigravity-chat</option>
-                            <option value="llm_nmedia_cloud">llm_nmedia_cloud</option>
-                        </select>
-                    </div>
-
-                    <!-- MODÈLE -->
-                    <div class="space-y-1">
-                        <label class="text-gray-400 text-[11px]">Modèle :</label>
-                        <select id="ledger-model-select" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
-                            <option value="">Tous les modèles</option>
-                        </select>
-                    </div>
-
-                    <!-- ACTION -->
-                    <div class="space-y-1">
-                        <label class="text-gray-400 text-[11px]">Action :</label>
-                        <select id="ledger-action-select" onchange="onLedgerFilterChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
-                            <option value="">Toutes les actions</option>
-                        </select>
-                    </div>
-
-                    <!-- RECHERCHE TEXTE -->
-                    <div class="space-y-1">
-                        <label class="text-gray-400 text-[11px]">Recherche :</label>
-                        <input type="text" id="ledger-search-input" placeholder="Cible, clé, projet..." oninput="onLedgerSearchInput()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
-                    </div>
-
-                    <!-- PAGE SIZE -->
-                    <div class="space-y-1">
-                        <label class="text-gray-400 text-[11px]">Lignes / page :</label>
-                        <select id="ledger-pagesize-select" onchange="onLedgerPageSizeChange()" class="w-full bg-darkcard border border-darkborder rounded-lg px-2.5 py-1.5 text-gray-200 focus:border-cyan-500 focus:outline-none">
-                            <option value="25">25 par page</option>
-                            <option value="50" selected>50 par page (défaut)</option>
-                            <option value="100">100 par page</option>
-                        </select>
-                    </div>
+                <div id="overview-modules-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                    <div class="text-gray-500 py-3 font-tech text-xs">Découverte des modules du projet...</div>
                 </div>
             </div>
 
-            <!-- TABLEAU DU LEDGER -->
-            <div class="glass-card rounded-xl overflow-hidden border border-darkborder">
-                <div class="p-4 border-b border-darkborder flex items-center justify-between flex-wrap gap-2">
-                    <div class="flex items-center gap-2">
-                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
-                            <span>📋</span> Journal Détaillé des Interactions LLM
-                        </h2>
-                        <span id="ledger-status-badge" class="px-2 py-0.5 rounded text-[11px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">0 entrées</span>
+            <!-- DOUBLE PANNEAU : APERÇU TRACES & SNAPSHOTS -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- PANNEAU GAUCHE : DERNIÈRES DÉLIBÉRATIONS COGNITIVES -->
+                <div class="glass-cyber p-5 rounded-xl space-y-3">
+                    <div class="flex items-center justify-between border-b border-cyberborder/40 pb-2.5">
+                        <h3 class="text-xs font-bold text-cybercyan uppercase font-tech flex items-center gap-1.5">
+                            <span>🧠</span> Dernières Délibérations d'Agents
+                        </h3>
+                        <button onclick="switchTab('traces')" class="text-[11px] text-gray-400 hover:text-cyan-300 font-tech">Voir tout l'arbre →</button>
                     </div>
-                    <!-- CONTROLES PAGINATION HAUT -->
-                    <div class="flex items-center gap-2 text-xs">
-                        <button id="ledger-prev-btn" onclick="ledgerGoPage(ledgerCurrentPage - 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">◀ Précédent</button>
-                        <span id="ledger-page-indicator" class="font-mono text-gray-400">Page 1 / 1</span>
-                        <button id="ledger-next-btn" onclick="ledgerGoPage(ledgerCurrentPage + 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">Suivant ▶</button>
+                    <div id="overview-recent-traces" class="space-y-2.5 font-tech text-xs">
+                        <div class="text-gray-500 py-4 text-center">Chargement des traces...</div>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-darkborder bg-black/20 text-xs text-gray-400 font-mono">
-                                <th class="p-3">Horodatage</th>
-                                <th class="p-3">Source LLM</th>
-                                <th class="p-3">Projet</th>
-                                <th class="p-3">Modèle</th>
-                                <th class="p-3">Action</th>
-                                <th class="p-3">Cible / Contenu</th>
-                                <th class="p-3 text-right">Tokens (Prompt/Comp)</th>
-                                <th class="p-3 text-right">Coût ($ USD)</th>
-                                <th class="p-3 text-center">Détails</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ledger-table-body" class="divide-y divide-darkborder font-mono text-xs">
-                            <tr><td colspan="9" class="p-6 text-center text-gray-500 font-sans">Chargement du journal token...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- CONTROLES PAGINATION BAS -->
-                <div class="p-3 bg-black/20 border-t border-darkborder flex items-center justify-between flex-wrap gap-2 text-xs">
-                    <span id="ledger-footer-info" class="text-gray-400 font-mono">Affichage de 0 à 0 sur 0 entrées</span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="ledgerGoPage(1)" class="px-2 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-400" title="Première page">⇤</button>
-                        <button id="ledger-prev-btn-bottom" onclick="ledgerGoPage(ledgerCurrentPage - 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">◀ Précédent</button>
-                        <span id="ledger-page-indicator-bottom" class="font-mono text-gray-400">1 / 1</span>
-                        <button id="ledger-next-btn-bottom" onclick="ledgerGoPage(ledgerCurrentPage + 1)" class="px-2.5 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">Suivant ▶</button>
-                        <button id="ledger-last-btn" onclick="ledgerGoPage(ledgerTotalPages)" class="px-2 py-1 rounded bg-darkcard border border-darkborder hover:bg-gray-800 text-gray-400" title="Dernière page">⇥</button>
+                <!-- PANNEAU DROITE : CHECKPOINTS PITR & ÉTAT MÉMOIRE -->
+                <div class="glass-cyber p-5 rounded-xl space-y-3">
+                    <div class="flex items-center justify-between border-b border-cyberborder/40 pb-2.5">
+                        <h3 class="text-xs font-bold text-cyberemerald uppercase font-tech flex items-center gap-1.5">
+                            <span>🛡️</span> Instantanés PITR & Hygiène Mémoire
+                        </h3>
+                        <button onclick="switchTab('resilience')" class="text-[11px] text-gray-400 hover:text-emerald-300 font-tech">Gérer la résilience →</button>
+                    </div>
+                    <div id="overview-recent-checkpoints" class="space-y-2.5 font-tech text-xs">
+                        <div class="text-gray-500 py-4 text-center">Chargement des checkpoints...</div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 8 : BACKLOG & MODULES MÉTIERS (ADR-0369) ════════ -->
+        <section id="tab-backlog" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3 flex-wrap gap-3">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>📚</span> Backlog & Modules Métiers (User Stories & EvidencePacks)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Exploration granulaire par module (Boire : Réception/Incubation/Ventes, Metro : OneTrust/Papercuts/Offres/Avion).</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="backlog-stories-count-badge" class="text-xs font-tech px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">
+                        -- Stories
+                    </span>
+                    <button onclick="loadBacklog()" class="px-2.5 py-1 rounded bg-cyan-950 border border-cyan-500/30 text-cybercyan hover:bg-cyan-900 text-xs font-tech transition">
+                        ↻ Rafraîchir
+                    </button>
+                </div>
+            </div>
+
+            <!-- BARRE DE FILTRES MODULES CHIPS / PILLS -->
+            <div class="glass-cyber p-3.5 rounded-xl flex items-center justify-between flex-wrap gap-2.5 border border-cyberborder/60">
+                <div class="flex items-center gap-2 flex-wrap text-xs font-tech">
+                    <span class="text-gray-400 font-bold flex items-center gap-1 mr-1">
+                        <span>🧭</span> Module Actif :
+                    </span>
+                    <div id="backlog-module-pills" class="flex items-center gap-1.5 flex-wrap">
+                        <!-- Rempli dynamiquement -->
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="backlog-search-input" placeholder="Rechercher story, Jira..." oninput="onBacklogSearch(this.value)" class="bg-cybercard border border-cyberborder text-white text-xs rounded px-2.5 py-1 font-tech w-48 focus:outline-none focus:border-cyan-400" />
+                </div>
+            </div>
+
+            <!-- STATUT METRIQUES BACKLOG (4 MINI KPIS) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-tech text-xs">
+                <div class="glass-cyber p-3 rounded-lg border-l-2 border-l-emerald-400">
+                    <span class="text-gray-400">READY / IN_BUILD</span>
+                    <div id="backlog-kpi-active" class="text-lg font-bold text-cyberemerald mt-0.5">0</div>
+                </div>
+                <div class="glass-cyber p-3 rounded-lg border-l-2 border-l-cyan-400">
+                    <span class="text-gray-400">EN ANALYSE / OPEN</span>
+                    <div id="backlog-kpi-open" class="text-lg font-bold text-cybercyan mt-0.5">0</div>
+                </div>
+                <div class="glass-cyber p-3 rounded-lg border-l-2 border-l-violet-400">
+                    <span class="text-gray-400">DONE / ACCEPTED</span>
+                    <div id="backlog-kpi-done" class="text-lg font-bold text-cyberviolet mt-0.5">0</div>
+                </div>
+                <div class="glass-cyber p-3 rounded-lg border-l-2 border-l-amber-400">
+                    <span class="text-gray-400">AVEC EVIDENCEPACK</span>
+                    <div id="backlog-kpi-evidence" class="text-lg font-bold text-cyberamber mt-0.5">0</div>
+                </div>
+            </div>
+
+            <!-- CONTENEUR DES STORIES (TABLEAU CYBERNÉTIQUE) -->
+            <div id="backlog-stories-container" class="space-y-3 font-tech text-xs">
+                <div class="text-gray-500 py-8 text-center">Chargement des User Stories...</div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 2 : SWARM & TOPOLOGIE (BLAST RADIUS) ════════════ -->
+        <section id="tab-swarm" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>🤖</span> Topologie Multi-Agents & Rayon d'Impact (Blast Radius - ADR-0371)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Gouvernance déterministe des permissions d'écriture et confinement de l'exécution Unattended.</p>
+                </div>
+                <div class="flex items-center gap-3 text-xs font-tech">
+                    <span class="px-2 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30" id="swarm-unattended-badge">-- Autorisés Unattended</span>
+                    <span class="px-2 py-1 rounded bg-amber-950 text-amber-300 border border-amber-500/30" id="swarm-hitl-badge">-- HITL Requis</span>
+                </div>
+            </div>
+
+            <!-- GRILLE DES 6 AGENTS -->
+            <div id="swarm-agents-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="text-gray-500 font-tech text-xs py-8 text-center col-span-3">Chargement de la topologie de l'essaim...</div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 3 : TRACES & DÉLIBÉRATION COGNITIVE ════════════ -->
+        <section id="tab-traces" class="hidden space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4 border-b border-cyberborder pb-3">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>🧠</span> Terminal de Délibération Cognitive & Spans d'Exécution
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Inspection des délibérations internes (&lt;thinking&gt;), outils et verdicts Sentinel (Rubber Duck).</p>
+                </div>
+                <!-- FILTRES TRACES -->
+                <div class="flex items-center gap-2 flex-wrap text-xs font-tech">
+                    <span class="text-gray-400">RÔLE :</span>
+                    <select id="traces-filter-role" onchange="loadTraces()" class="cyber-select text-xs cursor-pointer">
+                        <option value="">Tous les Rôles</option>
+                        <option value="sentinel">Sentinel</option>
+                        <option value="worker">Worker</option>
+                        <option value="orchestrator">Orchestrator</option>
+                        <option value="research">Research</option>
+                        <option value="qa">QA</option>
+                        <option value="crawler">Crawler</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CONTENEUR DES TRACES -->
+            <div id="traces-list-container" class="space-y-4">
+                <div class="text-gray-500 font-tech text-xs py-8 text-center">Chargement des traces d'exécution...</div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 4 : CYBER-RÉSILIENCE & PITR ═════════════════════ -->
+        <section id="tab-resilience" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>🛡️</span> Bouclier de Cyber-Résilience & Restauration PITR (ADR-0371)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Vérification cryptographique SHA-256 et restauration sélective de la mémoire agentique.</p>
+                </div>
+                <div class="text-xs font-tech px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30" id="resilience-posture-badge">
+                    POSTURE : EXCELLENT (100/100)
+                </div>
+            </div>
+
+            <!-- STATS DE RÉSILIENCE -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="glass-cyber p-4 rounded-xl space-y-1">
+                    <span class="text-xs text-gray-400 font-tech">POINTS DE CONTRÔLE (CHECKPOINTS)</span>
+                    <div class="text-2xl font-bold text-white font-tech" id="res-cp-count">--</div>
+                    <p class="text-[11px] text-gray-500 font-tech">Rétention FIFO des 3 derniers instantanés</p>
+                </div>
+                <div class="glass-cyber p-4 rounded-xl space-y-1">
+                    <span class="text-xs text-gray-400 font-tech">DOSSIERS DE PREUVES (EVIDENCEPACKS)</span>
+                    <div class="text-2xl font-bold text-cyberemerald font-tech" id="res-ev-score">--%</div>
+                    <p class="text-[11px] text-gray-500 font-tech" id="res-ev-ratio">--/-- valides sans falsification</p>
+                </div>
+                <div class="glass-cyber p-4 rounded-xl space-y-1">
+                    <span class="text-xs text-gray-400 font-tech">HYGIÈNE MÉMOIRE (ADR-0362)</span>
+                    <div class="text-2xl font-bold text-white font-tech" id="res-mem-status">CONFORME</div>
+                    <p class="text-[11px] text-gray-500 font-tech" id="res-mem-details">-- lignes / 200 max</p>
+                </div>
+            </div>
+
+            <!-- PISTE CHRONOLOGIQUE DES CHECKPOINTS HORODATÉS -->
+            <div class="glass-cyber p-5 rounded-xl space-y-4">
+                <h3 class="text-xs font-bold text-cybercyan uppercase font-tech flex items-center gap-1.5">
+                    <span>⏳</span> Piste Chronologique des Snapshots Cryptographiques SHA-256
+                </h3>
+                <div id="checkpoints-table-container" class="overflow-x-auto">
+                    <div class="text-gray-500 font-tech text-xs py-4 text-center">Chargement des checkpoints...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 5 : LABORATOIRE DREAM RSI ═══════════════════════ -->
+        <section id="tab-dream-rsi" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>🧪</span> Laboratoire d'Auto-Amélioration Récursive (Dream RSI - ADR-0372)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Évaluation hors-ligne sur simulateur de replay sans coût LLM et garantie de non-régression monotone.</p>
+                </div>
+                <div class="text-xs font-tech px-2.5 py-1 rounded bg-violet-950 text-violet-300 border border-violet-500/30" id="rsi-applied-badge">
+                    POLITIQUE : PERSISTÉE
+                </div>
+            </div>
+
+            <!-- GRILLE PRINCIPALE DREAM RSI : RADAR 4 PANNES + POLITIQUE OPTIMALE -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- RADAR CHART 4 PANNES DU HARNAIS -->
+                <div class="glass-cyber p-5 rounded-xl space-y-3">
+                    <div class="flex items-center justify-between border-b border-cyberborder/40 pb-2">
+                        <h3 class="text-xs font-bold text-cyberviolet uppercase font-tech flex items-center gap-1.5">
+                            <span>📡</span> Radar d'Isolation des Défaillances du Harnais
+                        </h3>
+                        <span class="text-xs font-tech text-gray-400" id="rsi-bottleneck-label">Goulot : --</span>
+                    </div>
+                    <div class="w-full h-64 flex items-center justify-center relative">
+                        <canvas id="rsiRadarChart"></canvas>
+                    </div>
+                    <div id="rsi-recommendations" class="pt-2 border-t border-gray-800 text-xs font-tech text-gray-400 space-y-1">
+                        <!-- Recommandations dynamiques -->
+                    </div>
+                </div>
+
+                <!-- POLITIQUE SÉLECTIONNÉE & COMPARAISON -->
+                <div class="glass-cyber p-5 rounded-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-cyberborder/40 pb-2">
+                        <h3 class="text-xs font-bold text-cybercyan uppercase font-tech flex items-center gap-1.5">
+                            <span>🧬</span> Méta-Politique Optimale Sélectionnée
+                        </h3>
+                        <span class="text-xs font-tech font-bold text-cyberemerald" id="rsi-gain-badge">+--% vs π₀</span>
+                    </div>
+                    <div id="rsi-policy-details" class="space-y-3 font-tech text-xs">
+                        <div class="text-gray-500 py-4 text-center">Chargement de la politique...</div>
+                    </div>
+
+                    <!-- TABLEAU COMPARATIF CANDIDATS -->
+                    <div class="pt-3 border-t border-gray-800">
+                        <h4 class="text-[11px] font-bold text-gray-400 uppercase font-tech mb-2">Frontière d'Exploration des Candidats :</h4>
+                        <div id="rsi-candidates-table" class="overflow-x-auto max-h-48 overflow-y-auto">
+                            <!-- Table candidats -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 6 : PORTES & GOUVERNANCE FSM ════════════════════ -->
+        <section id="tab-governance" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>🚪</span> Machine d'États Finie (FSM) & 6 Portes de Gouvernance (ADR-0339)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Progression séquentielle inconditionnelle : Gate 0 (T-Shirt) à Gate 5 (Ship & Clôture).</p>
+                </div>
+                <span class="text-xs font-tech px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30" id="gov-current-stage-badge">
+                    ÉTAPE : ...
+                </span>
+            </div>
+
+            <!-- RUNWAY VISUEL DES 6 PORTES -->
+            <div id="governance-runway-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-tech">
+                <div class="text-gray-500 text-xs py-8 text-center col-span-3">Chargement des portes de gouvernance...</div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 7 : TOKEN LEDGER ═══════════════════════════════ -->
+        <section id="tab-ledger" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>💎</span> Token Ledger & Économie d'Inférence
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Comptabilité analytique de la consommation des modèles et circuit breaker financier.</p>
+                </div>
+                <span class="text-xs font-tech px-2.5 py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">
+                    ADR-0104 / TOKENLEDGER
+                </span>
+            </div>
+
+            <!-- CONTENU DU LEDGER -->
+            <div id="ledger-content-container" class="space-y-4 font-tech text-xs">
+                <div class="text-gray-500 py-8 text-center">Chargement du Token Ledger...</div>
             </div>
         </section>
 
     </main>
 
     <!-- ── FOOTER DISCRET ─────────────────────────────────────────── -->
-    <footer class="border-t border-darkborder py-3 px-6 text-center text-xs text-gray-500 font-mono">
-        Memory Loop Sovereign Observability • Nmédia Solutions • Mode Local Zéro-Docker
+    <footer class="mt-auto border-t border-cyberborder/40 py-3 px-6 text-center text-[11px] font-tech text-gray-500">
+        mLoop Sovereign Framework — Pure Local State-Graph Engine — ADR-0371 & ADR-0372 Compliant.
     </footer>
 
-    <!-- ── SCRIPT D'INTERACTION JS ─────────────────────────────────── -->
+    <!-- ── MODAL NOTIFICATION COPIE / ACTION ────────────────────────── -->
+    <div id="toast-notify" class="fixed bottom-6 right-6 px-4 py-2 rounded-lg bg-cyan-950 border border-cyan-400/50 text-cybercyan text-xs font-tech shadow-2xl transition opacity-0 pointer-events-none z-50">
+        Notification
+    </div>
+
+    <!-- ── LOGIQUE JS JAVASCRIPT ULTRA-RÉACTIVE (ZERO SLOP) ─────────── -->
     <script>
-        let currentProject = "";
+        // ── 0. GESTION PERSISTANCE LOCALE & FUSEAU HORAIRE ──────────
+        const CockpitStorage = {
+            KEY: 'mloop_cockpit_state_v2',
+            get() {
+                try {
+                    const raw = localStorage.getItem(this.KEY);
+                    return raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    return {};
+                }
+            },
+            set(patch) {
+                try {
+                    const cur = this.get();
+                    localStorage.setItem(this.KEY, JSON.stringify({ ...cur, ...patch }));
+                } catch (e) {}
+            }
+        };
+
+        // Formateur déterministe d'horodatage selon le fuseau horaire du poste utilisateur
+        function formatLocalTime(tsString, includeSeconds = true) {
+            if (!tsString) return '-';
+            try {
+                let s = String(tsString).trim();
+                const fnMatch = s.match(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/);
+                if (fnMatch) {
+                    s = `${fnMatch[1]}-${fnMatch[2]}-${fnMatch[3]}T${fnMatch[4]}:${fnMatch[5]}:${fnMatch[6]}Z`;
+                } else if (s.includes('T') && !s.endsWith('Z') && !s.includes('+') && !s.includes('-', 10)) {
+                    s += 'Z';
+                } else if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(s) && !s.includes('+') && !s.includes('Z')) {
+                    s = s.replace(' ', 'T') + 'Z';
+                }
+                const d = new Date(s);
+                if (isNaN(d.getTime())) return tsString;
+
+                const pad = (n) => String(n).padStart(2, '0');
+                const y = d.getFullYear();
+                const m = pad(d.getMonth() + 1);
+                const day = pad(d.getDate());
+                const h = pad(d.getHours());
+                const min = pad(d.getMinutes());
+                const sec = pad(d.getSeconds());
+
+                return includeSeconds ? `${y}-${m}-${day} ${h}:${min}:${sec}` : `${y}-${m}-${day} ${h}:${min}`;
+            } catch (e) {
+                return tsString;
+            }
+        }
+
+        function startLocalClock() {
+            const timeEl = document.getElementById('header-clock-time');
+            const tzEl = document.getElementById('header-clock-tz');
+            if (!timeEl) return;
+
+            function tick() {
+                const now = new Date();
+                const pad = (n) => String(n).padStart(2, '0');
+                const h = pad(now.getHours());
+                const m = pad(now.getMinutes());
+                const s = pad(now.getSeconds());
+                timeEl.textContent = `${h}:${m}:${s}`;
+                if (tzEl && !tzEl.dataset.initialized) {
+                    try {
+                        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local';
+                        const tzShort = now.toLocaleDateString(undefined, { day: '2-digit', timeZoneName: 'short' }).split(' ')[1] || '';
+                        tzEl.textContent = tzShort ? `${tzShort} (${tz.split('/').pop()})` : tz;
+                        tzEl.dataset.initialized = 'true';
+                    } catch (e) {
+                        tzEl.textContent = 'Local';
+                    }
+                }
+            }
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        let currentTab = 'overview';
+        let activeProject = 'mLoop';
         let autoRefreshTimer = null;
-        let activeEventType = "ALL";
+        let radarChartInstance = null;
 
-        // 6. Paramètres d'état Token Ledger (déclarés tôt pour la restauration)
-        let ledgerCurrentPage = 1;
-        let ledgerPageSize = 50;
-        let ledgerTotalPages = 1;
-        let ledgerSearchDebounce = null;
+        // ── GESTION DES ONGLETS ─────────────────────────────────────
+        let activeModule = 'ALL';
+        let allProjectModules = {};
+        let backlogRawStories = [];
+        let backlogSearchTerm = '';
 
-        function restoreUiPreferences() {
-            // 1. Onglet actif (Priorité : Hash URL > localStorage > 'overview')
-            const validTabs = ['overview', 'events', 'stories', 'graph', 'ledger'];
-            const hash = (window.location.hash || '').replace('#', '').trim();
-            const savedTab = (hash && validTabs.includes(hash)) ? hash : (localStorage.getItem('mloop_active_tab') || 'overview');
-            switchTab(validTabs.includes(savedTab) ? savedTab : 'overview', false);
-
-            // 2. Auto-refresh (Live 5s)
-            const autoRefreshVal = localStorage.getItem('mloop_auto_refresh');
-            const autoRefreshEl = document.getElementById('auto-refresh');
-            if (autoRefreshEl && autoRefreshVal !== null) {
-                autoRefreshEl.checked = (autoRefreshVal === 'true');
-            }
-
-            // 3. Filtre d'événements
-            const savedEventFilter = localStorage.getItem('mloop_events_filter');
-            if (savedEventFilter) {
-                activeEventType = savedEventFilter;
-                document.querySelectorAll('.event-filter-btn').forEach(btn => {
-                    if (btn.getAttribute('data-type') === activeEventType) {
-                        btn.classList.add('bg-cyan-600', 'text-white');
-                        btn.classList.remove('bg-darkcard', 'text-gray-300');
-                    } else {
-                        btn.classList.remove('bg-cyan-600', 'text-white');
-                        btn.classList.add('bg-darkcard', 'text-gray-300');
-                    }
-                });
-            }
-
-            // 4. Préférences Token Ledger (dates, source, recherche, pagination)
-            const dStart = localStorage.getItem('mloop_ledger_date_start');
-            const dEnd = localStorage.getItem('mloop_ledger_date_end');
-            const source = localStorage.getItem('mloop_ledger_source');
-            const search = localStorage.getItem('mloop_ledger_search');
-            const pageSize = localStorage.getItem('mloop_ledger_pagesize');
-            const page = localStorage.getItem('mloop_ledger_page');
-
-            const elStart = document.getElementById('ledger-date-start');
-            const elEnd = document.getElementById('ledger-date-end');
-            const elSource = document.getElementById('ledger-source-select');
-            const elSearch = document.getElementById('ledger-search-input');
-            const elPageSize = document.getElementById('ledger-pagesize-select');
-
-            if (elStart && dStart) elStart.value = dStart;
-            if (elEnd && dEnd) elEnd.value = dEnd;
-            if (elSource && source) {
-                let normSource = source;
-                if (normSource === 'nmedia_cloud') normSource = 'llm_nmedia_cloud';
-                if (normSource === 'Google') normSource = 'antigravity-chat';
-                elSource.value = normSource;
-            }
-            if (elSearch && search) elSearch.value = search;
-            if (elPageSize && pageSize) {
-                elPageSize.value = pageSize;
-                ledgerPageSize = parseInt(pageSize, 10) || 50;
-            }
-            if (page) {
-                ledgerCurrentPage = parseInt(page, 10) || 1;
-            }
-        }
-
-        async function init() {
-            restoreUiPreferences();
-            await loadProjects();
-            await refreshAll();
-            toggleAutoRefresh();
-        }
-
-        async function loadProjects() {
-            try {
-                const res = await fetch('/api/projects');
-                const data = await res.json();
-                const sel = document.getElementById('project-selector');
-                sel.innerHTML = "";
-
-                // Priorité de présélection : localStorage > active_project renvoyé par l'API
-                let savedProject = localStorage.getItem('mloop_selected_project') || data.active_project;
-                if (savedProject && savedProject.toLowerCase() === 'default') {
-                    savedProject = 'ALL';
-                    localStorage.setItem('mloop_selected_project', 'ALL');
-                }
-
-                const list = data.projects_formatted || data.projects.map(p => ({id: p, name: p}));
-                let matched = false;
-
-                list.forEach(p => {
-                    const opt = document.createElement('option');
-                    const val = typeof p === 'object' ? p.id : p;
-                    const label = typeof p === 'object' ? p.name : p;
-                    opt.value = val;
-                    opt.textContent = label;
-                    if (val === savedProject || val.toLowerCase() === (savedProject || '').toLowerCase()) {
-                        opt.selected = true;
-                        currentProject = val;
-                        matched = true;
-                    }
-                    sel.appendChild(opt);
-                });
-
-                if (!matched && list.length > 0) {
-                    const firstVal = typeof list[0] === 'object' ? list[0].id : list[0];
-                    currentProject = firstVal;
-                    sel.value = firstVal;
-                }
-
-                // S'assurer que le backend est également synchronisé
-                if (currentProject && currentProject !== data.active_project) {
-                    fetch('/api/project/select', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ project: currentProject })
-                    }).catch(() => {});
-                }
-            } catch (err) {
-                console.error("Erreur chargement projets:", err);
-            }
-        }
-
-        async function onProjectChange() {
-            const sel = document.getElementById('project-selector');
-            currentProject = sel.value;
-
-            // 1. Persistance locale dans le navigateur (survit au refresh / fermeture onglet)
-            localStorage.setItem('mloop_selected_project', currentProject);
-
-            // 2. Persistance sur le disque serveur (memory/active_project.json)
-            try {
-                await fetch('/api/project/select', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ project: currentProject })
-                });
-            } catch (err) {
-                console.warn("Échec persistance serveur:", err);
-            }
-
-            refreshAll();
-        }
-
-        async function refreshAll() {
-            await Promise.all([
-                loadMetrics(),
-                loadEvents(),
-                loadStories(),
-                loadGraph(),
-                loadState(),
-                loadLedger(),
-            ]);
-        }
-
-        function toggleAutoRefresh() {
-            const isChecked = document.getElementById('auto-refresh').checked;
-            localStorage.setItem('mloop_auto_refresh', isChecked ? 'true' : 'false');
-            if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-            if (isChecked) {
-                autoRefreshTimer = setInterval(refreshAll, 5000);
-            }
-        }
-
-        function switchTab(tabName, loadData = true) {
-            const validTabs = ['overview', 'events', 'stories', 'graph', 'ledger'];
-            if (!validTabs.includes(tabName)) tabName = 'overview';
-
-            validTabs.forEach(t => {
+        function switchTab(tabName) {
+            currentTab = tabName;
+            CockpitStorage.set({ currentTab: tabName });
+            const tabs = ['overview', 'backlog', 'swarm', 'traces', 'resilience', 'dream-rsi', 'governance', 'ledger'];
+            tabs.forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (el) el.classList.add('hidden');
@@ -662,6 +630,7 @@
                     btn.classList.add('text-gray-400');
                 }
             });
+
             const activeEl = document.getElementById(`tab-${tabName}`);
             const activeBtn = document.getElementById(`tab-btn-${tabName}`);
             if (activeEl) activeEl.classList.remove('hidden');
@@ -670,581 +639,1206 @@
                 activeBtn.classList.remove('text-gray-400');
             }
 
-            // Persistance de l'onglet actif
-            localStorage.setItem('mloop_active_tab', tabName);
+            refreshCurrentTab();
+        }
+
+        // ── ACTUALISATION ──────────────────────────────────────────
+        function refreshCurrentTab() {
+            if (currentTab === 'overview') loadOverview();
+            else if (currentTab === 'backlog') loadBacklog();
+            else if (currentTab === 'swarm') loadSwarm();
+            else if (currentTab === 'traces') loadTraces();
+            else if (currentTab === 'resilience') loadResilience();
+            else if (currentTab === 'dream-rsi') loadDreamRSI();
+            else if (currentTab === 'governance') loadGovernance();
+            else if (currentTab === 'ledger') loadLedger();
+        }
+
+        function toggleAutoRefresh() {
+            const enabled = document.getElementById('auto-refresh').checked;
+            CockpitStorage.set({ autoRefresh: enabled });
+            if (enabled) {
+                if (!autoRefreshTimer) autoRefreshTimer = setInterval(refreshCurrentTab, 5000);
+            } else {
+                if (autoRefreshTimer) {
+                    clearInterval(autoRefreshTimer);
+                    autoRefreshTimer = null;
+                }
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast-notify');
+            if (t) {
+                t.textContent = msg;
+                t.classList.remove('opacity-0');
+                t.classList.add('opacity-100');
+                setTimeout(() => {
+                    t.classList.remove('opacity-100');
+                    t.classList.add('opacity-0');
+                }, 2500);
+            }
+        }
+
+        function copyToClipboard(text, label = 'Élément') {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`${label} copié dans le presse-papier !`);
+            });
+        }
+
+        // ── 1. PROJETS ─────────────────────────────────────────────
+        async function loadProjects() {
             try {
-                if (window.location.hash !== '#' + tabName) {
-                    history.replaceState(null, '', '#' + tabName);
+                const res = await fetch('/api/projects');
+                const data = await res.json();
+                const sel = document.getElementById('project-selector');
+                if (!sel) return;
+                sel.innerHTML = '';
+                const list = data.projects_formatted || (data.projects || []).map(p => ({ id: p, name: p }));
+                allProjectModules = data.modules_by_project || {};
+
+                // Valider si activeProject persiste ou repli sur active_project serveur
+                const ids = list.map(p => p.id);
+                if (!activeProject || !ids.includes(activeProject)) {
+                    activeProject = data.active_project || ids[0] || 'Memory Loop';
+                }
+
+                list.forEach(pObj => {
+                    const opt = document.createElement('option');
+                    opt.value = pObj.id;
+                    opt.textContent = pObj.name;
+                    if (pObj.id === activeProject) {
+                        opt.selected = true;
+                    }
+                    sel.appendChild(opt);
+                });
+                sel.value = activeProject;
+                populateModuleSelector();
+            } catch (e) {
+                console.error('Erreur chargement projets', e);
+            }
+        }
+
+        function populateModuleSelector() {
+            const sel = document.getElementById('module-selector');
+            if (!sel) return;
+            sel.innerHTML = '<option value="ALL">Tous les modules</option>';
+            const mods = allProjectModules[activeProject] || [];
+            const modIds = mods.map(m => m.id);
+            if (activeModule !== 'ALL' && !modIds.includes(activeModule)) {
+                activeModule = 'ALL';
+            }
+
+            mods.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.textContent = `${m.label} (${m.stories_count || 0})`;
+                if (m.id === activeModule) opt.selected = true;
+                sel.appendChild(opt);
+            });
+            sel.value = activeModule;
+        }
+
+        function onModuleChange() {
+            const sel = document.getElementById('module-selector');
+            activeModule = sel ? sel.value : 'ALL';
+            CockpitStorage.set({ activeModule });
+            refreshCurrentTab();
+        }
+
+        function selectModule(modId) {
+            activeModule = modId;
+            CockpitStorage.set({ activeModule });
+            const sel = document.getElementById('module-selector');
+            if (sel) sel.value = modId;
+            refreshCurrentTab();
+        }
+
+        async function onProjectChange() {
+            const sel = document.getElementById('project-selector');
+            activeProject = sel.value;
+            activeModule = 'ALL';
+            CockpitStorage.set({ activeProject, activeModule: 'ALL' });
+            populateModuleSelector();
+            try {
+                await fetch('/api/project/select', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ project: activeProject })
+                });
+            } catch (e) {}
+            refreshCurrentTab();
+        }
+
+        // ── 2. VUE OVERVIEW ────────────────────────────────────────
+        async function loadOverview() {
+            try {
+                const res = await fetch(`/api/overview/stats?project=${encodeURIComponent(activeProject)}`);
+                const data = await res.json();
+
+                // KPIs
+                document.getElementById('kpi-res-score').textContent = `${data.resilience.score}/100`;
+                document.getElementById('kpi-res-status').textContent = data.resilience.status;
+                document.getElementById('kpi-res-checkpoints').textContent = `${data.resilience.checkpoints_count} Checkpoints`;
+                const evRatio = data.resilience.evidence_total > 0 ? Math.round((data.resilience.evidence_valid / data.resilience.evidence_total) * 100) : 100;
+                document.getElementById('kpi-res-evidence').textContent = `Evidence: ${evRatio}%`;
+
+                document.getElementById('kpi-rsi-gain').textContent = `+${data.dream_rsi.gain_vs_pi0.toFixed(1)}%`;
+                document.getElementById('kpi-rsi-policy').textContent = data.dream_rsi.best_policy;
+                document.getElementById('kpi-rsi-score').textContent = `Harnais: ${data.dream_rsi.harness_score}/100`;
+
+                document.getElementById('kpi-fsm-stage').textContent = data.lifecycle.current_stage;
+                document.getElementById('header-gate-label').textContent = data.lifecycle.current_stage;
+
+                const tokensSavedK = Math.round((data.dream_rsi.episodes_count * 1800) / 1000);
+                document.getElementById('kpi-tokens-saved').textContent = `${tokensSavedK} k`;
+
+                // Swarm Quick Strip
+                const strip = document.getElementById('overview-swarm-strip');
+                if (strip) {
+                    strip.innerHTML = `
+                        <span class="px-2 py-0.5 rounded bg-cyan-950/70 border border-cyan-500/30 text-cyan-300 font-tech">ORCHESTRATOR ● [HITL]</span>
+                        <span class="px-2 py-0.5 rounded bg-emerald-950/70 border border-emerald-500/30 text-cyberemerald font-tech">WORKER ● [UNATTENDED]</span>
+                        <span class="px-2 py-0.5 rounded bg-emerald-950/70 border border-emerald-500/30 text-cyberemerald font-tech">SENTINEL ● [ACTIVE]</span>
+                        <span class="px-2 py-0.5 rounded bg-emerald-950/70 border border-emerald-500/30 text-cyberemerald font-tech">RESEARCH ● [READY]</span>
+                        <span class="px-2 py-0.5 rounded bg-emerald-950/70 border border-emerald-500/30 text-cyberemerald font-tech">QA ● [READY]</span>
+                    `;
+                }
+
+                // Recent traces & checkpoints
+                loadOverviewPanels();
+                loadOverviewModules();
+            } catch (e) {
+                console.error('Erreur overview', e);
+            }
+        }
+
+        async function loadOverviewModules() {
+            const container = document.getElementById('overview-modules-container');
+            if (!container) return;
+            try {
+                const res = await fetch(`/api/modules?project=${encodeURIComponent(activeProject)}`);
+                const data = await res.json();
+                const mods = data.modules || [];
+                if (mods.length === 0) {
+                    container.innerHTML = '<div class="text-gray-500 py-3 text-xs col-span-full">Aucun sous-module spécifique détecté pour ce projet (structure racine).</div>';
+                    return;
+                }
+                container.innerHTML = mods.map(m => {
+                    const isSelected = (activeModule === m.id);
+                    const cardBorder = isSelected ? 'border-cyan-400 bg-cyan-950/30' : 'border-cyberborder/60 hover:border-cyan-500/40 bg-cybercard';
+                    return `
+                        <div class="p-3.5 rounded-xl border ${cardBorder} transition space-y-2 flex flex-col justify-between">
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-white text-xs font-tech">${m.label}</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-tech ${m.has_stories ? 'bg-cyan-950 text-cyan-300 border border-cyan-800/50' : 'bg-gray-800 text-gray-400'}">
+                                        ${m.has_stories ? `${m.stories_count} Récits` : (m.has_docs ? 'Cadrage Gate 0' : 'Référence')}
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-gray-400 line-clamp-2">${m.description}</p>
+                            </div>
+                            <div class="pt-2 border-t border-gray-800/80 flex items-center justify-between text-[10px] font-tech">
+                                <span class="text-gray-500">ID : ${m.id}</span>
+                                <button onclick="selectModule('${m.id}'); switchTab('backlog');" class="px-2 py-1 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cybercyan font-medium transition">
+                                    Voir Récits →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                container.innerHTML = '<div class="text-gray-500 py-2 text-xs">Erreur lors de la détection des modules.</div>';
+            }
+        }
+
+        async function loadOverviewPanels() {
+            try {
+                // Traces preview
+                const resT = await fetch(`/api/traces/tree?project=${encodeURIComponent(activeProject)}&limit=3`);
+                const dataT = await resT.json();
+                const cT = document.getElementById('overview-recent-traces');
+                if (cT && dataT.traces) {
+                    cT.innerHTML = dataT.traces.map(tr => {
+                        const isRej = tr.critique.status === 'REJECTED';
+                        const badgeColor = isRej ? 'bg-rose-950/80 text-cyberrose border-rose-500/40' : 'bg-emerald-950/80 text-cyberemerald border-emerald-500/40';
+                        return `
+                            <div class="p-2.5 rounded bg-cybercard border border-cyberborder/60 hover:border-cyan-500/40 transition">
+                                <div class="flex items-center justify-between mb-1 text-xs">
+                                    <span class="text-cyan-400 font-bold">${tr.agent_role.toUpperCase()}</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[10px] text-gray-500 font-tech">🕒 ${formatLocalTime(tr.timestamp, false)}</span>
+                                        <span class="px-1.5 py-0.2 rounded border text-[10px] ${badgeColor}">${tr.critique.status}</span>
+                                    </div>
+                                </div>
+                                <p class="text-gray-300 text-[11px] truncate">${tr.thinking ? tr.thinking.slice(0, 95) + '...' : 'Pas de délibération textuelle'}</p>
+                            </div>
+                        `;
+                    }).join('') || '<div class="text-gray-500 py-2">Aucune trace enregistrée.</div>';
+                }
+
+                // Checkpoints preview
+                const resR = await fetch(`/api/resilience/posture?project=${encodeURIComponent(activeProject)}`);
+                const dataR = await resR.json();
+                const cR = document.getElementById('overview-recent-checkpoints');
+                if (cR && dataR.detailed_checkpoints) {
+                    cR.innerHTML = dataR.detailed_checkpoints.slice(0, 3).map(pt => {
+                        const localTimeStr = formatLocalTime(pt.datetime_utc || pt.filename);
+                        return `
+                            <div class="p-2.5 rounded bg-cybercard border border-cyberborder/60 flex items-center justify-between">
+                                <div>
+                                    <div class="text-white font-bold text-xs">${pt.filename}</div>
+                                    <div class="text-[10px] text-cyan-300/80 font-tech">🕒 ${localTimeStr} · SHA-256: ${pt.sha256.slice(0, 12)}...</div>
+                                </div>
+                                <button onclick="copyToClipboard('${pt.sha256}', 'SHA-256')" class="px-2 py-1 text-[10px] rounded bg-cyan-950 border border-cyan-500/30 text-cybercyan hover:bg-cyan-900">Copier</button>
+                            </div>
+                        `;
+                    }).join('') || '<div class="text-gray-500 py-2">Aucun checkpoint trouvé.</div>';
                 }
             } catch (e) {}
+        }
 
-            if (loadData && tabName === 'ledger') {
-                loadLedger();
+        // ── 3. VUE SWARM & TOPOLOGIE ────────────────────────────────
+        async function loadSwarm() {
+            try {
+                const res = await fetch(`/api/swarm/topology?project=${encodeURIComponent(activeProject)}`);
+                const data = await res.json();
+                document.getElementById('swarm-unattended-badge').textContent = `${data.unattended_safe_count} Autorisés Unattended`;
+                document.getElementById('swarm-hitl-badge').textContent = `${data.hitl_required_count} HITL Requis`;
+
+                const grid = document.getElementById('swarm-agents-grid');
+                if (!grid) return;
+                grid.innerHTML = (data.agents || []).map(ag => {
+                    const isUnattended = ag.unattended_authorized;
+                    const badgeClass = isUnattended ? 'bg-emerald-950/80 text-cyberemerald border-emerald-500/40' : 'bg-amber-950/80 text-cyberamber border-amber-500/40';
+                    const blastClass = ag.blast_radius_level === 'MINIMAL' ? 'text-cyberemerald' : (ag.blast_radius_level === 'CONTROLLED' ? 'text-cyberamber' : 'text-cyberrose');
+
+                    return `
+                        <div class="glass-cyber p-5 rounded-xl border border-cyberborder hover:border-cyan-400/40 transition space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-base font-bold text-white font-tech uppercase flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                                    ${ag.name}
+                                </h3>
+                                <span class="px-2 py-0.5 rounded border text-[10px] font-tech ${badgeClass}">${isUnattended ? '🛡️ UNATTENDED' : '⚠️ HITL REQUIS'}</span>
+                            </div>
+                            <p class="text-xs text-gray-400 min-h-[32px]">${ag.description}</p>
+                            <div class="pt-2 border-t border-gray-800 space-y-2 text-xs font-tech">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Rayon d'Impact :</span>
+                                    <span class="font-bold ${blastClass}">${ag.blast_radius_level} (${ag.blast_score}/100)</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 block mb-1">Périmètres d'écriture :</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        ${ag.authorized_write_paths.map(p => `<span class="px-1.5 py-0.2 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-800/40 text-[10px]">${p}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 block mb-1">Zones strictement interdites :</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        ${ag.forbidden_paths.map(p => `<span class="px-1.5 py-0.2 rounded bg-rose-950/60 text-rose-300 border border-rose-800/40 text-[10px]">${p}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('Erreur swarm', e);
             }
         }
 
-        // 1. Charger Métriques
-        async function loadMetrics() {
+        
+        // ── 9. VUE BACKLOG & USER STORIES ──────────────────────────
+        async function loadBacklog() {
+            const container = document.getElementById('backlog-stories-container');
+            const pillsContainer = document.getElementById('backlog-module-pills');
+            const countBadge = document.getElementById('backlog-stories-count-badge');
+            if (!container) return;
+
+            // Render module pills
+            if (pillsContainer) {
+                const mods = allProjectModules[activeProject] || [];
+                let pillsHtml = `
+                    <button onclick="selectModule('ALL')" class="px-2.5 py-1 rounded text-xs transition ${activeModule === 'ALL' ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                        🌐 Tous (${mods.reduce((acc, x) => acc + (x.stories_count || 0), 0)})
+                    </button>
+                `;
+                mods.forEach(m => {
+                    const isSel = (activeModule === m.id);
+                    pillsHtml += `
+                        <button onclick="selectModule('${m.id}')" class="px-2.5 py-1 rounded text-xs transition ${isSel ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                            ${m.label} (${m.stories_count || 0})
+                        </button>
+                    `;
+                });
+                pillsContainer.innerHTML = pillsHtml;
+            }
+
             try {
-                const res = await fetch(`/api/metrics?project=${encodeURIComponent(currentProject)}`);
+                let url = `/api/stories?project=${encodeURIComponent(activeProject)}`;
+                if (activeModule && activeModule !== 'ALL') {
+                    url += `&module=${encodeURIComponent(activeModule)}`;
+                }
+                const res = await fetch(url);
                 const data = await res.json();
+                backlogRawStories = data.stories || [];
 
-                document.getElementById('kpi-cost').textContent = `$${data.total_cost_usd.toFixed(4)}`;
-                document.getElementById('kpi-tokens').textContent = data.total_tokens.toLocaleString();
-                document.getElementById('kpi-prompt-tokens').textContent = data.prompt_tokens.toLocaleString();
-                document.getElementById('kpi-completion-tokens').textContent = data.completion_tokens.toLocaleString();
-                document.getElementById('kpi-calls').textContent = data.total_calls;
+                if (countBadge) countBadge.textContent = `${data.total_stories} Stories (${data.project})`;
 
-                // Modèles
-                const modelsContainer = document.getElementById('models-list');
-                modelsContainer.innerHTML = "";
-                const maxCost = Math.max(...Object.values(data.models_breakdown).map(m => m.cost_usd), 0.001);
-                
-                if (Object.keys(data.models_breakdown).length === 0) {
-                    modelsContainer.innerHTML = `<div class="text-xs text-gray-500 italic">Aucune interaction LLM répertoriée pour ce projet.</div>`;
-                } else {
-                    for (const [mName, stats] of Object.entries(data.models_breakdown)) {
-                        const pct = Math.min(100, Math.round((stats.cost_usd / maxCost) * 100));
-                        modelsContainer.innerHTML += `
-                            <div class="space-y-1">
-                                <div class="flex justify-between text-xs font-mono">
-                                    <span class="text-gray-300 font-semibold truncate max-w-[240px]">${mName}</span>
-                                    <span class="text-cyan-400 font-bold">$${stats.cost_usd.toFixed(4)} (${stats.total_tokens.toLocaleString()} tok)</span>
-                                </div>
-                                <div class="w-full h-1.5 bg-darkborder rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full" style="width: ${pct}%"></div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
+                // KPIs
+                const activeCount = (data.status_counts?.['READY_FOR_DEV'] || 0) + (data.status_counts?.['IN_BUILD'] || 0);
+                const openCount = (data.status_counts?.['OPEN'] || 0) + (data.status_counts?.['IN_PLAN'] || 0) + (data.status_counts?.['IN_ANALYZE'] || 0);
+                const doneCount = (data.status_counts?.['DONE'] || 0) + (data.status_counts?.['ACCEPTED'] || 0);
+                const evCount = backlogRawStories.filter(s => s.has_evidence).length;
 
-                // Actions
-                const actionsContainer = document.getElementById('actions-list');
-                actionsContainer.innerHTML = "";
-                if (data.top_actions.length === 0) {
-                    actionsContainer.innerHTML = `<div class="text-xs text-gray-500 italic">Aucune action enregistrée.</div>`;
-                } else {
-                    data.top_actions.forEach(([act, stats]) => {
-                        actionsContainer.innerHTML += `
-                            <div class="flex items-center justify-between text-xs py-1 border-b border-darkborder/50">
-                                <span class="font-mono text-gray-300">${act}</span>
-                                <span class="text-gray-400 font-mono">${stats.calls}x • <b class="text-indigo-400">${stats.tokens.toLocaleString()} tok</b> ($${stats.cost_usd.toFixed(4)})</span>
-                            </div>
-                        `;
-                    });
-                }
-            } catch (err) {
-                console.error("Erreur métriques:", err);
+                document.getElementById('backlog-kpi-active').textContent = activeCount;
+                document.getElementById('backlog-kpi-open').textContent = openCount;
+                document.getElementById('backlog-kpi-done').textContent = doneCount;
+                document.getElementById('backlog-kpi-evidence').textContent = `${evCount} / ${data.total_stories}`;
+
+                renderBacklogList();
+            } catch (e) {
+                console.error('Erreur backlog', e);
+                container.innerHTML = `<div class="p-4 rounded bg-rose-950/40 border border-rose-800 text-rose-300">Erreur de chargement du backlog : ${e.message}</div>`;
             }
         }
 
-        // 2. Charger Événements Live
-        async function loadEvents() {
+        function onBacklogSearch(term) {
+            backlogSearchTerm = (term || '').toLowerCase().trim();
+            renderBacklogList();
+        }
+
+        function renderBacklogList() {
+            const container = document.getElementById('backlog-stories-container');
+            if (!container) return;
+
+            let stories = backlogRawStories;
+            if (backlogSearchTerm) {
+                stories = stories.filter(s => {
+                    const text = `${s.id} ${s.title} ${s.jira_key || ''} ${s.epic_key || ''} ${s.module || ''}`.toLowerCase();
+                    return text.includes(backlogSearchTerm);
+                });
+            }
+
+            if (stories.length === 0) {
+                container.innerHTML = '<div class="glass-cyber p-8 rounded-xl text-center text-gray-500">Aucune User Story ne correspond aux critères.</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="glass-cyber rounded-xl border border-cyberborder/60 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs font-tech">
+                            <thead class="text-gray-400 border-b border-gray-800 bg-cybercard/50">
+                                <tr>
+                                    <th class="py-2.5 px-3">ID Story</th>
+                                    <th class="py-2.5 px-3">Module Métier</th>
+                                    <th class="py-2.5 px-3">Titre & Récit</th>
+                                    <th class="py-2.5 px-3">Statut</th>
+                                    <th class="py-2.5 px-3">Jira</th>
+                                    <th class="py-2.5 px-3">Scénarios</th>
+                                    <th class="py-2.5 px-3 text-right">EvidencePack</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800/60">
+                                ${stories.map(s => {
+                                    const isDone = ['DONE', 'ACCEPTED'].includes(s.status);
+                                    const isReady = s.status === 'READY_FOR_DEV';
+                                    const isInBuild = s.status === 'IN_BUILD';
+                                    const badgeStatus = isDone 
+                                        ? 'bg-violet-950/80 text-cyberviolet border-violet-700/50' 
+                                        : (isReady ? 'bg-emerald-950/80 text-cyberemerald border-emerald-500/50' 
+                                        : (isInBuild ? 'bg-amber-950/80 text-cyberamber border-amber-500/50' : 'bg-gray-800 text-gray-300 border-gray-700'));
+
+                                    const evBadge = s.has_evidence 
+                                        ? `<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-cyberemerald border border-emerald-500/40 text-[10px]" title="${s.evidence_info?.total_items || 0} faits certifiés (Score: ${s.evidence_info?.confidence_score || 1.0})">✅ Pack Certifié</span>`
+                                        : '<span class="px-1.5 py-0.5 rounded bg-gray-800 text-gray-500 text-[10px]">⚪ Absent</span>';
+
+                                    const prettyMod = (s.module || 'default').replace('01-reception', '🐣 Réception').replace('02-incubation', '🥚 Incubation').replace('03-ventes', '🤝 Ventes').replace('OneTrust_FOOD', '🔒 OneTrust').replace('OneTrust_COMMERCE', '🔒 OneTrust').replace('OneTrust_SANTE', '🔒 OneTrust').replace('Metro_Food_Offers', '🏷️ Offres').replace('RBC_Avion', '✈️ RBC Avion');
+
+                                    return `
+                                        <tr class="hover:bg-cyan-950/20 transition">
+                                            <td class="py-2.5 px-3 font-bold text-cyan-300 whitespace-nowrap">
+                                                <button onclick="copyToClipboard('${s.id}', 'ID Story')" class="hover:underline">${s.id}</button>
+                                            </td>
+                                            <td class="py-2.5 px-3 text-gray-300 whitespace-nowrap">${prettyMod}</td>
+                                            <td class="py-2.5 px-3 text-white max-w-sm truncate" title="${s.title}">${s.title}</td>
+                                            <td class="py-2.5 px-3 whitespace-nowrap">
+                                                <span class="px-2 py-0.5 rounded border text-[10px] font-bold ${badgeStatus}">${s.status}</span>
+                                            </td>
+                                            <td class="py-2.5 px-3 text-gray-400 whitespace-nowrap font-mono text-[11px]">${s.jira_key || '-'}</td>
+                                            <td class="py-2.5 px-3 text-gray-300 whitespace-nowrap">
+                                                ${s.scenario_count > 0 ? `<span class="px-1.5 py-0.5 rounded bg-cyan-950/60 text-cyan-200 border border-cyan-800/40">${s.scenario_count} Gherkin</span>` : '<span class="text-gray-600">-</span>'}
+                                            </td>
+                                            <td class="py-2.5 px-3 text-right whitespace-nowrap">${evBadge}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ── 4. VUE TRACES ──────────────────────────────────────────
+        async function loadTraces() {
             try {
-                const res = await fetch(`/api/events?project=${encodeURIComponent(currentProject)}&limit=80&event_type=${activeEventType}`);
+                const role = document.getElementById('traces-filter-role').value;
+                const url = `/api/traces/tree?project=${encodeURIComponent(activeProject)}&limit=40${role ? `&role=${role}` : ''}`;
+                const res = await fetch(url);
                 const data = await res.json();
+                const container = document.getElementById('traces-list-container');
+                if (!container) return;
 
-                document.getElementById('kpi-events-count').textContent = data.total_captured.toLocaleString();
-                document.getElementById('events-stats-bar').textContent = `${data.count} événements affichés sur ${data.total_captured} capturés`;
-
-                const timeline = document.getElementById('events-timeline');
-                timeline.innerHTML = "";
-
-                if (data.events.length === 0) {
-                    timeline.innerHTML = `<div class="text-center py-8 text-xs text-gray-500 italic">Aucun événement ne correspond au filtre actif.</div>`;
+                if (!data.traces || data.traces.length === 0) {
+                    container.innerHTML = '<div class="glass-cyber p-8 rounded-xl text-center text-gray-500 font-tech text-xs">Aucune trace cognitive disponible pour ce filtre.</div>';
                     return;
                 }
 
-                data.events.forEach(ev => {
-                    const date = new Date(ev.timestamp);
-                    const timeStr = date.toLocaleTimeString();
-                    const type = ev.event_type || "EVENT";
-                    
-                    let badgeColor = "bg-gray-800 text-gray-300 border-gray-700";
-                    if (type === "STEP_S1") badgeColor = "bg-purple-950/80 text-purple-300 border-purple-800";
-                    else if (type === "STEP_S2") badgeColor = "bg-blue-950/80 text-blue-300 border-blue-800";
-                    else if (type === "MCP_CALL") badgeColor = "bg-cyan-950/80 text-cyan-300 border-cyan-800";
-                    else if (type === "VERIFICATION_GATE") badgeColor = "bg-emerald-950/80 text-emerald-300 border-emerald-800";
-                    else if (type.includes("FAIL") || type.includes("ERROR")) badgeColor = "bg-rose-950/80 text-rose-300 border-rose-800";
+                container.innerHTML = data.traces.map((tr, idx) => {
+                    const isRej = tr.critique.status === 'REJECTED';
+                    const badgeClass = isRej ? 'bg-rose-950/90 text-cyberrose border-rose-500/50' : 'bg-emerald-950/90 text-cyberemerald border-emerald-500/50';
+                    const stampText = isRej ? '🟥 REJECTED (GATE_BLOCK)' : '🟩 VERIFIED (SENTINEL_PASSED)';
 
-                    timeline.innerHTML += `
-                        <div class="glass-card p-3 rounded-lg flex flex-col gap-1.5 text-xs hover:border-gray-700 transition">
-                            <div class="flex items-center justify-between flex-wrap gap-2">
+                    return `
+                        <div class="glass-cyber p-4 rounded-xl border border-cyberborder space-y-3 font-tech">
+                            <div class="flex items-center justify-between flex-wrap gap-2 text-xs">
                                 <div class="flex items-center gap-2">
-                                    <span class="px-2 py-0.5 rounded border text-[10px] font-mono font-bold ${badgeColor}">${type}</span>
-                                    <span class="font-semibold text-gray-200">${ev.agent || "mLoop"}</span>
+                                    <span class="text-cyan-400 font-bold text-sm">${tr.agent_role.toUpperCase()}</span>
+                                    <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-400 text-[10px]">${tr.trace_id}</span>
+                                    <span class="text-gray-500 text-[11px]">🕒 ${formatLocalTime(tr.timestamp, true)}</span>
                                 </div>
-                                <span class="text-gray-500 font-mono text-[11px]">${timeStr}</span>
+                                <span class="px-2 py-0.5 rounded border text-[11px] font-bold ${badgeClass}">${stampText}</span>
                             </div>
-                            <div class="text-gray-400 font-mono text-[11px] overflow-hidden truncate">
-                                ${ev.details ? (ev.details.action || ev.details.msg || JSON.stringify(ev.details)) : "Action standard"}
-                            </div>
-                            ${ev.details && Object.keys(ev.details).length > 1 ? `
-                                <details class="text-[10px] text-gray-500 mt-1 cursor-pointer">
-                                    <summary class="hover:text-gray-300">Détails JSON</summary>
-                                    <pre class="bg-black/50 p-2 rounded mt-1 overflow-x-auto text-gray-400 font-mono">${JSON.stringify(ev.details, null, 2)}</pre>
-                                </details>
+
+                            ${tr.target_file ? `<div class="text-[11px] text-gray-400">Cible : <span class="text-cyan-300 font-bold">${tr.target_file}</span></div>` : ''}
+
+                            <!-- THINKING DELIBERATION TERMINAL -->
+                            ${tr.thinking ? `
+                                <div class="rounded-lg bg-[#02040a] p-3 border border-cyan-950 space-y-1">
+                                    <div class="text-[10px] uppercase text-cyan-500 font-bold flex items-center justify-between">
+                                        <span>&lt;thinking&gt; Délibération Cognitive :</span>
+                                        <button onclick="copyToClipboard(\`${tr.thinking.replace(/`/g, '\\`')}\`, 'Thinking')" class="text-gray-500 hover:text-cyan-400">Copier</button>
+                                    </div>
+                                    <pre class="text-xs text-cyan-200/90 whitespace-pre-wrap leading-relaxed">${tr.thinking}</pre>
+                                </div>
+                            ` : ''}
+
+                            <!-- CRITIQUE SENTINEL SI REJET -->
+                            ${tr.critique.blocking_issues && tr.critique.blocking_issues.length > 0 ? `
+                                <div class="p-3 rounded-lg bg-rose-950/30 border border-rose-800/40 text-xs text-rose-300 space-y-1">
+                                    <div class="font-bold flex items-center gap-1.5">
+                                        <span>⚠️</span> Issues Bloquantes Relevées par Sentinel :
+                                    </div>
+                                    <ul class="list-disc list-inside space-y-0.5 pl-2 text-[11px]">
+                                        ${tr.critique.blocking_issues.map(iss => `<li>${iss}</li>`).join('')}
+                                    </ul>
+                                </div>
                             ` : ''}
                         </div>
                     `;
-                });
-            } catch (err) {
-                console.error("Erreur événements:", err);
+                }).join('');
+            } catch (e) {
+                console.error('Erreur traces', e);
             }
         }
 
-        function filterEvents(type) {
-            activeEventType = type;
-            localStorage.setItem('mloop_events_filter', type);
-            document.querySelectorAll('.event-filter-btn').forEach(btn => {
-                if (btn.getAttribute('data-type') === type) {
-                    btn.classList.add('bg-cyan-600', 'text-white');
-                    btn.classList.remove('bg-darkcard', 'text-gray-300');
-                } else {
-                    btn.classList.remove('bg-cyan-600', 'text-white');
-                    btn.classList.add('bg-darkcard', 'text-gray-300');
-                }
-            });
-            loadEvents();
-        }
-
-        // 3. Charger Backlog & Stories
-        async function loadStories() {
+        // ── 5. VUE RÉSILIENCE ──────────────────────────────────────
+        async function loadResilience() {
             try {
-                const res = await fetch(`/api/stories?project=${encodeURIComponent(currentProject)}`);
+                const res = await fetch(`/api/resilience/posture?project=${encodeURIComponent(activeProject)}`);
                 const data = await res.json();
 
-                document.getElementById('kpi-stories-count').textContent = data.total_stories;
-                const withEvidence = data.stories.filter(s => s.has_evidence).length;
-                document.getElementById('kpi-evidence-count').textContent = `${withEvidence} / ${data.total_stories}`;
-                document.getElementById('stories-summary-badge').textContent = `${data.total_stories} Récits découverts`;
+                document.getElementById('resilience-posture-badge').textContent = `POSTURE : ${data.status} (${data.resilience_index}/100)`;
+                document.getElementById('res-cp-count').textContent = data.checkpoints.count;
+                document.getElementById('res-ev-score').textContent = `${data.evidence.score}%`;
+                document.getElementById('res-ev-ratio').textContent = `${data.evidence.valid}/${data.evidence.total} validés sans falsification`;
+                document.getElementById('res-mem-status').textContent = data.memory_hygiene.ok ? 'CONFORME' : 'ALERTE PLAFOND';
+                document.getElementById('res-mem-details').textContent = `${data.memory_hygiene.lines} lignes / 200 max (${data.memory_hygiene.bytes} octets)`;
 
-                const tbody = document.getElementById('stories-table-body');
-                tbody.innerHTML = "";
-
-                if (data.stories.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500 font-sans">Aucun récit trouvé dans le backlog de ce projet.</td></tr>`;
-                    return;
-                }
-
-                data.stories.forEach(s => {
-                    let statusColor = "bg-gray-800 text-gray-300 border-gray-700";
-                    if (s.status === "DONE" || s.status === "ACCEPTED") statusColor = "bg-emerald-950 text-emerald-300 border-emerald-800";
-                    else if (s.status === "READY_FOR_DEV") statusColor = "bg-cyan-950 text-cyan-300 border-cyan-800";
-                    else if (s.status === "IN_ANALYZE" || s.status === "IN_PLAN") statusColor = "bg-indigo-950 text-indigo-300 border-indigo-800";
-                    else if (s.status === "IN_BUILD") statusColor = "bg-amber-950 text-amber-300 border-amber-800";
-
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-darkcard/50 transition">
-                            <td class="p-3 font-bold text-cyan-300">${s.id}</td>
-                            <td class="p-3 text-gray-200 font-sans max-w-xs truncate" title="${s.title}">${s.title}</td>
-                            <td class="p-3">
-                                <span class="px-2 py-0.5 rounded border text-[10px] font-bold ${statusColor}">${s.status}</span>
-                            </td>
-                            <td class="p-3 text-gray-400">${s.type}</td>
-                            <td class="p-3 text-gray-400">${s.scenario_count} scénario(s)</td>
-                            <td class="p-3">
-                                ${s.has_evidence ? `
-                                    <span class="inline-flex items-center gap-1 text-emerald-400 text-[11px] font-sans font-medium" title="EvidencePack généré">
-                                        🛡️ SHA-256 Validé
-                                    </span>
-                                ` : `
-                                    <span class="text-gray-600 text-[11px] font-sans">En attente</span>
-                                `}
-                            </td>
-                        </tr>
+                // Table des checkpoints
+                const tc = document.getElementById('checkpoints-table-container');
+                if (tc && data.detailed_checkpoints) {
+                    tc.innerHTML = `
+                        <table class="w-full text-left text-xs font-tech">
+                            <thead class="text-gray-400 border-b border-gray-800">
+                                <tr>
+                                    <th class="py-2">Étape</th>
+                                    <th class="py-2">Fichier Horodaté</th>
+                                    <th class="py-2">Phase</th>
+                                    <th class="py-2">Empreinte SHA-256</th>
+                                    <th class="py-2 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                ${data.detailed_checkpoints.map(pt => {
+                                    const localTime = formatLocalTime(pt.datetime_utc || pt.filename, true);
+                                    return `
+                                    <tr class="hover:bg-cyan-950/20">
+                                        <td class="py-2.5 font-bold text-cybercyan">#${pt.step}</td>
+                                        <td class="py-2.5 text-white">
+                                            <div class="font-bold text-cyan-300">🕒 ${localTime}</div>
+                                            <div class="text-[10px] text-gray-500 font-mono">${pt.filename}</div>
+                                        </td>
+                                        <td class="py-2.5"><span class="px-1.5 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px]">${pt.phase}</span></td>
+                                        <td class="py-2.5 text-gray-400 font-mono">${pt.sha256.slice(0, 20)}...</td>
+                                        <td class="py-2.5 text-right">
+                                            <button onclick="copyToClipboard('python src/swarm.py rollback --step ${pt.step}', 'Commande Rollback')" class="px-2 py-1 rounded bg-cyan-950 border border-cyan-500/40 text-cybercyan hover:bg-cyan-900 text-[10px]">
+                                                Commande Rollback
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
                     `;
-                });
-            } catch (err) {
-                console.error("Erreur stories:", err);
-            }
-        }
-
-        // 4. Charger Graphe
-        async function loadGraph() {
-            try {
-                const res = await fetch(`/api/graph?project=${encodeURIComponent(currentProject)}`);
-                const data = await res.json();
-
-                document.getElementById('graph-total-nodes').textContent = data.total_nodes.toLocaleString();
-                document.getElementById('graph-total-edges').textContent = data.total_edges.toLocaleString();
-
-                const container = document.getElementById('graph-sample-nodes');
-                container.innerHTML = "";
-
-                if (data.sample_nodes.length === 0) {
-                    container.innerHTML = `<div class="text-xs text-gray-500 italic col-span-3">Graphe non initialisé ou vide pour ce projet.</div>`;
-                    return;
                 }
-
-                data.sample_nodes.forEach(n => {
-                    container.innerHTML += `
-                        <div class="p-3 rounded-lg bg-darkcard border border-darkborder flex flex-col gap-1 text-xs">
-                            <div class="font-mono font-bold text-cyan-300 truncate">${n.id || n.name}</div>
-                            <div class="text-[11px] text-gray-400 truncate">${n.type || n.layer || "Entité"}</div>
-                        </div>
-                    `;
-                });
-            } catch (err) {
-                console.error("Erreur graphe:", err);
+            } catch (e) {
+                console.error('Erreur resilience', e);
             }
         }
 
-        // 5. Charger État du Cycle
-        async function loadState() {
+        // ── 6. VUE DREAM RSI ───────────────────────────────────────
+        async function loadDreamRSI() {
             try {
-                const res = await fetch(`/api/state?project=${encodeURIComponent(currentProject)}`);
-                const data = await res.json();
-                const stepper = document.getElementById('phases-stepper');
-                stepper.innerHTML = "";
-
-                data.phases.forEach(p => {
-                    let color = "border-gray-800 bg-darkcard/50 text-gray-500";
-                    let badge = "En attente";
-                    if (p.status === "COMPLETED") {
-                        color = "border-emerald-800 bg-emerald-950/40 text-emerald-300";
-                        badge = "✓ Validé";
-                    } else if (p.status === "IN_PROGRESS") {
-                        color = "border-cyan-800 bg-cyan-950/40 text-cyan-300 animate-pulse";
-                        badge = "● En cours";
-                    }
-
-                    stepper.innerHTML += `
-                        <div class="p-3 rounded-lg border ${color} flex flex-col justify-between gap-1.5">
-                            <span class="text-xs font-semibold">${p.name}</span>
-                            <span class="text-[10px] font-mono font-bold opacity-80">${badge}</span>
-                        </div>
-                    `;
-                });
-            } catch (err) {
-                console.error("Erreur state:", err);
-            }
-        }
-
-        // 6. Charger Token Ledger
-        async function loadLedger() {
-            try {
-                const dateStart = document.getElementById('ledger-date-start')?.value || '';
-                const dateEnd = document.getElementById('ledger-date-end')?.value || '';
-                const source = document.getElementById('ledger-source-select')?.value || localStorage.getItem('mloop_ledger_source') || '';
-                const model = document.getElementById('ledger-model-select')?.value || localStorage.getItem('mloop_ledger_model') || '';
-                const action = document.getElementById('ledger-action-select')?.value || localStorage.getItem('mloop_ledger_action') || '';
-                const search = document.getElementById('ledger-search-input')?.value || '';
-
-                const params = new URLSearchParams({
-                    project: currentProject,
-                    page: ledgerCurrentPage,
-                    page_size: ledgerPageSize,
-                });
-                if (dateStart) params.append('start_date', dateStart);
-                if (dateEnd) params.append('end_date', dateEnd);
-                if (source) params.append('source', source);
-                if (model) params.append('model', model);
-                if (action) params.append('action', action);
-                if (search) params.append('search', search);
-
-                const res = await fetch(`/api/ledger?${params.toString()}`);
+                const res = await fetch(`/api/dream-rsi/summary?project=${encodeURIComponent(activeProject)}`);
                 const data = await res.json();
 
-                // 1. Synthèse globale & bi-source
-                if (data.global_summary) {
-                    const gTok = document.getElementById('ledger-global-tokens');
-                    const gCost = document.getElementById('ledger-global-cost');
-                    const gCalls = document.getElementById('ledger-global-calls');
-                    if (gTok) gTok.textContent = data.global_summary.total_tokens.toLocaleString();
-                    if (gCost) gCost.textContent = `$${data.global_summary.total_cost_usd.toFixed(4)}`;
-                    if (gCalls) gCalls.textContent = `${data.global_summary.total_calls.toLocaleString()} appels`;
+                document.getElementById('rsi-applied-badge').textContent = data.applied_on_disk ? 'POLITIQUE : PERSISTÉE SUR DISQUE' : 'POLITIQUE : SIMULATION ONLY';
+                document.getElementById('rsi-gain-badge').textContent = `+${data.selected_policy.gain_vs_pi0.toFixed(1)}% vs π₀`;
+                document.getElementById('rsi-bottleneck-label').textContent = `Goulot : ${data.harness_diagnosis.primary_bottleneck}`;
 
-                    // Ventilation bi-source
-                    if (data.global_summary.by_source) {
-                        const nm = data.global_summary.by_source.llm_nmedia_cloud || data.global_summary.by_source.nmedia_cloud || {tokens: 0, cost_usd: 0};
-                        const gg = data.global_summary.by_source['antigravity-chat'] || data.global_summary.by_source.Google || {tokens: 0, cost_usd: 0};
-                        const elNm = document.getElementById('ledger-source-nmedia');
-                        const elNmC = document.getElementById('ledger-source-nmedia-cost');
-                        const elGg = document.getElementById('ledger-source-google');
-                        const elGgC = document.getElementById('ledger-source-google-cost');
-                        if (elNm) elNm.textContent = `${nm.tokens.toLocaleString()} tok`;
-                        if (elNmC) elNmC.textContent = `$${nm.cost_usd.toFixed(4)}`;
-                        if (elGg) elGg.textContent = `${gg.tokens.toLocaleString()} tok`;
-                        if (elGgC) elGgC.textContent = `$${gg.cost_usd.toFixed(4)}`;
-                    }
-
-                    // Ventilation top projets
-                    const projBreakdown = document.getElementById('ledger-projects-breakdown');
-                    if (projBreakdown) {
-                        projBreakdown.innerHTML = '';
-                        const projs = Object.entries(data.global_summary.by_project || {});
-                        if (projs.length === 0) {
-                            projBreakdown.innerHTML = '<div class="text-xs text-gray-500 italic">Aucune donnée projet.</div>';
-                        } else {
-                            projs.slice(0, 6).forEach(([pName, pStats]) => {
-                                const isCurrent = (currentProject === pName);
-                                projBreakdown.innerHTML += `
-                                    <div onclick="selectLedgerProject('${pName}')" class="flex items-center justify-between text-xs py-0.5 px-1.5 rounded cursor-pointer transition ${isCurrent ? 'bg-cyan-950/80 border border-cyan-800' : 'hover:bg-darkcard'}" title="Filtrer sur ${pName}">
-                                        <span class="text-gray-300 font-semibold truncate max-w-[130px]">${pName}</span>
-                                        <span class="text-gray-400 font-mono text-[11px]">${pStats.tokens.toLocaleString()} tok <b class="text-emerald-400">($${pStats.cost_usd.toFixed(3)})</b></span>
-                                    </div>
-                                `;
-                            });
+                // Radar Chart Chart.js
+                const dist = data.harness_diagnosis.distribution;
+                const ctx = document.getElementById('rsiRadarChart');
+                if (ctx) {
+                    if (radarChartInstance) radarChartInstance.destroy();
+                    radarChartInstance = new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['Memory', 'Tooling', 'Gate', 'Prompt'],
+                            datasets: [{
+                                label: 'Répartition des Défaillances (%)',
+                                data: [dist.Memory || 25, dist.Tooling || 25, dist.Gate || 25, dist.Prompt || 25],
+                                backgroundColor: 'rgba(168, 85, 247, 0.25)',
+                                borderColor: '#a855f7',
+                                pointBackgroundColor: '#00f2fe',
+                                pointBorderColor: '#fff',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                r: {
+                                    angleLines: { color: 'rgba(56, 189, 248, 0.2)' },
+                                    grid: { color: 'rgba(56, 189, 248, 0.15)' },
+                                    pointLabels: { color: '#38bdf8', font: { family: 'monospace', size: 11 } },
+                                    ticks: { display: false, max: 100, min: 0 }
+                                }
+                            },
+                            plugins: { legend: { display: false } }
                         }
-                    }
+                    });
                 }
 
-                // 2. Synthèse filtrée
-                const fTok = document.getElementById('ledger-filtered-tokens');
-                const fCost = document.getElementById('ledger-filtered-cost');
-                const fEntries = document.getElementById('ledger-filtered-entries');
-                const sBadge = document.getElementById('ledger-status-badge');
-                if (fTok) fTok.textContent = data.filtered_tokens.toLocaleString();
-                if (fCost) fCost.textContent = `$${data.filtered_cost_usd.toFixed(4)}`;
-                if (fEntries) fEntries.textContent = `${data.total_entries.toLocaleString()} entrées`;
-                if (sBadge) sBadge.textContent = `${data.total_entries.toLocaleString()} entrées répertoriées`;
-
-                // 3. Dropdowns de filtres
-                updateLedgerDropdowns(data.available_models, data.available_actions);
-
-                // 4. Pagination
-                ledgerCurrentPage = data.page;
-                ledgerTotalPages = data.total_pages;
-                const pInd = document.getElementById('ledger-page-indicator');
-                const pIndBot = document.getElementById('ledger-page-indicator-bottom');
-                if (pInd) pInd.textContent = `Page ${data.page} / ${data.total_pages}`;
-                if (pIndBot) pIndBot.textContent = `${data.page} / ${data.total_pages}`;
-
-                const prev1 = document.getElementById('ledger-prev-btn');
-                const prev2 = document.getElementById('ledger-prev-btn-bottom');
-                const next1 = document.getElementById('ledger-next-btn');
-                const next2 = document.getElementById('ledger-next-btn-bottom');
-                if (prev1) prev1.disabled = (data.page <= 1);
-                if (prev2) prev2.disabled = (data.page <= 1);
-                if (next1) next1.disabled = (data.page >= data.total_pages);
-                if (next2) next2.disabled = (data.page >= data.total_pages);
-
-                const startIdx = (data.page - 1) * data.page_size + (data.entries.length > 0 ? 1 : 0);
-                const endIdx = startIdx + data.entries.length - (data.entries.length > 0 ? 1 : 0);
-                const footInfo = document.getElementById('ledger-footer-info');
-                if (footInfo) footInfo.textContent = `Affichage de ${startIdx.toLocaleString()} à ${endIdx.toLocaleString()} sur ${data.total_entries.toLocaleString()} entrées`;
-
-                // 5. Table des interactions
-                const tbody = document.getElementById('ledger-table-body');
-                if (!tbody) return;
-                tbody.innerHTML = '';
-
-                if (data.entries.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-gray-500 font-sans italic">Aucune interaction LLM ne correspond aux filtres sélectionnés.</td></tr>`;
-                    return;
+                // Recommandations
+                const recs = document.getElementById('rsi-recommendations');
+                if (recs && data.harness_diagnosis.recommendations) {
+                    recs.innerHTML = data.harness_diagnosis.recommendations.map(r => `<div>• ${r}</div>`).join('');
                 }
 
-                data.entries.forEach(e => {
-                    const date = new Date(e.timestamp);
-                    const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                    const pName = e.project_display || e.project || 'Memory Loop';
-                    const cost = typeof e.cost_usd_est === 'number' ? e.cost_usd_est.toFixed(4) : (e.cost_usd_est || '0.0000');
-                    const totalToks = (e.total_tokens_est || 0).toLocaleString();
-                    const promptToks = (e.prompt_tokens_est || 0).toLocaleString();
-                    const compToks = (e.completion_tokens_est || 0).toLocaleString();
-                    const action = e.action || 'llm-call';
-                    const model = e.model || 'unknown';
-                    const target = e.target || '—';
-                    const sourceVal = e.source || 'llm_nmedia_cloud';
-
-                    let sourceBadge = `<span class="px-2 py-0.5 rounded border text-[10px] font-bold bg-indigo-950/80 text-indigo-300 border-indigo-700/60" title="Proxy LiteLLM d'entreprise (Nmédia Solutions)">☁️ llm_nmedia_cloud</span>`;
-                    if (sourceVal === 'antigravity-chat' || sourceVal === 'Google') {
-                        sourceBadge = `<span class="px-2 py-0.5 rounded border text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border-emerald-700/60" title="Session IDE Antigravity (Google DeepMind)">🌐 antigravity-chat</span>`;
-                    }
-
-                    let actBadge = 'bg-gray-800 text-gray-300 border-gray-700';
-                    if (action.includes('rubber-duck')) actBadge = 'bg-amber-950/80 text-amber-300 border-amber-800';
-                    else if (action.includes('grill')) actBadge = 'bg-rose-950/80 text-rose-300 border-rose-800';
-                    else if (action.includes('sentinel')) actBadge = 'bg-purple-950/80 text-purple-300 border-purple-800';
-                    else if (action.includes('vibe')) actBadge = 'bg-emerald-950/80 text-emerald-300 border-emerald-800';
-                    else if (action.includes('plan')) actBadge = 'bg-blue-950/80 text-blue-300 border-blue-800';
-                    else if (action.includes('sync') || action.includes('notebooklm')) actBadge = 'bg-cyan-950/80 text-cyan-300 border-cyan-800';
-                    else if (action.includes('chat_turn') || action.includes('chat')) actBadge = 'bg-teal-950/80 text-teal-300 border-teal-800';
-                    else if (action.includes('command') || action.includes('run_command')) actBadge = 'bg-orange-950/80 text-orange-300 border-orange-800';
-                    else if (action.includes('file') || action.includes('grep') || action.includes('write')) actBadge = 'bg-sky-950/80 text-sky-300 border-sky-800';
-                    else if (action.includes('browser') || action.includes('subagent')) actBadge = 'bg-fuchsia-950/80 text-fuchsia-300 border-fuchsia-800';
-
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-darkcard/50 transition">
-                            <td class="p-3 text-gray-400 whitespace-nowrap text-[11px]">${dateStr}</td>
-                            <td class="p-3 whitespace-nowrap">${sourceBadge}</td>
-                            <td class="p-3">
-                                <span class="px-2 py-0.5 rounded bg-darkcard border border-darkborder text-gray-300 text-[11px] font-semibold">${pName}</span>
-                            </td>
-                            <td class="p-3 text-cyan-300 font-semibold whitespace-nowrap">${model}</td>
-                            <td class="p-3">
-                                <span class="px-2 py-0.5 rounded border text-[10px] font-bold ${actBadge}">${action}</span>
-                            </td>
-                            <td class="p-3 text-gray-300 font-sans max-w-xs truncate" title="${target}">
-                                ${target}
-                            </td>
-                            <td class="p-3 text-right">
-                                <span class="font-bold text-indigo-400">${totalToks}</span>
-                                <div class="text-[10px] text-gray-500">${promptToks}p / ${compToks}c</div>
-                            </td>
-                            <td class="p-3 text-right font-bold text-emerald-400 font-mono whitespace-nowrap">
-                                $${cost}
-                            </td>
-                            <td class="p-3 text-center">
-                                ${(e.context_contributors && e.context_contributors.length > 0) || e.metadata ? `
-                                    <details class="text-[10px] text-gray-500 cursor-pointer">
-                                        <summary class="hover:text-cyan-400 select-none">Détails</summary>
-                                        <div class="bg-black/80 p-2 rounded mt-1 text-left text-gray-400 font-mono max-w-xs overflow-x-auto">
-                                            ${e.key_label ? `<div class="text-[10px] text-gray-400 mb-1">Source: ${sourceVal} • Clé: ${e.key_label} (${e.key_masked || ''})</div>` : ''}
-                                            ${e.context_contributors ? `<div class="text-gray-400 font-semibold mb-1">Sources (${e.context_contributors.length}):</div><ul class="list-disc pl-3 text-[10px] space-y-0.5">${e.context_contributors.map(c => `<li>${c}</li>`).join('')}</ul>` : ''}
-                                        </div>
-                                    </details>
-                                ` : '<span class="text-gray-600">—</span>'}
-                            </td>
-                        </tr>
+                // Policy details
+                const pol = data.selected_policy;
+                const polDetails = document.getElementById('rsi-policy-details');
+                if (polDetails) {
+                    polDetails.innerHTML = `
+                        <div class="p-3 rounded bg-cybercard border border-cyberborder space-y-1.5">
+                            <div class="text-sm font-bold text-white">${pol.name}</div>
+                            <div class="grid grid-cols-2 gap-2 text-gray-400 text-[11px] pt-1 border-t border-gray-800">
+                                <div>Branching : <span class="text-cyan-300 font-bold">${pol.branching_factor}</span></div>
+                                <div>Patience : <span class="text-cyan-300 font-bold">${pol.patience}</span></div>
+                                <div>Seuil d'Arrêt : <span class="text-cyan-300 font-bold">${pol.early_stopping_threshold}</span></div>
+                                <div>Stratégie : <span class="text-cyan-300 font-bold">${pol.strategy}</span></div>
+                            </div>
+                            <div class="text-xs text-cyberemerald pt-1 font-bold">Taux de Succès Simulé : ${pol.success_rate}%</div>
+                        </div>
                     `;
-                });
-            } catch (err) {
-                console.error("Erreur chargement ledger:", err);
-            }
-        }
-
-        function updateLedgerDropdowns(models, actions) {
-            const modelSel = document.getElementById('ledger-model-select');
-            const actSel = document.getElementById('ledger-action-select');
-            if (!modelSel || !actSel) return;
-
-            const savedModel = localStorage.getItem('mloop_ledger_model') || '';
-            const savedAct = localStorage.getItem('mloop_ledger_action') || '';
-            const currentModel = modelSel.value || savedModel;
-            const currentAct = actSel.value || savedAct;
-
-            if (models && modelSel.options.length <= 1) {
-                models.forEach(m => {
-                    const opt = document.createElement('option');
-                    opt.value = m;
-                    opt.textContent = m;
-                    if (m === currentModel) opt.selected = true;
-                    modelSel.appendChild(opt);
-                });
-                if (currentModel) modelSel.value = currentModel;
-            }
-
-            if (actions && actSel.options.length <= 1) {
-                actions.forEach(a => {
-                    const opt = document.createElement('option');
-                    opt.value = a;
-                    opt.textContent = a;
-                    if (a === currentAct) opt.selected = true;
-                    actSel.appendChild(opt);
-                });
-                if (currentAct) actSel.value = currentAct;
-            }
-        }
-
-        function onLedgerFilterChange() {
-            const dStart = document.getElementById('ledger-date-start')?.value || '';
-            const dEnd = document.getElementById('ledger-date-end')?.value || '';
-            const source = document.getElementById('ledger-source-select')?.value || '';
-            const model = document.getElementById('ledger-model-select')?.value || '';
-            const action = document.getElementById('ledger-action-select')?.value || '';
-
-            localStorage.setItem('mloop_ledger_date_start', dStart);
-            localStorage.setItem('mloop_ledger_date_end', dEnd);
-            localStorage.setItem('mloop_ledger_source', source);
-            localStorage.setItem('mloop_ledger_model', model);
-            localStorage.setItem('mloop_ledger_action', action);
-
-            ledgerCurrentPage = 1;
-            localStorage.setItem('mloop_ledger_page', '1');
-            loadLedger();
-        }
-
-        function onLedgerPageSizeChange() {
-            const sel = document.getElementById('ledger-pagesize-select');
-            ledgerPageSize = parseInt(sel.value, 10) || 50;
-            localStorage.setItem('mloop_ledger_pagesize', ledgerPageSize.toString());
-            ledgerCurrentPage = 1;
-            localStorage.setItem('mloop_ledger_page', '1');
-            loadLedger();
-        }
-
-        function onLedgerSearchInput() {
-            const searchVal = document.getElementById('ledger-search-input')?.value || '';
-            localStorage.setItem('mloop_ledger_search', searchVal);
-            if (ledgerSearchDebounce) clearTimeout(ledgerSearchDebounce);
-            ledgerSearchDebounce = setTimeout(() => {
-                ledgerCurrentPage = 1;
-                localStorage.setItem('mloop_ledger_page', '1');
-                loadLedger();
-            }, 350);
-        }
-
-        function ledgerGoPage(p) {
-            if (p < 1 || p > ledgerTotalPages) return;
-            ledgerCurrentPage = p;
-            localStorage.setItem('mloop_ledger_page', p.toString());
-            loadLedger();
-        }
-
-        function resetLedgerFilters() {
-            const dStart = document.getElementById('ledger-date-start');
-            const dEnd = document.getElementById('ledger-date-end');
-            const sSrc = document.getElementById('ledger-source-select');
-            const mSel = document.getElementById('ledger-model-select');
-            const aSel = document.getElementById('ledger-action-select');
-            const sInput = document.getElementById('ledger-search-input');
-            const pSize = document.getElementById('ledger-pagesize-select');
-
-            if (dStart) dStart.value = '';
-            if (dEnd) dEnd.value = '';
-            if (sSrc) sSrc.value = '';
-            if (mSel) mSel.value = '';
-            if (aSel) aSel.value = '';
-            if (sInput) sInput.value = '';
-            if (pSize) pSize.value = '50';
-
-            localStorage.removeItem('mloop_ledger_date_start');
-            localStorage.removeItem('mloop_ledger_date_end');
-            localStorage.removeItem('mloop_ledger_source');
-            localStorage.removeItem('mloop_ledger_model');
-            localStorage.removeItem('mloop_ledger_action');
-            localStorage.removeItem('mloop_ledger_search');
-            localStorage.removeItem('mloop_ledger_pagesize');
-            localStorage.removeItem('mloop_ledger_page');
-
-            ledgerCurrentPage = 1;
-            ledgerPageSize = 50;
-            loadLedger();
-        }
-
-        function filterBySource(srcName) {
-            const sSel = document.getElementById('ledger-source-select');
-            if (sSel) {
-                if (sSel.value === srcName) {
-                    sSel.value = "";
-                } else {
-                    sSel.value = srcName;
                 }
-                onLedgerFilterChange();
+
+                // Candidates table
+                const candTable = document.getElementById('rsi-candidates-table');
+                if (candTable && data.candidates_frontier) {
+                    candTable.innerHTML = `
+                        <table class="w-full text-left text-[11px] font-tech">
+                            <thead class="text-gray-400 border-b border-gray-800">
+                                <tr>
+                                    <th class="py-1">Méta-Politique</th>
+                                    <th class="py-1">b</th>
+                                    <th class="py-1">p</th>
+                                    <th class="py-1">Succès</th>
+                                    <th class="py-1 text-right">Gain vs π₀</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                ${data.candidates_frontier.map(c => `
+                                    <tr class="hover:bg-cyan-950/20">
+                                        <td class="py-1 text-white">${c.name}</td>
+                                        <td class="py-1 text-cyan-300">${c.branching}</td>
+                                        <td class="py-1 text-cyan-300">${c.patience}</td>
+                                        <td class="py-1 text-gray-300">${c.success_rate}%</td>
+                                        <td class="py-1 text-right font-bold ${c.gain_vs_pi0 > 0 ? 'text-cyberemerald' : 'text-gray-400'}">+${c.gain_vs_pi0}%</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+            } catch (e) {
+                console.error('Erreur dream rsi', e);
             }
         }
 
-        function selectLedgerProject(pName) {
-            const sel = document.getElementById('project-selector');
-            if (sel) {
-                sel.value = pName;
-                onProjectChange();
+        // ── 7. VUE GOUVERNANCE ─────────────────────────────────────
+        async function loadGovernance() {
+            try {
+                const res = await fetch(`/api/governance/gates?project=${encodeURIComponent(activeProject)}`);
+                const data = await res.json();
+                document.getElementById('gov-current-stage-badge').textContent = `ÉTAPE : ${data.current_stage}`;
+
+                const runway = document.getElementById('governance-runway-container');
+                if (!runway) return;
+
+                runway.innerHTML = (data.gates || []).map(g => {
+                    const isApp = g.is_approved;
+                    const isAct = g.is_active_target;
+                    const cardBorder = isApp ? 'border-emerald-500/40 bg-emerald-950/20' : (isAct ? 'border-cyan-400 cyber-glow-cyan bg-cyan-950/25' : 'border-gray-800 bg-cybercard');
+                    const statusText = isApp ? 'VALIDÉE (PASS)' : (isAct ? 'EN COURS (CIBLE ACTIVE)' : 'À VENIR');
+                    const statusClass = isApp ? 'bg-emerald-950 text-cyberemerald border-emerald-500/50' : (isAct ? 'bg-cyan-950 text-cybercyan border-cyan-400' : 'bg-gray-900 text-gray-500 border-gray-800');
+
+                    return `
+                        <div class="glass-cyber p-5 rounded-xl border ${cardBorder} space-y-3 relative overflow-hidden">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-extrabold font-tech text-white">GATE ${g.gate_number}</span>
+                                <span class="px-2 py-0.5 rounded border text-[10px] font-tech font-bold ${statusClass}">${statusText}</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-cyan-200 font-tech">${g.name}</h3>
+                            <p class="text-xs text-gray-400 min-h-[32px]">${g.description}</p>
+                            <div class="pt-2 border-t border-gray-800 flex items-center justify-between text-[11px] font-tech">
+                                <span class="text-gray-500">${g.from_stage} → ${g.to_stage}</span>
+                                ${isAct ? `
+                                    <button onclick="approveGateAction(${g.gate_number})" class="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition shadow-sm">
+                                        Valider (HITL)
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('Erreur gouvernance', e);
             }
         }
 
-        // Support navigation boutons retour / avant du navigateur
-        window.addEventListener('hashchange', () => {
-            const hash = (window.location.hash || '').replace('#', '').trim();
-            if (hash && ['overview', 'events', 'stories', 'graph', 'ledger'].includes(hash)) {
-                switchTab(hash, true);
+        async function approveGateAction(gateNum) {
+            if (!confirm(`Confirmez-vous la validation formelle de la Gate ${gateNum} pour le projet ${activeProject} ?`)) return;
+            try {
+                const res = await fetch('/api/governance/approve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ project: activeProject, gate: gateNum })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Porte ${gateNum} validée avec succès !`);
+                    loadGovernance();
+                    loadOverview();
+                } else {
+                    alert(`Erreur : ${data.detail || 'Validation rejetée'}`);
+                }
+            } catch (e) {
+                alert(`Erreur de connexion : ${e}`);
             }
+        }
+
+        // ── 8. VUE TOKEN LEDGER (ADR-0104 & COCKPIT 2.0) ──────────
+        let ledgerPage = 1;
+        let ledgerSourceFilter = 'ALL';
+        let ledgerScopeAll = false;
+        let ledgerSearchTerm = '';
+
+        function setLedgerScope(showAll) {
+            ledgerScopeAll = showAll;
+            ledgerPage = 1;
+            loadLedger();
+        }
+
+        function setLedgerSource(src) {
+            ledgerSourceFilter = src;
+            ledgerPage = 1;
+            loadLedger();
+        }
+
+        function onLedgerSearch(val) {
+            ledgerSearchTerm = val;
+            ledgerPage = 1;
+            loadLedger();
+        }
+
+        function changeLedgerPage(delta) {
+            ledgerPage = Math.max(1, ledgerPage + delta);
+            loadLedger();
+        }
+
+        function filterLedgerModule(modId) {
+            activeModule = modId;
+            const sel = document.getElementById('module-selector');
+            if (sel) sel.value = modId;
+            ledgerPage = 1;
+            loadLedger();
+        }
+
+        async function switchProjectModule(projId) {
+            activeModule = 'ALL';
+            const modSel = document.getElementById('module-selector');
+            if (modSel) modSel.value = 'ALL';
+            if (projId === 'ALL') {
+                setLedgerScope(true);
+            } else {
+                ledgerScopeAll = false;
+                activeProject = projId;
+                const sel = document.getElementById('project-selector');
+                if (sel) sel.value = projId;
+                try {
+                    await fetch('/api/project/select', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ project: projId })
+                    });
+                } catch (e) {}
+                ledgerPage = 1;
+                loadLedger();
+                loadOverview();
+            }
+        }
+
+        async function loadLedger(pageOverride = null) {
+            if (pageOverride !== null) ledgerPage = pageOverride;
+            try {
+                const targetProj = ledgerScopeAll ? 'ALL' : activeProject;
+                let url = `/api/ledger?project=${encodeURIComponent(targetProj)}&page=${ledgerPage}&page_size=25`;
+                if (activeModule && activeModule !== 'ALL' && !ledgerScopeAll) {
+                    url += `&module=${encodeURIComponent(activeModule)}`;
+                }
+                if (ledgerSourceFilter && ledgerSourceFilter !== 'ALL') {
+                    url += `&source=${encodeURIComponent(ledgerSourceFilter)}`;
+                }
+                if (ledgerSearchTerm && ledgerSearchTerm.trim()) {
+                    url += `&search=${encodeURIComponent(ledgerSearchTerm.trim())}`;
+                }
+
+                const res = await fetch(url);
+                const data = await res.json();
+                const container = document.getElementById('ledger-content-container');
+                if (!container) return;
+
+                const cost = (data.filtered_cost_usd !== undefined ? data.filtered_cost_usd : (data.summary?.total_cost_usd || 0));
+                const tokens = (data.filtered_tokens !== undefined ? data.filtered_tokens : (data.summary?.total_tokens || 0));
+                const promptTokens = data.filtered_prompt_tokens || (data.summary?.prompt_tokens || 0);
+                const complTokens = data.filtered_completion_tokens || (data.summary?.completion_tokens || 0);
+                const totalEntries = data.total_entries || (data.summary?.total_calls || 0);
+
+                const gSummary = data.global_summary || {};
+                const gCost = gSummary.total_cost_usd || 0;
+                const gTokens = gSummary.total_tokens || 0;
+                const gCalls = gSummary.total_calls || 0;
+
+                const byModel = data.by_model || {};
+                const bySource = gSummary.by_source || {};
+                const byProj = gSummary.by_project || {};
+                const entries = data.entries || [];
+                const totalPages = data.total_pages || 1;
+                const curPage = data.page || 1;
+
+                // Modèles breakdown sorted by tokens
+                const modelsList = Object.entries(byModel).sort((a, b) => (b[1].tokens || 0) - (a[1].tokens || 0));
+
+                container.innerHTML = `
+                    <!-- BARRE RACCOURCIS MODULES MÉTIERS (BOIRE, METRO FOOD/COMMERCE/PHARMA) -->
+                    <div class="glass-cyber p-3 rounded-xl flex flex-col gap-2.5 border border-cyberborder/50">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <div class="flex items-center gap-1.5 flex-wrap text-xs font-tech">
+                                <span class="text-gray-400 font-bold flex items-center gap-1 mr-1">
+                                    <span>🧭</span> Projets :
+                                </span>
+                                <button onclick="switchProjectModule('ALL')" class="px-2.5 py-1 rounded text-xs transition ${ledgerScopeAll ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                                    📊 Global (ALL)
+                                </button>
+                                <button onclick="switchProjectModule('BoireFrere_Segment2')" class="px-2.5 py-1 rounded text-xs transition ${!ledgerScopeAll && activeProject === 'BoireFrere_Segment2' ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                                    🐣 Boire & Frères
+                                </button>
+                                <button onclick="switchProjectModule('Metro_FOOD')" class="px-2.5 py-1 rounded text-xs transition ${!ledgerScopeAll && activeProject === 'Metro_FOOD' ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                                    🛒 Metro Food
+                                </button>
+                                <button onclick="switchProjectModule('Metro_COMMERCE')" class="px-2.5 py-1 rounded text-xs transition ${!ledgerScopeAll && activeProject === 'Metro_COMMERCE' ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                                    💳 Metro Commerce
+                                </button>
+                                <button onclick="switchProjectModule('Metro_SANTE')" class="px-2.5 py-1 rounded text-xs transition ${!ledgerScopeAll && activeProject === 'Metro_SANTE' ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                                    🏥 Metro Santé / Pharma
+                                </button>
+                                <button onclick="switchProjectModule('Metro_SHARED')" class="px-2.5 py-1 rounded text-xs transition ${!ledgerScopeAll && activeProject === 'Metro_SHARED' ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                                    📦 Metro Shared
+                                </button>
+                            </div>
+                            <div class="text-[11px] text-gray-500 font-tech">
+                                ${ledgerScopeAll ? 'Mode consolidé' : `Actif : ${activeProject}`}
+                            </div>
+                        </div>
+
+                        ${data.by_module && data.by_module.length > 0 ? `
+                            <div class="flex items-center gap-1.5 flex-wrap pt-2 border-t border-gray-800/80 text-xs font-tech">
+                                <span class="text-cyan-400 font-bold flex items-center gap-1 mr-1">
+                                    <span>🧩</span> Modules :
+                                </span>
+                                <button onclick="filterLedgerModule('ALL')" class="px-2.5 py-0.5 rounded text-[11px] transition ${(!activeModule || activeModule === 'ALL') ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'}">
+                                    Tous les modules
+                                </button>
+                                ${data.by_module.map(m => `
+                                    <button onclick="filterLedgerModule('${m.id}')" class="px-2.5 py-0.5 rounded text-[11px] transition ${activeModule === m.id ? 'bg-cyan-500 text-black font-bold shadow' : 'bg-cybercard border border-cyberborder/60 text-gray-300 hover:text-white'} flex items-center gap-1.5">
+                                        <span>${m.label}</span>
+                                        <span class="px-1.5 py-0.2 rounded bg-black/40 text-[10px] text-cyan-300 font-mono">${(m.tokens || 0).toLocaleString()} tk</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- BARRE D'ACTION ET FILTRES SOUVERAINS -->
+                    <div class="glass-cyber p-3.5 rounded-xl flex flex-wrap items-center justify-between gap-3 border border-cyberborder/60">
+                        <!-- SÉLECTEUR DE PÉRIMÈTRE -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-gray-400 font-tech">Périmètre :</span>
+                            <div class="inline-flex rounded-lg p-0.5 bg-cybercard border border-cyberborder">
+                                <button onclick="setLedgerScope(false)" class="px-2.5 py-1 rounded text-xs font-tech transition ${!ledgerScopeAll ? 'bg-cyan-500 text-black font-bold shadow' : 'text-gray-400 hover:text-white'}">
+                                    📁 Projet : ${activeProject}
+                                </button>
+                                <button onclick="setLedgerScope(true)" class="px-2.5 py-1 rounded text-xs font-tech transition ${ledgerScopeAll ? 'bg-cyan-500 text-black font-bold shadow' : 'text-gray-400 hover:text-white'}">
+                                    🌐 Tout le Système (ALL)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- FILTRES SOURCE & RECHERCHE -->
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <select onchange="setLedgerSource(this.value)" class="cyber-select text-xs font-tech cursor-pointer">
+                                <option value="ALL" ${ledgerSourceFilter === 'ALL' ? 'selected' : ''}>Toutes les sources</option>
+                                <option value="opencode-desktop" ${ledgerSourceFilter === 'opencode-desktop' ? 'selected' : ''}>💻 OpenCode Desktop (SQLite)</option>
+                                <option value="antigravity-chat" ${ledgerSourceFilter === 'antigravity-chat' ? 'selected' : ''}>Google Workspace / Antigravity</option>
+                                <option value="llm_nmedia_cloud" ${ledgerSourceFilter === 'llm_nmedia_cloud' ? 'selected' : ''}>LLM NMedia Cloud (Claude/OpenAI)</option>
+                            </select>
+
+                            <div class="relative">
+                                <input type="text" placeholder="Rechercher action / cible..." 
+                                    value="${ledgerSearchTerm}" 
+                                    onchange="onLedgerSearch(this.value)"
+                                    class="bg-cybercard border border-cyberborder/80 text-white rounded px-2.5 py-1 text-xs focus:outline-none focus:border-cyan-400 font-tech w-44 placeholder-gray-500" />
+                                ${ledgerSearchTerm ? `<button onclick="onLedgerSearch('')" class="absolute right-2 top-1 text-gray-400 hover:text-white">✕</button>` : ''}
+                            </div>
+
+                            <button onclick="loadLedger()" class="px-2 py-1 rounded bg-cyan-950 border border-cyan-500/30 text-cybercyan hover:bg-cyan-900 transition">
+                                ↻
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 4 CARTES KPI LEDGER -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="glass-cyber p-4 rounded-xl border-l-4 border-l-cyan-400">
+                            <div class="flex justify-between items-center text-xs text-gray-400">
+                                <span>COÛT ESTIMÉ (${ledgerScopeAll ? 'GLOBAL' : activeProject})</span>
+                                <span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 text-[10px] font-bold">USD</span>
+                            </div>
+                            <div class="text-2xl font-extrabold text-cybercyan font-tech mt-1">$${cost.toFixed(4)}</div>
+                            <div class="text-[11px] text-gray-500 pt-1.5 mt-1 border-t border-gray-800/80 font-tech">
+                                Total Système : $${gCost.toFixed(4)}
+                            </div>
+                        </div>
+
+                        <div class="glass-cyber p-4 rounded-xl border-l-4 border-l-emerald-400">
+                            <div class="flex justify-between items-center text-xs text-gray-400">
+                                <span>TOKENS CONSOMMÉS</span>
+                                <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-cyberemerald text-[10px] font-bold">JETONS</span>
+                            </div>
+                            <div class="text-2xl font-extrabold text-white font-tech mt-1">${tokens.toLocaleString()}</div>
+                            <div class="text-[11px] text-gray-500 pt-1.5 mt-1 border-t border-gray-800/80 font-tech flex justify-between">
+                                <span>In : ${promptTokens.toLocaleString()}</span>
+                                <span>Out : ${complTokens.toLocaleString()}</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-cyber p-4 rounded-xl border-l-4 border-l-violet-400">
+                            <div class="flex justify-between items-center text-xs text-gray-400">
+                                <span>TRANSACTIONS & APPELS</span>
+                                <span class="px-1.5 py-0.5 rounded bg-violet-950 text-cyberviolet text-[10px] font-bold">LOGS</span>
+                            </div>
+                            <div class="text-2xl font-extrabold text-white font-tech mt-1">${totalEntries.toLocaleString()}</div>
+                            <div class="text-[11px] text-gray-500 pt-1.5 mt-1 border-t border-gray-800/80 font-tech">
+                                Système : ${gCalls.toLocaleString()} appels
+                            </div>
+                        </div>
+
+                        <div class="glass-cyber p-4 rounded-xl border-l-4 border-l-amber-400">
+                            <div class="flex justify-between items-center text-xs text-gray-400">
+                                <span>MODÈLES SOLLICITÉS</span>
+                                <span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px] font-bold">DIVERSITÉ</span>
+                            </div>
+                            <div class="text-2xl font-extrabold text-cyberamber font-tech mt-1">${modelsList.length}</div>
+                            <div class="text-[11px] text-gray-500 pt-1.5 mt-1 border-t border-gray-800/80 font-tech truncate">
+                                ${modelsList.map(m => m[0].split('/').pop()).slice(0, 2).join(', ') || 'Aucun'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION VENTILATION PAR MODULE MÉTIER -->
+                    ${data.by_module && data.by_module.length > 0 ? `
+                        <div class="glass-cyber p-4 rounded-xl space-y-3 border border-cyan-500/20">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xs font-bold text-cybercyan uppercase tracking-wider flex items-center gap-1.5 font-tech">
+                                    <span>🧩</span> Ventilation par Module Métier (${ledgerScopeAll ? 'Global' : activeProject}) :
+                                </h3>
+                                <span class="text-[10px] text-gray-400 font-tech">Cliquer sur un module pour filtrer</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                ${data.by_module.map(m => {
+                                    const isSelected = (activeModule === m.id);
+                                    const pct = tokens > 0 ? Math.round(((m.tokens || 0) / tokens) * 100) : 0;
+                                    return `
+                                        <div onclick="filterLedgerModule('${m.id}')" class="p-3 rounded-lg cursor-pointer transition ${isSelected ? 'bg-cyan-950/70 border-2 border-cyan-400 shadow-lg' : 'bg-cybercard border border-cyberborder/50 hover:border-cyan-400/50'} space-y-1.5">
+                                            <div class="flex items-center justify-between">
+                                                <span class="font-bold text-white font-tech text-xs truncate mr-1" title="${m.label}">${m.label}</span>
+                                                <span class="text-cybercyan font-tech text-xs font-bold whitespace-nowrap">$${(m.cost_usd || 0).toFixed(3)}</span>
+                                            </div>
+                                            <div class="w-full bg-gray-900 rounded-full h-1.5 overflow-hidden">
+                                                <div class="bg-cyan-400 h-1.5 rounded-full" style="width: ${pct}%"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-[11px] text-gray-400 font-tech">
+                                                <span>${(m.tokens || 0).toLocaleString()} tokens</span>
+                                                <span class="text-gray-300 font-bold">${m.calls || 0} req</span>
+                                            </div>
+                                            ${m.by_source ? `
+                                                <div class="pt-1.5 border-t border-gray-800/80 flex items-center gap-1.5 text-[10px] text-gray-400 font-tech flex-wrap">
+                                                    ${m.by_source['opencode-desktop'] ? `<span class="text-cyan-300 font-semibold">💻 OpenCode: ${(m.by_source['opencode-desktop']).toLocaleString()}</span>` : ''}
+                                                    ${m.by_source['antigravity-chat'] ? `<span class="text-emerald-300 font-semibold">Google: ${(m.by_source['antigravity-chat']).toLocaleString()}</span>` : ''}
+                                                    ${m.by_source['llm_nmedia_cloud'] ? `<span class="text-violet-300 font-semibold">NMedia: ${(m.by_source['llm_nmedia_cloud']).toLocaleString()}</span>` : ''}
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- 2 PANNEAUX D'ANALYSE DÉTAILLÉE -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <!-- PANNEAU 1 : RÉPARTITION PAR MODÈLE D'IA -->
+                        <div class="glass-cyber p-5 rounded-xl space-y-3">
+                            <h3 class="text-xs font-bold text-cybercyan uppercase tracking-wider flex items-center gap-1.5 font-tech">
+                                <span>🤖</span> Répartition par Modèle d'IA :
+                            </h3>
+                            <div class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+                                ${modelsList.length > 0 ? modelsList.map(([mName, mStats]) => {
+                                    const pct = tokens > 0 ? Math.round(((mStats.tokens || 0) / tokens) * 100) : 0;
+                                    return `
+                                        <div class="p-3 rounded-lg bg-cybercard border border-cyberborder/50 hover:border-cyan-400/40 transition space-y-1.5">
+                                            <div class="flex items-center justify-between">
+                                                <span class="font-bold text-white font-tech text-xs">${mName}</span>
+                                                <span class="text-cybercyan font-tech text-xs font-bold">$${(mStats.cost_usd || 0).toFixed(4)}</span>
+                                            </div>
+                                            <div class="w-full bg-gray-900 rounded-full h-1.5 overflow-hidden">
+                                                <div class="bg-cyan-400 h-1.5 rounded-full" style="width: ${pct}%"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-[11px] text-gray-400 font-tech">
+                                                <span>${(mStats.tokens || 0).toLocaleString()} tokens (${pct}%)</span>
+                                                <span>${mStats.calls || 0} requêtes</span>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('') : '<div class="text-gray-500 py-4 text-center font-tech">Aucun modèle sollicité dans cette sélection.</div>'}
+                            </div>
+                        </div>
+
+                        <!-- PANNEAU 2 : VENTILATION TRI-SOURCE & PROJETS -->
+                        <div class="glass-cyber p-5 rounded-xl space-y-3">
+                            <h3 class="text-xs font-bold text-cyberemerald uppercase tracking-wider flex items-center gap-1.5 font-tech">
+                                <span>🌐</span> Télémétrie Tri-Source & Top Projets :
+                            </h3>
+                            <div class="space-y-2.5">
+                                <!-- Tri-Source Telemetry -->
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div class="p-2.5 rounded-lg bg-cybercard border border-cyberborder/50">
+                                        <div class="text-[10px] text-gray-400 font-tech uppercase">Google / Antigravity</div>
+                                        <div class="text-xs font-bold text-emerald-300 font-tech mt-0.5 truncate">
+                                            ${(bySource['antigravity-chat']?.tokens || 0).toLocaleString()} tk
+                                        </div>
+                                        <div class="text-[10px] text-gray-500 font-tech mt-0.5">
+                                            ${bySource['antigravity-chat']?.calls || 0} req ($${(bySource['antigravity-chat']?.cost_usd || 0).toFixed(2)})
+                                        </div>
+                                    </div>
+                                    <div class="p-2.5 rounded-lg bg-cybercard border border-cyan-500/30">
+                                        <div class="text-[10px] text-cyan-400 font-tech uppercase font-bold">💻 OpenCode</div>
+                                        <div class="text-xs font-bold text-cybercyan font-tech mt-0.5 truncate">
+                                            ${(bySource['opencode-desktop']?.tokens || 0).toLocaleString()} tk
+                                        </div>
+                                        <div class="text-[10px] text-gray-500 font-tech mt-0.5">
+                                            ${bySource['opencode-desktop']?.calls || 0} req ($${(bySource['opencode-desktop']?.cost_usd || 0).toFixed(2)})
+                                        </div>
+                                    </div>
+                                    <div class="p-2.5 rounded-lg bg-cybercard border border-cyberborder/50">
+                                        <div class="text-[10px] text-gray-400 font-tech uppercase">LLM NMedia</div>
+                                        <div class="text-xs font-bold text-violet-300 font-tech mt-0.5 truncate">
+                                            ${(bySource['llm_nmedia_cloud']?.tokens || 0).toLocaleString()} tk
+                                        </div>
+                                        <div class="text-[10px] text-gray-500 font-tech mt-0.5">
+                                            ${bySource['llm_nmedia_cloud']?.calls || 0} req ($${(bySource['llm_nmedia_cloud']?.cost_usd || 0).toFixed(2)})
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Top Modules Consommateurs -->
+                                <div class="pt-2 border-t border-gray-800">
+                                    <div class="text-[11px] text-gray-400 font-tech mb-2 font-bold flex justify-between">
+                                        <span>Top Modules Consommateurs (Système) :</span>
+                                        <span class="text-[10px] text-gray-500">Cliquer pour filtrer</span>
+                                    </div>
+                                    <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                                        ${Object.entries(byProj).slice(0, 8).map(([pName, pStats]) => `
+                                            <div class="flex items-center justify-between p-1.5 rounded bg-gray-900/60 hover:bg-cyan-950/30 transition text-[11px] font-tech">
+                                                <button onclick="switchProjectModule('${pName}')" class="text-gray-300 hover:text-cybercyan font-medium truncate max-w-[180px] text-left cursor-pointer">
+                                                    ${pName.replace('BoireFrere_Segment2', '🐣 Boire & Frères (S2)').replace('BoireFrere_Reception', '🐣 Boire & Frères (Réception)').replace('Metro_COMMERCE', '💳 Metro Commerce').replace('Metro_FOOD', '🛒 Metro Food').replace('Metro_SANTE', '🏥 Metro Santé/Pharma').replace('Metro_OneTrust', '🔒 Metro OneTrust').replace('Metro_SHARED', '📦 Metro Shared')}
+                                                </button>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-gray-400">${(pStats.tokens || 0).toLocaleString()} tk</span>
+                                                    <span class="text-cybercyan font-bold">$${(pStats.cost_usd || 0).toFixed(3)}</span>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLEAU DU JOURNAL DÉTAILLÉ (TOKEN LEDGER ENTRIES) -->
+                    <div class="glass-cyber p-5 rounded-xl space-y-4">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 font-tech">
+                                <span>📜</span> Journal des Transactions Récentes (${totalEntries} entrées) :
+                            </h3>
+                            <div class="text-xs text-gray-400 font-tech">
+                                Page ${curPage} sur ${totalPages}
+                            </div>
+                        </div>
+
+                        ${entries.length > 0 ? `
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-[11px] font-tech">
+                                    <thead class="text-gray-400 border-b border-gray-800">
+                                        <tr>
+                                            <th class="py-2 px-2">Horodatage</th>
+                                            <th class="py-2 px-2">Projet</th>
+                                            <th class="py-2 px-2">Module</th>
+                                            <th class="py-2 px-2">Source</th>
+                                            <th class="py-2 px-2">Modèle</th>
+                                            <th class="py-2 px-2">Action / Cible</th>
+                                            <th class="py-2 px-2 text-right">Tokens (In / Out)</th>
+                                            <th class="py-2 px-2 text-right">Coût Est.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-800/60">
+                                        ${entries.map(e => {
+                                            const isGoogle = (e.source === 'antigravity-chat');
+                                            const isOpenCode = (e.source === 'opencode-desktop');
+                                            const srcBadge = isOpenCode
+                                                ? '<span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/50 text-[10px] font-bold">OpenCode</span>'
+                                                : isGoogle
+                                                    ? '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-cyberemerald border border-emerald-800/40 text-[10px]">Google</span>'
+                                                    : '<span class="px-1.5 py-0.5 rounded bg-violet-950 text-violet-300 border border-violet-800/40 text-[10px]">NMedia</span>';
+                                            const cleanTs = formatLocalTime(e.timestamp, true);
+                                            const mShort = (e.model || 'unknown').split('/').pop();
+                                            const modLabel = e.module_label || e.module || 'Général';
+
+                                            return `
+                                                <tr class="hover:bg-cyan-950/20 transition">
+                                                    <td class="py-2 px-2 text-gray-400 whitespace-nowrap">${cleanTs}</td>
+                                                    <td class="py-2 px-2 text-white font-bold whitespace-nowrap">${e.project_display || e.project || '-'}</td>
+                                                    <td class="py-2 px-2 whitespace-nowrap">
+                                                        <span class="px-1.5 py-0.5 rounded bg-blue-950/70 text-blue-300 border border-blue-800/40 text-[10px] cursor-pointer hover:border-cyan-400" onclick="filterLedgerModule('${e.module}')">
+                                                            ${modLabel}
+                                                        </span>
+                                                    </td>
+                                                    <td class="py-2 px-2 whitespace-nowrap">${srcBadge}</td>
+                                                    <td class="py-2 px-2 text-cyan-300 whitespace-nowrap font-mono">${mShort}</td>
+                                                    <td class="py-2 px-2 text-gray-300 truncate max-w-xs" title="${e.action || ''} : ${e.target || ''}">
+                                                        <span class="text-white font-bold">${e.action || 'call'}</span>
+                                                        ${e.target ? `<span class="text-gray-500"> → ${e.target}</span>` : ''}
+                                                    </td>
+                                                    <td class="py-2 px-2 text-right text-gray-200 whitespace-nowrap">
+                                                        <span class="font-bold text-white">${(e.total_tokens_est || 0).toLocaleString()}</span>
+                                                        <span class="text-gray-500 text-[10px]">(${(e.prompt_tokens_est || 0).toLocaleString()} / ${(e.completion_tokens_est || 0).toLocaleString()})</span>
+                                                    </td>
+                                                    <td class="py-2 px-2 text-right font-bold text-cybercyan whitespace-nowrap">
+                                                        $${(e.cost_usd_est || 0).toFixed(4)}
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- CONTRÔLES DE PAGINATION -->
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-800 font-tech text-xs">
+                                <button onclick="changeLedgerPage(-1)" ${curPage <= 1 ? 'disabled class="px-3 py-1 rounded bg-gray-900 text-gray-600 cursor-not-allowed"' : 'class="px-3 py-1 rounded bg-cyan-950 text-cybercyan hover:bg-cyan-900 border border-cyan-500/30 transition"'}>
+                                    ← Précédent
+                                </button>
+                                <span class="text-gray-400">
+                                    Page <span class="text-white font-bold">${curPage}</span> / <span class="text-white font-bold">${totalPages}</span>
+                                </span>
+                                <button onclick="changeLedgerPage(1)" ${curPage >= totalPages ? 'disabled class="px-3 py-1 rounded bg-gray-900 text-gray-600 cursor-not-allowed"' : 'class="px-3 py-1 rounded bg-cyan-950 text-cybercyan hover:bg-cyan-900 border border-cyan-500/30 transition"'}>
+                                    Suivant →
+                                </button>
+                            </div>
+                        ` : `
+                            <div class="py-8 text-center space-y-3 font-tech">
+                                <div class="text-gray-400">Aucune transaction enregistrée pour ce filtre ou ce projet.</div>
+                                ${!ledgerScopeAll ? `
+                                    <button onclick="setLedgerScope(true)" class="px-3 py-1.5 rounded bg-cyan-950 border border-cyan-500/40 text-cybercyan text-xs font-bold hover:bg-cyan-900 transition shadow">
+                                        🌐 Afficher les ${gCalls.toLocaleString()} transactions globales du système
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `}
+                    </div>
+                `;
+            } catch (e) {
+                console.error('Erreur ledger', e);
+                const container = document.getElementById('ledger-content-container');
+                if (container) {
+                    container.innerHTML = `<div class="text-rose-400 p-4 rounded bg-rose-950/40 border border-rose-800 font-tech">Erreur de chargement du Token Ledger : ${e.message}</div>`;
+                }
+            }
+        }
+
+        // ── INITIALISATION AU CHARGEMENT ───────────────────────────
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadProjects();
+            switchTab('overview');
+            toggleAutoRefresh();
         });
-
-        // Lancement au chargement de la page
-        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>

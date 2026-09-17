@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Tests unitaires et d'intégration pour le Dashboard d'Observabilité mLoop."""
 
-import pytest
 from fastapi.testclient import TestClient
 
 from src.dashboard.server import app

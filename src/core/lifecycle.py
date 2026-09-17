@@ -123,6 +123,7 @@ COMMAND_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
     "wayfinder": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
     "struct-check": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
     "rubber-duck": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+    "multi-draft": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
     "worker-status": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
     "worker-close": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
     "worker-harvest": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
@@ -139,9 +140,11 @@ COMMAND_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
     "eval": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "audit-loop": ProjectLifecycleStage.STAGE_4_VALIDATE,
     
+    # Phase 2 (Plan & Grill)
+    "jira-sync": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+    "jira_sync": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+    
     # Phase 5 (Ship)
-    "jira-sync": ProjectLifecycleStage.STAGE_5_SHIP,
-    "jira_sync": ProjectLifecycleStage.STAGE_5_SHIP,
     "cycle-status": ProjectLifecycleStage.STAGE_5_SHIP,
 }
 
@@ -355,7 +358,9 @@ class ProjectLifecycleManager:
         universal_commands = {
             "resume", "vibe-check", "guide", "doctor", "sync", "help",
             "fact-search", "graph-query", "code-explore", "lifecycle-status",
-            "lifecycle-clean", "gate-approve", "init"
+            "lifecycle-clean", "gate-approve", "init",
+            "agent-resilience", "topology", "rollback",
+            "dream-rsi",
         }
         cmd_norm = command_name.lower().replace("_", "-")
         if cmd_norm in universal_commands:

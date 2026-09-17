@@ -75,6 +75,28 @@ class TokenLedger:
         key_perso = os.getenv("LITELLM_API_KEY_PERSO", "")
 
         active_key = os.getenv("LITELLM_API_KEY", "")
+        # Déréférencement automatique si LITELLM_API_KEY pointe vers une variable ou un alias
+        alias_map = {
+            "LITELLM_API_KEY_BOIRE": key_boire,
+            "${LITELLM_API_KEY_BOIRE}": key_boire,
+            "BOIRE": key_boire,
+            "boire": key_boire,
+            "LITELLM_API_KEY_METRO": key_metro,
+            "${LITELLM_API_KEY_METRO}": key_metro,
+            "METRO": key_metro,
+            "metro": key_metro,
+            "LITELLM_API_KEY_PERSO": key_perso,
+            "${LITELLM_API_KEY_PERSO}": key_perso,
+            "PERSO": key_perso,
+            "perso": key_perso,
+        }
+        if active_key in alias_map and alias_map[active_key]:
+            active_key = alias_map[active_key]
+        elif active_key and not active_key.startswith("sk-"):
+            clean_ref = active_key.strip("${}").strip()
+            if clean_ref in os.environ and os.environ[clean_ref].startswith("sk-"):
+                active_key = os.environ[clean_ref]
+
         if not active_key:
             secret_active = Path.home() / ".secrets" / "nmedia-key"
             if secret_active.exists():

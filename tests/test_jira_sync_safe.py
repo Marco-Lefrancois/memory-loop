@@ -718,3 +718,117 @@ def test_no_real_http_call_guard(tmp_path, monkeypatch):
     state = _make_state()
     rc = handle_jira_sync(args, state, tmp_path)
     assert rc == 2  # Bloqué bien avant HTTP
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 17. Garde Constitutionnelle : Statut FERMÉ dans Jira (ne jamais sync)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_is_jira_status_closed_multilingual():
+    """Vérifie la détection robuste des statuts fermés en français et anglais."""
+    from src.pipelines.jira.sync_engine import is_jira_status_closed
+
+    # Catégorie Jira Cloud "done"
+    assert is_jira_status_closed("N'importe quel nom", "done") is True
+    assert is_jira_status_closed("", "Done") is True
+
+    # Variantes textuelles françaises
+    assert is_jira_status_closed("Fermée") is True
+    assert is_jira_status_closed("Fermé") is True
+    assert is_jira_status_closed("Terminé") is True
+    assert is_jira_status_closed("Terminée") is True
+    assert is_jira_status_closed("Résolu") is True
+    assert is_jira_status_closed("Annulé") is True
+    assert is_jira_status_closed("Clos") is True
+
+    # Variantes textuelles anglaises
+    assert is_jira_status_closed("Closed") is True
+    assert is_jira_status_closed("Done") is True
+    assert is_jira_status_closed("Resolved") is True
+    assert is_jira_status_closed("Cancelled") is True
+
+    # Statuts actifs (ne doivent PAS être considérés comme fermés)
+    assert is_jira_status_closed("Open", "new") is False
+    assert is_jira_status_closed("In Progress", "indeterminate") is False
+    assert is_jira_status_closed("Ready for Dev", "new") is False
+    assert is_jira_status_closed("À faire", "new") is False
+
+
+def test_jira_sync_rejects_closed_ticket_in_preview(tmp_path, monkeypatch):
+    """Vérifie qu'un ticket détecté FERMÉ sur Jira est automatiquement rejeté en preview."""
+    from unittest.mock import MagicMock
+    import httpx
+
+    item = _make_item("REC-011-BE", "COUVBOIRE-957", StoryStatus.READY_FOR_DEV)
+    state = _make_state([item])
+    args = _make_args(story="REC-011-BE")
+
+    monkeypatch.setenv("JIRA_URL", "https://mock.jira.com")
+    monkeypatch.setenv("JIRA_EMAIL", "test@example.com")
+    monkeypatch.setenv("JIRA_API_TOKEN", "fake_token")
+
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = {
+        "fields": {
+            "status": {
+                "name": "Fermée",
+                "statusCategory": {"key": "done", "name": "Terminé"}
+            }
+        }
+    }
+
+    mock_client = MagicMock()
+    mock_client.get.return_value = mock_resp
+
+    with patch("httpx.Client", return_value=mock_client):
+        rc = handle_jira_sync(args, state, tmp_path)
+
+    assert rc == 0, "Le dry-run doit réussir"
+    # Vérifier que le manifeste preview a rejeté l'item
+    manifest_path = tmp_path / "memory" / "sync" / "jira_sync_preview.json"
+    if manifest_path.exists():
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        assert len(data["eligible"]) == 0
+        assert len(data["rejected"]) == 1
+        assert "FERMÉ" in data["rejected"][0]["reason"]
+
+
+def test_sync_targeted_skips_closed_jira_issue(tmp_path):
+    """Vérifie que sync_targeted_to_jira n'émet aucun PUT/POST si l'issue est fermée sur Jira."""
+    from src.pipelines.jira.sync_engine import sync_targeted_to_jira
+    from unittest.mock import MagicMock
+
+    item = _make_item("REC-011-BE", "COUVBOIRE-957", StoryStatus.READY_FOR_DEV)
+    state = _make_state([item])
+
+    mock_client = MagicMock()
+    # Réponse pour GET /rest/api/3/issue/COUVBOIRE-957
+    mock_get = MagicMock()
+    mock_get.status_code = 200
+    mock_get.json.return_value = {
+        "fields": {
+            "status": {"name": "Fermée", "statusCategory": {"key": "done"}},
+            "components": [],
+            "customfield_10151": None,
+        }
+    }
+    mock_client.get.return_value = mock_get
+
+    with patch("os.getenv") as mock_env, \
+         patch("httpx.Client", return_value=mock_client), \
+         patch("src.pipelines.jira.sync_engine._fetch_allowed_subtask_types", return_value={}), \
+         patch("src.pipelines.jira.sync_engine._validate_subtasks_mapping"):
+        
+        mock_env.side_effect = lambda k: {
+            "JIRA_URL": "https://mock.jira.com",
+            "JIRA_EMAIL": "test@example.com",
+            "JIRA_API_TOKEN": "token",
+        }.get(k)
+
+        sync_targeted_to_jira(state, tmp_path, [item], manifest_id="test1234")
+
+    # Vérification stricte : aucun appel PUT (mise à jour) ni POST (sous-tâche)
+    mock_client.put.assert_not_called()
+    mock_client.post.assert_not_called()
+
