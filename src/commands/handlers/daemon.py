@@ -31,38 +31,26 @@ def handle_guardian_status(args, state, project_path):
 
 
 def handle_role_list(args, state, project_path):
-    """Liste les manifestes de rôles agentiques déclaratifs disponibles."""
-    ZeroFluffConsole.section("MANIFESTES DES RÔLES AGENTIQUES MLOOP (STANDARDS/AGENTS)")
-    agents_dir = Path("standards/agents")
-    try:
-        import tomllib
-    except ImportError:
-        import toml as tomllib
+    """Liste les manifestes de rôles agentiques déclaratifs disponibles (ADR-0379)."""
+    ZeroFluffConsole.section("MANIFESTES DES RÔLES AGENTIQUES MLOOP (.AGENTS/AGENTS/*.MD)")
+    from src.core.standards_graph import StandardsGraphStore
 
-    if not agents_dir.exists():
-        ZeroFluffConsole.warning("Aucun dossier standards/agents/ trouvé.")
-        return 0
+    store = StandardsGraphStore.get_instance()
+    agents = store.get_agents()
 
-    roles = list(agents_dir.glob("*.toml"))
-    if not roles:
+    if not agents:
         ZeroFluffConsole.info("Aucun rôle déclaratif trouvé.")
         return 0
 
-    for role_file in sorted(roles):
-        try:
-            data = tomllib.loads(role_file.read_text(encoding="utf-8"))
-            name = data.get("name", role_file.stem)
-            desc = data.get("description", "Aucune description.")
-            model = data.get("model", "Hérité")
-            effort = data.get("model_reasoning_effort", "medium")
-            sandbox = data.get("sandbox_mode", "read-only")
-            
-            ZeroFluffConsole.info(f"🤖 Rôle : [{name.upper()}] (Fichier : {role_file.name})")
-            print(f"   • Description : {desc}")
-            print(f"   • Modèle cible : {model} (Effort : {effort})")
-            print(f"   • Bac à sable : {sandbox}\n")
-        except Exception as e:
-            ZeroFluffConsole.warning(f"Erreur de lecture du rôle {role_file.name} : {e}")
+    for name, agent in sorted(agents.items()):
+        skills_str = ", ".join(agent.skills) if agent.skills else "(aucun outil spécialisé)"
+        ZeroFluffConsole.info(f"🤖 Rôle : [{name.upper()}] (Fichier : {Path(agent.file_path).name})")
+        if agent.role:
+            print(f"   • Rôle & Mission : {agent.role}")
+        print(f"   • Description : {agent.description}")
+        print(f"   • Modèle cible : {agent.model} (Effort : {agent.model_reasoning_effort})")
+        print(f"   • Bac à sable : {agent.sandbox_mode}")
+        print(f"   • Compétences autorisées : {skills_str}\n")
 
-    ZeroFluffConsole.success(f"{len(roles)} rôles déclaratifs chargés avec succès.")
+    ZeroFluffConsole.success(f"{len(agents)} rôles agentiques chargés depuis StandardsGraph.")
     return 0

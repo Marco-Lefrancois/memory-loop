@@ -28,6 +28,7 @@ Ce skill régit la délégation de travail vers des agents workers éphémères 
 
 ### 1. Préparation du Prompt Éphémère (Clean Slate)
 - Tout worker démarre dans une session vierge.
+- S'assurer au préalable que le runtime est opérationnel via `python src/swarm.py doctor --agents` ou `agent-probe` (ADR-0377).
 - Écrire le prompt complet dans un fichier scratch (`memory/scratch/worker_<ID>_prompt.md`).
 - Le prompt DOIT être auto-suffisant (chemin du fichier, séquence d'actions, commande de synchronisation). Ne jamais passer de prompt brut volumineux dans la ligne de commande.
 

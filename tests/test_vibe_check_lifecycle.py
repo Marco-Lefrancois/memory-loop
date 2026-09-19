@@ -126,22 +126,19 @@ def test_vibe_check_run_mode_fails_when_backlog_missing():
         shutil.rmtree(proj_dir, ignore_errors=True)
 
 
-def test_vibe_check_fails_on_premature_stories_in_sow_phase():
-    """Vérifie que run_vibe_check en phase SOW échoue fermement (Check 13) si des stories existent."""
+def test_vibe_check_fails_on_premature_stories_in_ingest_phase():
+    """Vérifie que run_vibe_check en phase Ingest échoue fermement (Check 13) si des stories existent (ADR-0375)."""
     from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
     proj_name = "PrematureStoriesProject"
     proj_dir = Path("Projects") / proj_name
     proj_dir.mkdir(parents=True, exist_ok=True)
     try:
-        (proj_dir / "docs" / "01-architecture").mkdir(parents=True, exist_ok=True)
+        (proj_dir / "docs" / "00-ingested").mkdir(parents=True, exist_ok=True)
         (proj_dir / "backlog" / "stories").mkdir(parents=True, exist_ok=True)
         (proj_dir / "memory" / "evidence").mkdir(parents=True, exist_ok=True)
 
-        sow_file = proj_dir / "docs" / "01-architecture" / f"SOW_{proj_name}.md"
-        sow_file.write_text("# SOW", encoding="utf-8")
-
-        # Initialiser en STAGE_1_SOW
-        state = ProjectLifecycleManager.init_lifecycle(proj_dir, initial_stage=ProjectLifecycleStage.STAGE_1_SOW)
+        # Initialiser en STAGE_1_INGEST
+        state = ProjectLifecycleManager.init_lifecycle(proj_dir, initial_stage=ProjectLifecycleStage.STAGE_1_INGEST, force=True)
 
         # Créer une story prématurée sous backlog/stories/
         premature_story = proj_dir / "backlog" / "stories" / "US-01.md"
@@ -150,7 +147,7 @@ def test_vibe_check_fails_on_premature_stories_in_sow_phase():
         res = run_vibe_check(proj_name)
         phase_check = next(c for c in res["checks"] if "Interdiction de Saut de Phase" in c["check"])
         assert phase_check["status"] == "FAIL"
-        assert "interdit(s) en étape 'STAGE_1_SOW'" in phase_check["check"]
+        assert "interdit(s) en étape 'STAGE_1_INGEST'" in phase_check["check"]
 
         # Nettoyer les stories prématurées avec confirmation explicite
         ProjectLifecycleManager.clean_premature_stories(proj_dir, confirm=True)

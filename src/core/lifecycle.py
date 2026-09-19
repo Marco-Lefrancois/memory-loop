@@ -24,52 +24,58 @@ logger = logging.getLogger("lifecycle")
 
 
 class ProjectLifecycleStage(str, Enum):
-    """Les 6 phases séquentielles officielles du cycle de vie mLoop (ADR-0339)."""
-    STAGE_0_TSHIRT = "STAGE_0_TSHIRT"         # Phase 0 : Cadrage Macro & Enveloppe Budgétaire
-    STAGE_1_SOW = "STAGE_1_SOW"               # Phase 1 : Énoncé des Travaux (SOW) & Contractualisation
-    STAGE_2_PLAN_GRILL = "STAGE_2_PLAN_GRILL" # Phase 2 : Analyse fine, Grill-with-Docs & Stories 4 Piliers
-    STAGE_3_BUILD = "STAGE_3_BUILD"           # Phase 3 : Développement physique & Tests unitaires
-    STAGE_4_VALIDATE = "STAGE_4_VALIDATE"     # Phase 4 : Audit QA, Evals & Non-régression
-    STAGE_5_SHIP = "STAGE_5_SHIP"             # Phase 5 : Synchronisation Jira, Git & Clôture
+    """Les 5 phases séquentielles officielles du cycle de vie mLoop (ADR-0375)."""
+    STAGE_1_INGEST = "STAGE_1_INGEST"                 # Phase 1 : INGEST & EXPLORE (Amorçage, Ingestion & Cartographie)
+    STAGE_2_PLAN_ANALYSE = "STAGE_2_PLAN_ANALYSE"     # Phase 2 : PLAN & ANALYSE (Macro-Planification T-Shirt/SOW & Micro-Analyse Stories)
+    STAGE_3_BUILD = "STAGE_3_BUILD"                   # Phase 3 : BUILD & DEV (Développement physique & Tests unitaires)
+    STAGE_4_VALIDATE = "STAGE_4_VALIDATE"             # Phase 4 : VALIDATE & QA (Audit QA, Evals & Non-régression)
+    STAGE_5_SHIP = "STAGE_5_SHIP"                     # Phase 5 : SHIP & SYNC (Distribution Jira, Git & Clôture)
+
+    # Rétro-compatibilité legacy ADR-0339 (préservés pour compatibilité sérialisation & tests)
+    STAGE_0_TSHIRT = "STAGE_0_TSHIRT"
+    STAGE_1_SOW = "STAGE_1_SOW"
+    STAGE_2_PLAN_GRILL = "STAGE_2_PLAN_GRILL"
 
 
-# Ordre strict des phases
+# Ordre strict des 5 phases canoniques (ADR-0375)
 STAGE_ORDER: List[ProjectLifecycleStage] = [
-    ProjectLifecycleStage.STAGE_0_TSHIRT,
-    ProjectLifecycleStage.STAGE_1_SOW,
-    ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+    ProjectLifecycleStage.STAGE_1_INGEST,
+    ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
     ProjectLifecycleStage.STAGE_3_BUILD,
     ProjectLifecycleStage.STAGE_4_VALIDATE,
     ProjectLifecycleStage.STAGE_5_SHIP,
 ]
 
 STAGE_NAMES: Dict[ProjectLifecycleStage, str] = {
-    ProjectLifecycleStage.STAGE_0_TSHIRT: "Phase 0 : T-SHIRT-SIZE (Cadrage Macro)",
-    ProjectLifecycleStage.STAGE_1_SOW: "Phase 1 : SOW (Énoncé des Travaux)",
-    ProjectLifecycleStage.STAGE_2_PLAN_GRILL: "Phase 2 : PLAN / GRILL-ME (Spécifications & Stories)",
+    ProjectLifecycleStage.STAGE_1_INGEST: "Phase 1 : INGEST & EXPLORE (Amorçage & Ingestion)",
+    ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE: "Phase 2 : PLAN & ANALYSE (Planification & Spécifications)",
     ProjectLifecycleStage.STAGE_3_BUILD: "Phase 3 : BUILD (Développement Physique)",
     ProjectLifecycleStage.STAGE_4_VALIDATE: "Phase 4 : VALIDATE (Assurance Qualité & Evals)",
     ProjectLifecycleStage.STAGE_5_SHIP: "Phase 5 : SHIP & SYNC (Distribution & Clôture)",
+    # Aliases legacy
+    ProjectLifecycleStage.STAGE_0_TSHIRT: "Phase 1 : INGEST & EXPLORE (Amorçage & Ingestion)",
+    ProjectLifecycleStage.STAGE_1_SOW: "Phase 2 : PLAN & ANALYSE (Planification & Spécifications)",
+    ProjectLifecycleStage.STAGE_2_PLAN_GRILL: "Phase 2 : PLAN & ANALYSE (Planification & Spécifications)",
 }
 
 GATE_DEFINITIONS: Dict[int, Dict[str, Any]] = {
     0: {
-        "name": "Gate 0 : Accord Enveloppe Budgétaire",
-        "from_stage": ProjectLifecycleStage.STAGE_0_TSHIRT,
-        "to_stage": ProjectLifecycleStage.STAGE_1_SOW,
-        "description": "Validation de l'enveloppe macroscopique T-Shirt par la direction ou le client.",
-        "requires_human": True,
+        "name": "Gate 0 : Cadrage Initial (Alias Gate 1)",
+        "from_stage": ProjectLifecycleStage.STAGE_1_INGEST,
+        "to_stage": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+        "description": "Validation d'amorçage (alias rétro-compatible de Gate 1).",
+        "requires_human": False,
     },
     1: {
-        "name": "Gate 1 : Signature & Approbation du SOW",
-        "from_stage": ProjectLifecycleStage.STAGE_1_SOW,
-        "to_stage": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-        "description": "Approbation formelle du document SOW et du périmètre contractuel avant toute story détaillée.",
-        "requires_human": True,
+        "name": "Gate 1 : Ingestion & Cadrage Initial Prêt",
+        "from_stage": ProjectLifecycleStage.STAGE_1_INGEST,
+        "to_stage": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+        "description": "Validation que les sources brutes sont ingérées et que le projet peut être planifié et analysé.",
+        "requires_human": False,
     },
     2: {
         "name": "Gate 2 : Definition of Ready (DoR)",
-        "from_stage": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+        "from_stage": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
         "to_stage": ProjectLifecycleStage.STAGE_3_BUILD,
         "description": "Validation DoR sans ambiguïté par WikiFix & Sentinel (4 Piliers Gherkin + EvidencePacks).",
         "requires_human": False,
@@ -97,62 +103,66 @@ GATE_DEFINITIONS: Dict[int, Dict[str, Any]] = {
     },
 }
 
-# Matrice des restrictions de commandes par phase minimale requise
+# Matrice des restrictions de commandes par phase minimale requise (ADR-0375)
 COMMAND_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
-    # Phase 0 & 1 (Inception & SOW)
-    "to-sow": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "ingest": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "research": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "markitdown_convert": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "crawl": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "extract": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "agentic-extract": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "notebooklm": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "lifecycle-status": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "lifecycle-clean": ProjectLifecycleStage.STAGE_0_TSHIRT,
-    "gate-approve": ProjectLifecycleStage.STAGE_0_TSHIRT,
+    # Phase 1 : INGEST & EXPLORE
+    "ingest": ProjectLifecycleStage.STAGE_1_INGEST,
+    "research": ProjectLifecycleStage.STAGE_1_INGEST,
+    "markitdown_convert": ProjectLifecycleStage.STAGE_1_INGEST,
+    "crawl": ProjectLifecycleStage.STAGE_1_INGEST,
+    "extract": ProjectLifecycleStage.STAGE_1_INGEST,
+    "agentic-extract": ProjectLifecycleStage.STAGE_1_INGEST,
+    "notebooklm": ProjectLifecycleStage.STAGE_1_INGEST,
+    "svg-optimize": ProjectLifecycleStage.STAGE_1_INGEST,
+    "svg-ocr": ProjectLifecycleStage.STAGE_1_INGEST,
+    "csv-normalize": ProjectLifecycleStage.STAGE_1_INGEST,
+    "csv-validate": ProjectLifecycleStage.STAGE_1_INGEST,
+    "lifecycle-status": ProjectLifecycleStage.STAGE_1_INGEST,
+    "lifecycle-clean": ProjectLifecycleStage.STAGE_1_INGEST,
+    "gate-approve": ProjectLifecycleStage.STAGE_1_INGEST,
     
-    # Phase 2 (Plan & Grill)
-    "focus": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "grill": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "to-spec": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "to-tickets": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "archify": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "chunk": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "hyper-query": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "wayfinder": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "struct-check": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "rubber-duck": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "multi-draft": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "worker-status": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "worker-close": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "worker-harvest": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+    # Phase 2 : PLAN & ANALYSE (Macro-Planification & Micro-Analyse)
+    "to-tshirt": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "to-sow": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "grill-project": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "focus": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "grill": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "to-spec": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "to-tickets": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "archify": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "chunk": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "hyper-query": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "wayfinder": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "struct-check": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "rubber-duck": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "multi-draft": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "worker-status": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "worker-close": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "worker-harvest": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
     
-    # Phase 3 (Build)
+    # Phase 3 : BUILD & DEV
     "self-dev": ProjectLifecycleStage.STAGE_3_BUILD,
     "confidence": ProjectLifecycleStage.STAGE_3_BUILD,
     "worker-spawn": ProjectLifecycleStage.STAGE_3_BUILD,
     "code-impact": ProjectLifecycleStage.STAGE_3_BUILD,
     "code-affected": ProjectLifecycleStage.STAGE_3_BUILD,
     
-    # Phase 4 (Validate)
+    # Phase 4 : VALIDATE & QA
     "aoep": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "eval": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "audit-loop": ProjectLifecycleStage.STAGE_4_VALIDATE,
     
-    # Phase 2 (Plan & Grill)
-    "jira-sync": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "jira_sync": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    
-    # Phase 5 (Ship)
+    # Phase 5 : SHIP & SYNC
+    "jira-sync": ProjectLifecycleStage.STAGE_5_SHIP,
+    "jira_sync": ProjectLifecycleStage.STAGE_5_SHIP,
     "cycle-status": ProjectLifecycleStage.STAGE_5_SHIP,
 }
 
-# Matrice des restrictions par type de tâche pour les workers Herdr (ADR-0339 / Option 1)
+# Matrice des restrictions par type de tâche pour les workers Herdr (ADR-0375)
 WORKER_TASK_TYPE_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
-    "deepening": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "deepsearch": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
-    "validation": ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+    "deepening": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "deepsearch": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+    "validation": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
     "build": ProjectLifecycleStage.STAGE_3_BUILD,
     "compaction": ProjectLifecycleStage.STAGE_3_BUILD,
 }
@@ -171,14 +181,26 @@ class GateApprovalRecord(BaseModel):
 class ProjectLifecycleState(BaseModel):
     """État persistant et canonique du cycle de vie d'un projet client (SSOT)."""
     project_name: str
-    current_stage: ProjectLifecycleStage = ProjectLifecycleStage.STAGE_0_TSHIRT
+    current_stage: ProjectLifecycleStage = ProjectLifecycleStage.STAGE_1_INGEST
     gates: Dict[str, GateApprovalRecord] = Field(default_factory=dict)
     created_at_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     updated_at_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     @property
+    def canonical_stage(self) -> ProjectLifecycleStage:
+        if self.current_stage in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST):
+            return ProjectLifecycleStage.STAGE_1_INGEST
+        if self.current_stage in (
+            ProjectLifecycleStage.STAGE_1_SOW,
+            ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+            ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+        ):
+            return ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
+        return self.current_stage
+
+    @property
     def stage_index(self) -> int:
-        return STAGE_ORDER.index(self.current_stage)
+        return STAGE_ORDER.index(self.canonical_stage)
 
     def is_gate_approved(self, gate_number: int) -> bool:
         return str(gate_number) in self.gates
@@ -201,6 +223,26 @@ class ProjectLifecycleManager:
             try:
                 with open(state_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
+                # Migration déterministe ADR-0375 des anciens états ADR-0339
+                raw_stage = data.get("current_stage")
+                if raw_stage == "STAGE_0_TSHIRT":
+                    sprint_file = project_path / "backlog" / "sprint_backlog.md"
+                    stories_dir = project_path / "backlog" / "stories"
+                    arch_dir = project_path / "docs" / "01-architecture"
+                    specs_dir = project_path / "docs" / "02-specs"
+                    has_work = (
+                        sprint_file.exists()
+                        or (stories_dir.exists() and any(stories_dir.glob("*.md")))
+                        or (arch_dir.exists() and any(arch_dir.glob("*.md")))
+                        or (specs_dir.exists() and any(specs_dir.glob("*.md")))
+                    )
+                    data["current_stage"] = (
+                        ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE.value
+                        if has_work
+                        else ProjectLifecycleStage.STAGE_1_INGEST.value
+                    )
+                elif raw_stage in ("STAGE_1_SOW", "STAGE_2_PLAN_GRILL"):
+                    data["current_stage"] = ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE.value
                 return ProjectLifecycleState(**data)
             except Exception as e:
                 # Sauvegarde d'urgence du fichier corrompu (ADR-0369)
@@ -240,11 +282,22 @@ class ProjectLifecycleManager:
             try:
                 with open(state_file, "r", encoding="utf-8") as f:
                     existing_data = json.load(f)
-                existing_stage = ProjectLifecycleStage(existing_data.get("current_stage"))
+                raw_existing = ProjectLifecycleStage(existing_data.get("current_stage"))
+                existing_canonical = (
+                    ProjectLifecycleStage.STAGE_1_INGEST
+                    if raw_existing in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
+                    else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
+                    if raw_existing in (
+                        ProjectLifecycleStage.STAGE_1_SOW,
+                        ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+                        ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+                    )
+                    else raw_existing
+                )
                 existing_gates = set(existing_data.get("gates", {}).keys())
 
-                existing_idx = STAGE_ORDER.index(existing_stage)
-                new_idx = STAGE_ORDER.index(state.current_stage)
+                existing_idx = STAGE_ORDER.index(existing_canonical)
+                new_idx = STAGE_ORDER.index(state.canonical_stage)
 
                 new_gates = set(state.gates.keys())
                 lost_gates = existing_gates - new_gates
@@ -252,14 +305,14 @@ class ProjectLifecycleManager:
                 if new_idx < existing_idx or lost_gates:
                     msg = (
                         f"Régression de cycle de vie interdite pour '{project_path.name}' : "
-                        f"passage de {existing_stage.value} (index {existing_idx}) à {state.current_stage.value} (index {new_idx}) "
+                        f"passage de {raw_existing.value} (index {existing_idx}) à {state.current_stage.value} (index {new_idx}) "
                         f"ou perte de portes {sorted(list(lost_gates))}."
                     )
                     logger.warning(
                         msg,
                         extra={
                             "project": project_path.name,
-                            "existing_stage": existing_stage.value,
+                            "existing_stage": raw_existing.value,
                             "new_stage": state.current_stage.value,
                             "lost_gates": list(lost_gates),
                         },
@@ -317,17 +370,23 @@ class ProjectLifecycleManager:
 
         proj_name = project_path.name
 
-        # Détermination de l'étape initiale selon la présence du SOW
+        # Détermination de l'étape initiale selon la présence de livrables existants (Fast-Track)
         if initial_stage is None:
             sow_files = (
                 list((project_path / "docs" / "01-architecture").glob("SOW_*.md"))
                 if (project_path / "docs" / "01-architecture").exists()
                 else []
             )
-            if sow_files:
-                initial_stage = ProjectLifecycleStage.STAGE_1_SOW
+            specs_files = (
+                list((project_path / "docs" / "02-specs").glob("*.md"))
+                if (project_path / "docs" / "02-specs").exists()
+                else []
+            )
+            sprint_file = project_path / "backlog" / "sprint_backlog.md"
+            if sow_files or specs_files or sprint_file.exists():
+                initial_stage = ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
             else:
-                initial_stage = ProjectLifecycleStage.STAGE_0_TSHIRT
+                initial_stage = ProjectLifecycleStage.STAGE_1_INGEST
 
         state = ProjectLifecycleState(
             project_name=proj_name,
@@ -384,22 +443,33 @@ class ProjectLifecycleManager:
             # Commande non répertoriée dans la matrice stricte : autoriser par défaut
             return True, "Commande non restreinte."
 
-        current_idx = STAGE_ORDER.index(state.current_stage)
-        required_idx = STAGE_ORDER.index(min_required)
+        current_idx = STAGE_ORDER.index(state.canonical_stage)
+        req_stage = (
+            ProjectLifecycleStage.STAGE_1_INGEST
+            if min_required in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
+            else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
+            if min_required in (
+                ProjectLifecycleStage.STAGE_1_SOW,
+                ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+                ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+            )
+            else min_required
+        )
+        required_idx = STAGE_ORDER.index(req_stage)
 
         if current_idx < required_idx:
             # Violation de porte
-            gate_needed = current_idx  # La porte à franchir pour avancer
+            gate_needed = current_idx + 1  # La porte à franchir pour avancer (Gate 1 pour sortir de Phase 1)
             gate_def = GATE_DEFINITIONS.get(gate_needed, {})
             gate_name = gate_def.get("name", f"Gate {gate_needed}")
             detail = ""
-            if cmd_norm == "worker-spawn" and not task_type and current_idx == STAGE_ORDER.index(ProjectLifecycleStage.STAGE_2_PLAN_GRILL):
-                detail = " En Phase 2 (STAGE_2_PLAN_GRILL), spécifiez un --task-type d'analyse ('deepening', 'deepsearch', 'validation') pour déléguer."
+            if cmd_norm == "worker-spawn" and not task_type and current_idx == STAGE_ORDER.index(ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE):
+                detail = " En Phase 2 (STAGE_2_PLAN_ANALYSE), spécifiez un --task-type d'analyse ('deepening', 'deepsearch', 'validation') pour déléguer."
 
             return (
                 False,
-                f"La commande '{cmd_norm}' requiert au minimum l'étape '{min_required.value}' ({STAGE_NAMES[min_required]}). "
-                f"Le projet est actuellement en '{state.current_stage.value}' ({STAGE_NAMES[state.current_stage]}).{detail} "
+                f"La commande '{cmd_norm}' requiert au minimum l'étape '{min_required.value}' ({STAGE_NAMES.get(min_required, min_required.value)}). "
+                f"Le projet est actuellement en '{state.current_stage.value}' ({STAGE_NAMES.get(state.current_stage, state.current_stage.value)}).{detail} "
                 f"Vous devez d'abord franchir la '{gate_name}' via "
                 f"'python src/swarm.py gate-approve --project {project_path.name} --gate {gate_needed} --approver <nom>'."
             )
@@ -418,18 +488,55 @@ class ProjectLifecycleManager:
         Valide formellement une Porte de Gouvernance et fait progresser le projet vers la phase suivante.
         """
         if gate_number not in GATE_DEFINITIONS:
-            raise ValueError(f"Porte inconnue : Gate {gate_number}. Portes valides : 0 à 5.")
+            raise ValueError(f"Porte inconnue : Gate {gate_number}. Portes valides : 1 à 5.")
 
         state = cls.get_state(project_path)
         gate_def = GATE_DEFINITIONS[gate_number]
 
-        # Vérification d'alignement de phase
+        # Vérification d'alignement de phase (avec support canonique)
         expected_stage = gate_def["from_stage"]
-        if state.current_stage != expected_stage:
+        current_canonical = state.canonical_stage
+        expected_canonical = (
+            ProjectLifecycleStage.STAGE_1_INGEST
+            if expected_stage in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
+            else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
+            if expected_stage in (
+                ProjectLifecycleStage.STAGE_1_SOW,
+                ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+                ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+            )
+            else expected_stage
+        )
+        if current_canonical != expected_canonical:
             raise ValueError(
                 f"Impossible de valider la Gate {gate_number} : le projet est en étape '{state.current_stage.value}', "
                 f"alors que cette porte requiert d'être en étape '{expected_stage.value}'."
             )
+
+        # Validations bloquantes spécifiques Gate 1 (ADR-0378 / Check 13 / Anti-Ghost-Bias)
+        if gate_number in (0, 1):
+            stories_dir = project_path / "backlog" / "stories"
+            if stories_dir.exists():
+                premature = [sf.name for sf in stories_dir.glob("*.md") if sf.name.lower() != "readme.md"]
+                if premature:
+                    raise ValueError(
+                        f"Approbation de Gate {gate_number} refusée (Check 13 / Anti-Ghost-Bias) : "
+                        f"des récits physiques ({len(premature)}) existent déjà sous backlog/stories/ : {premature[:3]}. "
+                        f"En Phase 1 (INGEST & EXPLORE), la création de stories est formellement interdite. "
+                        f"Lancez 'python src/swarm.py lifecycle-clean --confirm' pour assainir le backlog avant de valider la Gate 1."
+                    )
+            ref_dir = project_path / "reference"
+            raw_files = [f for f in ref_dir.rglob("*") if f.is_file()] if ref_dir.exists() else []
+            ingested_dir = project_path / "docs" / "00-ingested"
+            ingested_files = list(ingested_dir.glob("*.md")) if ingested_dir.exists() else []
+            manifest_file = ingested_dir / "source_manifest.json" if ingested_dir.exists() else None
+            has_ingested = bool(ingested_files or (manifest_file and manifest_file.exists()))
+            if raw_files and not has_ingested:
+                raise ValueError(
+                    f"Approbation de Gate {gate_number} refusée : des fichiers bruts sont présents dans reference/ "
+                    f"mais aucun document normalisé n'a été trouvé sous docs/00-ingested/ pour '{project_path.name}'. "
+                    f"Lancez 'python src/swarm.py ingest --project {project_path.name}' avant d'approuver la Gate 1."
+                )
 
         # Calcul d'empreinte de sécurité sur les livrables de la phase
         checksum = cls._compute_stage_deliverables_hash(project_path, state.current_stage)
@@ -481,7 +588,7 @@ class ProjectLifecycleManager:
             }
 
         state = cls.get_state(project_path)
-        if state.stage_index >= STAGE_ORDER.index(ProjectLifecycleStage.STAGE_2_PLAN_GRILL):
+        if state.canonical_stage != ProjectLifecycleStage.STAGE_1_INGEST:
             return {
                 "status": "noop",
                 "deleted_stories": [],
@@ -566,13 +673,43 @@ class ProjectLifecycleManager:
         h = hashlib.sha256()
         files_to_hash = []
 
-        if stage in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_SOW):
+        canonical = (
+            ProjectLifecycleStage.STAGE_1_INGEST
+            if stage in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
+            else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
+            if stage in (
+                ProjectLifecycleStage.STAGE_1_SOW,
+                ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
+                ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
+            )
+            else stage
+        )
+
+        if canonical == ProjectLifecycleStage.STAGE_1_INGEST:
+            ingested_dir = project_path / "docs" / "00-ingested"
+            if ingested_dir.exists():
+                manifest_file = ingested_dir / "source_manifest.json"
+                if manifest_file.exists():
+                    files_to_hash.append(manifest_file)
+                files_to_hash.extend(sorted(ingested_dir.glob("*.md")))
+            assets_dir = project_path / "docs" / "05-assets"
+            if assets_dir.exists():
+                files_to_hash.extend(sorted(f for f in assets_dir.rglob("*.svg") if f.is_file()))
+            lexicon_file = project_path / "docs" / "04-transverse" / "lexique_domaine.md"
+            if lexicon_file.exists():
+                files_to_hash.append(lexicon_file)
+
+        elif canonical == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE:
             arch_dir = project_path / "docs" / "01-architecture"
             if arch_dir.exists():
+                files_to_hash.extend(sorted(arch_dir.glob("TSHIRT_SIZE_*.md")))
                 files_to_hash.extend(sorted(arch_dir.glob("SOW_*.md")))
             backlog_file = project_path / "backlog" / "sprint_backlog.md"
             if backlog_file.exists():
                 files_to_hash.append(backlog_file)
+            stories_dir = project_path / "backlog" / "stories"
+            if stories_dir.exists():
+                files_to_hash.extend(sorted(stories_dir.glob("*.md")))
 
         for f in files_to_hash:
             h.update(f.read_bytes())

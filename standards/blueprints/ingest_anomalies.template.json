@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "mLoop Ingest Anomalies Register (Fail-Closed / ADR-0335)",
+  "description": "Registre canonique d'anomalies d'ingestion documentaire en politique Fail-Closed.",
+  "type": "object",
+  "required": ["project_name", "recorded_at", "total_anomalies", "anomalies"],
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "description": "Nom officiel du projet client"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Horodatage ISO de l'enregistrement"
+    },
+    "total_anomalies": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Nombre d'anomalies bloquantes ou avertissements enregistrés"
+    },
+    "anomalies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["filename", "filepath", "error", "timestamp"],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Nom du fichier ayant causé l'anomalie"
+          },
+          "filepath": {
+            "type": "string",
+            "description": "Chemin relatif du fichier source"
+          },
+          "error": {
+            "type": "string",
+            "description": "Description technique de l'erreur I/O ou de parsing"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Horodatage ISO de l'erreur"
+          }
+        }
+      }
+    }
+  }
+}

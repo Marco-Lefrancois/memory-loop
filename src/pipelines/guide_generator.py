@@ -33,6 +33,8 @@ PHASE_MAPPING: Dict[str, str] = {
     # Phase 2 : PLAN / ARCHI (Planification, Architecture, Grill & Découpage)
     "focus": "plan",
     "grill": "plan",
+    "grill-project": "plan",
+    "to-tshirt": "plan",
     "to-spec": "plan",
     "to-tickets": "plan",
     "wayfinder": "plan",
@@ -52,6 +54,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "story-clean": "plan",
     "update-story": "plan",
     "dossier-init": "plan",
+    "multi-draft": "plan",
 
     # Phase 3 : BUILD / DEV (Développement & Workers Multi-Agents)
     "self-dev": "build",
@@ -126,6 +129,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "teach": "transverse",
     "hook": "transverse",
     "doctor": "transverse",
+    "agent-probe": "transverse",
     "skill-doctor": "transverse",
     "skill-list": "transverse",
     "skill-invoke": "transverse",
@@ -170,6 +174,7 @@ PHASE_HEADERS: Dict[str, Dict[str, str]] = {
 }
 
 ARTEFACTS_MAP: Dict[str, str] = {
+    "to-tshirt": "`docs/01-architecture/TSHIRT_SIZE_<PROJET>.md`",
     "to-sow": "`docs/01-architecture/SOW_<PROJET>.md`",
     "ingest": "`docs/00-ingested/` normalisé",
     "crawl": "`memory/crawler/cache/` (Markdown Twin)",
@@ -178,6 +183,7 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "code-init": "Base SQLite `.codegraph/`",
     "focus": "Chargement de `backlog/stories/<ID>.md`",
     "grill": "ADRs dans `standards/adr-system/` & preuves",
+    "grill-project": "`standards/adr-system/` & cadrage macro",
     "to-spec": "`docs/01-architecture/`",
     "to-tickets": "`backlog/stories/` + `sprint_backlog.md`",
     "archify": "Artefact HTML vectoriel interactif",
@@ -204,6 +210,7 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "topology": "Cartographie Blast Radius & Surface d'Exposition",
     "rollback": "Restauration PITR de l'état et mémoire saine",
     "dream-rsi": "Méta-Politique Optimale (.mloop/dream_policy.json)",
+    "multi-draft": "Rapport Challenge Multi-Drafts (ADR-0373)",
 }
 
 

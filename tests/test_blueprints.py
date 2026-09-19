@@ -19,7 +19,9 @@ def test_blueprint_loader_resolves_official_blueprints():
         "project_open_questions_template.md",
         "project_spec_template.md",
         "project_adr_template.md",
-        "project_tracer_bullet_story_template.md",
+        "story_draft_template.md",
+        "story_template.md",
+        "tshirt_size_template.md",
         "project_fact_dossier_template.md",
         "git_pre_commit_hook.sh",
     ]

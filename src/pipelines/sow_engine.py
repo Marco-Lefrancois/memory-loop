@@ -148,9 +148,11 @@ class SOWEngine:
         content = template_text
         content = content.replace("[TITRE DU PROJET]", final_title)
         content = content.replace("[Nom Officiel du Projet]", final_title)
+        content = content.replace("[Date de Rédaction]", today_str)
         content = content.replace("[Date de Rédaction ex: 18 août 2026]", today_str)
         content = content.replace("[1.0]", "1.0")
         content = content.replace("`[T-SHIRT_SIZE]`", f"`{target_size}`")
+        content = content.replace("[T-SHIRT_SIZE]", f"`{target_size}`")
 
         # Ajuster les montants selon la taille T-Shirt
         pricing_map = {
@@ -171,9 +173,14 @@ class SOWEngine:
 
         formatted_cost = f"{cost:,} $".replace(",", " ")
         content = content.replace(
+            "([N] jours / [N] $ CAD)",
+            f"({days} jours / {formatted_cost} CAD)",
+        )
+        content = content.replace(
             "([N] jours / [N] h / [N] $ CAD)",
             f"({days} jours / {hours} h / {formatted_cost} CAD)",
         )
+        content = content.replace("[TOTAL_BUDGET]", f"{cost:,}".replace(",", " "))
         content = content.replace(
             "| **Total Heures Estimées** | **[N]** |",
             f"| **Total Heures Estimées** | **{hours}** |",
@@ -191,26 +198,27 @@ class SOWEngine:
             f"| **Valeur Monétaire Estimée** | **{formatted_cost}** |",
         )
 
-        # Injection dynamique des récits macro dans Section 4 si présents
+        # Injection dynamique des récits macro dans Section 2.1 Périmètre Inclus si présents
         if ctx.get("macro_stories"):
-            macro_rows = []
+            macro_items = []
             for s in ctx["macro_stories"]:
-                macro_rows.append(
-                    f"| `{s['id']}` | {s['component'] or 'Composant'} | 3 | **{s['title']}** : Découpage macro en attente de cadrage fin (Gate 2). |"
+                macro_items.append(
+                    f"  - **`{s['id']}`** : {s['title']} ({s['component'] or 'Composant'})"
                 )
-            if macro_rows:
-                macro_table_block = (
-                    "| ID | Parcours / Composant | SP | Titre & Description Sommaire (*INVEST*) |\n"
-                    "| :--- | :--- | :---: | :--- |\n"
-                    + "\n".join(macro_rows)
-                )
-                # Remplacer le bloc par défaut dans le template s'il existe
-                default_table_pattern = (
-                    r"\| ID \| Parcours / Composant \| SP \| Titre & Description Sommaire \(\*INVEST\*\) \|\n"
-                    r"\| :--- \| :--- \| :---: \| :--- \|\n"
-                    r"(?:\| `.+` \| .+ \| \d+ \| .+ \|\n?)+"
-                )
-                content = re.sub(default_table_pattern, macro_table_block + "\n", content)
+            macro_block = (
+                "* **Récits & Fonctionnalités Clés (Macro-Backlog)** :\n"
+                + "\n".join(macro_items)
+            )
+            # Remplacement dans Section 2.1
+            pattern_lot = (
+                r"\* \*\*Lot 1 : \[Nom du Lot ou Domaine 1\]\*\*\n"
+                r"  - \[Livrable / Fonctionnalité contractuelle 1\.1\]\n"
+                r"  - \[Livrable / Fonctionnalité contractuelle 1\.2\]"
+            )
+            if re.search(pattern_lot, content):
+                content = re.sub(pattern_lot, macro_block, content)
+            else:
+                content = content.replace("### 2.1 Périmètre Inclus (In-Scope)\n", f"### 2.1 Périmètre Inclus (In-Scope)\n{macro_block}\n")
 
         out_dir = self.project_path / "docs" / "01-architecture"
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -218,13 +226,8 @@ class SOWEngine:
 
         out_file.write_text(content, encoding="utf-8")
 
-        # Enregistrement de l'étape de phase SOW (ADR-0339)
-        from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
-        l_state = ProjectLifecycleManager.get_state(self.project_path)
-        if l_state.current_stage == ProjectLifecycleStage.STAGE_0_TSHIRT:
-            l_state.current_stage = ProjectLifecycleStage.STAGE_1_SOW
-            ProjectLifecycleManager.save_state(self.project_path, l_state)
-
+        # Note ADR-0375 : Le SOW est un livrable d'avant-projet de la Phase 2 (STAGE_2_PLAN_ANALYSE).
+        # Il n'impose plus de transition d'état artificielle dans la machine à états.
         return out_file
 
     # ── ADR-0331 §2.2.3 : Interdiction Formelle des Libellés Génériques ──────

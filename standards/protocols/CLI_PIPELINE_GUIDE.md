@@ -2,8 +2,8 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 114 Commandes Enregistrées dans `src/commands/_registry.py`  
-**Date de Synchronisation** : 17 septembre 2026  
+**Commandes Actives** : 116 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Date de Synchronisation** : 15 septembre 2026  
 
 ---
 
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 113 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 116 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -41,7 +41,7 @@ flowchart LR
 | `python src/swarm.py ingest` | Ingestion documentaire vers Markdown normalisé | [--initiative <STR>] | `docs/00-ingested/` normalisé |
 | `python src/swarm.py init` | Initialiser un nouveau projet (Loi des 3 Piliers) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py research` | Session de recherche automatisée | [--query <STR>] [--url <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py to-sow` | Générer un Énoncé des Travaux (SOW) et Évaluation Budgétaire (T-Shirt Size) | [--title <STR>] [--size <STR>] | `docs/01-architecture/SOW_<PROJET>.md` |
+| `python src/swarm.py to-sow` | Générer un Énoncé des Travaux (SOW) contractuel sous docs/01-architecture/ | [--title <STR>] [--size <STR>] | `docs/01-architecture/SOW_<PROJET>.md` |
 
 ---
 
@@ -85,11 +85,14 @@ flowchart LR
 | `python src/swarm.py graph-impact` | Calculer le rayon d'impact conceptuel et architectural (Blast Radius) | --target <STR> [--global <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py graph-query` | Interroger le graphe de connaissances sur un concept, ADR ou règle (Agentic Retrieval) | --query <STR> [--limit <INT>] [--global <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py graph-status` | Afficher les statistiques et la fraîcheur du graphe de connaissances | [--global <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py grill` | Session interactive Grill-with-Docs et génération d'ADR | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--story <STR>] | ADRs dans `standards/adr-system/` & preuves |
+| `python src/swarm.py grill` | Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--story <STR>] | ADRs dans `standards/adr-system/` & preuves |
+| `python src/swarm.py grill-project` | Cadrage contradictoire macro d'avant-projet (Architecture globale, Loi 25, SSO, exclusions) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] | `standards/adr-system/` & cadrage macro |
 | `python src/swarm.py hyper-query` | Interroger l'hypergraphe pour une User Story ou inspecter les statistiques (ADR-0343) | [--story <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py multi-draft` | Challenge d'évaluation comparative locale multi-branches (struct-check + Sentinel) — ADR-0373 | --story <STR> [--eval-only <STR>] [--strict <STR>] | Rapport Challenge Multi-Drafts (ADR-0373) |
 | `python src/swarm.py story-clean` | Nettoyer les sections de mémoire temporaires (Suite Mémoire, Notes de Traçabilité) des stories (ADR-0301) | [--verbose <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py to-spec` | Générer une spécification technique | [--title <STR>] | `docs/01-architecture/` |
 | `python src/swarm.py to-tickets` | Découpage en tickets verticaux depuis l'architecture | *(Aucun)* | `backlog/stories/` + `sprint_backlog.md` |
+| `python src/swarm.py to-tshirt` | Générer un Dimensionnement Budgétaire d'avant-projet (T-Shirt Size) sous docs/01-architecture/ | [--title <STR>] | `docs/01-architecture/TSHIRT_SIZE_<PROJET>.md` |
 | `python src/swarm.py topology` | Cartographie topologique des agents et calcul du Blast Radius (ADR-0371) | [--agent <STR>] [--json <STR>] | Cartographie Blast Radius & Surface d'Exposition |
 | `python src/swarm.py update-story` | Mettre à jour une section H2 spécifique d'une story de façon AST-déterministe | --story <STR> --section <STR> --content <STR> | Console / Mémoire d'état |
 | `python src/swarm.py wayfinder` | Initialiser ou mettre à jour la carte Wayfinder | [--title <STR>] | Console / Mémoire d'état |
@@ -138,14 +141,13 @@ flowchart LR
 | `python src/swarm.py eval-harvest` | Moissonner les anomalies d'audit en cas d'évaluation Evals (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py fact-check` | Exécuter l'audit Fact-Check NLI sur une User Story et émettre son certificat | [--story <STR>] [--strict <STR>] | Certificat de véracité NLI |
 | `python src/swarm.py fact-search` | Recherche factuelle haute précision dans l'index FTS5 SSOT documentaire | --query <STR> [--limit <INT>] [--layer <STR>] [--no-synonyms <STR>] [--include-superseded <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py gate-approve` | Valider formellement une Porte de Gouvernance (Gate 0 à 5 - ADR-0339) | --gate <INT> [--approver <STR>] [--notes <STR>] | `memory/lifecycle_state.json` (Porte validée) |
+| `python src/swarm.py gate-approve` | Valider formellement une Porte de Gouvernance (Gate 1 à 5 - ADR-0375) | --gate <INT> [--approver <STR>] [--notes <STR>] | `memory/lifecycle_state.json` (Porte validée) |
 | `python src/swarm.py gates` | Exécuter, vérifier ou auditer les portails d'acceptation (Runnable Gates - ADR-0341) | [--file <STR>] [--scope <STR>] [--status <STR>] [--reverify <STR>] [--lint <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py guardian-status` | Afficher l'état du Guardian Auto-Reviewer et du Circuit Breaker | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py hill-climb` | Test Hill-Climbing (mutation-évaluation) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py lifecycle-clean` | Archiver de manière réversible les stories orphelines créées prématurément (Zéro Ghost Bias / L-08) | [--confirm <STR>] | Nettoyage stories orphelines |
 | `python src/swarm.py lifecycle-status` | Afficher l'état du cycle de vie projet et l'historique des portes (ADR-0339) | *(Aucun)* | Console / Historique du cycle de vie |
 | `python src/swarm.py rubber-duck` | Agent Sentinel — revue contradictoire de fond (Avocat du Diable avec discernement & rigueur) | [--file <STR>] [--suggest-patch <STR>] | Rapport sémantique 4 Piliers |
-| `python src/swarm.py multi-draft` | Challenge d'évaluation comparative locale multi-branches physiques (struct-check + Sentinel) — ADR-0373 | --story <STR> [--eval-only] [--strict] | `memory/drafts/<ID>/challenge_matrix.json` & `challenge_report.md` |
 | `python src/swarm.py struct-check` | Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence du gabarit blueprint (pré-Sentinel) | [--file <STR>] [--strict <STR>] [--verbose <STR>] | Rapport violations C1–C7 |
 | `python src/swarm.py tree` | Afficher l'arbre d'exécution Depth Tree et l'état des gates (ADR-0341) | [--file <STR>] [--scope <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py wikifix` | Alias de sync (audit de cohérence WikiFix) | [--verbose <STR>] [--incremental <STR>] [--fast <STR>] [--story <STR>] | `memory/wikifix_report.md` |
@@ -177,6 +179,7 @@ flowchart LR
 
 | Commande CLI | Rôle / Description | Paramètres | Sorties / Artefacts Clés |
 | :--- | :--- | :--- | :--- |
+| `python src/swarm.py agent-probe` | Sonder les runtimes et CLI des agents locaux aval (Herdr, OpenCode, Claude Code... - ADR-0377) | [--agent <STR>] [--json <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py agent-resilience` | Audit de la posture de cyber-résilience agentique (ADR-0371) | [--json <STR>] | Score & Audit de Cyber-Résilience (ADR-0371) |
 | `python src/swarm.py app-server` | Démarrer le démon d'interfaçage JSON-RPC 2.0 mLoop App-Server | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py blast` | Calcul du rayon d'impact (Blast Radius) d'un fichier ou composant | [--file <STR>] [--target <STR>] | Console / Mémoire d'état |
@@ -184,7 +187,7 @@ flowchart LR
 | `python src/swarm.py cache-stats` | Afficher les statistiques du cache sémantique déterministe LLM | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py context-watch` | Surveiller l'occupation de la fenêtre de contexte et alerter la Dumb-Zone (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py dashboard` | Tableau de bord d'observabilité et supervision souverain mLoop (FastAPI / Zero-Docker) | [--port <INT>] [--no-browser <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py doctor` | Bilan de santé global et diagnostic d'hygiène des compétences mLoop | [--skills <STR>] [--threshold <INT>] [--json <STR>] [--no-tombstone <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py doctor` | Bilan de santé global et diagnostic d'hygiène des compétences et agents mLoop (ADR-0377) | [--skills <STR>] [--agents <STR>] [--threshold <INT>] [--json <STR>] [--no-tombstone <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py dream` | Consolidation nocturne et compression mémorielle (Sleep-Wake) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py dream-rsi` | Exécuter le cycle Dream RSI (simulateur replay hors-ligne & optimisation de politique) | [--simulate <STR>] [--apply <STR>] [--json <STR>] | Méta-Politique Optimale (.mloop/dream_policy.json) |
 | `python src/swarm.py graph-run` | Exécution Graph Engineering (DAG Multi-Agents) | [--title <STR>] | Console / Mémoire d'état |

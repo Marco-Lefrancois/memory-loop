@@ -18,7 +18,7 @@ COMMANDS: dict[str, dict] = {
             {
                 "name": "--phase",
                 "type": str,
-                "choices": ["sow", "spec", "plan", "build", "validate", "ship"],
+                "choices": ["ingest", "plan", "build", "validate", "ship", "sow", "spec"],
                 "help": "Filtrer par phase du cycle",
             },
             {
@@ -89,13 +89,13 @@ COMMANDS: dict[str, dict] = {
     },
     "gate-approve": {
         "handler": "project:handle_gate_approve",
-        "help": "Valider formellement une Porte de Gouvernance (Gate 0 à 5 - ADR-0339)",
+        "help": "Valider formellement une Porte de Gouvernance (Gate 1 à 5 - ADR-0375)",
         "args": [
             {
                 "name": "--gate",
                 "type": int,
                 "required": True,
-                "help": "Numéro de porte (0: Enveloppe T-Shirt, 1: SOW, 2: DoR, 3: DoD, 4: Recette QA, 5: Clôture)",
+                "help": "Numéro de porte (1: Ingestion & Cadrage, 2: DoR, 3: DoD, 4: Recette QA, 5: Clôture)",
             },
             {
                 "name": "--approver",
@@ -654,14 +654,25 @@ COMMANDS: dict[str, dict] = {
     },
     "grill": {
         "handler": "architecture:handle_grill",
-        "help": "Session interactive Grill-with-Docs et génération d'ADR",
+        "help": "Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1)",
         "args": [
             {"name": "--title", "type": str, "help": "Titre"},
             {"name": "--decision", "type": str, "help": "Décision retenue"},
             {"name": "--context", "type": str, "help": "Contexte"},
             {"name": "--positives", "type": str, "help": "Conséquences positives"},
             {"name": "--negatives", "type": str, "help": "Conséquences négatives"},
-            {"name": "--story", "type": str, "help": "Identifiant du récit"},
+            {"name": "--story", "type": str, "help": "Identifiant du récit pour analyse micro 1:1"},
+        ],
+    },
+    "grill-project": {
+        "handler": "architecture:handle_grill",
+        "help": "Cadrage contradictoire macro d'avant-projet (Architecture globale, Loi 25, SSO, exclusions)",
+        "args": [
+            {"name": "--title", "type": str, "help": "Titre de l'arbitrage macro"},
+            {"name": "--decision", "type": str, "help": "Décision retenue"},
+            {"name": "--context", "type": str, "help": "Contexte macroscopique"},
+            {"name": "--positives", "type": str, "help": "Conséquences positives"},
+            {"name": "--negatives", "type": str, "help": "Conséquences négatives"},
         ],
     },
     "wayfinder": {
@@ -671,15 +682,22 @@ COMMANDS: dict[str, dict] = {
             {"name": "--title", "type": str, "help": "Titre de l'initiative"},
         ],
     },
+    "to-tshirt": {
+        "handler": "architecture:handle_to_tshirt",
+        "help": "Générer un Dimensionnement Budgétaire d'avant-projet (T-Shirt Size) sous docs/01-architecture/",
+        "args": [
+            {"name": "--title", "type": str, "help": "Titre du projet ou de l'initiative"},
+        ],
+    },
     "to-sow": {
         "handler": "architecture:handle_to_sow",
-        "help": "Générer un Énoncé des Travaux (SOW) et Évaluation Budgétaire (T-Shirt Size)",
+        "help": "Générer un Énoncé des Travaux (SOW) contractuel sous docs/01-architecture/",
         "args": [
             {"name": "--title", "type": str, "help": "Titre du projet"},
             {
                 "name": "--size",
                 "type": str,
-                "help": "Taille T-Shirt cible (xs, s, m, M, l, L, xl)",
+                "help": "Taille T-Shirt de référence (xs, s, m, M, l, L, xl)",
             },
         ],
     },
@@ -1062,12 +1080,17 @@ COMMANDS: dict[str, dict] = {
     "doctor": {
         "handler": "skill:handle_skill_doctor",
         "no_project": True,
-        "help": "Bilan de santé global et diagnostic d'hygiène des compétences mLoop",
+        "help": "Bilan de santé global et diagnostic d'hygiène des compétences et agents mLoop (ADR-0377)",
         "args": [
             {
                 "name": "--skills",
                 "action": "store_true",
                 "help": "Auditer l'hygiène contextuelle des compétences",
+            },
+            {
+                "name": "--agents",
+                "action": "store_true",
+                "help": "Sonder la disponibilité et les versions des agents CLI locaux (ADR-0377)",
             },
             {
                 "name": "--threshold",
@@ -1087,6 +1110,24 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "agent-probe": {
+        "handler": "skill:handle_agent_probe",
+        "no_project": True,
+        "help": "Sonder les runtimes et CLI des agents locaux aval (Herdr, OpenCode, Claude Code... - ADR-0377)",
+        "args": [
+            {
+                "name": "--agent",
+                "type": str,
+                "help": "Cibler un agent spécifique (ex: herdr, opencode)",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie structurée en JSON",
+            },
+        ],
+    },
+
     # ── Code Intelligence (CodeGraph - ADR-0204) ───────────
     "code-init": {
         "handler": "code_intelligence:handle_code_init",

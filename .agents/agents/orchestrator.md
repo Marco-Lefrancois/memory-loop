@@ -1,12 +1,19 @@
 ---
 name: orchestrator
 role: Session & Workflow Pilot
-description: Supervise le cycle de vie mLoop et coordonne les skills.
-model_pref: nmedia_cloud/gemini-3-flash-preview-thinking
+description: "Supervise le cycle de vie mLoop et coordonne les skills."
+model: gemini-3-flash-preview-thinking
+model_reasoning_effort: medium
+sandbox_mode: orchestrate
+allowed_write_paths:
+  - memory/**
+  - backlog/**
+forbidden_write_paths:
+  - src/**
 skills:
-  - analyze
-  - plan
-  - validate
+  - herdr-orchestration
+  - handoff
+  - triage
 ---
 
 # MISSION

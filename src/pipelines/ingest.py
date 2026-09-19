@@ -31,6 +31,21 @@ def run_ingest(
             f"Ingestion scopée à l'initiative '{initiative}' → docs/{initiative}/00-ingested/"
         )
 
+    from src.core.layout import ProjectLayout
+
+    ref_dir = project_path / ProjectLayout.REFERENCE
+    if initiative:
+        ref_dir = ref_dir / initiative
+
+    # Vérification présence de matière première brute dans reference/ (Pause Humaine & Fail-Safe - ADR-0378)
+    raw_files = [f for f in ref_dir.rglob("*") if f.is_file()] if ref_dir.exists() else []
+    if not raw_files:
+        ZeroFluffConsole.warning(
+            f"Aucun document détecté dans {ref_dir.as_posix()}/.\n"
+            f"👉 Veuillez déposer vos documents bruts clients (PDF, Word, Excel, Maquettes SVG...) dans ce dossier avant de relancer l'ingestion."
+        )
+        return state
+
     # Phase 1: Ingestion Cognitive Local MarkItDown (RHO/Graphe)
     state = IngestAgent().execute(state)
 

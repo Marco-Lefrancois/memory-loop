@@ -5,7 +5,9 @@ Ceci est le **Cerveau** (Backend d'État & Méta-Orchestrateur) du cycle de vie 
 ### 🎯 Modèle Mental & Mission Fondatrice
 - **Fournisseur Universel de Spécifications (*Universal Dev Handoff*)** : mLoop distille la matière première brute en récits verticaux actionnables (Gherkin 4 piliers, contrats déclaratifs REST/CTA, règles métier atomiques `RM-XXX`) consommables sans ambiguïté par tout développeur ou agent aval (Cursor, Copilot, OpenCode, Claude Code).
 - **Herméticité Absolue (Code vs Architecture)** : mLoop cadre, conçoit, modélise et valide ; il ne modifie **JAMAIS** le code de l'application cliente. L'unique exception est l'auto-développement du framework mLoop (`C:\Memory Loop\src`).
-- **Cycle de Vie en 6 Portes Déterministes** : `0. Inception (SOW)` ➔ `1. Ingest (Spec)` ➔ `2. Plan (Grill)` ➔ `3. Build (Workers)` ➔ `4. Validate (QA)` ➔ `5. Ship (Sync)`.
+- **Cycle de Vie en 5 Phases Universelles (ADR-0375)** : `1. INGEST & EXPLORE` ➔ `2. PLAN & ANALYSE` (Dualité Macro-Planification & Micro-Analyse fine Grill-Me 1:1) ➔ `3. BUILD & DEV` ➔ `4. VALIDATE & QA` ➔ `5. SHIP & SYNC`.
+- **Règle des 2 Seuls Gabarits de Récits** : Palier 1 (`standards/blueprints/story_draft_template.md` avec `status: DRAFT` et `grill_me: PENDING`) ➔ Palier 2 (`standards/blueprints/story_template.md` haute fidélité avec `status: READY_FOR_DEV` et DoR 6/6).
+- **Trinité Documentaire Étanche** : `docs/01-architecture/TSHIRT_SIZE_<PROJET>.md` (macro budgétaire optionnel) | `docs/01-architecture/SOW_<PROJET>.md` (contractuel optionnel) | `backlog/sprint_backlog.md` (suivi d'exécution agile pur).
 - **Flux des Piliers de Données** : Staging brut local `reference/` (interdit en lecture brute) ➔ Normalisation Markdown dans `docs/` (SSOT) ➔ Découpage INVEST dans `backlog/` (Stories & `sprint_backlog.md`).
 
 ---
@@ -17,9 +19,9 @@ Ceci est le **Cerveau** (Backend d'État & Méta-Orchestrateur) du cycle de vie 
 
 ```bash
 1. python src/swarm.py resume --project <nom_projet>     # Anti-amnésie : restauration d'état et historique
-2. python src/swarm.py vibe-check --project <nom_projet> # Guardrail pré-vol de sécurité : 17 contrôles stricts
-3. python src/swarm.py focus --project <nom_projet> --story <chemin_ou_id> # Verrou d'attention sur le récit cible (Phase ≥ 2 uniquement)
-# ⚠️ En Phase 0 (T-Shirt) ou Phase 1 (SOW) : remplacer la commande 3 par 'python src/swarm.py lifecycle-status --project <nom_projet>'
+2. python src/swarm.py vibe-check --project <nom_projet> # Guardrail pré-vol de sécurité : contrôles stricts
+3. python src/swarm.py focus --project <nom_projet> --story <chemin_ou_id> # Verrou d'attention sur le récit cible (Phase ≥ 2)
+# ⚠️ En Phase 1 (INGEST) : remplacer la commande 3 par 'python src/swarm.py lifecycle-status --project <nom_projet>'
 ```
 
 ### 1.2 Outils d'Analyse Sémantique & Directives Terminal
@@ -30,8 +32,8 @@ Ceci est le **Cerveau** (Backend d'État & Méta-Orchestrateur) du cycle de vie 
   - Ne JAMAIS chaîner les commandes avec `&&` sous PowerShell.
   - Ne JAMAIS exécuter un nom d'outil MCP comme commande shell dans le terminal.
 
-### 1.3 Guide SSOT du Pipeline CLI (104 Commandes Réelles - ADR-0370)
-📖 Pour la matrice complète des **104 commandes CLI réelles** regroupées par les 6 phases du cycle mLoop (T-Shirt/SOW, Spec, Plan, Build, Validate, Ship) et transverse :
+### 1.3 Guide SSOT du Pipeline CLI (116 Commandes Réelles - ADR-0370)
+📖 Pour la matrice complète des **116 commandes CLI réelles** regroupées par les 5 phases universelles du cycle mLoop (ADR-0375 : Ingest, Plan, Build, Validate, Ship) et transverse :
 - Consultez [`standards/protocols/CLI_PIPELINE_GUIDE.md`](file:///c:/Memory%20Loop/standards/protocols/CLI_PIPELINE_GUIDE.md)
 - Ou exécutez `python src/swarm.py guide [--phase <nom_phase>]` (et `guide --sync` pour synchroniser le SSOT).
 
@@ -45,6 +47,7 @@ Ceci est le **Cerveau** (Backend d'État & Méta-Orchestrateur) du cycle de vie 
 | 🩺 **5. Skill Doctor** | Audit jetons et détection du *Context Rot* dans `.agents/skills/` (ADR-0362) | `python src/swarm.py doctor --skills` |
 | 🕸️ **6. Graph Intelligence** | Consultation du graphe sans dumping JSON brut (ADR-0204 & ADR-0363) | `python src/swarm.py graph-query --query "..."` |
 | 🛡️ **7. Protection Anti-Amnésie** | Sauvegarde Système 1 et checkpoint avant compaction LLM (ADR-0364) | `python src/swarm.py hook --event pre_compact` |
+| 🤖 **8. Runtimes Agents Aval** | Sonde des CLI locaux pour Dev Handoff & Herdr (ADR-0377) | `python src/swarm.py doctor --agents` (ou `agent-probe`) |
 
 ### 1.5 Moteurs d'Analyse & Diagrammes Déterministes
 - **Graphify** : Documentation, architecture SSOT et règles métier (`graph-query`, `graph-explain`).
@@ -124,7 +127,8 @@ L'organisation du stockage repose sur une séparation hermétique des responsabi
 
 ### 3.4 Activation des Compétences à la Demande (Progressive Disclosure)
 Charger les directives opérationnelles via `view_file` uniquement lors de l'entrée dans la phase correspondante :
-- *Triage & Découpage* ➔ `.agents/skills/plan/SKILL.md` ou `.agents/skills/triage/SKILL.md`.
+- *Phase 1 (Amorçage & Ingestion)* ➔ `.agents/agents/explorer.md` ou `.agents/skills/markitdown/SKILL.md`.
+- *Triage & Découpage (Phase 2)* ➔ `.agents/skills/plan/SKILL.md` ou `.agents/skills/triage/SKILL.md`.
 - *Audit Contradictoire (Rubber Duck, Gherkin)* ➔ `.agents/skills/sentinel/SKILL.md` ou `.agents/skills/rubber-duck/SKILL.md`.
 - *Orchestration DAG & EvidencePacks* ➔ `.agents/skills/graph-engineering/SKILL.md`.
 - *Pause Anti-Hallucination* ➔ `.agents/skills/wait-what/SKILL.md`.
@@ -222,8 +226,10 @@ Charger les directives opérationnelles via `view_file` uniquement lors de l'ent
 - **Violation du Contrat Visuel (Maquettes = SSOT)** :
   - Ne jamais contredire une maquette (`docs/05-assets/` ou `reference/maquettes_svg/`) : elle constitue la source de vérité absolue pour l'interface. En cas de conflit avec un compte-rendu textuel, la maquette l'emporte.
   - **Maquette Vectorisée = Lecture Obligatoire** : Si un SVG ingéré ne contient aucune balise de texte (texte converti en tracés vectoriels), le pont OCR (`src/converters/svg_ocr_bridge.py`, skill `.agents/skills/svg-ocr/`) doit obligatoirement être invoqué pour en extraire les libellés réels (audité par le 10ᵉ contrôle Vibe-Check).
-- **Zéro Dérive de Gabarit** : Interdiction absolue de créer ou modifier une story hors du gabarit officiel `story_template.md`.
-- **Interdiction de Saut de Phase lors d'un SOW (ADR-0339 Zero-Premature-Stories & Stop-and-Handoff)** : Lors d'une demande de SOW ou d'un découpage budgétaire (Phase 0 / Phase 1), interdiction formelle de créer ou de rédiger des User Stories détaillées avec critères Gherkin sous `backlog/stories/`. Le découpage doit résider exclusivement au niveau macro dans `backlog/sprint_backlog.md` et dans la Section 4 du SOW. Après génération du SOW (`to-sow`), obligation impérative de marquer un point d'arrêt complet (*Stop-and-Handoff*) et d'inviter l'utilisateur à franchir la Porte 1 via `python src/swarm.py gate-approve --project <nom> --gate 1`. L'instanciation de récits détaillés ne peut démarrer qu'après approbation formelle du SOW (Gate 1) et passage en Phase 2 (PLAN / GRILL-ME), obligatoirement accompagnée du Dossier de Preuves Documentaires (ADR-0361) et du Grilling interactif (1 question par tour).
+- **Interdiction de Modification Non Auditée du Cœur mLoop (ADR-0376 — Audit 360° en 7 Couches)** : Interdiction absolue de modifier le moteur Python, les gabarits, les protocoles ou les directives du framework mLoop sans avoir cartographié l'impact sur l'ensemble des 7 couches de l'écosystème (`standards/protocols/ECOSYSTEM_RIGOR_PROTOCOL.md`) et soumis un plan zéro blindspot avec approbation humaine bloquante.
+- **Règle des 2 Seuls Gabarits de Récits (ADR-0375)** : Interdiction absolue de créer ou modifier une story hors des 2 gabarits officiels : `standards/blueprints/story_draft_template.md` (Palier 1 : Cadrage DRAFT) et `standards/blueprints/story_template.md` (Palier 2 : Haute Fidélité READY_FOR_DEV). Tout autre template est proscrit.
+- **Interdiction de Saut de Phase (ADR-0375 / ADR-0378 / Zero-Premature-Dev)** : En Phase 1 (INGEST & EXPLORE), interdiction absolue de créer des User Stories sous `backlog/stories/` (Check 13 / Anti-Ghost-Bias). En Phase 2 (PLAN & ANALYSE), le découpage macro génère obligatoirement des ébauches au statut `DRAFT` (`grill_me: PENDING`). L'attribution du statut `READY_FOR_DEV` exige impérativement l'entrevue contradictoire **Grill-Me 1:1**, la rédaction des 4 Piliers Gherkin, la validation du DoR 6/6 (`wikifix`/`rubber-duck`) et l'approbation humaine finale.
+- **Dualité du Protocole Grill-Me** : Toujours exécuter `python src/swarm.py grill-project` pour trancher les choix d'architecture transverses (SSO, sécurité, Loi 25, exclusions nettes) avant d'engager les sessions de micro-grilling unitaire `python src/swarm.py grill-me --story <ID>`.
 - **Zéro Auto-Approbation Sans Grilling** : Interdiction d'attribuer le statut `READY_FOR_DEV` sans session Grill-with-Docs interactive (1 question par tour) et validation formelle `wikifix`/`rubber-duck`.
 - **Jira-Linking-Only (SSOT Référencement)** : Interdiction absolue d'utiliser des chemins locaux (`C:\...`) ou des identifiants temporaires (`REC-015-FE`) dans le corps fonctionnel des récits. Toute référence entre récits doit utiliser exclusivement la clé Jira officielle (ex: `COUVBOIRE-990`).
 - **Pureté Déclarative No-Code** : Utiliser un langage naturel fonctionnel pur (ex: *"l'écran des Mentions Légales"* au lieu de classes physiques). Liens officiels déclaratifs pour les SDKs.
@@ -237,7 +243,7 @@ Charger les directives opérationnelles via `view_file` uniquement lors de l'ent
 - **Zéro Dumping de Graphe JSON Brut (ADR-0363)** : Interdiction formelle d'ouvrir ou d'ingérer des fichiers de graphes bruts (`graph.json`, `knowledge_graph.json`) dans la fenêtre de contexte (risque de fatigue de contexte et d'explosion des jetons). Consultation exclusive via `graph-query`, `graph-explain` ou le bridge MCP.
 - **Zéro Confusion Graphe Racine vs Graphe Projet Client** : Ne jamais exécuter `graphify query` brut à la racine du framework pour interroger un projet client. Toujours utiliser la commande canonique multi-tenant `python src/swarm.py graph-query --project <nom_projet> --query "<concept>"`.
 - **Zéro Exploration Disque Brute** : Aucun crawl non ciblé (`ls -R`, `dir /s`, `find`) avant l'exécution de la Boot Sequence.
-- **Zéro Lecture Brute de `reference/`** : Toujours passer par l'ingestion normalisée dans `docs/00-ingested/`.
+- **Zéro Lecture Brute de `reference/` & Respect de la Pause Humaine** : Toujours passer par l'ingestion normalisée dans `docs/00-ingested/` et `docs/05-assets/` (ADR-0332). Conformément à l'ADR-0100 (`forbidden_subreadmes: true`), aucun sous-readme ne doit être créé dans `reference/`. Si `reference/` est vide lors de l'initialisation, respecter la pause humaine et attendre le dépôt manuel.
 - **Confinement Projet (Multi-Tenant Project Lock)** : Travail hermétique sous `Projects/<nom_projet>/` avec accès transversal strictement contrôlé aux `standards/`, `src/` et `memory/`.
 - **Zéro Création de Compétence Jetable (Zero-Bloat Skills - ADR-0362)** : Interdiction d'ajouter des compétences unitaires dans `.agents/skills/` sans audit préalable via `python src/swarm.py doctor --skills`. Bonifier les compétences maîtresses existantes (`calibrate`, `dream_consolidator`, `rho_optimizer`) pour maintenir le budget de boot sous 15 000 jetons.
 

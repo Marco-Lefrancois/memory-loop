@@ -5,6 +5,43 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [2.31.0] - 2026-09-19
+
+### Added
+- **Cycle de Vie Universel en 5 Phases & Dualité de Cadrage (ADR-0375)** :
+  - Standardisation du cycle en 5 phases universelles : `1. INGEST & EXPLORE` ➔ `2. PLAN & ANALYSE` ➔ `3. BUILD & DEV` ➔ `4. VALIDATE & QA` ➔ `5. SHIP & SYNC`.
+  - Dualité de planification : Macro-découpage initial (`story_draft_template.md` avec statut `DRAFT` et `grill_me: PENDING`) et Micro-analyse haute fidélité (`story_template.md` DoR 6/6, 4 Piliers Gherkin).
+  - Nouveaux gabarits SSOT : `standards/blueprints/story_draft_template.md`, `tshirt_size_template.md`, `source_manifest.template.json`, `ingest_anomalies.template.json`.
+- **Contrat d'Ingestion & Exploration Phase 1 (ADR-0378)** :
+  - Protocole d'ingestion normalisée et cartographie des sources (`standards/protocols/INGESTION_AND_EXPLORATION_PROTOCOL.md`).
+  - Validation de Gate 1 bloquante avant toute entrée en Phase 2 et interdiction stricte de création prématurée de récits en Phase 1 (Anti-Ghost-Bias).
+- **Bouclier de Confinement & Graphe de Standards (ADR-0379)** :
+  - Moteur `src/core/confinement_shield.py` : contrôle d'accès strict aux compétences selon le profil de l'agent.
+  - Moteur `src/core/standards_graph.py` : validation topologique des dépendances normatives et standards mLoop.
+  - Contrôle Vibe-Check n°19 (`Intégrité StandardsGraph & Bouclier de Confinement SSOT`).
+- **Sonde des Runtimes d'Agents Aval & Herdr (ADR-0377)** :
+  - Module `src/core/agent_probe.py` : diagnostic opérationnel des runtimes CLI (Cursor, Claude Code, Copilot, OpenCode).
+  - Contrôle Vibe-Check n°18 (`Runtimes d'Agents Aval & Herdr Opérationnels`).
+- **Standard Rigueur Zéro-Blindspot Écosystème mLoop (ADR-0376)** :
+  - Protocole d'audit 360° en 7 couches (`standards/protocols/ECOSYSTEM_RIGOR_PROTOCOL.md`).
+  - Règle constitutionnelle `.agents/rules/ecosystem_rigor_zero_blindspot.md`.
+- **Résilience Cyber MCP & Workflows Déterministes (ADR-0374)** :
+  - Garde de résilience `src/bridges/mcp_resilience_guard.py` et documentation associée.
+- **Cartographie Exhaustive & Plan de Test Intégral** :
+  - `standards/protocols/PHASE_FILES_AND_TEST_PLAN.md`.
+  - 5 nouvelles suites de tests (`test_standards_graph.py`, `test_agent_probe.py`, `test_phase_1_ingest_gate.py`, `test_mcp_resilience_guard.py`, `test_dashboard_sse.py`).
+
+### Changed
+- **Migration Markdown des Agents** : Conversion et enrichissement des agents sous `.agents/agents/*.md` (`explorer.md`, `worker.md`, `orchestrator.md`, `plan.md`, `sentinel.md`).
+- **Dashboard mLoop** : Enrichissement de la vue des traces, du streaming SSE et de l'observabilité.
+- **Guide CLI SSOT (ADR-0370)** : Alignement strict à 116 commandes réelles dans `standards/protocols/CLI_PIPELINE_GUIDE.md`.
+
+### Removed
+- **Éradication des Gabarits Redondants** : Suppression définitive de `standards/blueprints/project_tracer_bullet_story_template.md` et `standards/blueprints/story_template_PRO_ANALYSIS.md` (consolidation sur les 2 seuls gabarits officiels DRAFT et READY_FOR_DEV).
+- **Suppression des anciens fichiers TOML** : Nettoyage de `standards/agents/*.toml`.
+
+---
+
 ## [2.30.0] - 2026-09-17
 
 ### Added

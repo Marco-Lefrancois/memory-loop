@@ -14,15 +14,27 @@ if TYPE_CHECKING:
 
 
 def handle_grill(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
-    """Session interactive Grill-with-Docs et génération d'ADR."""
+    """Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1)."""
     from src.pipelines.grill_engine import GrillEngine
     from src.pipelines.sync import run_sync
 
     ge = GrillEngine(project_path)
+    story_id = getattr(args, "story", None)
+    is_macro = story_id is None
+
+    if is_macro:
+        ZeroFluffConsole.info(
+            f"[GRILL-ME MACRO] Cadrage transverse du projet '{args.project}' (Architecture globale, Loi 25, SSO, exclusions)."
+        )
+    else:
+        ZeroFluffConsole.info(
+            f"[GRILL-ME MICRO 1:1] Entretien contradictoire chirurgical sur le récit '{story_id}'."
+        )
+
     search_term = (
         getattr(args, "query", None)
         or getattr(args, "title", None)
-        or getattr(args, "story", None)
+        or story_id
     )
     if search_term and search_term != "Décision d'Architecture":
         ge.perform_fact_search(str(search_term))
@@ -45,19 +57,47 @@ def handle_grill(args: argparse.Namespace, state: LoopState, project_path: Path)
         ZeroFluffConsole.success(f"ADR généré avec succès : {adr_path}")
     else:
         ZeroFluffConsole.info(
-            "Aucun contenu de décision (--context/--decision) fourni : marquage de story sans génération d'ADR."
+            "Aucun contenu de décision (--context/--decision) fourni : cadrage sans génération d'ADR."
         )
 
-    if getattr(args, "story", None):
-        if ge.mark_story_grilled(args.story):
+    if story_id:
+        if ge.mark_story_grilled(story_id):
             ZeroFluffConsole.success(
-                f"Récit {args.story} marqué comme GRILLED (statut: READY_FOR_GROOMING)."
+                f"Récit {story_id} qualifié avec succès via Grill-Me Micro 1:1."
             )
         else:
             ZeroFluffConsole.warning(
-                f"Récit {args.story} introuvable dans backlog/stories ou sprint_backlog.md."
+                f"Récit {story_id} introuvable dans backlog/stories ou sprint_backlog.md."
             )
     run_sync(args.project, state, project_path)
+    return 0
+
+
+def handle_to_tshirt(
+    args: argparse.Namespace, state: LoopState, project_path: Path
+) -> int:
+    """Génère un Dimensionnement Budgétaire (T-Shirt Size) d'avant-projet dans docs/01-architecture/."""
+    from src.utils.blueprints import BlueprintLoader
+    import datetime
+
+    title = getattr(args, "title", None) or project_path.name
+    date_iso = datetime.date.today().isoformat()
+
+    out_dir = project_path / "docs" / "01-architecture"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_file = out_dir / f"TSHIRT_SIZE_{project_path.name}.md"
+
+    content = BlueprintLoader.render(
+        "tshirt_size_template.md",
+        {
+            "NOM_DU_PROJET": title,
+            "DATE_ISO": date_iso,
+        },
+    )
+    content = content.replace("[NOM_DU_PROJET]", title).replace("[DATE_ISO]", date_iso)
+
+    out_file.write_text(content, encoding="utf-8")
+    ZeroFluffConsole.success(f"Dimensionnement Budgétaire (T-Shirt Size) généré : {out_file}")
     return 0
 
 

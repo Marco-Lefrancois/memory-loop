@@ -13,9 +13,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-PROJECT_NAME = "Metro_OneTrust"
-VALID_STORY = "Projects/Metro_OneTrust/backlog/stories/FOOD/MMA-4673.md"
-INVALID_STORY = "backlog/stories/UNKNOWN_STORY_99.md"
+PROJECT_NAME = "Metro_COMMERCE"
+VALID_STORY = "Projects/Metro_COMMERCE/backlog/stories/OneTrust_COMMERCE/MMA-4692.md"
+INVALID_STORY = "backlog/stories/NONEXISTENT_STORY_99999.md"
 
 def run_swarm_cmd(args_list):
     """Exécute une commande CLI python src/swarm.py et retourne stdout, stderr, exit_code."""
@@ -26,13 +26,13 @@ def run_swarm_cmd(args_list):
 class TestAgentE2ESimulation:
 
     def test_boot_sequence_step1_resume(self):
-        """Étape 1 : Simulation 'python src/swarm.py resume --project Metro_OneTrust'"""
+        """Étape 1 : Simulation 'python src/swarm.py resume --project Metro_COMMERCE'"""
         code, stdout, stderr = run_swarm_cmd(["resume", "--project", PROJECT_NAME])
         assert code == 0, f"Resume a échoué avec stderr: {stderr}"
         assert "Session restaurée avec succès" in stdout or "Restauration" in stdout
 
     def test_boot_sequence_step2_vibe_check(self):
-        """Étape 2 : Simulation 'python src/swarm.py vibe-check --project Metro_OneTrust'"""
+        """Étape 2 : Simulation 'python src/swarm.py vibe-check --project Metro_COMMERCE'"""
         code, stdout, stderr = run_swarm_cmd(["vibe-check", "--project", PROJECT_NAME])
         assert code == 0, f"Vibe-check a échoué avec stderr: {stderr}"
         assert "Guardrail" in stdout or "Vibe-Check" in stdout
@@ -43,10 +43,10 @@ class TestAgentE2ESimulation:
         assert code != 0 or "FileNotFoundError" in stdout or "introuvable" in stdout, "L'erreur de story introuvable aurait dû être levée !"
 
     def test_boot_sequence_step3_focus_valid_story(self):
-        """Étape 3b : Simulation d'un focus valide sur le bon chemin de la story US-13-FOOD."""
+        """Étape 3b : Simulation d'un focus valide sur le bon chemin de la story MMA-4692."""
         code, stdout, stderr = run_swarm_cmd(["focus", "--project", PROJECT_NAME, "--story", VALID_STORY])
         assert code == 0, f"Focus valide a échoué avec stderr: {stderr}"
-        assert "Focus" in stdout or "verrouillé" in stdout or "US-13-FOOD" in stdout
+        assert "MMA-4692" in stdout or "IN_ANALYZE" in stdout or "FOCUS STATE MACHINE" in stdout or "Focus" in stdout
 
     def test_full_agent_boot_sequence_end_to_end(self):
         """Test E2E complet enchaîné (Sequence complète d'amorçage sans interruption)."""

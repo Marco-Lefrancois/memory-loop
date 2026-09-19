@@ -13,6 +13,7 @@ from fastapi import APIRouter, Query
 
 from src.dashboard.cache import get_cached_or_compute
 from src.dashboard.project_utils import resolve_project_canonical_name
+from src.dashboard.module_utils import match_module_entry
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/traces", tags=["Traces & Cognition"])
@@ -37,6 +38,7 @@ def _resolve_traces_file(project: Optional[str]) -> Path:
 def get_traces_tree(
     project: Optional[str] = Query(None),
     role: Optional[str] = Query(None),
+    module: Optional[str] = Query(None),
     limit: int = Query(50, ge=1, le=200),
 ) -> Dict[str, Any]:
     """
@@ -58,6 +60,17 @@ def get_traces_tree(
         # Filtrage par rôle éventuel
         if role:
             raw_traces = [t for t in raw_traces if str(t.get("agent_role")).lower() == role.lower()]
+
+        # Filtrage par module éventuel
+        if module and module.upper() not in ("ALL", "*", "TOUS"):
+            raw_traces = [
+                t for t in raw_traces
+                if match_module_entry(
+                    (t.get("prompt_context") or {}).get("file", ""),
+                    module,
+                    [str(r) for r in (t.get("prompt_context") or {}).get("rules", [])]
+                )
+            ]
 
         # Tri antéchronologique (plus récent en premier)
         sorted_traces = list(reversed(raw_traces))[:limit]

@@ -17,22 +17,22 @@ Ce protocole définit la séquence obligatoire en **5 étapes déterministes** p
 
 ---
 
-## 🗺️ 2. La Matrice des 5 Étapes Séquentielles
+## 🗺️ 2. La Matrice Séquentielle en 5 Phases Universelles (ADR-0375)
 
 ```mermaid
 flowchart TD
-    E1["<b>Étape 1 : Initialisation & Scaffolding</b><br><code>python src/swarm.py init --project &lt;nom_projet&gt;</code><br><i>Génération arborescence agnostique</i>"]
-    E1 --> E2["<b>Étape 2 : Dépôt & Ingestion Documentaire</b><br>Dépôt dans <code>reference/</code><br><code>python src/swarm.py ingest --project &lt;nom_projet&gt;</code>"]
-    E2 --> E3["<b>Étape 3 : Énoncé des Travaux (SOW / T-Shirt Sizing)</b><br><code>python src/swarm.py to-sow --project &lt;nom_projet&gt; --size &lt;SIZE&gt;</code><br><i>Validation Porte 1</i>"]
-    E3 --> E4["<b>Étape 4 : Découpage Vertical du Backlog</b><br>Initialisation de <code>sprint_backlog.md</code><br><i>Statuts OPEN / IN_ANALYZE</i>"]
-    E4 --> E5["<b>Étape 5 : Spécification Interactive & Grill-me</b><br><code>python src/swarm.py grill --project &lt;nom_projet&gt; --story &lt;ID&gt;</code><br><i>4 Piliers Gherkin + Validation Porte 2 DoR</i>"]
+    E1["<b>Temps 1 : Initialisation & Scaffolding</b><br><code>python src/swarm.py init --project &lt;nom_projet&gt;</code><br><i>Génération arborescence SSOT agnostique</i>"]
+    E1 --> E2["<b>Temps 2 : Pause Humaine Obligatoire (Staging)</b><br>Dépôt manuel dans <code>Projects/&lt;nom&gt;/reference/</code><br><i>(Cahiers des charges, exports, maquettes SVG...)</i>"]
+    E2 --> E3["<b>Temps 3 : Ingestion & Normalisation MarkItDown</b><br><code>python src/swarm.py ingest --project &lt;nom_projet&gt;</code><br><i>Conversion SSOT docs/00-ingested/ & docs/05-assets/</i>"]
+    E3 --> E4["<b>Temps 4 : Franchissement Gate 1 (Ingestion Validée)</b><br><code>python src/swarm.py gate-approve --gate 1 --approver &lt;Nom&gt;</code><br><i>Check 13 validé : 0 story avant Phase 2</i>"]
+    E4 --> E5["<b>Phase 2 : PLAN & ANALYSE</b><br>Macro (SOW/T-Shirt/Tickets) & Micro (Grill-Me 1:1)"]
 ```
 
 ---
 
 ## 📋 3. Détail Opérationnel Étape par Étape
 
-### 🔹 Étape 1 : Initialisation & Scaffolding Agnostique
+### 🔹 Étape 1 : Initialisation & Scaffolding Agnostique (Phase 1)
 * **Commande CLI** :
   ```bash
   python src/swarm.py init --project <nom_projet>
@@ -42,51 +42,50 @@ flowchart TD
   - `Projects/<nom_projet>/AGENTS.md` (Guide développeur agnostique + 4 Piliers Gherkin).
   - `Projects/<nom_projet>/opencode.json` (Configuration IDE standardisée).
   - `Projects/<nom_projet>/.gitignore` (Exclusions de build et protection de `reference/` non versionné).
-  - Arborescence : `reference/`, `docs/` (`00-ingested/`, `01-architecture/`, `02-business-rules/`, `04-transverse/`, `05-assets/maquettes/`, `05-assets/diagrams/`), `backlog/` (`stories/`, `reviews/`), `memory/` (`evidence/`, `plan/`).
+  - Arborescence canonique : `reference/` (staging brut sans sub-readme), `docs/` (`00-ingested/`, `01-architecture/`, `02-business-rules/`, `03-models/`, `04-transverse/`, `05-assets/maquettes/`, `05-assets/diagrams/`), `backlog/` (`stories/`), `memory/` (`evidence/`, `plan/`).
 
 ---
 
-### 🔹 Étape 2 : Dépôt de la Matière Première & Ingestion Normalisée
-* **Action Utilisateur** : Déposer les documents bruts (PDF, Word, Excel, export Figma, notes de réunion) dans le dossier de staging local :
+### 🔹 Étape 2 : Pause Humaine Obligatoire — Dépôt de la Matière Première
+* **Action Utilisateur Explicite** : Déposer les documents bruts (PDF, Word, Excel, export Figma, notes de réunion, maquettes vectorielles SVG) dans le dossier de staging local :
   👉 `Projects/<nom_projet>/reference/`
+* **Règle absolue** : Aucun sous-readme interne dans `reference/` (`forbidden_subreadmes: true`, ADR-0100).
+
+---
+
+### 🔹 Étape 3 : Ingestion Normalisée MarkItDown & Synchronisation
 * **Commande CLI** :
   ```bash
   python src/swarm.py ingest --project <nom_projet>
   ```
-* **Résultat** : Conversion et normalisation Markdown sous `Projects/<nom_projet>/docs/00-ingested/` et transfert/optimisation des actifs visuels et maquettes vectorielles sous `Projects/<nom_projet>/docs/05-assets/maquettes/` (ADR-0332).
+* **Résultats Automatiques** :
+  - Conversion et normalisation Markdown sous `docs/00-ingested/`.
+  - Transfert et optimisation des maquettes SVG sous `docs/05-assets/maquettes/` (ADR-0332).
+  - Génération du `source_manifest.json` et des sidecars LOD `.overview.md` (ADR-0335).
+  - Synchronisation de l'index SQLite FTS5 et de l'hypergraphe Graphify.
 
 ---
 
-### 🔹 Étape 3 : Cadrage Macro & Énoncé des Travaux (SOW / Phase 1)
+### 🔹 Étape 4 : Validation de la Porte 1 (Gate 1 : Ingestion Complète)
 * **Commande CLI** :
   ```bash
-  python src/swarm.py to-sow --project <nom_projet> --size <T-SHIRT_SIZE>
+  python src/swarm.py gate-approve --project <nom_projet> --gate 1 --approver "<Nom>"
   ```
-  *(Valeurs de `--size` : `xs`, `XS`, `s`, `S`, `m`, `M`, `l`, `L`, `xl` selon la grille Kevin Chamberland)*.
-* **Livrable Produit** : `Projects/<nom_projet>/docs/01-architecture/SOW_<nom_projet>.md` conforme au Gold Standard `standards/blueprints/sow_evaluation_template.md`.
-* **Porte de Gouvernance 1** : Signature / Accord de cadrage du client avant le découpage fin.
+* **Contrôles Déterministes Bloquants** :
+  - Tous les fichiers de `reference/` sont convertis sous `docs/00-ingested/`.
+  - Check 13 (Anti-Ghost-Bias) respecté : zéro story sous `backlog/stories/`.
+  - Transition officielle vers `STAGE_2_PLAN_ANALYSE`.
 
 ---
 
-### 🔹 Étape 4 : Découpage Vertical du Backlog (Phase 2)
-* **Action de l'Agent / Humain** :
-  - Créer ou actualiser `Projects/<nom_projet>/backlog/sprint_backlog.md` avec la liste ordonnée des User Stories (`US-01`, `US-02`...).
-  - Les statuts initiaux sont **`OPEN`** ou **`IN_ANALYZE`**.
-  - **Interdiction formelle** de positionner les récits en `READY_FOR_DEV` avant l'étape de Grilling.
-
----
-
-### 🔹 Étape 5 : Spécification Interactive & Validation (Grill with Docs)
-* **Commande CLI** :
-  ```bash
-  python src/swarm.py grill --project <nom_projet> --story <ID_OU_CHEMIN>
-  ```
-* **Actions** :
-  1. Interview interactive 1 question par tour avec l'utilisateur pour trancher les zones d'ambiguïté.
-  2. Rédaction au gabarit `standards/blueprints/story_template.md` (4 Piliers Gherkin).
-  3. Génération autonome de l'EvidencePack sous `memory/evidence/<STORY_ID>_evidence.json`.
-  4. Audit contradictoire Sentinel : `python src/swarm.py rubber-duck --project <nom_projet> --file <story_path>`.
-* **Porte de Gouvernance 2 (Definition of Ready - DoR)** : Passage du statut en `READY_FOR_DEV`.
+### 🔹 Étape 5 : Phase 2 — Planification Macro & Analyse Fine (Grill-Me)
+* **Macro-Planification (Optionnelle selon contrat)** :
+  - Dimensionnement T-Shirt : `python src/swarm.py to-tshirt --project <nom_projet>`
+  - Énoncé des Travaux (SOW) : `python src/swarm.py to-sow --project <nom_projet> --size <SIZE>`
+  - Découpage Macro : `python src/swarm.py to-tickets --project <nom_projet>`
+* **Micro-Analyse 1:1 Récit par Récit** :
+  - Entrevue Grill-Me : `python src/swarm.py grill-me --project <nom_projet> --story <ID>`
+  - Validation DoR 6/6 (Porte 2) ➔ statut `READY_FOR_DEV`.
 
 ---
 

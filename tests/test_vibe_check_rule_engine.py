@@ -42,7 +42,7 @@ validation_rules:
         )
 
         result = run_vibe_check("TestRuleEngineVibeProj")
-        re_checks = [c for c in result["checks"] if "RuleEngine" in c["check"]]
+        re_checks = [c for c in result["checks"] if c["check"].startswith("Intégrité RuleEngine")]
         assert len(re_checks) == 1
         assert re_checks[0]["status"] == "FAIL"
     finally:
@@ -62,7 +62,7 @@ def test_vibe_check_passes_when_no_rule_violation():
         )
 
         result = run_vibe_check("TestRuleEngineVibeProj2")
-        re_checks = [c for c in result["checks"] if "RuleEngine" in c["check"]]
+        re_checks = [c for c in result["checks"] if c["check"].startswith("Intégrité RuleEngine")]
         assert len(re_checks) == 1
         assert re_checks[0]["status"] == "PASS"
     finally:

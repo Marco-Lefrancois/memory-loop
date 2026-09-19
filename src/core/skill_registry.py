@@ -51,6 +51,7 @@ def register_skill(name: str, handler: Callable[..., Any]) -> None:
 def resolve_skill(uri: str) -> Callable[..., Any]:
     """
     Résout une URI ``skill://`` en son handler callable.
+    Applique le bouclier de confinement au runtime (ADR-0379).
 
     Args:
         uri: URI au format ``skill://<name>`` (ex: ``skill://preload-context``).
@@ -61,6 +62,7 @@ def resolve_skill(uri: str) -> Callable[..., Any]:
     Raises:
         InvalidSkillURIError: Si l'URI n'est pas au bon format.
         SkillNotFoundError:   Si aucune compétence n'est enregistrée sous ce nom.
+        PermissionDeniedError: Si l'agent actif n'est pas autorisé à invoquer cette compétence.
     """
     match = _SKILL_URI_PATTERN.match(uri)
     if not match:
@@ -69,6 +71,14 @@ def resolve_skill(uri: str) -> Callable[..., Any]:
         )
 
     name = match.group("name")
+
+    # ─── 1. Bouclier de Confinement Runtime (ADR-0379) ───────────────────────
+    try:
+        from src.core.confinement_shield import ConfinementShield
+        ConfinementShield.verify_skill_access(name)
+    except ImportError:
+        pass
+
     if name not in _skill_registry:
         available = ", ".join(sorted(_skill_registry)) or "(registre vide)"
         raise SkillNotFoundError(
@@ -95,17 +105,52 @@ def invoke_skill(uri: str, *args: Any, **kwargs: Any) -> Any:
     return handler(*args, **kwargs)
 
 
-def list_skills() -> Dict[str, str]:
+def get_skill_catalog() -> Dict[str, Dict[str, Any]]:
+    """
+    Retourne le catalogue complet des compétences découvertes dynamiquement
+    depuis StandardsGraphStore (.agents/skills/*/SKILL.md) avec leurs métadonnées.
+    """
+    try:
+        from src.core.standards_graph import StandardsGraphStore
+        store = StandardsGraphStore.get_instance()
+        skills = store.get_skills()
+        return {
+            name: {
+                "name": s.name,
+                "description": s.description,
+                "category": s.category,
+                "file_path": s.file_path,
+                "inputs": s.inputs,
+                "outputs": s.outputs,
+                "runtime_handler": getattr(_skill_registry.get(name), "__qualname__", None),
+            }
+            for name, s in sorted(skills.items())
+        }
+    except Exception:
+        return {}
+
+
+def list_skills(include_catalog: bool = False) -> Dict[str, str]:
     """
     Retourne le catalogue des compétences enregistrées.
 
+    Args:
+        include_catalog: Si True, inclut également les compétences déclaratives
+                         découvertes dans StandardsGraph (.agents/skills/).
+
     Returns:
-        Dictionnaire ``{name: handler_qualname}``.
+        Dictionnaire ``{name: handler_qualname_or_description}``.
     """
-    return {
+    skills: Dict[str, str] = {
         name: getattr(handler, "__qualname__", repr(handler))
         for name, handler in sorted(_skill_registry.items())
     }
+    if include_catalog:
+        catalog = get_skill_catalog()
+        for name, meta in catalog.items():
+            if name not in skills:
+                skills[name] = meta["description"] or f"skill://{name}"
+    return skills
 
 
 def unregister_skill(name: str) -> Optional[Callable[..., Any]]:

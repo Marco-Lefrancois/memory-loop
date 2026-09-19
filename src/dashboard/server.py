@@ -8,6 +8,7 @@ Supporte la résolution canonique des projets (ex: Boire & Frères) et la récur
 
 from __future__ import annotations
 
+import asyncio
 import json
 import math
 import os
@@ -18,7 +19,7 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from src.dashboard.project_utils import (
@@ -673,6 +674,7 @@ def get_events(
     project: Optional[str] = None,
     limit: int = Query(100, ge=1, le=500),
     event_type: Optional[str] = None,
+    module: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Retourne le journal live des événements récents depuis events.jsonl.
@@ -711,6 +713,12 @@ def get_events(
                             if ev.get("event_type", "").upper() != event_type.upper():
                                 continue
 
+                        if module and module.upper() not in ("ALL", "*", "TOUS"):
+                            details_str = str(ev.get("details", ""))
+                            target_str = str(ev.get("target", ""))
+                            if not match_module_entry(target_str, module, [details_str, str(ev.get("file_attention", ""))]):
+                                continue
+
                         fp = f"{ev.get('timestamp')}_{ev.get('event_type')}_{ev.get('agent')}_{str(ev.get('details'))[:40]}"
                         if fp in seen:
                             continue
@@ -729,6 +737,257 @@ def get_events(
         "count": len(selected),
         "total_captured": len(raw_events),
         "events": selected,
+    }
+
+
+@app.get("/api/stream/events")
+async def stream_events(
+    project: Optional[str] = None,
+    event_type: Optional[str] = None,
+    module: Optional[str] = None,
+):
+    """
+    Stream SSE (Server-Sent Events) pour l'Event Bus mLoop en temps réel (ST-112).
+    Diffuse les événements au fur et à mesure de leur écriture dans memory/events.jsonl.
+    """
+    target_project = _resolve_project_canonical_name(project)
+
+    async def event_generator():
+        # 1. Événement initial : 40 derniers événements
+        initial_res = get_events(project=target_project, limit=40, event_type=event_type, module=module)
+        initial_list = list(reversed(initial_res.get("events", [])))
+        yield f"event: initial\ndata: {json.dumps(initial_list, ensure_ascii=False)}\n\n"
+
+        events_file = REPO_ROOT / "memory" / "events.jsonl"
+        last_pos = events_file.stat().st_size if events_file.exists() else 0
+        seen_fp = set()
+        for ev in initial_list:
+            fp = f"{ev.get('timestamp')}_{ev.get('event_type')}_{ev.get('agent')}_{str(ev.get('details'))[:40]}"
+            seen_fp.add(fp)
+
+        heartbeat_counter = 0
+        try:
+            while True:
+                await asyncio.sleep(0.5)
+                heartbeat_counter += 1
+
+                if heartbeat_counter >= 30:  # ~15s ping
+                    yield ": keepalive\n\n"
+                    heartbeat_counter = 0
+
+                if not events_file.exists():
+                    continue
+
+                curr_size = events_file.stat().st_size
+                if curr_size < last_pos:
+                    last_pos = 0
+
+                if curr_size > last_pos:
+                    try:
+                        with open(events_file, "r", encoding="utf-8", errors="ignore") as f:
+                            f.seek(last_pos)
+                            new_lines = f.readlines()
+                            last_pos = f.tell()
+
+                        for line in new_lines:
+                            line = line.strip()
+                            if not line:
+                                continue
+                            try:
+                                ev = json.loads(line)
+                                entry_proj = ev.get("project", "")
+                                if target_project not in ("Memory Loop", "mLoop", "global", "All", "ALL", "*"):
+                                    if not _match_project_alias(entry_proj, target_project):
+                                        continue
+
+                                if event_type and event_type != "ALL":
+                                    if ev.get("event_type", "").upper() != event_type.upper():
+                                        continue
+
+                                if module and module.upper() not in ("ALL", "*", "TOUS"):
+                                    details_str = str(ev.get("details", ""))
+                                    target_str = str(ev.get("target", ""))
+                                    if not match_module_entry(target_str, module, [details_str, str(ev.get("file_attention", ""))]):
+                                        continue
+
+                                fp = f"{ev.get('timestamp')}_{ev.get('event_type')}_{ev.get('agent')}_{str(ev.get('details'))[:40]}"
+                                if fp in seen_fp:
+                                    continue
+                                seen_fp.add(fp)
+
+                                yield f"event: message\ndata: {json.dumps(ev, ensure_ascii=False)}\n\n"
+                            except Exception:
+                                continue
+                    except Exception:
+                        pass
+        except asyncio.CancelledError:
+            pass
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@app.get("/api/backlog/{project_name}")
+def get_project_backlog(project_name: str, module: Optional[str] = None) -> Dict[str, Any]:
+    """Retourne la liste des User Stories d'un projet pour le Backlog Drawer (ST-114)."""
+    return get_stories(project=project_name, module=module)
+
+
+@app.get("/api/backlog/{project_name}/{story_id}")
+def get_project_story_detail(project_name: str, story_id: str) -> Dict[str, Any]:
+    """
+    Retourne le détail complet d'une User Story pour inspection approfondie dans le Backlog Drawer.
+    """
+    target_project = _resolve_project_canonical_name(project_name)
+    p_root = _get_project_root(target_project)
+
+    backlog_roots = [p_root / "backlog"]
+    if target_project in ("Memory Loop", "mLoop", "ALL"):
+        dash_b = REPO_ROOT / "Projects" / "mLoop-Dashboard" / "backlog"
+        if dash_b.exists():
+            backlog_roots.append(dash_b)
+
+    found_file: Optional[Path] = None
+    for b_root in backlog_roots:
+        if not b_root.exists():
+            continue
+        for md_file in b_root.rglob("*.md"):
+            if md_file.stem.lower() == story_id.lower() or story_id.lower() in md_file.stem.lower():
+                found_file = md_file
+                break
+        if found_file:
+            break
+
+    if not found_file or not found_file.exists():
+        raise HTTPException(status_code=404, detail=f"Story '{story_id}' introuvable dans '{project_name}'.")
+
+    content = found_file.read_text(encoding="utf-8", errors="ignore")
+
+    meta: Dict[str, Any] = {
+        "id": story_id,
+        "title": found_file.stem,
+        "status": "OPEN",
+        "type": "feature",
+        "layer": "vertical-slice",
+        "jira_key": "",
+        "epic_key": "",
+    }
+    body = content
+    fm_match = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
+    if fm_match:
+        fm_text = fm_match.group(1)
+        body = content[fm_match.end():].strip()
+        for line in fm_text.splitlines():
+            if ":" in line:
+                k, v = line.split(":", 1)
+                meta[k.strip().lower()] = v.strip().strip("'\"")
+
+    if meta.get("title") == found_file.stem:
+        h1_match = re.search(r"^#\s+(.+)$", content, re.MULTILINE)
+        if h1_match:
+            meta["title"] = h1_match.group(1).strip()
+
+    scenarios = []
+    gherkin_blocks = re.findall(r"```gherkin(.*?)```", content, re.DOTALL | re.IGNORECASE)
+    for block in gherkin_blocks:
+        scen_matches = re.split(r"(?im)^\s*(?:Scénario|Scenario)\s*:\s*", block)
+        for s in scen_matches[1:]:
+            lines = s.strip().splitlines()
+            s_name = lines[0].strip() if lines else "Scénario"
+            steps = [l.strip() for l in lines[1:] if l.strip() and not l.strip().startswith("#")]
+            scenarios.append({"name": s_name, "steps": steps})
+
+    # Business rules extraction (R-xxx or RM-xxx)
+    rules = re.findall(r"(?im)^\s*[\*\-]\s*`?([A-Za-z0-9_\-]+)`?\s*:\s*(.+)$", content)
+    business_rules = [{"code": r[0], "description": r[1].strip()} for r in rules if r[0].upper().startswith(("R-", "RM-", "REGLE", "RULE"))]
+
+    evidence_data = None
+    evidence_dirs = [p_root / "memory" / "evidence", REPO_ROOT / "memory" / "evidence"]
+    for ev_dir in evidence_dirs:
+        if ev_dir.exists():
+            cand = ev_dir / f"{story_id}_evidence.json"
+            if not cand.exists():
+                cand = ev_dir / f"{found_file.stem}_evidence.json"
+            if cand.exists():
+                try:
+                    evidence_data = json.loads(cand.read_text(encoding="utf-8"))
+                    break
+                except Exception:
+                    pass
+
+    return {
+        "project": target_project,
+        "id": meta.get("id", story_id),
+        "story_id": meta.get("id", story_id),
+        "title": meta.get("title", found_file.stem),
+        "status": meta.get("status", "OPEN"),
+        "type": meta.get("type", "feature"),
+        "layer": meta.get("layer", "vertical-slice"),
+        "jira_key": meta.get("jira_key", ""),
+        "epic_key": meta.get("epic_key", ""),
+        "file_path": found_file.relative_to(REPO_ROOT).as_posix() if found_file.is_relative_to(REPO_ROOT) else found_file.name,
+        "scenarios": scenarios,
+        "business_rules": business_rules,
+        "has_evidence": evidence_data is not None,
+        "evidence": evidence_data,
+        "raw_markdown": body,
+    }
+
+
+@app.get("/api/rho-rules")
+def get_rho_rules(project: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Retourne l'inventaire des règles d'auto-amélioration et d'exclusion sémantiques RHO (ST-104).
+    """
+    import yaml
+    target_project = _resolve_project_canonical_name(project)
+    p_root = _get_project_root(target_project)
+
+    global_rules_file = REPO_ROOT / "standards" / "rho_rules.yaml"
+    if not global_rules_file.exists():
+        global_rules_file = REPO_ROOT / "rho_rules.yaml"
+
+    local_candidates = [
+        p_root / "memory" / "rho_rules.yaml",
+        p_root / "rho_rules.yaml",
+        REPO_ROOT / "memory" / "rho_rules.yaml",
+    ]
+
+    def _parse_yaml(path: Path) -> List[Dict[str, Any]]:
+        if not path.exists():
+            return []
+        try:
+            raw = path.read_text(encoding="utf-8", errors="ignore")
+            data = yaml.safe_load(raw)
+            if isinstance(data, list):
+                return data
+            if isinstance(data, dict):
+                return data.get("rules", [data])
+            return []
+        except Exception:
+            return []
+
+    global_rules = _parse_yaml(global_rules_file)
+    local_rules = []
+    for lc in local_candidates:
+        if lc.exists() and lc != global_rules_file:
+            local_rules = _parse_yaml(lc)
+            if local_rules:
+                break
+
+    return {
+        "project": target_project,
+        "global_rules_count": len(global_rules),
+        "local_rules_count": len(local_rules),
+        "global_rules": global_rules,
+        "local_rules": local_rules,
     }
 
 

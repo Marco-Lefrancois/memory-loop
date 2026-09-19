@@ -42,7 +42,9 @@ def handle_notebooklm(args: "argparse.Namespace", state: "LoopState" = None, pro
 
     # 1. Action Auth
     if getattr(args, "auth", False):
-        script_path = root_dir / "login_notebooklm.mjs"
+        script_path = root_dir / "tools" / "notebooklm" / "login_notebooklm.mjs"
+        if not script_path.exists():
+            script_path = root_dir / "login_notebooklm.mjs"
         if not script_path.exists():
             ZeroFluffConsole.error(f"Script de connexion introuvable : {script_path}")
             return 1

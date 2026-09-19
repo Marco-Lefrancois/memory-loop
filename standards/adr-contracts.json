@@ -1,13 +1,15 @@
 {
   "_meta": {
-    "description": "Contrats machine dérivés des ADRs série 01xx. NE PAS MODIFIER MANUELLEMENT sans mettre à jour l'ADR source correspondante.",
+    "description": "Contrats machine dérivés des ADRs séries 01xx et 03xx. NE PAS MODIFIER MANUELLEMENT sans mettre à jour l'ADR source correspondante.",
     "maintainer": "Agent mLoop (règle ADR-Sync — AGENTS.md §Règle ADR-Sync)",
-    "last_updated": "2026-08-17",
-    "source_adrs": ["ADR-0100", "ADR-0102", "ADR-0103"],
+    "last_updated": "2026-09-18",
+    "source_adrs": ["ADR-0100", "ADR-0102", "ADR-0103", "ADR-0375", "ADR-0378"],
     "adr_paths": {
       "ADR-0100": "standards/adr-system/0100-structure-repertoire-projet-client.md",
       "ADR-0102": "standards/adr-system/0102-structure-ssot-dossier-docs.md",
-      "ADR-0103": "standards/adr-system/0103-segmentation-memory-loop-openspec.md"
+      "ADR-0103": "standards/adr-system/0103-segmentation-memory-loop-openspec.md",
+      "ADR-0375": "standards/adr-system/0375-project-lifecycle-5-phases-and-analysis-types.md",
+      "ADR-0378": "standards/adr-system/0378-phase-1-ingest-and-explore-contract-and-gate-1.md"
     }
   },
   "ADR-0100": {
@@ -16,7 +18,7 @@
     "required_root_files": ["README.md", "AGENTS.md", "opencode.json", ".gitignore"],
     "forbidden_subreadmes": true,
     "git_ignored_dirs": ["reference", "graphify-out", ".codegraph"],
-    "memory_subdirs": ["sessions", "debates", "sync", "reports", "cache", "tmp"],
+    "memory_subdirs": ["sessions", "debates", "sync", "reports", "cache", "tmp", "evidence", "plan"],
     "forbidden_in_client": ["src", "openspec"]
   },
   "ADR-0102": {
@@ -53,5 +55,64 @@
       "src",
       "openspec"
     ]
+  },
+  "ADR-0375": {
+    "title": "Cycle de Vie en 5 Phases Universelles & Dualité Grill-Me",
+    "stage_order": [
+      "STAGE_1_INGEST",
+      "STAGE_2_PLAN_ANALYSE",
+      "STAGE_3_BUILD",
+      "STAGE_4_VALIDATE",
+      "STAGE_5_SHIP"
+    ],
+    "stage_names": {
+      "STAGE_1_INGEST": "Phase 1 : INGEST & EXPLORE (Amorçage & Ingestion)",
+      "STAGE_2_PLAN_ANALYSE": "Phase 2 : PLAN & ANALYSE (Planification & Spécifications)",
+      "STAGE_3_BUILD": "Phase 3 : BUILD (Développement Physique)",
+      "STAGE_4_VALIDATE": "Phase 4 : VALIDATE (Assurance Qualité & Evals)",
+      "STAGE_5_SHIP": "Phase 5 : SHIP & SYNC (Distribution & Clôture)"
+    },
+    "legacy_stage_aliases": {
+      "STAGE_0_TSHIRT": "STAGE_1_INGEST",
+      "STAGE_1_SOW": "STAGE_2_PLAN_ANALYSE",
+      "STAGE_2_PLAN_GRILL": "STAGE_2_PLAN_ANALYSE"
+    }
+  },
+  "ADR-0378": {
+    "title": "Standardisation Phase 1 INGEST & EXPLORE, Contrat d'Ingestion & Gate 1",
+    "gate_definitions": {
+      "1": {
+        "name": "Gate 1 : Ingestion & Cadrage Initial Prêt",
+        "from_stage": "STAGE_1_INGEST",
+        "to_stage": "STAGE_2_PLAN_ANALYSE",
+        "description": "Validation que les sources brutes sont ingérées, sans stories prématurées (Check 13).",
+        "requires_human": false,
+        "deliverables": [
+          "docs/00-ingested/source_manifest.json",
+          "docs/00-ingested/index.md"
+        ]
+      }
+    },
+    "phase_1_commands": [
+      "ingest",
+      "research",
+      "markitdown_convert",
+      "crawl",
+      "extract",
+      "agentic-extract",
+      "notebooklm",
+      "svg-optimize",
+      "svg-ocr",
+      "csv-normalize",
+      "csv-validate",
+      "lifecycle-status",
+      "lifecycle-clean",
+      "gate-approve"
+    ],
+    "check_13": {
+      "rule": "zero_stories_before_gate_1",
+      "forbidden_path": "backlog/stories/*.md",
+      "exceptions": ["README.md"]
+    }
   }
 }

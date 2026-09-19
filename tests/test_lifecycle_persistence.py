@@ -1,6 +1,6 @@
 """
 Tests TDD de persistance, idempotence et protection anti-régression du cycle de vie projet.
-Conformité : ADR-0339 (Quality Gates) et ADR-0369 (Standards de Robustesse Senior).
+Conformité : ADR-0375 (Cycle de vie en 5 phases) et ADR-0369 (Standards de Robustesse Senior).
 Lacune : L-05 (Corruption d'état lifecycle par worker/sync/init).
 """
 
@@ -19,39 +19,30 @@ from src.core.lifecycle import (
 
 @pytest.fixture
 def active_phase2_project(tmp_path: Path) -> Path:
-    """Crée un projet temporaire avec un état sain en STAGE_2_PLAN_GRILL et Gate 1 approuvée."""
+    """Crée un projet temporaire avec un état sain en STAGE_2_PLAN_ANALYSE et Gate 1 approuvée."""
     proj = tmp_path / "Projects" / "TestShopifyProject"
     proj.mkdir(parents=True, exist_ok=True)
     (proj / "docs" / "01-architecture").mkdir(parents=True, exist_ok=True)
     (proj / "backlog" / "stories").mkdir(parents=True, exist_ok=True)
     (proj / "memory" / "evidence").mkdir(parents=True, exist_ok=True)
 
-    # Initialisation initiale en STAGE_0_TSHIRT (pas de SOW au départ)
+    # Initialisation initiale en STAGE_1_INGEST (pas de SOW ni specs au départ)
     state = ProjectLifecycleManager.init_lifecycle(proj)
-    assert state.current_stage == ProjectLifecycleStage.STAGE_0_TSHIRT
+    assert state.current_stage == ProjectLifecycleStage.STAGE_1_INGEST
 
-    # Valider Gate 0 -> passage en STAGE_1_SOW
-    state = ProjectLifecycleManager.approve_gate(
-        project_path=proj,
-        gate_number=0,
-        approver="PO Lead",
-        notes="Enveloppe budgétaire validée",
-    )
-    assert state.current_stage == ProjectLifecycleStage.STAGE_1_SOW
-
-    # Création d'un SOW pour simuler la phase 1 achevée
-    sow_file = proj / "docs" / "01-architecture" / "SOW_TestShopifyProject.md"
-    sow_file.write_text("# SOW Validé", encoding="utf-8")
-
-    # Valider Gate 1 -> passage en STAGE_2_PLAN_GRILL
+    # Valider Gate 1 -> passage en STAGE_2_PLAN_ANALYSE
     state = ProjectLifecycleManager.approve_gate(
         project_path=proj,
         gate_number=1,
         approver="PO Lead",
-        notes="SOW formellement approuvé",
+        notes="Ingestion et cadrage initial approuvés",
     )
-    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_GRILL
+    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
     assert state.is_gate_approved(1)
+
+    # Création d'un SOW pour simuler le cadrage amont achevé
+    sow_file = proj / "docs" / "01-architecture" / "SOW_TestShopifyProject.md"
+    sow_file.write_text("# SOW Validé", encoding="utf-8")
 
     yield proj
 
@@ -64,24 +55,24 @@ def test_init_lifecycle_preserves_existing_advanced_state(active_phase2_project:
     # Simulation d'un appel init intempestif (par exemple exécuté par un worker)
     state_after_reinit = ProjectLifecycleManager.init_lifecycle(active_phase2_project, force=False)
 
-    # L'état DOIT être préservé en STAGE_2_PLAN_GRILL avec Gate 1
-    assert state_after_reinit.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_GRILL
+    # L'état DOIT être préservé en STAGE_2_PLAN_ANALYSE avec Gate 1
+    assert state_after_reinit.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
     assert state_after_reinit.is_gate_approved(1)
     assert "1" in state_after_reinit.gates
 
     # Vérification sur disque
     state_file = ProjectLifecycleManager.get_state_file(active_phase2_project)
     disk_data = json.loads(state_file.read_text(encoding="utf-8"))
-    assert disk_data["current_stage"] == "STAGE_2_PLAN_GRILL"
+    assert disk_data["current_stage"] == "STAGE_2_PLAN_ANALYSE"
     assert "1" in disk_data["gates"]
 
 
 def test_save_state_prevents_unauthorized_regression(active_phase2_project: Path) -> None:
     """Vérifie que save_state refuse d'écraser un état avancé avec un état régressé sans accord explicite."""
-    # Création d'un état régressé (STAGE_1_SOW sans gates)
+    # Création d'un état régressé (STAGE_1_INGEST sans gates)
     regressed_state = ProjectLifecycleState(
         project_name=active_phase2_project.name,
-        current_stage=ProjectLifecycleStage.STAGE_1_SOW,
+        current_stage=ProjectLifecycleStage.STAGE_1_INGEST,
         gates={},
     )
 
@@ -93,7 +84,7 @@ def test_save_state_prevents_unauthorized_regression(active_phase2_project: Path
 
     # L'état sur disque ne doit pas avoir bougé
     persisted = ProjectLifecycleManager.get_state(active_phase2_project)
-    assert persisted.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_GRILL
+    assert persisted.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
     assert persisted.is_gate_approved(1)
 
 
@@ -128,5 +119,5 @@ def test_resume_preserves_lifecycle_state(active_phase2_project: Path) -> None:
 
     # L'état doit être strictement préservé
     state = ProjectLifecycleManager.get_state(active_phase2_project)
-    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_GRILL
+    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
     assert state.is_gate_approved(1)

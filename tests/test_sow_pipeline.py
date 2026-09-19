@@ -8,7 +8,7 @@ from src.pipelines.sow_engine import SOWEngine
 
 
 def test_sow_engine_loads_blueprint(tmp_path: Path):
-    """Vérifie que le SOWEngine accède au gabarit officiel."""
+    """Vérifie que le SOWEngine accède au gabarit officiel (ADR-0375)."""
     project_dir = tmp_path / "Projects" / "Test_Project"
     project_dir.mkdir(parents=True)
 
@@ -16,9 +16,19 @@ def test_sow_engine_loads_blueprint(tmp_path: Path):
     blueprint = engine.get_blueprint_content()
 
     assert "# [TITRE DU PROJET] — Énoncé des Travaux" in blueprint
-    assert "Grille de Référence Kevin Chamberland" in blueprint
-    assert "Conception UX/UI" in blueprint
-    assert "Assurance Qualité (QA)" in blueprint
+    assert "Portée Contractuelle & Livrables Officiels" in blueprint
+    assert "Matrice de Responsabilités (RACI)" in blueprint
+    assert "Conformité Légale, Loi 25" in blueprint
+
+
+def test_tshirt_blueprint_loads():
+    """Vérifie que le gabarit T-Shirt Size contient la grille Kevin Chamberland (ADR-0375)."""
+    tshirt_bp = Path("standards/blueprints/tshirt_size_template.md")
+    assert tshirt_bp.exists()
+    content = tshirt_bp.read_text(encoding="utf-8")
+    assert "Grille de Référence Kevin Chamberland" in content
+    assert "Macro-Briques" in content
+    assert "Exclusions Explicites de Périmètre" in content
 
 
 def test_sow_engine_generates_sow(tmp_path: Path):

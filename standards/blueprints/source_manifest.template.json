@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "mLoop Source Manifest Schema (ADR-0335 / Gate 1)",
+  "description": "Manifeste canonique d'ingestion et d'ancrage épistémique (SSOT ADR-0335).",
+  "type": "object",
+  "required": ["project_name", "generated_at", "total_sources", "sources"],
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "description": "Nom officiel du projet client mLoop"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Horodatage ISO-8601 de la dernière consolidation"
+    },
+    "total_sources": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Nombre total de documents bruts consolidés"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["filename", "filepath", "sha256", "sections", "terms"],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Nom du fichier d'origine dans reference/"
+          },
+          "filepath": {
+            "type": "string",
+            "description": "Chemin relatif complet du fichier source"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$",
+            "description": "Empreinte SHA-256 déterministe"
+          },
+          "target_md": {
+            "type": "string",
+            "description": "Chemin relatif du fichier Markdown produit sous docs/00-ingested/"
+          },
+          "sections": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Titres hiérarchiques extraits du document"
+          },
+          "terms": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Termes métier et entités nommées (Length-Aware)"
+          },
+          "what_it_actually_proves": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Assertions formellement démontrées par la matière brute"
+          },
+          "what_it_does_not_prove": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Zones d'ombre et limites non couvertes par le document"
+          },
+          "claim_boundaries": {
+            "type": "string",
+            "description": "Périmètre de validité des assertions"
+          },
+          "ingested_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Horodatage ISO de l'ingestion"
+          }
+        }
+      }
+    }
+  }
+}

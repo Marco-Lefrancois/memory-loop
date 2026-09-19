@@ -16,18 +16,16 @@ from src.core.lifecycle import (
 
 @pytest.fixture
 def sow_project_with_stories(tmp_path: Path) -> Path:
-    """Crée un projet en STAGE_1_SOW avec des stories et des preuves prématurées."""
+    """Crée un projet en STAGE_1_INGEST avec des stories et des preuves prématurées."""
     proj = tmp_path / "Projects" / "SowCleanupTestProject"
     proj.mkdir(parents=True, exist_ok=True)
     (proj / "docs" / "01-architecture").mkdir(parents=True, exist_ok=True)
     (proj / "backlog" / "stories").mkdir(parents=True, exist_ok=True)
     (proj / "memory" / "evidence").mkdir(parents=True, exist_ok=True)
 
-    # Initialisation en STAGE_1_SOW
-    sow_file = proj / "docs" / "01-architecture" / "SOW_Test.md"
-    sow_file.write_text("# SOW Validé", encoding="utf-8")
+    # Initialisation en STAGE_1_INGEST (avant Gate 1)
     state = ProjectLifecycleManager.init_lifecycle(proj)
-    assert state.current_stage == ProjectLifecycleStage.STAGE_1_SOW
+    assert state.current_stage == ProjectLifecycleStage.STAGE_1_INGEST
 
     # Fichiers de stories prématurées
     s1 = proj / "backlog" / "stories" / "SHOP-101.md"
@@ -92,9 +90,9 @@ def test_premature_stories_are_archived_not_unlinked(sow_project_with_stories: P
 
 def test_no_archive_when_stage_is_phase2_or_higher(sow_project_with_stories: Path) -> None:
     """Vérifie que rien n'est touché ni déplacé si le projet est en Phase 2 ou supérieure."""
-    # Simuler progression en STAGE_2_PLAN_GRILL
+    # Simuler progression en STAGE_2_PLAN_ANALYSE
     state = ProjectLifecycleManager.get_state(sow_project_with_stories)
-    state.current_stage = ProjectLifecycleStage.STAGE_2_PLAN_GRILL
+    state.current_stage = ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
     ProjectLifecycleManager.save_state(sow_project_with_stories, state, allow_regression=True)
 
     res = ProjectLifecycleManager.clean_premature_stories(sow_project_with_stories, confirm=True)

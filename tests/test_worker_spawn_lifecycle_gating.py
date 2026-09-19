@@ -17,7 +17,7 @@ from src.core.lifecycle import (
 
 @pytest.fixture
 def phase2_project(tmp_path: Path) -> Path:
-    """Crée un projet temporaire en STAGE_2_PLAN_GRILL."""
+    """Crée un projet temporaire en STAGE_2_PLAN_ANALYSE."""
     proj = tmp_path / "Projects" / "Phase2Project"
     proj.mkdir(parents=True, exist_ok=True)
     (proj / "docs" / "01-architecture").mkdir(parents=True, exist_ok=True)
@@ -26,17 +26,10 @@ def phase2_project(tmp_path: Path) -> Path:
     state = ProjectLifecycleManager.init_lifecycle(proj)
     state = ProjectLifecycleManager.approve_gate(
         project_path=proj,
-        gate_number=0,
-        approver="PO Lead",
-    )
-    sow_file = proj / "docs" / "01-architecture" / "SOW_Phase2Project.md"
-    sow_file.write_text("# SOW Validé", encoding="utf-8")
-    state = ProjectLifecycleManager.approve_gate(
-        project_path=proj,
         gate_number=1,
         approver="PO Lead",
     )
-    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_GRILL
+    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
     yield proj
     if proj.exists():
         shutil.rmtree(proj.parent.parent, ignore_errors=True)

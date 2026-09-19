@@ -49,49 +49,61 @@ class IngestAgent:
         return (docs / initiative) if initiative else docs
 
     def execute(self, state: LoopState) -> LoopState:
-        initiative = getattr(state, "ingest_initiative", None)
-        scope_label = f"reference/{initiative}/" if initiative else f"{ProjectLayout.REFERENCE}/"
-        ZeroFluffConsole.step_s1(self.name, f"Démarrage du scan du répertoire {scope_label}...")
-        self.anomalies = []
-        ref_path = self._ref_root(state)
+        from src.core.confinement_shield import AgentContext
+        project_root = self._project_root(state)
 
-        if not ref_path.exists():
-            ref_path.mkdir(parents=True, exist_ok=True)
+        with AgentContext("explorer", project_path=project_root):
+            initiative = getattr(state, "ingest_initiative", None)
+            scope_label = f"reference/{initiative}/" if initiative else f"{ProjectLayout.REFERENCE}/"
+            ZeroFluffConsole.step_s1(self.name, f"Démarrage du scan du répertoire {scope_label}...")
+            self.anomalies = []
+            ref_path = self._ref_root(state)
 
-        supported_extensions = [
-            ".pdf",
-            ".docx",
-            ".xlsx",
-            ".csv",
-            ".txt",
-            ".md",
-            ".cs",
-            ".pptx",
-            ".ppt",
-            ".svg",
-            ".vtt",
-            ".jpg",
-            ".jpeg",
-            ".png",
-        ]
+            if not ref_path.exists():
+                ref_path.mkdir(parents=True, exist_ok=True)
 
-        for file in ref_path.rglob("*"):
-            if file.is_file() and file.suffix.lower() in supported_extensions:
+            supported_extensions = [
+                ".pdf",
+                ".docx",
+                ".xlsx",
+                ".csv",
+                ".txt",
+                ".md",
+                ".cs",
+                ".pptx",
+                ".ppt",
+                ".svg",
+                ".vtt",
+                ".jpg",
+                ".jpeg",
+                ".png",
+            ]
+
+            files_to_process = [
+                file for file in ref_path.rglob("*")
+                if file.is_file() and file.suffix.lower() in supported_extensions
+            ]
+
+            if not files_to_process:
+                ZeroFluffConsole.info(f"Aucun document source à ingérer dans {scope_label}.")
+                return state
+
+            for file in files_to_process:
                 state = self._process_file(file, state)
 
-        # Post-traitement déterministe (ADR-0102 & ADR-0335)
-        self._write_source_manifest(state)
-        self._update_domain_lexicon(state)
-        self._write_anomalies_manifest(state)
-        self._generate_maquettes_index(state)
-        self._generate_ingested_index(state)
-        # La carte d'orientation racine docs/index.md décrit le projet entier :
-        # ne pas la (re)générer lors d'une ingestion scopée à une seule initiative.
-        if not getattr(state, "ingest_initiative", None):
-            self._generate_docs_root_index(state)
-        self._generate_lod_sidecars(state)
+            # Post-traitement déterministe (ADR-0102 & ADR-0335)
+            self._write_source_manifest(state)
+            self._update_domain_lexicon(state)
+            self._write_anomalies_manifest(state)
+            self._generate_maquettes_index(state)
+            self._generate_ingested_index(state)
+            # La carte d'orientation racine docs/index.md décrit le projet entier :
+            # ne pas la (re)générer lors d'une ingestion scopée à une seule initiative.
+            if not getattr(state, "ingest_initiative", None):
+                self._generate_docs_root_index(state)
+            self._generate_lod_sidecars(state)
 
-        return state
+            return state
 
     def _extract_sections(self, text: str) -> list[str]:
         """Extrait la liste hiérarchique des titres Markdown (#, ##, ###)."""
@@ -330,7 +342,7 @@ class IngestAgent:
         """Génère le manifeste de source canonique sous docs/00-ingested/source_manifest.json (ADR-0335)."""
         ingested_dir = self._ingested_root(state)
         ingested_dir.mkdir(parents=True, exist_ok=True)
-        manifest_file = ingested_dir / "source_manifest.json"
+        manifest_file = ingested_dir / ProjectLayout.SOURCE_MANIFEST
 
         manifest_data = {
             "manifest_version": "1.0.0",
@@ -355,17 +367,16 @@ class IngestAgent:
         }
 
         try:
-            manifest_file.write_text(
-                json.dumps(manifest_data, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+            with open(manifest_file, "w", encoding="utf-8") as f:
+                json.dump(manifest_data, f, indent=2, ensure_ascii=False)
             ZeroFluffConsole.info(f"Source Manifest canonique synchronisé : {manifest_file}")
         except Exception as e:
-            ZeroFluffConsole.warning(f"Impossible d'écrire source_manifest.json : {e}")
+            ZeroFluffConsole.warning(f"Impossible d'écrire {ProjectLayout.SOURCE_MANIFEST} : {e}")
 
     def _write_anomalies_manifest(self, state: LoopState) -> None:
         """Enregistre le registre d'anomalies d'ingestion sous docs/00-ingested/ingest_anomalies.json (Fail-Closed)."""
         ingested_dir = self._ingested_root(state)
-        anomalies_file = ingested_dir / "ingest_anomalies.json"
+        anomalies_file = ingested_dir / ProjectLayout.INGEST_ANOMALIES
 
         if self.anomalies:
             data = {
@@ -375,14 +386,13 @@ class IngestAgent:
                 "anomalies": self.anomalies,
             }
             try:
-                anomalies_file.write_text(
-                    json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
-                )
+                with open(anomalies_file, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
                 ZeroFluffConsole.warning(
                     f"Registre des anomalies d'ingestion consigné : {anomalies_file}"
                 )
             except Exception as e:
-                ZeroFluffConsole.warning(f"Impossible d'écrire ingest_anomalies.json : {e}")
+                ZeroFluffConsole.warning(f"Impossible d'écrire {ProjectLayout.INGEST_ANOMALIES} : {e}")
         else:
             if anomalies_file.exists():
                 try:

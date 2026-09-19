@@ -77,7 +77,7 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0336](0336-structured-thinking-models-outcome-evals.md)** : Modèles de Pensée Structurés & Évaluations d'Impact
 *   **[ADR-0337](0337-obsidian-visual-excellence-canvas.md)** : Standard d'Excellence Visuelle Obsidian, Callouts Hiérarchisés & Toiles Spatiales Canvas 2D
 *   **[ADR-0338](0338-nmedia-cloud-litellm-pricing-forensics.md)** : Gouvernance Modèles LiteLLM, Pricing Forensics & Allocation Budgétaire
-*   **[ADR-0339](0339-project-lifecycle-stages-governance-gates.md)** : Portes de Gouvernance & Cycle de Vie Global du Projet
+*   **[ADR-0339](0339-project-lifecycle-stages-governance-gates.md)** : Portes de Gouvernance & Cycle de Vie Global du Projet *(Amendé par ADR-0375)*
 *   **[ADR-0340](0340-hallmark-anti-slop-ui-macrostructures.md)** : Intégration du Standard Hallmark (Anti-AI-Slop, 21 Macrostructures UI & Matrice 8 États)
 *   **[ADR-0341](0341-runnable-gates-depth-tree-orchestration.md)** : Runnable Gates, Depth Tree Orchestration & Empreintes Déterministes
 *   **[ADR-0342](0342-declarative-yaml-extraction-blueprints.md)** : Blueprints d'Extraction Déclarative YAML & Distillation de Connaissances Typées
@@ -107,7 +107,19 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0370](0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md)** : Générateur Automatique du Guide CLI SSOT & Gouvernance Anti-Drift Déterministe
 *   **[ADR-0371](0371-paradigme-dual-harnais-preventif-et-point-in-time-recovery-agentique.md)** : Paradigme Dual Harnais Préventif & Point-in-Time Recovery Agentique (Synthèse Cohesity Agent Resilience)
 *   **[ADR-0372](0372-replay-simulator-hors-ligne-et-auto-amelioration-recursive-du-harnais.md)** : Replay Simulator Hors-Ligne & Auto-Amélioration Récursive du Harnais (Synthèse Dream RSI)
+*   **[ADR-0373](0373-generation-multi-draft-et-tournoi-auto-evaluatif-local.md)** : Génération Multi-Branches (Multi-Draft Challenge) & Auto-Évaluation Déterministe Locale
+*   **[ADR-0374](0374-standard-mcp-cyber-resilience-et-workflows-deterministes.md)** : Standard MCP de Cyber-Résilience Agentique & Workflows Déterministes Multi-Étapes (Synthèse Rubrik MCP & OWASP MCP Top 10)
+*   **[ADR-0375](0375-project-lifecycle-5-phases-and-analysis-types.md)** : Réalignement du Cycle de Vie en 5 Phases, Typologie d'Analyses & Règle des 2 Gabarits
+*   **[ADR-0376](0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md)** : Standard de Rigueur d'Ingénierie & Audit 360° Zéro Blindspot pour les Évolutions de l'Écosystème mLoop
+*   **[ADR-0377](0377-sonde-runtimes-agents-aval-inspiration-agentmgr.md)** : Sonde & Gouvernance Déterministe des Runtimes d'Agents Aval (Inspiration AgentManager & Universal Dev Handoff)
+*   **[ADR-0378](0378-phase-1-ingest-and-explore-contract-and-gate-1.md)** : Standardisation de la Phase 1 INGEST & EXPLORE, Contrat d'Ingestion Documentaire et Gate 1
 
 ---
-*Dernière consolidation constitutionnelle : 17 septembre 2026 — 87 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 18 septembre 2026 — 93 ADRs Unifiées (Zéro Conflit)*
 | 0373 | [Génération Multi-Branches (Multi-Draft Challenge) & Auto-Évaluation Déterministe Locale](0373-generation-multi-draft-et-tournoi-auto-evaluatif-local.md) | Approuvé |
+| 0374 | [Standard MCP de Cyber-Résilience Agentique & Workflows Déterministes](0374-standard-mcp-cyber-resilience-et-workflows-deterministes.md) | Approuvé |
+| 0375 | [Réalignement du Cycle de Vie en 5 Phases, Typologie d'Analyses & Règle des 2 Gabarits](0375-project-lifecycle-5-phases-and-analysis-types.md) | Approuvé |
+| 0376 | [Standard de Rigueur d'Ingénierie & Audit 360° Zéro Blindspot](0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md) | Approuvé |
+| 0377 | [Sonde & Gouvernance Déterministe des Runtimes d'Agents Aval](0377-sonde-runtimes-agents-aval-inspiration-agentmgr.md) | Approuvé |
+| 0378 | [Standardisation de la Phase 1 INGEST & EXPLORE, Contrat d'Ingestion et Gate 1](0378-phase-1-ingest-and-explore-contract-and-gate-1.md) | Approuvé |
+

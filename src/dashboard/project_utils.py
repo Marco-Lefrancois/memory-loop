@@ -167,6 +167,17 @@ def match_project_alias(candidate: str, target: str, entry: Optional[Dict[str, A
         if t_ck == "metro":
             return "metro" in c_ck
 
+    # Dashboard mLoop
+    if "dashboard" in t_ck:
+        if "dashboard" in c_ck:
+            return True
+        if c_ck in ("mloop", "memoryloop"):
+            if entry:
+                haystack = (str(entry.get("target", "")) + " " + str(entry.get("action", "")) + " " + str(entry.get("context_contributors", []))).lower()
+                if "dashboard" in haystack:
+                    return True
+            return True
+
     return False
 
 

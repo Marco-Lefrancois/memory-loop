@@ -139,6 +139,7 @@ class StoryStatus(str, Enum):
     """
 
     # ─── Commun aux deux modes ──────────────────────────────────────
+    DRAFT = "DRAFT"
     BACKLOG = "BACKLOG"
     OPEN = "OPEN"
     IN_ANALYZE = "IN_ANALYZE"

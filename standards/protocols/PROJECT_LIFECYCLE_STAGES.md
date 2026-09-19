@@ -1,88 +1,80 @@
 # 🚦 Protocole Normatif : Phases et Portes d'Étape du Cycle de Vie Projet (Project Lifecycle Stages)
 
-**Statut** : SSOT Normatif  
-**Date d'effet** : 18 août 2026  
-**Domaine** : Gouvernance de Projet, Cadrage Macro, Contractualisation, Découpage Spécifications, Ingénierie Logicielle  
+**Statut** : SSOT Normatif (ADR-0375)  
+**Date d'effet** : Septembre 2026  
+**Domaine** : Gouvernance de Projet, Cycle en 5 Phases Universelles, Typologie d'Analyses, Parcours Fast-Track & Dualité Grill-Me  
 
 ---
 
-## 1. Vue d'Ensemble du Cycle de Vie en 6 Phases
+## 1. Vue d'Ensemble du Cycle de Vie en 5 Phases
 
-Tout projet client géré dans l'écosystème mLoop transite obligatoirement par ces **6 phases séquentielles**, chacune verrouillée par une **Porte d'Étape (*Quality Gate*)** :
+Tout projet géré dans l'écosystème mLoop transite par **5 phases d'ingénierie universelles**, jalonnées par des **Portes d'Étape (*Quality Gates*)** :
 
 ```mermaid
 flowchart LR
-    P0["0. T-SHIRT-SIZE<br>(Cadrage Macro)"] -->|Gate 0 : Validation Enveloppe| P1["1. SOW<br>(Énoncé des Travaux)"]
-    P1 -->|Gate 1 : Signature Client| P2["2. PLAN / GRILL-ME<br>(Analyse Fine Récit/Récit)"]
-    P2 -->|Gate 2 : Definition of Ready| P3["3. BUILD<br>(Développement Physique)"]
-    P3 -->|Gate 3 : Definition of Done| P4["4. VALIDATE<br>(Audit QA & Evals)"]
-    P4 -->|Gate 4 : Conformité Métier| P5["5. SHIP & SYNC<br>(Mise en Prod & Jira)"]
+    P1["1. INGEST & EXPLORE<br>(Init, Crawl, Matière première)"] -->|Gate 1 : Ingestion Complète| P2["2. PLAN & ANALYSE<br>(Macro-Cadrage & Grill-Me 1:1)"]
+    P2 -->|Gate 2 : Definition of Ready (DoR 6/6)| P3["3. BUILD & DEV<br>(Développement & Tests Unitaires)"]
+    P3 -->|Gate 3 : Definition of Done (DoD)| P4["4. VALIDATE & QA<br>(Audit QA, Evals & NLI)"]
+    P4 -->|Gate 4 : Conformité Métier| P5["5. SHIP & SYNC<br>(Mise en Prod, Git & Jira Cloud)"]
 ```
 
 ---
 
-## 2. Définition Détaillée des 6 Phases & Portes d'Étape
+## 2. Définition des 5 Phases Universelles & Quality Gates
 
-### 🟡 Phase 0 : `T-SHIRT-SIZE` (Cadrage Macro & Enveloppe Budgétaire)
-* **Objectif** : Évaluer l'effort et le coût de haut niveau pour arbitrage par la direction et le client.
+### 🟡 Phase 1 : `INGEST & EXPLORE` (Socle Préalable Obligatoire)
+* **Protocole Normatif** : [`INGESTION_AND_EXPLORATION_PROTOCOL.md`](INGESTION_AND_EXPLORATION_PROTOCOL.md) & [ADR-0377](../adr-system/0377-phase-1-ingest-and-explore-contract-and-gate-1.md).
+* **Objectif** : Initialiser la structure du projet (`python src/swarm.py init`), permettre le dépôt humain dans `reference/` (sans sub-readme), et ingérer l'ensemble des sources brutes (maquettes, briefs, wikis, exports Jira, APIs).
 * **Activités** :
-  - Identification des briques majeures du parcours utilisateur à partir des maquettes et briefs initiaux.
-  - Attribution d'une taille T-Shirt selon la grille officielle client (ex: Grille Kevin Chamberland : `xs` à `xl`, 1 000 $/jour).
-  - Définition explicite des exclusions de périmètre (`-` = 0 $ / 0 j).
+  - Ingestion via `python src/swarm.py ingest`, `crawl`, `markitdown_convert`, `extract`, `agentic-extract`, `csv-normalize`.
+  - Optimisation des maquettes SVG sous `docs/05-assets/` via `python src/swarm.py svg-optimize` (ADR-0332).
+  - Analyse exploratoire via NotebookLM (`python src/swarm.py notebooklm`) et Fact-Search local.
 * **Livrables Autorisés** :
-  - Tableau macro dans `backlog/sprint_backlog.md` (identifiant chaque brique avec sa taille T-Shirt).
-  - Fiche de dimensionnement dans `docs/02-business-rules/`.
-* **🚫 Interdictions** : Interdiction de rédiger des récits détaillés au format Gherkin ou de produire du code.
-* **🚪 Porte 0 (*Exit Criteria*)** : Accord de la direction et du client sur l'enveloppe globale.
+  - Documents bruts convertis et normalisés sous `docs/00-ingested/` avec `source_manifest.json` et sidecars LOD `.overview.md` (ADR-0335).
+  - Actifs visuels et maquettes vectorielles épurées sous `docs/05-assets/` (ADR-0332).
+  - Lexique du domaine auto-alimenté sous `docs/04-transverse/lexique_domaine.md`.
+  - Index sémantique SQLite FTS5 et hypergraphe Graphify synchronisés (`python src/swarm.py sync`).
+* **🚫 Interdictions (Check 13 / Anti-Ghost-Bias)** : Interdiction absolue et bloquante de créer des User Stories sous `backlog/stories/` ou de rédiger des livrables de cadrage macro (`TSHIRT_SIZE_*.md`, `SOW_*.md`) sous `docs/01-architecture/`.
+* **🚪 Porte 1 (*Gate 1 : Ingestion Complète & Cadrage Initial Prêt*)** :
+  1. G1 : Tous les fichiers bruts de `reference/` sont convertis en Markdown sous `docs/00-ingested/`.
+  2. G2 : Les maquettes vectorielles SVG sont optimisées sous `docs/05-assets/`.
+  3. G3 : SQLite FTS5 et l'hypergraphe Graphify sont synchronisés.
+  4. G4 : Le manifeste `source_manifest.json` et les sidecars LOD `.overview.md` sont présents.
+  5. G5 : Règle Check 13 respectée (0 story sous `backlog/stories/`).
 
 ---
 
-### 🟠 Phase 1 : `SOW` (Statement of Work / Énoncé des Travaux)
-* **Objectif** : Transformer l'enveloppe macro en engagement contractuel formel.
-* **Activités** :
-  - Formalisation du périmètre d'affaires, des jalons de livraison et du calendrier prévisionnel.
-  - Découpage macroscopique du périmètre dans le tableau `backlog/sprint_backlog.md` (statuts `OPEN` et `BACKLOG` exclusivement) et dans la Section 4 du SOW.
-  - Définition des hypothèses techniques, contraintes légales (ex: Loi 25) et prérequis tiers (ex: RxPro, SSO).
-  - Clarification de la matrice des responsabilités (RACI).
-* **Livrables Autorisés** :
-  - Document SOW officiel sous `docs/01-architecture/SOW_<NOM_PROJET>.md`.
-  - Tableau de bord macroscopique sous `backlog/sprint_backlog.md`.
-* **🚫 Interdictions** : Interdiction formelle de créer ou de rédiger des User Stories détaillées avec critères Gherkin sous `backlog/stories/`. Tout récit détaillé doit impérativement attendre l'approbation du SOW (Porte 1) et l'entrevue interactive de Grilling (Phase 2).
-* **🚪 Porte 1 (*Exit Criteria*)** : Signature et approbation formelle du SOW par le client / PO.
+### 🔵 Phase 2 : `PLAN & ANALYSE` (Dualité Macro-Planification & Micro-Analyse)
+* **Objectif** : Transformer la matière brute en décisions d'architecture fermes et en un backlog de User Stories prêtes pour le dev.
+* **Structure Bimodale** :
+  1. **Sous-étape A : Planification Macro (Cadrage & Chiffrage)** :
+     - **Grill-Me Macro (`python src/swarm.py grill-project`)** : Entrevue contradictoire transverse post-ingestion pour éliminer les zones d'ombre d'architecture (SSO, hébergement, conformité Loi 25, exclusions nettes).
+     - **Types d'analyses activables (Optionnels)** :
+       - Dimensionnement T-Shirt : `python src/swarm.py to-tshirt` ➔ `docs/01-architecture/TSHIRT_SIZE_<PROJET>.md`.
+       - Engagement contractuel SOW : `python src/swarm.py to-sow` ➔ `docs/01-architecture/SOW_<PROJET>.md`.
+     - **Découpage Macro (`python src/swarm.py to-tickets`)** : Génération des récits de cadrage de Palier 1 (`standards/blueprints/story_draft_template.md` avec `status: DRAFT` et `grill_me: PENDING`) dans `backlog/stories/` et initialisation de `backlog/sprint_backlog.md`.
+  2. **Sous-étape B : Analyse Fine Récit par Récit (Agile Sprints)** :
+     - **Grill-Me Micro 1:1 (`python src/swarm.py grill-me --story REC-XX`)** : Entrevue chirurgicale résolvant les questions ouvertes de l'ébauche pour produire le récit haute-fidélité (`standards/blueprints/story_template.md` avec `status: READY_FOR_DEV`, `grill_me: DONE`, DoR 6/6).
+* **Parcours Fast-Track (Mandats déjà contractualisés)** :
+  - Si un projet démarre avec un SOW déjà signé et des spécifications existantes, les sous-commandes `to-tshirt` et `to-sow` sont **bypassées sans avertissement**. Le projet débute directement l'analyse fine des stories.
+* **🚪 Porte 2 (*Definition of Ready*)** : Récits validés 100% sans erreur par WikiFix & Sentinel (DoR 6/6, 4 Piliers Gherkin, EvidencePacks complets).
 
 ---
 
-### 🔵 Phase 2 : `PLAN / GRILL-ME` (Analyse & Cadrage Récit par Récit)
-* **Objectif** : Spécifier chaque récit avec zéro ambiguïté et un contrat fonctionnel limpide.
+### 🟢 Phase 3 : `BUILD & DEV` (Développement & Delivery)
+* **Objectif** : Implémenter physiquement la solution technique validée.
 * **Activités** :
-  - Entrevue interactive ciblée **Grill-with-Docs** (1 question ciblée + recommandation par tour).
-  - Découpage en User Stories verticales selon le Gold Standard `standards/blueprints/story_template.md`.
-  - Rédaction obligatoire des **4 Piliers Gherkin** (1. Nominal, 2. Exceptions, 3. Résilience, 4. UX).
-  - Génération synchrone de l'EvidencePack sous `memory/evidence/<STORY_ID>_evidence.json`.
-* **Livrables Autorisés** :
-  - Fichiers de récits sous `backlog/stories/<JIRA_KEY>.md`.
-  - EvidencePacks JSON et registres de questions ouvertes (`docs/04-transverse/`).
-* **🚪 Porte 2 (*Definition of Ready*)** : Validation 100% sans erreur par WikiFix & Sentinel (zéro fuite technique `ADR-0319`, gabarit complet).
-
----
-
-### 🟢 Phase 3 : `BUILD` (Développement & Delivery)
-* **Objectif** : Implémenter physiquement la solution technique.
-* **Activités** :
-  - Handoff propre aux développeurs / agents IA aval (Renaud, Cursor, Copilot, Herdr workers).
-  - Développement guidé par les tests (TDD) et respect des contrats déclaratifs.
+  - Workers Herdr isolés (`python src/swarm.py worker-spawn`), développement TDD, refactoring.
 * **Livrables Autorisés** :
   - Code source applicatif physique, tests unitaires et d'intégration.
-* **🚪 Porte 3 (*Definition of Done*)** : Tous les tests unitaires et d'intégration passent au vert.
+* **🚪 Porte 3 (*Definition of Done*)** : 100% des tests unitaires et d'intégration verts.
 
 ---
 
-### 🟣 Phase 4 : `VALIDATE` (Assurance Qualité & Evals)
-* **Objectif** : Auditer contradictoirement la qualité, la sécurité et la non-régression.
+### 🟣 Phase 4 : `VALIDATE & QA` (Assurance Qualité & Evals)
+* **Objectif** : Auditer contradictoirement la qualité, la conformité sémantique et la non-régression.
 * **Activités** :
-  - Audit contradictoire Sentinel / Rubber Duck.
-  - Moisson automatique d'Evals (`AutoEvalHarvester`) à partir des anomalies.
-  - Vérification de conformité stricte aux 4 Piliers Gherkin.
+  - Audit contradictoire Sentinel / Rubber Duck, vérification NLI, moisson d'Evals (`AutoEvalHarvester`).
 * **Livrables Autorisés** :
   - Rapports d'audit de santé et suite de tests d'évaluation (`memory/evals/`).
 * **🚪 Porte 4 (*Exit Criteria*)** : Approbation formelle QA / Sentinel.
@@ -90,31 +82,29 @@ flowchart LR
 ---
 
 ### ⚪ Phase 5 : `SHIP & SYNC` (Mise en Production & Synchronisations)
-* **Objectif** : Déployer en production et aligner tous les registres de mémoire.
+* **Objectif** : Déployer en production et synchroniser tous les registres externes.
 * **Activités** :
-  - Synchronisation Jira Cloud (`python src/swarm.py jira_sync`).
+  - Synchronisation Jira Cloud Fail-Closed (`python src/swarm.py jira_sync`).
   - Synchronisation Git distant (`git push origin main`).
   - Clôture et archivage mémoire dans `memory/supersession_ledger.json`.
 * **Livrables Autorisés** :
-  - Release notes, tickets Jira à l'état fermé, base sémantique mise à jour (`swarm.py sync`).
+  - Release notes, tickets Jira synchronisés, base sémantique mise à jour (`swarm.py sync`).
+* **🚪 Porte 5 (*Exit Criteria*)** : Synchronisation Jira et Git scellée sans erreur.
 
 ---
 
-## 3. Matrice Récapitulative des Statuts de Projet
+## 3. Typologie des 4 Types d'Analyses & Règle des 2 Templates
 
-| Phase # | Code Statut | Phase Cycle mLoop | Livrable Pivot | Validation de Porte Requise |
-| :---: | :--- | :--- | :--- | :--- |
-| **0** | `STAGE_TSHIRT_SIZE` | 1: SPEC / INGEST | Matrice T-Shirt Sizing | Accord Enveloppe / Direction |
-| **1** | `STAGE_SOW` | 1: SPEC / INGEST | Document SOW validé | Signature Client |
-| **2** | `STAGE_PLAN_GRILL` | 2: PLAN / ARCHI | Stories 4 Piliers + EvidencePacks | Definition of Ready (WikiFix) |
-| **3** | `STAGE_BUILD` | 3: BUILD / DEV | Code Source & Tests | Definition of Done (Tests Verts) |
-| **4** | `STAGE_VALIDATE` | 4: VALIDATE / QA | Rapport QA & Evals Pack | Validation Sentinel / QA Lead |
-| **5** | `STAGE_SHIP_SYNC` | 5: SHIP / SYNC | Sync Jira & Git Release | Clôture de Cycle (Orchestrateur) |
+Dans mLoop, un livrable d'analyse n'est **jamais une phase**, mais un **artéfact analytique produit en Phase 2** :
 
----
+| Type d'Analyse | Livrable Produit | Commande CLI | Statut dans le Cycle |
+| :--- | :--- | :--- | :--- |
+| **1. Dimensionnement Macro (T-Shirt Size)** | `docs/01-architecture/TSHIRT_SIZE_<PROJET>.md` | `python src/swarm.py to-tshirt` | **Optionnel** (Avant-projet / Enveloppe budgétaire) |
+| **2. Cadrage Contractuel (SOW)** | `docs/01-architecture/SOW_<PROJET>.md` | `python src/swarm.py to-sow` | **Optionnel** (Contractualisation & Jalons) |
+| **3. Architecture Transverse & Cadrage** | ADRs + `docs/01-architecture/PROJECT_CONSTRAINTS.md` | `python src/swarm.py grill-project` | **Recommandé** (Alignement global et choix structurants) |
+| **4. Analyse Fine de Récit** | `backlog/stories/<ID>.md` (`story_template.md`) | `python src/swarm.py grill-me --story <ID>` | **Obligatoire** (Préparation au développement) |
 
-## 4. Amorçage de Projet & Procédure Opérationnelle
-
-Pour initialiser un nouveau projet dans le respect strict de ce cycle de vie, se référer au protocole opérationnel :
-👉 [`standards/protocols/PROJECT_CREATION_PROCEDURE.md`](PROJECT_CREATION_PROCEDURE.md) *(Scaffolding agnostique, ingestion, SOW et découpage).*
-
+### Règle des 2 Seuls Templates de Récits :
+- **Gabarit Palier 1 : `standards/blueprints/story_draft_template.md`** ➔ `status: DRAFT`, `grill_me: PENDING`.
+- **Gabarit Palier 2 : `standards/blueprints/story_template.md`** ➔ `status: READY_FOR_DEV`, `grill_me: DONE`, DoR 6/6.
+- *Tout autre gabarit de story est proscrit de l'écosystème.*

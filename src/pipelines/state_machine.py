@@ -32,13 +32,23 @@ def _clean_yaml_str(raw_yaml: str) -> dict:
 # ─── Transitions autorisées (SSOT) ────────────────────────────────────────────
 # Chaque clé mappe vers la liste des statuts cibles légaux.
 ALLOWED_TRANSITIONS = {
+    StoryStatus.DRAFT: [
+        StoryStatus.OPEN,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.READY_FOR_GROOMING,
+        StoryStatus.READY_FOR_DEV,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
     StoryStatus.BACKLOG: [
+        StoryStatus.DRAFT,
         StoryStatus.OPEN,
         StoryStatus.IN_ANALYZE,
         StoryStatus.IN_REVIEW,
         StoryStatus.ON_HOLD,
     ],
     StoryStatus.OPEN: [
+        StoryStatus.DRAFT,
         StoryStatus.IN_ANALYZE,
         StoryStatus.IN_REVIEW,
         StoryStatus.BACKLOG,

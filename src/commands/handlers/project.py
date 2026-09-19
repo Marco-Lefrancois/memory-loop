@@ -14,8 +14,8 @@ if TYPE_CHECKING:
 
 
 def handle_init(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
-    """Initialise l'arborescence d'un nouveau projet (Loi des 3 Piliers)."""
-    p = Path("Projects") / state.project_name
+    """Initialise l'arborescence d'un nouveau projet (Loi des 3 Piliers & ADR-0375)."""
+    p = project_path if project_path else (Path("Projects") / state.project_name)
     (p / ProjectLayout.REFERENCE).mkdir(parents=True, exist_ok=True)
     for subdir in ProjectLayout.DOCS_SUBDIRS:
         (p / ProjectLayout.DOCS / subdir).mkdir(parents=True, exist_ok=True)
@@ -89,21 +89,36 @@ def handle_init(args: argparse.Namespace, state: LoopState, project_path: Path) 
         with open(gitignore_path, "w", encoding="utf-8") as f:
             f.write(content)
 
-    # Initialisation déterministe du cycle de vie projet (ADR-0339)
-    from src.core.lifecycle import ProjectLifecycleManager
-    ProjectLifecycleManager.init_lifecycle(p)
+    # Initialisation déterministe du cycle de vie projet (ADR-0375 / ADR-0378)
+    from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
+    ProjectLifecycleManager.init_lifecycle(p, initial_stage=ProjectLifecycleStage.STAGE_1_INGEST)
 
-    ZeroFluffConsole.success(
-        f"Projet '{state.project_name}' initialisé avec succès (Structure agnostique prête)."
-    )
-    ZeroFluffConsole.info(
-        f"📋 Prochaines étapes du cycle de vie projet (SOP - ADR-0330) :\n"
-        f"  1. Déposez vos documents clients / maquettes dans 'Projects/{state.project_name}/reference/'\n"
-        f"  2. Ingestion & normalisation Markdown : 'python src/swarm.py ingest --project {state.project_name}'\n"
-        f"  3. Énoncé des Travaux & Cadrage (SOW) : 'python src/swarm.py to-sow --project {state.project_name} --size <T-SHIRT>'\n"
-        f"  4. Découpage du backlog : 'Projects/{state.project_name}/backlog/sprint_backlog.md'\n"
-        f"  5. Cadrage interactif des récits : 'python src/swarm.py grill --project {state.project_name} --story <ID>'"
-    )
+    print("\n" + "=" * 80)
+    print(f"🚀 INITIALISATION DU PROJET : {state.project_name} (ADR-0100 & ADR-0375)")
+    print("=" * 80)
+    print(f"✔ Arborescence des 3 Piliers initialisée sous Projects/{state.project_name}/ :")
+    print(f"  📁 {ProjectLayout.REFERENCE}/                     ➔ Staging brut local (exclu de Git, prêt pour dépôt)")
+    print(f"  📁 {ProjectLayout.DOCS}/                          ➔ SSOT Documentaire Markdown (ADR-0102 & ADR-0332) :")
+    print(f"     ├── {ProjectLayout.DOCS_INGESTED}/               ➔ Destination de la conversion MarkItDown")
+    print(f"     ├── {ProjectLayout.DOCS_ARCHITECTURE}/           ➔ Futurs SOW / T-Shirt / ADRs (Phase 2+)")
+    print(f"     ├── {ProjectLayout.DOCS_RULES}/         ➔ Règles d'affaires atomiques RM-XXX")
+    print(f"     ├── {ProjectLayout.DOCS_MODELS}/                 ➔ Modèles de données DDD et entités")
+    print(f"     ├── {ProjectLayout.DOCS_TRANSVERSE}/             ➔ Questions ouvertes client / dev")
+    print(f"     └── {ProjectLayout.DOCS_ASSETS}/                 ➔ Maquettes SVG & schémas versionnés (ADR-0332)")
+    print(f"  📁 {ProjectLayout.BACKLOG}/                       ➔ Backlog Agile (verrouillé en Phase 1 - Check 13)")
+    print(f"  📁 {ProjectLayout.MEMORY}/                        ➔ Traçabilité & Machine à états du cycle de vie")
+    print(f"\n✔ Fichiers agnostiques prêts : README.md, AGENTS.md, opencode.json, .gitignore")
+    print(f"✔ Cycle de vie initialisé : Étape active = STAGE_1_INGEST (Phase 1 : INGEST & EXPLORE)")
+    print("\n" + "-" * 80)
+    print("👉 INTERVENTION HUMAINE REQUISE (Prochaine action) :")
+    print("-" * 80)
+    print(f"1. Déposez vos documents bruts clients (PDF, Word, Excel, Maquettes SVG...) dans :")
+    print(f"   📂 Projects/{state.project_name}/reference/")
+    print(f"\n2. Dès vos fichiers déposés, lancez l'ingestion normalisée :")
+    print(f"   ⚡ python src/swarm.py ingest --project {state.project_name}")
+    print(f"\n3. Après ingestion, validez la Porte 1 pour débloquer la Phase 2 :")
+    print(f"   🚪 python src/swarm.py gate-approve --project {state.project_name} --gate 1 --approver \"<Votre Nom>\"")
+    print("=" * 80 + "\n")
     return 0
 
 
@@ -180,17 +195,11 @@ def handle_guide(args: argparse.Namespace, state: LoopState | None, project_path
     ZeroFluffConsole.section("GUIDE D'UTILISATION DU PIPELINE CLI — MEMORY LOOP (mLoop)")
 
     phases_data = {
-        "sow": {
-            "title": "🟡 Phase 0 : INCEPTION (Gathering, Cadrage & SOW)",
+        "ingest": {
+            "title": "🟠 Phase 1 : INGEST & EXPLORE (Ingestion & Exploration Documentaire)",
             "commands": [
-                ("to-sow", "Générer l'Énoncé des Travaux (SOW) sous docs/01-architecture/"),
                 ("ingest", "Ingérer les briefs et documents initiaux sous docs/00-ingested/"),
                 ("research", "Recherche et analyse documentaire préliminaire"),
-            ]
-        },
-        "spec": {
-            "title": "🟠 Phase 1 : SPEC / INGEST (Ingestion & Analyse Documentaire)",
-            "commands": [
                 ("crawl", "Web Crawler automatique avec détection Markdown Twin"),
                 ("markitdown_convert", "Conversion multi-formats (PDF, Office, etc.) vers Markdown"),
                 ("extract", "Extraction déclarative YAML vers Knowledge Abstracts (ADR-0342)"),
@@ -199,12 +208,15 @@ def handle_guide(args: argparse.Namespace, state: LoopState | None, project_path
             ]
         },
         "plan": {
-            "title": "🔵 Phase 2 : PLAN / ARCHI (Planification, Grill & Découpage)",
+            "title": "🔵 Phase 2 : PLAN & ANALYSE (Planification, Architecture, Grill & Découpage)",
             "commands": [
+                ("to-tshirt", "Générer un Dimensionnement Budgétaire d'avant-projet (T-Shirt Size)"),
+                ("to-sow", "Générer l'Énoncé des Travaux (SOW) contractuel sous docs/01-architecture/"),
+                ("grill-project", "Cadrage contradictoire macro d'avant-projet (Loi 25, SSO, exclusions)"),
                 ("focus", "Verrouiller l'attention sur une User Story (--story <ID>)"),
                 ("grill", "Entrevue interactive ciblée Grill-with-Docs & enregistrement d'ADRs"),
                 ("to-spec", "Distiller une discussion en spécification d'architecture"),
-                ("to-tickets", "Découper une spec en récits verticaux tracer-bullet"),
+                ("to-tickets", "Découper une spec en ébauches de récits verticaux (Palier 1 DRAFT)"),
                 ("wayfinder", "Meta-Orchestration (carte de décisions dans le brouillard)"),
                 ("chunk", "Découpage sémantique d'un document massif (ADR-0323)"),
                 ("hyper-query", "Interroger l'hypergraphe pour une User Story ou un concept (ADR-0343)"),
@@ -250,6 +262,9 @@ def handle_guide(args: argparse.Namespace, state: LoopState | None, project_path
     }
 
     target_phase = getattr(args, "phase", None)
+    # Mapping d'alias pour les anciens noms
+    if target_phase in ("sow", "spec"):
+        target_phase = "ingest" if target_phase == "spec" else "plan"
     selected_phases = [target_phase] if target_phase and target_phase in phases_data else list(phases_data.keys())
 
     print("\nCommandes universelles de démarrage (Boot Sequence) :")
@@ -323,13 +338,32 @@ def handle_gate_approve(args: argparse.Namespace, state: LoopState, project_path
 
 
 def handle_lifecycle_status(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
-    """Affiche le statut d'étape et l'historique des portes du cycle de vie projet."""
-    from src.core.lifecycle import ProjectLifecycleManager, STAGE_NAMES, GATE_DEFINITIONS
+    """Affiche le statut d'étape et l'historique des portes du cycle de vie projet (ADR-0339, ADR-0375, ADR-0378)."""
+    from src.core.lifecycle import ProjectLifecycleManager, STAGE_NAMES, GATE_DEFINITIONS, ProjectLifecycleStage
     l_state = ProjectLifecycleManager.get_state(project_path)
 
-    ZeroFluffConsole.section(f"Cycle de Vie Projet : {project_path.name} (ADR-0339)")
+    ZeroFluffConsole.section(f"Cycle de Vie Projet : {project_path.name} (ADR-0339 & ADR-0375)")
     stage_desc = STAGE_NAMES.get(l_state.current_stage, l_state.current_stage.value)
     ZeroFluffConsole.info(f"Étape Active : {l_state.current_stage.value} ({stage_desc})")
+
+    # Métadonnées détaillées Phase 1 (ADR-0378)
+    if l_state.canonical_stage == ProjectLifecycleStage.STAGE_1_INGEST:
+        ref_dir = project_path / ProjectLayout.REFERENCE
+        raw_count = len([f for f in ref_dir.rglob("*") if f.is_file()]) if ref_dir.exists() else 0
+        ingested_dir = project_path / ProjectLayout.DOCS / ProjectLayout.DOCS_INGESTED
+        ingested_count = len(list(ingested_dir.glob("*.md"))) if ingested_dir.exists() else 0
+        assets_dir = project_path / ProjectLayout.DOCS / ProjectLayout.DOCS_ASSETS
+        assets_count = len([f for f in assets_dir.rglob("*") if f.is_file()]) if assets_dir.exists() else 0
+
+        stories_dir = project_path / ProjectLayout.BACKLOG / "stories"
+        premature_stories = [f.name for f in stories_dir.glob("*.md") if f.name.lower() != "readme.md"] if stories_dir.exists() else []
+        c13_status = "PASS (0 story)" if not premature_stories else f"WARN ({len(premature_stories)} story(ies) prématurée(s) détectée(s))"
+
+        print("\n📊 Métadonnées Phase 1 (INGEST & EXPLORE) :")
+        print(f"  📁 Fichiers bruts déposés (reference/) : {raw_count}")
+        print(f"  📄 Documents Markdown normalisés (docs/00-ingested/) : {ingested_count}")
+        print(f"  🎨 Actifs visuels & maquettes (docs/05-assets/) : {assets_count}")
+        print(f"  🛡️ Check 13 Anti-Ghost-Bias (backlog/stories/) : {c13_status}")
 
     print("\n🚪 Historique des Portes de Gouvernance :")
     for g_num, g_def in sorted(GATE_DEFINITIONS.items()):

@@ -1,10 +1,20 @@
 ---
 name: sentinel
 role: Validation & Audit QA Engine
-description: Audit de conformité fonctionnelle et calcul du score INVEST.
-model_pref: ollama/deepseek-r1:7b
+description: "Audit de conformité fonctionnelle et calcul du score INVEST."
+model: deepseek-r1:7b
+model_reasoning_effort: high
+sandbox_mode: read-only
+allowed_write_paths:
+  - memory/reports/**
+forbidden_write_paths:
+  - src/**
+  - backlog/stories/**
+  - docs/**
 skills:
-  - validate
+  - sentinel
+  - security-and-hardening
+  - doubt-driven-development
 ---
 
 # MISSION

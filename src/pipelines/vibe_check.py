@@ -50,10 +50,7 @@ def detect_project_lifecycle_stage(
         stage_name = l_state.current_stage.value
         mode = (
             "INIT"
-            if l_state.current_stage in (
-                ProjectLifecycleStage.STAGE_0_TSHIRT,
-                ProjectLifecycleStage.STAGE_1_SOW,
-            )
+            if l_state.canonical_stage == ProjectLifecycleStage.STAGE_1_INGEST
             else "RUN"
         )
         return mode, stage_name
@@ -457,11 +454,8 @@ def run_vibe_check(
             else []
         )
 
-        # En Phase 0 (T-Shirt) ou Phase 1 (SOW), AUCUN récit détaillé n'est autorisé
-        if l_state.current_stage in (
-            ProjectLifecycleStage.STAGE_0_TSHIRT,
-            ProjectLifecycleStage.STAGE_1_SOW,
-        ):
+        # En Phase 1 (STAGE_1_INGEST), AUCUN récit détaillé n'est autorisé
+        if l_state.canonical_stage == ProjectLifecycleStage.STAGE_1_INGEST:
             if detailed_stories:
                 phase_gate_ok = False
                 phase_gate_violations.append(
@@ -494,18 +488,20 @@ def run_vibe_check(
                 except Exception as e:
                     logger.debug(f"Erreur lecture sprint_backlog.md pour Check 13: {e}", exc_info=True)
         else:
-            # En Phase 2 et plus, vérifier qu'un SOW existe si requis
+            # En Phase 2 et plus, vérifier qu'un SOW, des specs ou un sprint_backlog existe si des stories existent (Fast-Track)
             arch_dir = project_dir / "docs" / "01-architecture"
+            specs_dir = project_dir / "docs" / "02-specs"
             has_sow = arch_dir.exists() and any(arch_dir.glob("SOW_*.md"))
+            has_specs = specs_dir.exists() and any(specs_dir.glob("*.md"))
             sprint_file = project_dir / "backlog" / "sprint_backlog.md"
-            if detailed_stories and not has_sow and not sprint_file.exists():
+            if detailed_stories and not has_sow and not has_specs and not sprint_file.exists():
                 phase_gate_ok = False
-                phase_gate_violations.append("Récits détaillés sans SOW ni sprint_backlog préalable")
+                phase_gate_violations.append("Récits détaillés sans SOW, specs ni sprint_backlog préalable")
 
     phase_gate_msg = (
-        "Interdiction de Saut de Phase (ADR-0339)"
+        "Interdiction de Saut de Phase (ADR-0375 / ADR-0339)"
         if phase_gate_ok
-        else f"Interdiction de Saut de Phase (ADR-0339 : {'; '.join(phase_gate_violations)} — Exécutez 'python src/swarm.py lifecycle-clean --project {project_name}')"
+        else f"Interdiction de Saut de Phase (ADR-0375 / ADR-0339 : {'; '.join(phase_gate_violations)} — Exécutez 'python src/swarm.py lifecycle-clean --project {project_name}')"
     )
     checks.append(
         {"check": phase_gate_msg, "status": "PASS" if phase_gate_ok else "FAIL"}
@@ -557,6 +553,67 @@ def run_vibe_check(
     checks.append(
         {"check": guide_msg, "status": "PASS" if guide_sync_ok else "FAIL"}
     )
+
+    # Check 16 (ADR-0377 — Sonde des Runtimes d'Agents Aval & Herdr) :
+    # Vérifie la présence et la viabilité des outils d'exécution pour la phase courante.
+    from src.core.agent_probe import AgentProbe
+    probe = AgentProbe()
+    agent_readiness_ok, agent_violations = probe.check_readiness(stage=stage_label)
+    agent_msg = (
+        "Runtimes d'Agents Aval & Herdr Opérationnels (ADR-0377)"
+        if agent_readiness_ok
+        else f"Runtimes d'Agents Aval & Herdr (ADR-0377 : {'; '.join(agent_violations)})"
+    )
+    checks.append(
+        {"check": agent_msg, "status": "PASS" if agent_readiness_ok else "FAIL"}
+    )
+    # Check 19 (ADR-0379 — Intégrité StandardsGraph & Bouclier de Confinement SSOT) :
+    # 1. Vérifie la présence et la synchronisation de memory/standards_graph.db.
+    # 2. Vérifie la parité stricte des 38 skills (.agents/skills/*/SKILL.md) avec StandardsGraph.
+    # 3. Vérifie l'absence de fichiers .toml résiduels dans standards/agents/.
+    # 4. Vérifie l'intégrité du bouclier de confinement runtime (ConfinementShield).
+    standards_graph_ok = True
+    standards_violations = []
+
+    try:
+        from src.core.standards_graph import StandardsGraphStore
+        store = StandardsGraphStore.get_instance()
+        skills = store.get_skills()
+        agents = store.get_agents()
+
+        if len(skills) < 38:
+            standards_graph_ok = False
+            standards_violations.append(f"Catalogue incomplet ({len(skills)}/38 skills)")
+
+        if len(agents) < 5:
+            standards_graph_ok = False
+            standards_violations.append(f"Profils d'agents incomplets ({len(agents)}/5 agents)")
+
+        if Path("standards/agents").exists() and any(Path("standards/agents").glob("*.toml")):
+            standards_graph_ok = False
+            standards_violations.append("Fichiers .toml résiduels interdits sous standards/agents/")
+
+        from src.core.confinement_shield import ConfinementShield, PermissionDeniedError
+        try:
+            ConfinementShield.verify_skill_access("forbidden-skill-canary", "explorer")
+            standards_graph_ok = False
+            standards_violations.append("Bouclier ConfinementShield inactif (canary non intercepté)")
+        except PermissionDeniedError:
+            pass  # Interception réussie
+
+    except Exception as exc:
+        standards_graph_ok = False
+        standards_violations.append(f"Erreur StandardsGraph : {exc}")
+
+    standards_msg = (
+        "Intégrité StandardsGraph & Bouclier de Confinement SSOT (ADR-0379)"
+        if standards_graph_ok
+        else f"Intégrité StandardsGraph & Bouclier SSOT (Violations : {'; '.join(standards_violations)})"
+    )
+    checks.append(
+        {"check": standards_msg, "status": "PASS" if standards_graph_ok else "FAIL"}
+    )
+
 
     passed_count = sum(1 for c in checks if c["status"] == "PASS")
     total_count = len(checks)

@@ -1,6 +1,6 @@
 """
 Tests unitaires pour le moteur de cycle de vie projet (ProjectLifecycleManager).
-Conformité : ADR-0339 (Quality Gates) et ADR-0369 (Standards de Robustesse Senior).
+Conformité : ADR-0375 (Cycle de vie en 5 phases) et ADR-0369 (Standards de Robustesse Senior).
 """
 
 from __future__ import annotations
@@ -30,12 +30,12 @@ def temp_project(tmp_path: Path) -> Path:
 
 
 def test_init_lifecycle_defaults(temp_project: Path) -> None:
-    """Vérifie l'amorçage nominal en Phase 0 ou Phase 1 si SOW déjà présent."""
+    """Vérifie l'amorçage nominal en Phase 1 (INGEST) ou Phase 2 (PLAN) si SOW/specs déjà présents."""
     state = ProjectLifecycleManager.get_state(temp_project)
-    assert state.current_stage == ProjectLifecycleStage.STAGE_0_TSHIRT
+    assert state.current_stage == ProjectLifecycleStage.STAGE_1_INGEST
     assert len(state.gates) == 0
 
-    # Présence du SOW -> amorçage en STAGE_1_SOW
+    # Présence du SOW -> amorçage direct en STAGE_2_PLAN_ANALYSE (Fast-Track)
     sow_file = temp_project / "docs" / "01-architecture" / "SOW_TestProject.md"
     sow_file.write_text("# SOW Document", encoding="utf-8")
     
@@ -44,37 +44,41 @@ def test_init_lifecycle_defaults(temp_project: Path) -> None:
     state_file.unlink()
     
     new_state = ProjectLifecycleManager.get_state(temp_project)
-    assert new_state.current_stage == ProjectLifecycleStage.STAGE_1_SOW
+    assert new_state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
 
 
 @pytest.mark.parametrize(
     "command,stage,expected_allowed",
     [
         # Commandes universelles toujours autorisées
-        ("resume", ProjectLifecycleStage.STAGE_0_TSHIRT, True),
-        ("vibe-check", ProjectLifecycleStage.STAGE_0_TSHIRT, True),
-        ("guide", ProjectLifecycleStage.STAGE_1_SOW, True),
-        ("sync", ProjectLifecycleStage.STAGE_1_SOW, True),
-        ("lifecycle-status", ProjectLifecycleStage.STAGE_0_TSHIRT, True),
+        ("resume", ProjectLifecycleStage.STAGE_1_INGEST, True),
+        ("vibe-check", ProjectLifecycleStage.STAGE_1_INGEST, True),
+        ("guide", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
+        ("sync", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
+        ("lifecycle-status", ProjectLifecycleStage.STAGE_1_INGEST, True),
         
-        # Commandes de cadrage SOW (autorisées dès Phase 0/1)
-        ("to-sow", ProjectLifecycleStage.STAGE_0_TSHIRT, True),
-        ("to-sow", ProjectLifecycleStage.STAGE_1_SOW, True),
-        ("ingest", ProjectLifecycleStage.STAGE_0_TSHIRT, True),
+        # Commandes Phase 1 (INGEST)
+        ("ingest", ProjectLifecycleStage.STAGE_1_INGEST, True),
+        ("research", ProjectLifecycleStage.STAGE_1_INGEST, True),
         
-        # Commandes de Phase 2 (PLAN / GRILL) interdites en Phase 0 et 1
-        ("grill", ProjectLifecycleStage.STAGE_0_TSHIRT, False),
-        ("grill", ProjectLifecycleStage.STAGE_1_SOW, False),
-        ("grill", ProjectLifecycleStage.STAGE_2_PLAN_GRILL, True),
-        ("to-tickets", ProjectLifecycleStage.STAGE_1_SOW, False),
-        ("to-tickets", ProjectLifecycleStage.STAGE_2_PLAN_GRILL, True),
-        ("focus", ProjectLifecycleStage.STAGE_1_SOW, False),
-        ("focus", ProjectLifecycleStage.STAGE_2_PLAN_GRILL, True),
+        # Commandes Phase 2 (PLAN & ANALYSE) interdites en Phase 1
+        ("to-tshirt", ProjectLifecycleStage.STAGE_1_INGEST, False),
+        ("to-tshirt", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
+        ("to-sow", ProjectLifecycleStage.STAGE_1_INGEST, False),
+        ("to-sow", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
+        ("grill-project", ProjectLifecycleStage.STAGE_1_INGEST, False),
+        ("grill-project", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
+        ("grill", ProjectLifecycleStage.STAGE_1_INGEST, False),
+        ("grill", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
+        ("to-tickets", ProjectLifecycleStage.STAGE_1_INGEST, False),
+        ("to-tickets", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
+        ("focus", ProjectLifecycleStage.STAGE_1_INGEST, False),
+        ("focus", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, True),
         
         # Commandes de Phase 3 (BUILD) interdites avant Phase 3
-        ("self-dev", ProjectLifecycleStage.STAGE_2_PLAN_GRILL, False),
+        ("self-dev", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, False),
         ("self-dev", ProjectLifecycleStage.STAGE_3_BUILD, True),
-        ("worker-spawn", ProjectLifecycleStage.STAGE_2_PLAN_GRILL, False),
+        ("worker-spawn", ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE, False),
         ("worker-spawn", ProjectLifecycleStage.STAGE_3_BUILD, True),
         
         # Commandes de Phase 5 (SHIP) interdites avant Phase 5
@@ -89,7 +93,6 @@ def test_can_execute_command_gating(
     expected_allowed: bool,
 ) -> None:
     """Contrat de vérification des permissions de commandes par étape."""
-    # Définir l'étape du projet
     state = ProjectLifecycleManager.get_state(temp_project)
     state.current_stage = stage
     ProjectLifecycleManager.save_state(temp_project, state)
@@ -99,34 +102,34 @@ def test_can_execute_command_gating(
 
 
 def test_approve_gate_nominal_progression(temp_project: Path) -> None:
-    """Vérifie la progression séquentielle Gate 0 -> Gate 1 -> Gate 2."""
+    """Vérifie la progression séquentielle Gate 1 -> Gate 2."""
     state = ProjectLifecycleManager.get_state(temp_project)
-    assert state.current_stage == ProjectLifecycleStage.STAGE_0_TSHIRT
+    assert state.current_stage == ProjectLifecycleStage.STAGE_1_INGEST
 
-    # Valider Gate 0 (Accord Enveloppe) -> Passage en STAGE_1_SOW
-    state = ProjectLifecycleManager.approve_gate(
-        project_path=temp_project,
-        gate_number=0,
-        approver="PO Lead",
-        notes="Budget T-Shirt validé",
-    )
-    assert state.current_stage == ProjectLifecycleStage.STAGE_1_SOW
-    assert state.is_gate_approved(0)
-    assert state.gates["0"].approver == "PO Lead"
-
-    # Valider Gate 1 (Signature SOW) -> Passage en STAGE_2_PLAN_GRILL
+    # Valider Gate 1 (Ingestion & Cadrage Initial Prêt) -> Passage en STAGE_2_PLAN_ANALYSE
     state = ProjectLifecycleManager.approve_gate(
         project_path=temp_project,
         gate_number=1,
-        approver="Client Direct",
-        notes="SOW signé le 16 septembre",
+        approver="Architecte Lead",
+        notes="Ingestion et cadrage validés",
     )
-    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_GRILL
+    assert state.current_stage == ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
     assert state.is_gate_approved(1)
+    assert state.gates["1"].approver == "Architecte Lead"
+
+    # Valider Gate 2 (Definition of Ready - DoR) -> Passage en STAGE_3_BUILD
+    state = ProjectLifecycleManager.approve_gate(
+        project_path=temp_project,
+        gate_number=2,
+        approver="PO Lead",
+        notes="Stories DoR 6/6 validées",
+    )
+    assert state.current_stage == ProjectLifecycleStage.STAGE_3_BUILD
+    assert state.is_gate_approved(2)
 
 
 def test_approve_gate_out_of_order_raises(temp_project: Path) -> None:
-    """Vérifie qu'on ne peut pas valider une porte hors de séquence (ex: Gate 2 alors qu'on est en Phase 0)."""
+    """Vérifie qu'on ne peut pas valider une porte hors de séquence (ex: Gate 2 alors qu'on est en Phase 1)."""
     with pytest.raises(ValueError, match="Impossible de valider la Gate 2"):
         ProjectLifecycleManager.approve_gate(
             project_path=temp_project,
@@ -137,10 +140,9 @@ def test_approve_gate_out_of_order_raises(temp_project: Path) -> None:
 
 
 def test_clean_premature_stories(temp_project: Path) -> None:
-    """Vérifie la suppression radicale des stories sauvages et EvidencePacks en Phase SOW."""
-    # Créer l'état en STAGE_1_SOW
+    """Vérifie la suppression radicale des stories sauvages et EvidencePacks en Phase 1 INGEST."""
     state = ProjectLifecycleManager.get_state(temp_project)
-    state.current_stage = ProjectLifecycleStage.STAGE_1_SOW
+    state.current_stage = ProjectLifecycleStage.STAGE_1_INGEST
     ProjectLifecycleManager.save_state(temp_project, state)
 
     # Créer des fichiers orphelins prématurés

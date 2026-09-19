@@ -1,7 +1,12 @@
 # ADR-0339 : Portes de Gouvernance & Cycle de Vie Projet
 
-**Statut** : Accepté  
-**Date** : 18 août 2026  
+> [!WARNING]
+> **AMENDEMENT D'ARCHITECTURE (18 septembre 2026)** :  
+> Le modèle de cycle de vie en 6 étapes défini ci-dessous a été formellement révisé et amendé par **[ADR-0375](0375-project-lifecycle-5-phases-and-analysis-types.md)**.  
+> **Nouvelle Source Unique de Vérité** : Cycle unifié en **5 phases universelles** (`INGEST`, `PLAN & ANALYSE`, `BUILD`, `VALIDATE`, `SHIP`), réintégration de T-Shirt Size et SOW comme des types d'analyses optionnels de Phase 2, parcours Fast-Track, et règle des 2 gabarits de récits (`story_draft_template.md` et `story_template.md`). Consulter [PROJECT_LIFECYCLE_STAGES.md](../protocols/PROJECT_LIFECYCLE_STAGES.md).
+
+**Statut** : AMENDÉ PAR ADR-0375  
+**Date** : 18 août 2026 (Amendé le 18 septembre 2026)  
 **Auteurs** : Équipe mLoop & Co-Architecte Agentique  
 **Domaine** : Gouvernance de Projet, Portes d'Étape (Quality Gates), Prévention de la Dérive de Phase, Alignement Commercial & Technique  
 

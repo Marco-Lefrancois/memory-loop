@@ -84,20 +84,23 @@ class AppServerProtocol:
             }
 
         elif method == "roles/list":
-            from pathlib import Path
-            try:
-                import tomllib
-            except ImportError:
-                import toml as tomllib
-            agents_dir = Path("standards/agents")
-            roles = []
-            if agents_dir.exists():
-                for f in agents_dir.glob("*.toml"):
-                    try:
-                        data = tomllib.loads(f.read_text(encoding="utf-8"))
-                        roles.append(data)
-                    except Exception:
-                        pass
+            from src.core.standards_graph import StandardsGraphStore
+            store = StandardsGraphStore.get_instance()
+            agents = store.get_agents()
+            roles = [
+                {
+                    "name": a.name,
+                    "role": a.role,
+                    "description": a.description,
+                    "model": a.model,
+                    "model_reasoning_effort": a.model_reasoning_effort,
+                    "sandbox_mode": a.sandbox_mode,
+                    "skills": a.skills,
+                    "allowed_write_paths": a.allowed_write_paths,
+                    "forbidden_write_paths": a.forbidden_write_paths,
+                }
+                for a in agents.values()
+            ]
             return {"roles": roles}
 
         else:

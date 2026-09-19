@@ -10,10 +10,17 @@ from typing import Dict, Any
 
 def load_adr_contracts() -> Dict[str, Any]:
     """
-    Charge standards/adr-contracts.json — source de vérité machine des ADRs 01xx.
-    Fallback résilient sur des valeurs identiques si le fichier est absent.
-    Règle ADR-Sync : toute modification d'ADR 01xx DOIT mettre à jour ce fichier.
+    Charge les contrats d'architecture depuis StandardsGraphStore (ADR-0379),
+    avec repli résilient sur standards/adr-contracts.json.
     """
+    try:
+        from src.core.standards_graph import StandardsGraphStore
+        contracts = StandardsGraphStore.get_instance().get_layout_contracts()
+        if contracts:
+            return contracts
+    except Exception:
+        pass
+
     contracts_path = Path(__file__).resolve().parent.parent.parent / "standards" / "adr-contracts.json"
     if contracts_path.exists():
         try:
@@ -27,7 +34,8 @@ def load_adr_contracts() -> Dict[str, Any]:
         },
         "ADR-0102": {
             "docs_subdirs": ["00-ingested", "01-architecture", "02-business-rules",
-                             "03-models", "04-transverse"],
+                             "03-models", "04-transverse", "05-assets/maquettes",
+                             "05-assets/diagrams", "05-assets/images"],
             "required_files_in_docs": ["index.md"],
             "ssot_files": {
                 "sprint_backlog": "sprint_backlog.md",
@@ -39,6 +47,21 @@ def load_adr_contracts() -> Dict[str, Any]:
             "mloop_only_dirs": ["directives", "journal", "src", "openspec"],
             "mloop_layout": ["reference", "docs", "backlog", "memory", "graphify-out",
                              "directives", "journal", "src", "openspec"]
+        },
+        "ADR-0375": {
+            "stage_order": [
+                "STAGE_1_INGEST", "STAGE_2_PLAN_ANALYSE", "STAGE_3_BUILD",
+                "STAGE_4_VALIDATE", "STAGE_5_SHIP"
+            ]
+        },
+        "ADR-0378": {
+            "gate_definitions": {
+                "1": {
+                    "name": "Gate 1 : Ingestion & Cadrage Initial Prêt",
+                    "from_stage": "STAGE_1_INGEST",
+                    "to_stage": "STAGE_2_PLAN_ANALYSE"
+                }
+            }
         }
     }
 
@@ -72,6 +95,10 @@ class ProjectLayout:
 
     ACTIVE_PROJECT_FILE = "memory/active_project.json"
 
+    PROJECTS_DIR = Path("Projects")
+    SOURCE_MANIFEST = "source_manifest.json"
+    INGEST_ANOMALIES = "ingest_anomalies.json"
+
     # Sous-dossiers docs/ — ADR-0102
     DOCS_SUBDIRS = _c["ADR-0102"]["docs_subdirs"]
     DOCS_INGESTED = DOCS_SUBDIRS[0]      # "00-ingested"
@@ -81,6 +108,8 @@ class ProjectLayout:
     DOCS_TRANSVERSE = DOCS_SUBDIRS[4]    # "04-transverse"
     DOCS_ASSETS = "05-assets"            # "05-assets" (ADR-0332)
     DOCS_ASSETS_MAQUETTES = "05-assets/maquettes"
+    DOCS_ASSETS_DIAGRAMS = "05-assets/diagrams"
+    DOCS_ASSETS_IMAGES = "05-assets/images"
 
     # Fichiers SSOT canoniques — ADR-0102
     SSOT_FILES = _c["ADR-0102"]["ssot_files"]
