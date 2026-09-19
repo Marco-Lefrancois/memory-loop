@@ -22,5 +22,13 @@
     "created_at": "2026-09-15T20:46:38.889630+00:00",
     "scope": "global",
     "status": "ACTIVE_DETERMINISTIC"
+  },
+  {
+    "keyword": "commentaires verbeux",
+    "check_type": "compact_strings_and_comments",
+    "msg": "Compacter les longues strings multi-lignes et commentaires verbeux",
+    "created_at": "2026-09-19T14:39:46.173351+00:00",
+    "scope": "global",
+    "status": "ACTIVE_DETERMINISTIC"
   }
 ]

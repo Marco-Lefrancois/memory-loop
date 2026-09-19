@@ -1,90 +1,28 @@
 """
 Retrospective Harness Optimization (RHO) & Hypotheses Impact Tracker.
-
-Gère le cycle de vie des règles heuristiques résiduelles (RHO) :
-- Ajoute les règles validées sous standards/rho_rules.yaml ou Projects/<proj>/memory/rho_rules.yaml.
-- Maintient un registre des hypothèses rejetées (rho_impact.yaml) selon le principe WikiSkill.
-- Exécute le Dream Collector pour marquer les règles contredites comme TOMBSTONE.
+Gère le cycle de vie des règles heuristiques résiduelles (ADR-0365).
 """
 import argparse
+import logging
 import os
-import re
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import yaml
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+logger = logging.getLogger(__name__)
+
 from src.cli import ZeroFluffConsole
 from src.state import LoopState
 
 
-def get_rho_impact_file(project_name: str, scope: str = "project") -> Path:
-    """Retourne le chemin du registre des hypothèses rejetées (rho_impact.yaml)."""
-    if scope == "global" or project_name == "global":
-        return Path("standards") / "rho_impact.yaml"
-    return Path("Projects") / project_name / "memory" / "rho_impact.yaml"
+from src.pipelines.rho_registry import (
+    get_rho_impact_file,
+    record_rejected_hypothesis,
+    get_rejected_hypotheses,
+)
 
-
-def record_rejected_hypothesis(
-    project_name: str,
-    keyword: str,
-    reason: str,
-    scope: str = "project",
-    score_delta: float = 0.0,
-) -> Dict[str, Any]:
-    """
-    Consigne une hypothèse ou règle RHO rejetée (WikiSkill Negative Constraints).
-    """
-    target_file = get_rho_impact_file(project_name, scope)
-    target_file.parent.mkdir(parents=True, exist_ok=True)
-
-    data = {"rejected_hypotheses": []}
-    if target_file.exists():
-        try:
-            with open(target_file, "r", encoding="utf-8") as f:
-                data = yaml.safe_load(f) or {"rejected_hypotheses": []}
-                if "rejected_hypotheses" not in data:
-                    data["rejected_hypotheses"] = []
-        except Exception:
-            data = {"rejected_hypotheses": []}
-
-    entry = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "keyword": keyword.lower().strip(),
-        "reason": reason.strip(),
-        "score_delta": float(score_delta),
-        "verdict": "REJECTED",
-        "scope": scope,
-    }
-
-    # Éviter les doublons stricts
-    for existing in data["rejected_hypotheses"]:
-        if existing.get("keyword") == entry["keyword"] and existing.get("reason") == entry["reason"]:
-            return entry
-
-    data["rejected_hypotheses"].append(entry)
-
-    with open(target_file, "w", encoding="utf-8") as f:
-        yaml.dump(data, f, allow_unicode=True, sort_keys=False)
-
-    ZeroFluffConsole.warning(f"Hypothèse RHO rejetée consignée dans {target_file.as_posix()} : '{keyword}' -> {reason}")
-    return entry
-
-
-def get_rejected_hypotheses(project_name: str, scope: str = "project") -> List[Dict[str, Any]]:
-    """Retourne la liste des hypothèses rejetées."""
-    target_file = get_rho_impact_file(project_name, scope)
-    if not target_file.exists():
-        return []
-    try:
-        with open(target_file, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f) or {}
-            return data.get("rejected_hypotheses", [])
-    except Exception:
-        return []
 
 
 def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "project") -> bool:
@@ -109,7 +47,8 @@ def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "projec
             try:
                 import json
                 det_rules = json.loads(det_file.read_text(encoding="utf-8"))
-            except Exception:
+            except Exception as exc:
+                logger.debug("Erreur lecture deterministic_rules.json : %s", exc, exc_info=True)
                 det_rules = []
 
         if not any(r.get("keyword") == keyword.lower() for r in det_rules):
@@ -190,7 +129,8 @@ def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "projec
                 state = LoopState(project_name=project_name)
                 try:
                     state.load_from_audit(p_path)
-                except Exception:
+                except Exception as exc:
+                    logger.debug("load_from_audit échoué, fallback graph : %s", exc, exc_info=True)
                     state.load_from_graph(p_path)
 
                 entry = JournalEntry(
@@ -201,8 +141,8 @@ def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "projec
                 state.journal.append(entry)
                 state.save_to_audit(p_path)
                 ZeroFluffConsole.success("Événement RHO envoyé au Dashboard.")
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.debug("Journalisation audit RHO non critique : %s", exc, exc_info=True)
 
         return True
 
@@ -235,8 +175,8 @@ def dream_collector(project_name: str) -> Dict[str, Any]:
             try:
                 text = adr_path.read_text(encoding="utf-8")
                 adr_texts.append({"path": adr_path.name, "content": text})
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.debug("Erreur lecture ADR %s : %s", adr_path.name, exc, exc_info=True)
 
     # 2. Auditer les règles du projet et globales
     target_files = [f for f in [rho_file, global_rho_file] if f.exists()]
@@ -289,18 +229,24 @@ def dream_collector(project_name: str) -> Dict[str, Any]:
     return summary
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+
+
+def main() -> None:
+    """Point d'entrée CLI du module RHO Optimizer."""
+    parser = argparse.ArgumentParser(description="RHO Optimizer — Retrospective Harness Optimization")
     parser.add_argument("--project", required=True)
     parser.add_argument("--keyword", help="Le mot-clé ou motif qui déclenche la règle")
     parser.add_argument("--msg", help="Le message ou la directive à afficher")
-    parser.add_argument("--scope", choices=["project", "global"], default="project", help="Portée de la règle")
-    parser.add_argument("--dream", action="store_true", help="Lance le collecteur d'hygiène nocturne RHO (Tombstones)")
+    parser.add_argument("--scope", choices=["project", "global"], default="project")
+    parser.add_argument("--dream", action="store_true", help="Lance le Dream Collector (Tombstones)")
     args = parser.parse_args()
-
     if args.dream:
         dream_collector(args.project)
     elif args.keyword and args.msg:
         optimize_rho(args.project, args.keyword, args.msg, args.scope)
     else:
         parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

@@ -119,6 +119,12 @@
                     <span>✕</span> Reset Filtres
                 </button>
 
+                <!-- JAUGE CONTEXTUELLE DYNAMIQUE 3-ZONES (ADR-0324 / MLOOP-073-FE) -->
+                <div id="header-context-gauge" onclick="showContextGaugeInfo()" class="px-2.5 py-1 rounded bg-emerald-950/50 border border-emerald-500/40 text-cyberemerald text-[11px] font-tech flex items-center gap-1.5 cursor-pointer transition-all duration-300 hover:brightness-125" title="Jauge de saturation contextuelle (ADR-0324)">
+                    <span id="header-context-icon">🟢</span>
+                    <span id="header-context-label" class="font-bold font-mono">SMART ZONE : 0%</span>
+                </div>
+
                 <!-- HORLOGE LOCALE -->
                 <div id="header-local-clock" class="px-2.5 py-1 rounded bg-cyan-950/40 border border-cyan-500/30 text-cybercyan text-[11px] font-tech flex items-center gap-1.5" title="Horloge locale du poste de travail">
                     <span>🕒</span>
@@ -165,6 +171,9 @@
             <button onclick="switchTab('ledger')" id="tab-btn-ledger" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
                 <span>💎</span> TOKEN LEDGER
             </button>
+            <button onclick="switchTab('graph')" id="tab-btn-graph" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>🕸️</span> GRAPH & DATABASE
+            </button>
         </nav>
     </div>
 
@@ -180,6 +189,24 @@
                 </div>
                 <div id="overview-swarm-strip" class="flex items-center gap-2 flex-wrap">
                     <span class="text-xs text-gray-500 font-tech">Chargement de l'essaim...</span>
+                </div>
+            </div>
+
+            <!-- RUNWAY DE HANDOFFS MULTI-AGENTS & PING-PONG GUARD (MLOOP-074-FULL / ADR-0380) -->
+            <div class="glass-cyber p-4 rounded-xl space-y-3 border-l-4 border-l-emerald-400" id="swarm-handoffs-container">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b border-cyberborder/40 pb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-white uppercase font-tech flex items-center gap-1.5">
+                            <span>🔄</span> Runway de Handoffs Multi-Agents (ADR-0380)
+                        </span>
+                        <span class="text-[10px] text-gray-400 font-tech">Séquence causale des transferts de contrôle</span>
+                    </div>
+                    <div id="swarm-pingpong-badge" class="px-2.5 py-1 rounded bg-emerald-950/80 border border-emerald-500/40 text-cyberemerald text-[11px] font-tech font-bold flex items-center gap-1.5">
+                        🛡️ PING-PONG GUARD : CONFORME (0 boucle / Seuil: 3)
+                    </div>
+                </div>
+                <div id="swarm-handoffs-runway" class="flex items-center gap-2 overflow-x-auto py-2 font-tech text-xs">
+                    <div class="text-gray-500 py-1 text-center w-full">Chargement du runway de handoffs...</div>
                 </div>
             </div>
 
@@ -597,6 +624,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- COMPARATEUR DE TRAJECTOIRES CONTREFACTUELLES π₀ VS π* (MLOOP-074-FULL / ADR-0372) -->
+            <div class="glass-cyber p-5 rounded-xl space-y-4 border-l-4 border-l-violet-400" id="dream-rsi-diff-container">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b border-cyberborder/40 pb-2.5">
+                    <div>
+                        <h3 class="text-xs font-bold text-white uppercase font-tech flex items-center gap-1.5">
+                            <span>⚖️</span> Comparateur Contrefactuel de Trajectoires (MLOOP-074-FULL)
+                        </h3>
+                        <p class="text-[11px] text-gray-400 font-tech mt-0.5">Analyse différentielle causale : Trajectoire réelle (π₀) vs Politique optimale simulée (π*).</p>
+                    </div>
+                    <div id="rsi-diff-gain-badge" class="px-2.5 py-1 rounded bg-violet-950 text-cyberviolet border border-violet-500/40 text-[11px] font-tech font-bold">
+                        GAIN : +0.0% vs π₀
+                    </div>
+                </div>
+
+                <!-- ZONE DIFF OU EMPTY STATE -->
+                <div id="rsi-diff-content">
+                    <div class="text-gray-500 py-4 text-center font-tech text-xs">Chargement du comparateur différentiel...</div>
+                </div>
+            </div>
         </section>
 
         <!-- ════════ VUE 6 : TOKEN LEDGER & FINANCES ═════════════════════ -->
@@ -616,6 +663,103 @@
             <!-- CONTENU DU LEDGER -->
             <div id="ledger-content-container" class="space-y-4 font-tech text-xs">
                 <div class="text-gray-500 py-8 text-center">Chargement du Token Ledger...</div>
+            </div>
+        </section>
+
+        <!-- ════════ VUE 7 : GRAPH & DATABASE (MLOOP-075-FULL) ════════════ -->
+        <section id="tab-graph" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3 flex-wrap gap-2">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>🕸️</span> Knowledge Graph (Graphify) & Base SQLite Souveraine
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Exploration visuelle des connexions sémantiques et inspection tabulaire locale en lecture seule stricte.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="graph-metadata-badge" class="text-xs font-tech px-2.5 py-1 rounded bg-violet-950 text-cyberviolet border border-violet-500/30">
+                        GRAPHE : CHARGEMENT...
+                    </span>
+                    <button onclick="toggleGraphFullscreen()" class="px-2.5 py-1 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cybercyan text-xs font-tech transition flex items-center gap-1 shadow-sm" title="Basculer en plein écran">
+                        ⛶ <span class="hidden sm:inline">PLEIN ÉCRAN</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION HAUTE : VISUALISEUR GRAPHIFY IFRAME -->
+            <div class="glass-cyber p-4 rounded-xl space-y-3 border-l-4 border-l-violet-400" id="graph-viewer-container">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b border-cyberborder/40 pb-2">
+                    <div class="flex items-center gap-2 font-tech text-xs">
+                        <span class="text-white font-bold">CARTE SÉMANTIQUE DE CONNAISSANCES</span>
+                        <span id="graph-stats-summary" class="text-gray-400 text-[11px]">-- nœuds | -- liens</span>
+                    </div>
+                    <div id="graph-god-nodes" class="flex items-center gap-1.5 flex-wrap font-tech text-[10px]">
+                    </div>
+                </div>
+
+                <div id="graph-frame-box" class="w-full h-[540px] rounded-lg overflow-hidden bg-cybercard border border-cyberborder relative">
+                    <iframe id="graph-iframe" class="w-full h-full border-0" src="about:blank"></iframe>
+                    <div id="graph-empty-state" class="hidden absolute inset-0 bg-cybercard/95 flex flex-col items-center justify-center p-6 text-center space-y-3 font-tech">
+                        <div class="text-3xl">🕸️</div>
+                        <div class="text-sm font-bold text-gray-200">Graphe non encore compilé pour ce projet</div>
+                        <div class="text-xs text-gray-400 max-w-md">Pour générer le visualiseur interactif de connaissances souverain, lancez la compilation :</div>
+                        <code class="px-3 py-1.5 rounded bg-black border border-cyan-500/40 text-cybercyan text-xs select-all">python src/swarm.py graph-run</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION BASSE : EXPLORATEUR SQLITE SOUVERAIN (READ-ONLY) -->
+            <div class="glass-cyber p-5 rounded-xl space-y-4 border-l-4 border-l-cyan-400">
+                <div class="flex items-center justify-between flex-wrap gap-3 border-b border-cyberborder/40 pb-3">
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <h3 class="text-xs font-bold text-white uppercase font-tech flex items-center gap-1.5">
+                            <span>🗄️</span> Explorateur SQLite Souverain (Lecture Seule)
+                        </h3>
+                        <div class="flex items-center gap-1.5 font-tech text-xs text-gray-400">
+                            <span class="text-gray-300">BASE :</span>
+                            <select id="db-file-selector" onchange="onDatabaseChange()" class="cyber-select text-xs font-medium cursor-pointer">
+                                <option value="" disabled selected>Chargement...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <span class="text-xs font-tech px-2 py-0.5 rounded bg-emerald-950 text-cyberemerald border border-emerald-500/40 flex items-center gap-1 font-bold">
+                        🔒 READ-ONLY STRICT
+                    </span>
+                </div>
+
+                <div class="space-y-1.5 font-tech text-xs">
+                    <div class="text-gray-400 text-[11px] uppercase font-bold">Tables disponibles :</div>
+                    <div id="db-tables-pills" class="flex items-center gap-2 flex-wrap">
+                        <span class="text-gray-500">Chargement des tables...</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 font-tech text-xs">
+                    <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-gray-800">
+                        <div class="text-white font-bold flex items-center gap-2">
+                            <span>Table active :</span>
+                            <span id="db-current-table-label" class="text-cybercyan font-mono font-bold">--</span>
+                            <span id="db-records-count-badge" class="text-[10px] px-2 py-0.5 rounded bg-gray-900 text-gray-400">0 enregistrements</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <button onclick="changeDbPage(-1)" id="db-prev-page-btn" disabled class="px-2 py-1 rounded bg-cybercard border border-cyberborder text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed">◀ Précédent</button>
+                            <span id="db-page-info" class="text-gray-300 text-[11px]">Page 1 / 1</span>
+                            <button onclick="changeDbPage(1)" id="db-next-page-btn" disabled class="px-2 py-1 rounded bg-cybercard border border-cyberborder text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed">Suivant ▶</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-lg border border-cyberborder bg-cybercard max-h-[380px] overflow-y-auto">
+                        <table class="w-full text-left border-collapse" id="db-records-table">
+                            <thead class="bg-gray-900/90 sticky top-0 border-b border-cyberborder text-[11px] text-cybercyan uppercase font-mono">
+                                <tr id="db-table-headers">
+                                    <th class="p-2.5">Colonne</th>
+                                </tr>
+                            </thead>
+                            <tbody id="db-table-rows" class="divide-y divide-gray-800 text-[11px] text-gray-300 font-mono">
+                                <tr><td class="p-4 text-center text-gray-500" colspan="100%">Sélectionnez une table ci-dessus</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -731,6 +875,52 @@
             setInterval(tick, 1000);
         }
 
+        // ── JAUGE CONTEXTUELLE DYNAMIQUE 3-ZONES (ADR-0324 / MLOOP-073-FE) ──
+        let lastContextGaugeData = null;
+
+        async function updateContextGauge() {
+            const badge = document.getElementById('header-context-gauge');
+            const icon = document.getElementById('header-context-icon');
+            const label = document.getElementById('header-context-label');
+            if (!badge || !icon || !label) return;
+
+            try {
+                const res = await fetch(`/api/overview/context-health?project=${encodeURIComponent(activeProject)}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                lastContextGaugeData = data;
+
+                label.textContent = `${data.zone_label} : ${data.percentage}%`;
+                badge.title = `${(data.tokens_used || 0).toLocaleString()} / ${(data.window_size || 128000).toLocaleString()} tokens (${data.percentage}%)\nZone : ${data.zone_label}\nRecommandation : ${data.recommendation}`;
+
+                // Réinitialiser les styles dynamiques de zone (ADR-0324)
+                badge.className = 'px-2.5 py-1 rounded text-[11px] font-tech flex items-center gap-1.5 cursor-pointer transition-all duration-300 hover:brightness-125';
+
+                if (data.zone === 'SMART') {
+                    icon.textContent = '🟢';
+                    badge.classList.add('bg-emerald-950/50', 'border', 'border-emerald-500/40', 'text-cyberemerald');
+                } else if (data.zone === 'CAUTION') {
+                    icon.textContent = '🟡';
+                    badge.classList.add('bg-amber-950/50', 'border', 'border-amber-500/40', 'text-cyberamber');
+                } else {
+                    icon.textContent = '🔴';
+                    badge.classList.add('bg-rose-950/80', 'border', 'border-rose-500/60', 'text-rose-200', 'animate-pulse');
+                }
+            } catch (e) {
+                console.debug('Erreur rafraîchissement context-gauge', e);
+            }
+        }
+
+        function showContextGaugeInfo() {
+            if (!lastContextGaugeData) {
+                showToast('Jauge contextuelle : initialisation en cours...');
+                return;
+            }
+            const d = lastContextGaugeData;
+            const alertText = d.is_critical ? ' ⚠️ SATURATION CRITIQUE' : '';
+            showToast(`[${d.zone_label}${alertText}] ${(d.tokens_used || 0).toLocaleString()} / ${(d.window_size || 128000).toLocaleString()} tokens (${d.percentage}%). ${d.recommendation}`);
+        }
+
         // ── VARIABLES GLOBALES D'ÉTAT (SSOT) ─────────────────────────
         let currentTab = 'overview';
         let activeProject = 'mLoop';
@@ -738,8 +928,8 @@
         let allProjectModules = {};
         let autoRefreshTimer = null;
 
-        // ── NAVIGATION ONGLETS (6 ONGLETS RATIONNALISÉS) ─────────────
-        const APP_TABS = ['overview', 'events', 'backlog', 'traces', 'resilience', 'ledger'];
+        // ── NAVIGATION ONGLETS (7 ONGLETS SOUVERAINS) ─────────────
+        const APP_TABS = ['overview', 'events', 'backlog', 'traces', 'resilience', 'ledger', 'graph'];
 
         function switchTab(tabName) {
             if (!APP_TABS.includes(tabName)) tabName = 'overview';
@@ -769,12 +959,14 @@
 
         function refreshCurrentTab() {
             updateResetFilterButton();
+            updateContextGauge();
             if (currentTab === 'overview') loadOverview();
             else if (currentTab === 'events') loadEventsView();
             else if (currentTab === 'backlog') loadBacklog();
             else if (currentTab === 'traces') loadTraces();
             else if (currentTab === 'resilience') loadResilience();
             else if (currentTab === 'ledger') loadLedger();
+            else if (currentTab === 'graph') loadGraphTab();
         }
 
         function toggleAutoRefresh() {
@@ -990,6 +1182,61 @@
                             </div>
                         `;
                     }).join('');
+                }
+
+                // Runway de Handoffs Multi-Agents & Ping-Pong Guard (MLOOP-074-FULL)
+                const ppBadge = document.getElementById('swarm-pingpong-badge');
+                const handoffsRunway = document.getElementById('swarm-handoffs-runway');
+                if (handoffsRunway) {
+                    try {
+                        const hRes = await fetch(`/api/swarm/handoffs?project=${encodeURIComponent(activeProject)}`);
+                        const hData = await hRes.json();
+                        const guard = hData.ping_pong_guard || {};
+
+                        if (ppBadge) {
+                            ppBadge.textContent = guard.status_badge || '🛡️ PING-PONG GUARD : ACTIF';
+                            ppBadge.className = `px-2.5 py-1 rounded text-[11px] font-tech font-bold flex items-center gap-1.5 transition-all ${
+                                guard.is_tripped 
+                                    ? 'bg-rose-950/90 text-rose-300 border border-rose-500/80 animate-pulse' 
+                                    : (guard.consecutive_sterile_handoffs >= 2 
+                                        ? 'bg-amber-950/90 text-amber-300 border border-amber-500/60' 
+                                        : 'bg-emerald-950/80 text-cyberemerald border border-emerald-500/40')
+                            }`;
+                        }
+
+                        if (!hData.handoffs || hData.handoffs.length === 0) {
+                            handoffsRunway.innerHTML = `<div class="text-gray-500 text-xs py-1 text-center w-full">Aucun handoff récent pour ce projet.</div>`;
+                        } else {
+                            handoffsRunway.innerHTML = hData.handoffs.map((h, i) => {
+                                const isLoop = h.is_loop;
+                                const isLast = i === hData.handoffs.length - 1;
+                                const borderCol = isLoop 
+                                    ? 'border-rose-500/90 bg-rose-950/50 text-rose-200 animate-pulse ring-1 ring-rose-500/50' 
+                                    : 'border-cyberborder bg-cybercard text-gray-300 hover:border-cyan-500/40';
+
+                                return `
+                                    <div class="flex items-center gap-2 flex-shrink-0">
+                                        <div class="p-2 rounded-lg border ${borderCol} flex flex-col gap-1 min-w-[155px] shadow-sm">
+                                            <div class="flex items-center justify-between text-[10px]">
+                                                <span class="font-bold text-cybercyan font-mono">STEP #${h.step}</span>
+                                                ${isLoop ? '<span class="text-[9px] px-1 rounded bg-rose-900 text-rose-200 font-bold">BOUCLE</span>' : (h.produced_artifact ? '<span class="text-[9px] px-1 rounded bg-emerald-900/80 text-emerald-300 font-medium">📄 Artefact</span>' : '<span class="text-[9px] text-gray-500">Stérile</span>')}
+                                            </div>
+                                            <div class="flex items-center gap-1 text-[11px] font-bold">
+                                                <span class="text-white">${h.from_agent}</span>
+                                                <span class="text-gray-500">➔</span>
+                                                <span class="text-cybercyan">${h.to_agent}</span>
+                                            </div>
+                                            <div class="text-[9px] text-gray-500 font-mono truncate">${(h.timestamp || '').slice(11, 19) || 'Local'}</div>
+                                        </div>
+                                        ${!isLast ? '<span class="text-gray-600 font-bold text-xs select-none">➔</span>' : ''}
+                                    </div>
+                                `;
+                            }).join('');
+                        }
+                    } catch (err) {
+                        console.error("Erreur chargement handoffs runway:", err);
+                        if (handoffsRunway) handoffsRunway.innerHTML = `<div class="text-gray-500 text-xs py-1">Indisponible</div>`;
+                    }
                 }
 
                 // Gate Runway (Gate 0 à 5) avec validation HITL en 1 clic
@@ -1892,6 +2139,105 @@
                     `;
                 }
 
+                // Comparateur Contrefactuel de Trajectoires (MLOOP-074-FULL)
+                const diffCont = document.getElementById('rsi-diff-content');
+                const diffBadge = document.getElementById('rsi-diff-gain-badge');
+                if (diffCont) {
+                    try {
+                        const diffRes = await fetch(`/api/dream-rsi/diff?project=${encodeURIComponent(activeProject)}`);
+                        const diffData = await diffRes.json();
+
+                        if (diffBadge) {
+                            diffBadge.textContent = `GAIN : +${(diffData.gain_vs_pi0 || 0).toFixed(1)}% vs π₀`;
+                        }
+
+                        if (!diffData.has_episodes || !diffData.comparison || diffData.comparison.length === 0) {
+                            diffCont.innerHTML = `
+                                <div class="p-6 rounded-lg bg-cybercard border border-cyberborder text-center space-y-2 font-tech">
+                                    <div class="text-2xl">🌱</div>
+                                    <div class="text-sm font-bold text-gray-300">Aucun épisode de replay archivé pour "${diffData.project_name || activeProject}"</div>
+                                    <div class="text-xs text-gray-500 max-w-md mx-auto">
+                                        Le comparateur contrefactuel s'activera automatiquement dès la première simulation offline sous harnais Dream RSI.
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            diffCont.innerHTML = `
+                                <div class="space-y-3 font-tech">
+                                    <div class="p-3 rounded-lg bg-violet-950/40 border border-violet-500/30 flex items-center justify-between flex-wrap gap-2 text-xs">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-cyberviolet font-bold">🎯 RAISON D'OPTIMISATION :</span>
+                                            <span class="text-gray-200">${diffData.eliminated_bottleneck_reason || 'Élimination des étapes infructueuses'}</span>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-cyberamber font-bold">${(diffData.tokens_saved || 0).toLocaleString()} tokens économisés</span>
+                                            <span class="px-2 py-0.5 rounded bg-emerald-950 text-cyberemerald border border-emerald-500/40 font-bold">+${(diffData.gain_vs_pi0 || 0).toFixed(1)}%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        <div class="space-y-2">
+                                            <div class="text-xs font-bold text-gray-300 uppercase flex items-center justify-between pb-1 border-b border-gray-800">
+                                                <span>📉 Trajectoire Réelle (π₀)</span>
+                                                <span class="text-[10px] text-gray-500 font-normal">Exécution initiale</span>
+                                            </div>
+                                            <div class="space-y-2">
+                                                ${diffData.comparison.map(item => {
+                                                    const s = item.pi0;
+                                                    const isFail = s.status === 'FAILED';
+                                                    const border = isFail ? 'border-rose-500/60 bg-rose-950/30' : 'border-cyberborder bg-cybercard';
+                                                    const badge = isFail ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-500/40 font-bold">ÉCHEC</span>' : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30">SUCCÈS</span>';
+                                                    return `
+                                                        <div class="p-2.5 rounded-lg border ${border} text-xs space-y-1">
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="font-bold text-gray-300">Étape #${item.step_index} : <span class="text-white">${s.agent}</span></span>
+                                                                ${badge}
+                                                            </div>
+                                                            <div class="text-[11px] text-gray-400 truncate">${s.action}</div>
+                                                            <div class="flex items-center justify-between text-[10px] text-gray-500 pt-1 border-t border-gray-800/60">
+                                                                <span>Coût : <b class="text-gray-300">${(s.cost_tokens || 0).toLocaleString()} tokens</b></span>
+                                                                <span>${s.duration_ms || 0}ms</span>
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                }).join('')}
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <div class="text-xs font-bold text-cyberviolet uppercase flex items-center justify-between pb-1 border-b border-violet-900/40">
+                                                <span>🚀 Politique Optimale (π*)</span>
+                                                <span class="text-[10px] text-violet-400 font-normal">Contrefactuel épuré</span>
+                                            </div>
+                                            <div class="space-y-2">
+                                                ${diffData.comparison.map(item => {
+                                                    const s = item.pi_star;
+                                                    return `
+                                                        <div class="p-2.5 rounded-lg border border-violet-500/40 bg-violet-950/20 text-xs space-y-1">
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="font-bold text-white">Étape #${item.step_index} : <span class="text-cybercyan">${s.agent}</span></span>
+                                                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-cyberemerald border border-emerald-500/40 font-bold">OPTIMISÉ</span>
+                                                            </div>
+                                                            <div class="text-[11px] text-gray-200 truncate">${s.action}</div>
+                                                            <div class="flex items-center justify-between text-[10px] text-gray-400 pt-1 border-t border-violet-900/40">
+                                                                <span>Coût : <b class="text-cyberamber">${(s.cost_tokens || 0).toLocaleString()} tokens</b></span>
+                                                                <span>${s.duration_ms || 0}ms</span>
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                }).join('')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    } catch (err) {
+                        console.error("Erreur comparateur diff Dream RSI:", err);
+                        if (diffCont) diffCont.innerHTML = `<div class="text-gray-500 text-xs py-2">Indisponible</div>`;
+                    }
+                }
+
             } catch(e) {
                 console.error('Erreur résilience', e);
             }
@@ -2073,6 +2419,218 @@
                 `;
             } catch(e) {
                 console.error('Erreur ledger', e);
+            }
+        }
+
+        // ── 8. VUE 7 : GRAPH & DATABASE (MLOOP-075-FULL) ──────────────
+        let currentDb = 'standards_graph.db';
+        let currentDbTable = '';
+        let currentDbPage = 1;
+        let currentDbTotalPages = 1;
+
+        async function loadGraphTab() {
+            const metaBadge = document.getElementById('graph-metadata-badge');
+            const statsSummary = document.getElementById('graph-stats-summary');
+            const godNodesCont = document.getElementById('graph-god-nodes');
+            const iframe = document.getElementById('graph-iframe');
+            const emptyState = document.getElementById('graph-empty-state');
+
+            try {
+                const metaRes = await fetch(`/api/graph/metadata?project=${encodeURIComponent(activeProject)}`);
+                const meta = await metaRes.json();
+
+                if (meta.has_graph) {
+                    if (emptyState) emptyState.classList.add('hidden');
+                    const targetSrc = `/api/graph/html?project=${encodeURIComponent(activeProject)}`;
+                    if (iframe && iframe.getAttribute('src') !== targetSrc) {
+                        iframe.src = targetSrc;
+                    }
+                    if (metaBadge) {
+                        metaBadge.textContent = `${meta.nodes_count} NŒUDS | ${meta.edges_count} LIENS`;
+                        metaBadge.className = 'text-xs font-tech px-2.5 py-1 rounded bg-violet-950 text-cyberviolet border border-violet-500/30';
+                    }
+                    if (statsSummary) {
+                        statsSummary.textContent = `${meta.nodes_count} nœuds • ${meta.edges_count} liens sémantiques`;
+                    }
+                    if (godNodesCont && meta.god_nodes) {
+                        godNodesCont.innerHTML = meta.god_nodes.map(n => `
+                            <span class="px-2 py-0.5 rounded bg-violet-900/60 border border-violet-500/30 text-violet-200">
+                                📌 ${n.id} (${n.degree})
+                            </span>
+                        `).join('');
+                    }
+                } else {
+                    if (emptyState) emptyState.classList.remove('hidden');
+                    if (iframe) iframe.src = 'about:blank';
+                    if (metaBadge) {
+                        metaBadge.textContent = 'GRAPHE NON COMPILÉ';
+                        metaBadge.className = 'text-xs font-tech px-2.5 py-1 rounded bg-gray-900 text-gray-500 border border-gray-800';
+                    }
+                    if (statsSummary) statsSummary.textContent = '0 nœud • 0 lien';
+                    if (godNodesCont) godNodesCont.innerHTML = '';
+                }
+            } catch (err) {
+                console.error("Erreur métadonnées graphe :", err);
+            }
+
+            await loadDatabasesList();
+        }
+
+        async function loadDatabasesList() {
+            const selector = document.getElementById('db-file-selector');
+            if (!selector) return;
+
+            try {
+                const res = await fetch(`/api/database/list?project=${encodeURIComponent(activeProject)}`);
+                const data = await res.json();
+                const dbs = data.databases || [];
+
+                if (dbs.length === 0) {
+                    selector.innerHTML = '<option value="" disabled selected>Aucune base trouvée</option>';
+                    return;
+                }
+
+                selector.innerHTML = dbs.map(d => `
+                    <option value="${d.name}" ${d.name === currentDb ? 'selected' : ''}>
+                        ${d.name} (${Math.round(d.size_bytes / 1024)} Ko)
+                    </option>
+                `).join('');
+
+                if (!dbs.some(d => d.name === currentDb)) {
+                    currentDb = dbs[0].name;
+                }
+
+                await loadDbTables(currentDb);
+            } catch (err) {
+                console.error("Erreur chargement bases SQLite :", err);
+            }
+        }
+
+        async function onDatabaseChange() {
+            const selector = document.getElementById('db-file-selector');
+            if (selector) {
+                currentDb = selector.value;
+                currentDbTable = '';
+                await loadDbTables(currentDb);
+            }
+        }
+
+        async function loadDbTables(dbName) {
+            const pillsCont = document.getElementById('db-tables-pills');
+            if (!pillsCont) return;
+
+            try {
+                const res = await fetch(`/api/database/tables?db=${encodeURIComponent(dbName)}&project=${encodeURIComponent(activeProject)}`);
+                if (!res.ok) {
+                    pillsCont.innerHTML = '<span class="text-rose-400">Erreur d\'accès à la base</span>';
+                    return;
+                }
+                const data = await res.json();
+                const tables = data.tables || [];
+
+                if (tables.length === 0) {
+                    pillsCont.innerHTML = '<span class="text-gray-500">Aucune table dans cette base</span>';
+                    return;
+                }
+
+                pillsCont.innerHTML = tables.map(t => {
+                    const isCur = t.name === currentDbTable;
+                    const btnClass = isCur 
+                        ? 'bg-cyan-950 text-cybercyan border-cyan-400 font-bold' 
+                        : 'bg-cybercard text-gray-400 border-cyberborder hover:text-white';
+                    return `
+                        <button onclick="selectDbTable('${t.name}')" class="px-2.5 py-1 rounded border text-xs font-tech transition ${btnClass}">
+                            📁 ${t.name} <span class="text-[10px] opacity-75 font-mono">(${t.records_count})</span>
+                        </button>
+                    `;
+                }).join('');
+
+                if (!currentDbTable || !tables.some(t => t.name === currentDbTable)) {
+                    currentDbTable = tables[0].name;
+                }
+
+                await loadDbRecords(currentDb, currentDbTable, 1);
+            } catch (err) {
+                console.error("Erreur chargement tables :", err);
+            }
+        }
+
+        async function selectDbTable(tableName) {
+            currentDbTable = tableName;
+            currentDbPage = 1;
+            await loadDbTables(currentDb);
+        }
+
+        async function loadDbRecords(dbName, tableName, page = 1) {
+            currentDbPage = page;
+            const curLabel = document.getElementById('db-current-table-label');
+            const cntBadge = document.getElementById('db-records-count-badge');
+            const thead = document.getElementById('db-table-headers');
+            const tbody = document.getElementById('db-table-rows');
+            const pageInfo = document.getElementById('db-page-info');
+            const prevBtn = document.getElementById('db-prev-page-btn');
+            const nextBtn = document.getElementById('db-next-page-btn');
+
+            if (curLabel) curLabel.textContent = tableName || '--';
+
+            if (!dbName || !tableName) return;
+
+            try {
+                const res = await fetch(`/api/database/records?db=${encodeURIComponent(dbName)}&table=${encodeURIComponent(tableName)}&page=${page}&page_size=20&project=${encodeURIComponent(activeProject)}`);
+                if (!res.ok) {
+                    if (tbody) tbody.innerHTML = `<tr><td class="p-4 text-center text-rose-400" colspan="100%">Erreur lors du chargement des enregistrements</td></tr>`;
+                    return;
+                }
+                const data = await res.json();
+                currentDbTotalPages = data.total_pages || 1;
+
+                if (cntBadge) cntBadge.textContent = `${data.total_records.toLocaleString()} enregistrements`;
+                if (pageInfo) pageInfo.textContent = `Page ${data.current_page} / ${currentDbTotalPages}`;
+                if (prevBtn) prevBtn.disabled = data.current_page <= 1;
+                if (nextBtn) nextBtn.disabled = data.current_page >= currentDbTotalPages;
+
+                const cols = data.columns || [];
+                if (thead) {
+                    thead.innerHTML = cols.map(c => `<th class="p-2.5 whitespace-nowrap">${c}</th>`).join('');
+                }
+
+                const rows = data.records || [];
+                if (tbody) {
+                    if (rows.length === 0) {
+                        tbody.innerHTML = `<tr><td class="p-4 text-center text-gray-500" colspan="${cols.length || 1}">Aucun enregistrement dans cette table</td></tr>`;
+                    } else {
+                        tbody.innerHTML = rows.map(r => `
+                            <tr class="hover:bg-cyan-950/20 transition">
+                                ${cols.map(c => {
+                                    const val = r[c];
+                                    const valStr = (val === null || val === undefined) ? '<span class="text-gray-600">NULL</span>' : (typeof val === 'object' ? JSON.stringify(val) : String(val));
+                                    return `<td class="p-2.5 truncate max-w-[240px]" title="${valStr.replace(/"/g, '&quot;')}">${valStr}</td>`;
+                                }).join('')}
+                            </tr>
+                        `).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Erreur chargement enregistrements :", err);
+            }
+        }
+
+        function changeDbPage(delta) {
+            const targetPage = currentDbPage + delta;
+            if (targetPage >= 1 && targetPage <= currentDbTotalPages) {
+                loadDbRecords(currentDb, currentDbTable, targetPage);
+            }
+        }
+
+        function toggleGraphFullscreen() {
+            const box = document.getElementById('graph-frame-box');
+            if (!box) return;
+            if (!document.fullscreenElement) {
+                box.requestFullscreen().catch(err => {
+                    console.warn("Fullscreen non disponible :", err);
+                });
+            } else {
+                document.exitFullscreen();
             }
         }
 

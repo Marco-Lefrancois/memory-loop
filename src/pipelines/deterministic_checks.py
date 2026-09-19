@@ -12,7 +12,8 @@ MECHANICAL_KEYWORDS = {
     'placeholder', 'todo', 'fixme', 'ellipsis', 'stub',
     'focus', 'active story', 'no active story', 'lock',
     'import', 'deep module', 'boundary', 'barrel',
-    'naming', 'convention', 'formatting', 'syntax'
+    'naming', 'convention', 'formatting', 'syntax',
+    'compact', 'string', 'comment', 'verbeux', 'raccourcir'
 }
 
 
@@ -31,6 +32,8 @@ def classify_anomaly(keyword_or_msg: str) -> Tuple[str, Optional[str]]:
         return 'MECHANICAL', 'deep_module_boundaries'
     if any(k in text for k in ['naming', 'convention', 'syntax', 'format']):
         return 'MECHANICAL', 'syntax_and_convention'
+    if any(k in text for k in ['compact', 'string multi-ligne', 'commentaire verbeux', 'raccourcir', 'commentaires verbeux']):
+        return 'MECHANICAL', 'compact_strings_and_comments'
         
     return 'JUDGEMENT', None
 
@@ -124,3 +127,58 @@ def check_python_deep_module_boundaries(file_path: Path, base_dir: Optional[Path
                 })
 
     return violations
+
+
+def check_compact_strings_and_comments(
+    code_or_file: str,
+    is_file: bool = False,
+    max_comment_lines: int = 5,
+) -> List[Dict[str, Any]]:
+    """
+    Analyse statique des blocs de commentaires verbeux et docstrings multi-lignes excessives.
+    Détecte les opportunités d'optimisation contextuelle (ADR-0202 & ADR-0365).
+    """
+    if is_file:
+        p = Path(code_or_file)
+        if not p.exists():
+            return []
+        lines = p.read_text(encoding='utf-8', errors='ignore').splitlines()
+    else:
+        lines = code_or_file.splitlines()
+
+    violations = []
+    consecutive_comments = 0
+    start_line = 0
+
+    for idx, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith('#') and not stripped.startswith('#!'):
+            if consecutive_comments == 0:
+                start_line = idx
+            consecutive_comments += 1
+        else:
+            if consecutive_comments > max_comment_lines:
+                violations.append({
+                    'line': start_line,
+                    'count': consecutive_comments,
+                    'rule': 'EXCESSIVE_COMMENT_BLOCK',
+                    'message': (
+                        f"Bloc de commentaires verbeux détecté (lignes {start_line}-{start_line + consecutive_comments - 1}, "
+                        f"{consecutive_comments} lignes). Raccourcir ou extraire en documentation externe."
+                    ),
+                })
+            consecutive_comments = 0
+
+    if consecutive_comments > max_comment_lines:
+        violations.append({
+            'line': start_line,
+            'count': consecutive_comments,
+            'rule': 'EXCESSIVE_COMMENT_BLOCK',
+            'message': (
+                f"Bloc de commentaires verbeux détecté (lignes {start_line}-{start_line + consecutive_comments - 1}, "
+                f"{consecutive_comments} lignes). Raccourcir ou extraire en documentation externe."
+            ),
+        })
+
+    return violations
+

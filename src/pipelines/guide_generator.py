@@ -76,8 +76,12 @@ PHASE_MAPPING: Dict[str, str] = {
     "csv-anonymize": "build",
     "review": "build",
     "annotate": "build",
+    "code-check": "build",
+    "code-tournament": "build",
+    "tdd-enforce": "build",
 
     # Phase 4 : VALIDATE / QA (Validation Sémantique, Fact-Check & Guardrails)
+    "validate-sprint": "validate",
     "wikifix": "validate",
     "struct-check": "validate",
     "rubber-duck": "validate",
@@ -86,6 +90,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "fact-check": "validate",
     "fact-search": "validate",
     "check-leakage": "validate",
+    "nli-audit": "validate",
     "gates": "validate",
     "gate-approve": "validate",
     "lifecycle-status": "validate",
@@ -211,6 +216,10 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "rollback": "Restauration PITR de l'état et mémoire saine",
     "dream-rsi": "Méta-Politique Optimale (.mloop/dream_policy.json)",
     "multi-draft": "Rapport Challenge Multi-Drafts (ADR-0373)",
+    "code-check": "Rapport d'audit AST / Console",
+    "code-tournament": "Matrice d'arbitrage Pareto ($S_{\\text{pareto}}$) & Code optimal",
+    "tdd-enforce": "Sceau cryptographique TDD (Red / Green / Verify)",
+    "validate-sprint": "Rapports d'assurance qualité QA (`qa_certification_report.md` et `.json`)",
 }
 
 
@@ -285,7 +294,7 @@ def generate_guide_markdown() -> str:
         cmds_in_phase = [
             (cname, COMMANDS[cname])
             for cname in sorted(COMMANDS.keys())
-            if PHASE_MAPPING.get(cname) == pkey
+            if PHASE_MAPPING.get(cname, "transverse") == pkey
         ]
 
         for cname, cmeta in cmds_in_phase:

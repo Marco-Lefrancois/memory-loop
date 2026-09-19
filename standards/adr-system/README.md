@@ -113,13 +113,22 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0376](0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md)** : Standard de Rigueur d'Ingénierie & Audit 360° Zéro Blindspot pour les Évolutions de l'Écosystème mLoop
 *   **[ADR-0377](0377-sonde-runtimes-agents-aval-inspiration-agentmgr.md)** : Sonde & Gouvernance Déterministe des Runtimes d'Agents Aval (Inspiration AgentManager & Universal Dev Handoff)
 *   **[ADR-0378](0378-phase-1-ingest-and-explore-contract-and-gate-1.md)** : Standardisation de la Phase 1 INGEST & EXPLORE, Contrat d'Ingestion Documentaire et Gate 1
+*   **[ADR-0379](0379-standards-graph-and-runtime-confinement-shield.md)** : StandardsGraph SQLite Engine, Scoping JIT des Directives & Bouclier Runtime Anti-Outrepassage
+*   **[ADR-0380](0380-manifeste-observabilite-agentique-souveraine-boundary-tracing.md)** : Manifeste de l'Observabilité Agentique Souveraine, Boundary Tracing & Immunisation Déterministe
+*   **[ADR-0381](0381-standard-harnais-phase-3-linter-ast-tournoi-tdd-red-green.md)** : Standard du Harnais Déterministe de Phase 3 : Linter Statique AST, Tournoi TDD Multi-Candidats & Traçabilité Red-Green
+*   **[ADR-0382](0382-moteur-natif-specification-continue-et-gestionnaire-changes-sdd-souverain.md)** : Moteur Natif de Spécification Continue et Gestionnaire de Changes SDD Souverain
 
 ---
-*Dernière consolidation constitutionnelle : 18 septembre 2026 — 93 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 19 septembre 2026 — 97 ADRs Unifiées (Zéro Conflit)*
 | 0373 | [Génération Multi-Branches (Multi-Draft Challenge) & Auto-Évaluation Déterministe Locale](0373-generation-multi-draft-et-tournoi-auto-evaluatif-local.md) | Approuvé |
 | 0374 | [Standard MCP de Cyber-Résilience Agentique & Workflows Déterministes](0374-standard-mcp-cyber-resilience-et-workflows-deterministes.md) | Approuvé |
 | 0375 | [Réalignement du Cycle de Vie en 5 Phases, Typologie d'Analyses & Règle des 2 Gabarits](0375-project-lifecycle-5-phases-and-analysis-types.md) | Approuvé |
 | 0376 | [Standard de Rigueur d'Ingénierie & Audit 360° Zéro Blindspot](0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md) | Approuvé |
 | 0377 | [Sonde & Gouvernance Déterministe des Runtimes d'Agents Aval](0377-sonde-runtimes-agents-aval-inspiration-agentmgr.md) | Approuvé |
 | 0378 | [Standardisation de la Phase 1 INGEST & EXPLORE, Contrat d'Ingestion et Gate 1](0378-phase-1-ingest-and-explore-contract-and-gate-1.md) | Approuvé |
+| 0379 | [StandardsGraph SQLite Engine, Scoping JIT des Directives & Bouclier Runtime Anti-Outrepassage](0379-standards-graph-and-runtime-confinement-shield.md) | Approuvé |
+| 0380 | [Manifeste de l'Observabilité Agentique Souveraine, Boundary Tracing & Immunisation Déterministe](0380-manifeste-observabilite-agentique-souveraine-boundary-tracing.md) | Approuvé |
+| 0381 | [Standard du Harnais Déterministe de Phase 3 : Linter Statique AST, Tournoi TDD Multi-Candidats & Traçabilité Red-Green](0381-standard-harnais-phase-3-linter-ast-tournoi-tdd-red-green.md) | Approuvé |
+| 0382 | [Moteur Natif de Spécification Continue et Gestionnaire de Changes SDD Souverain](0382-moteur-natif-specification-continue-et-gestionnaire-changes-sdd-souverain.md) | Approuvé |
+
 

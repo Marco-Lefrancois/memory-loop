@@ -292,6 +292,99 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "code-check": {
+        "handler": "build_harness:handle_code_check",
+        "help": "Linter statique AST déterministe mLoop (modularité ADR-0202, standards ADR-0369 & ADR-0381)",
+        "args": [
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Chemin du fichier Python à auditer",
+            },
+            {
+                "name": "--story",
+                "type": str,
+                "help": "Identifiant du récit dont les fichiers associés doivent être audités",
+            },
+            {
+                "name": "--all",
+                "action": "store_true",
+                "help": "Auditer l'ensemble des modules Python sous src/",
+            },
+        ],
+        "no_project": True,
+    },
+    "code-tournament": {
+        "handler": "build_harness:handle_code_tournament",
+        "help": "Moteur de tournoi multi-draft et arbitrage Pareto (ADR-0373, ADR-0381)",
+        "args": [
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit (ex. MLOOP-072-BE)",
+            },
+            {
+                "name": "--target",
+                "type": str,
+                "required": True,
+                "help": "Chemin du fichier cible de production à promouvoir",
+            },
+            {
+                "name": "--test-file",
+                "type": str,
+                "help": "Chemin explicite du banc de test unitaire pytest",
+            },
+        ],
+        "no_project": True,
+    },
+    "tdd-enforce": {
+        "handler": "build_harness:handle_tdd_enforce",
+        "help": "Protocole TDD Red-Green Enforcement et verrou Gate 3 (ADR-0381)",
+        "args": [
+            {
+                "name": "--phase",
+                "type": str,
+                "required": True,
+                "choices": ["red", "green", "verify"],
+                "help": "Phase du protocole TDD (red: échec initial, green: succès complet, verify: contrôle Gate 3)",
+            },
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit (ex. MLOOP-082-BE)",
+            },
+            {
+                "name": "--test-file",
+                "type": str,
+                "help": "Chemin du banc de test unitaire",
+            },
+            {
+                "name": "--source-file",
+                "type": str,
+                "help": "Chemin du fichier source de production (requis pour la phase green)",
+            },
+        ],
+        "no_project": True,
+    },
+    "validate-sprint": {
+        "handler": "validation:handle_validate_sprint",
+        "help": "Certification déterministe de sprint Phase 4 (tests, linter AST, CEL 4-piliers) (ADR-0383 / MLOOP-090-BE)",
+        "args": [
+            {
+                "name": "--timeout",
+                "type": float,
+                "default": 240.0,
+                "help": "Délai maximal d'exécution du banc de test pytest (secondes)",
+            },
+            {
+                "name": "--test-dir",
+                "type": str,
+                "help": "Répertoire ou fichier de test spécifique pour la certification",
+            },
+        ],
+    },
     "story-clean": {
         "handler": "analysis:handle_story_clean",
         "help": "Nettoie les blocs de traçabilité injectés dans les récits (post-decouplage)",
@@ -1634,6 +1727,14 @@ COMMANDS: dict[str, dict] = {
         ],
         "no_project": True,
     },
+    # ── Contradiction Engine NLI (ADR-0326 / MLOOP-091-BE) ──
+    "nli-audit": {
+        "handler": "validation:handle_nli_audit",
+        "help": "Audit de non-contradiction sémantique NLI et fuites de tests (ADR-0326 / ADR-0354)",
+        "args": [],
+        "phase": "validate",
+    },
+
     # ── Visual Review & Annotation (Plannotator ADR-0305 / ADR-0307) ──
     "review": {
         "handler": "plannotator:handle_review",

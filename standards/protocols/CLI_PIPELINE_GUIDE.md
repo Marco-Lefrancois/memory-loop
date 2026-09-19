@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 116 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 121 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 116 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 121 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -107,13 +107,16 @@ flowchart LR
 | :--- | :--- | :--- | :--- |
 | `python src/swarm.py annotate` | Annotation visuelle de récits, ADRs, documents ou URLs avec porte de décision | [--story <STR>] [--adr <STR>] [--file <STR>] [--url <STR>] [--no-gate <STR>] [--require-approval <STR>] [--json <STR>] [--result-file <STR>] [--tailscale <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py code-affected` | Identifier les tests affectés par les changements de code | [--files <STR>] [--path <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py code-check` | Linter statique AST déterministe mLoop (modularité ADR-0202, standards ADR-0369 & ADR-0381) | [--file <STR>] [--story <STR>] [--all <STR>] | Rapport d'audit AST / Console |
 | `python src/swarm.py code-explore` | Explorer le code source via CodeGraph (AST & Call Paths) | --query <STR> [--path <STR>] [--compact <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py code-impact` | Calculer le rayon d'impact (Blast Radius) d'un symbole | --symbol <STR> [--path <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py code-tournament` | Moteur de tournoi multi-draft et arbitrage Pareto (ADR-0373, ADR-0381) | --story <STR> --target <STR> [--test-file <STR>] | Matrice d'arbitrage Pareto ($S_{\text{pareto}}$) & Code optimal |
 | `python src/swarm.py confidence` | Évaluer le score de confiance d'un fichier | --file <STR> | Console / Mémoire d'état |
 | `python src/swarm.py csv-anonymize` | Anonymiser déterministement les colonnes PII sensibles et échantillonner | --file <STR> --fields <STR> [--out <STR>] [--sample <INT>] | Console / Mémoire d'état |
 | `python src/swarm.py csv-diff` | Comparer deux instantanés de CSV et identifier les deltas sur clé primaire | --old <STR> --new <STR> --key <STR> | Console / Mémoire d'état |
 | `python src/swarm.py review` | Revue de code visuelle interactive via Plannotator (diff Git local ou PR) | [--pr <STR>] [--tailscale <STR>] [--no-local <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py self-dev` | Auto-développement du framework mLoop | *(Aucun)* | Code source sous `src/` |
+| `python src/swarm.py tdd-enforce` | Protocole TDD Red-Green Enforcement et verrou Gate 3 (ADR-0381) | --phase <STR> --story <STR> [--test-file <STR>] [--source-file <STR>] | Sceau cryptographique TDD (Red / Green / Verify) |
 | `python src/swarm.py worker-close` | Fermer le volet d'un worker Herdr et libérer ses ressources | --story <STR> | Console / Mémoire d'état |
 | `python src/swarm.py worker-handoff-test` | Tester la complétude et clarté d'une story par un dev naïf (Zero-Ask Simulator) | --story <STR> [--dry-run <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py worker-harvest` | Moissonner les preuves d'exécution PTY du worker et mettre à jour l'EvidencePack | --story <STR> [--lines <INT>] | Livrables intégrés sur disque |
@@ -147,9 +150,11 @@ flowchart LR
 | `python src/swarm.py hill-climb` | Test Hill-Climbing (mutation-évaluation) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py lifecycle-clean` | Archiver de manière réversible les stories orphelines créées prématurément (Zéro Ghost Bias / L-08) | [--confirm <STR>] | Nettoyage stories orphelines |
 | `python src/swarm.py lifecycle-status` | Afficher l'état du cycle de vie projet et l'historique des portes (ADR-0339) | *(Aucun)* | Console / Historique du cycle de vie |
+| `python src/swarm.py nli-audit` | Audit de non-contradiction sémantique NLI et fuites de tests (ADR-0326 / ADR-0354) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py rubber-duck` | Agent Sentinel — revue contradictoire de fond (Avocat du Diable avec discernement & rigueur) | [--file <STR>] [--suggest-patch <STR>] | Rapport sémantique 4 Piliers |
 | `python src/swarm.py struct-check` | Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence du gabarit blueprint (pré-Sentinel) | [--file <STR>] [--strict <STR>] [--verbose <STR>] | Rapport violations C1–C7 |
 | `python src/swarm.py tree` | Afficher l'arbre d'exécution Depth Tree et l'état des gates (ADR-0341) | [--file <STR>] [--scope <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py validate-sprint` | Certification déterministe de sprint Phase 4 (tests, linter AST, CEL 4-piliers) (ADR-0383 / MLOOP-090-BE) | [--timeout <FLOAT>] | Rapports d'assurance qualité QA (`qa_certification_report.md` et `.json`) |
 | `python src/swarm.py wikifix` | Alias de sync (audit de cohérence WikiFix) | [--verbose <STR>] [--incremental <STR>] [--fast <STR>] [--story <STR>] | `memory/wikifix_report.md` |
 
 ---

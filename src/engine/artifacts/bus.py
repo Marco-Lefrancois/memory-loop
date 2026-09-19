@@ -8,8 +8,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import time
+
+logger = logging.getLogger("artifacts.bus")
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
@@ -170,14 +173,23 @@ class OpaqueArtifactBus:
         try:
             full_text = self.get_content(handle.sha256)
             lines = full_text.splitlines()
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.debug("Erreur lors de la lecture de l'artefact pour descripteur prompt : %s", exc, exc_info=True)
 
         if len(lines) <= preview_lines * 2:
-            body = "\n".join(lines)
+            body = "\n".join([l[:200] + ("..." if len(l) > 200 else "") for l in lines])
+            if len(body) > 1000:
+                body = (
+                    body[:400]
+                    + f"\n[... {len(body) - 800} caractères omis pour protéger le contexte | "
+                    f"Consultez via bus.get_slice('{handle.handle_id}', start, end) ...]\n"
+                    + body[-400:]
+                )
         else:
-            head = "\n".join(lines[:preview_lines])
-            tail = "\n".join(lines[-preview_lines:])
+            clean_head = [l[:200] + ("..." if len(l) > 200 else "") for l in lines[:preview_lines]]
+            clean_tail = [l[:200] + ("..." if len(l) > 200 else "") for l in lines[-preview_lines:]]
+            head = "\n".join(clean_head)
+            tail = "\n".join(clean_tail)
             omitted = len(lines) - (preview_lines * 2)
             body = (
                 f"{head}\n"
@@ -185,6 +197,7 @@ class OpaqueArtifactBus:
                 f"Consultez via bus.get_slice('{handle.handle_id}', start, end) ...]\n"
                 f"{tail}"
             )
+
 
         return (
             f"📦 [OPAQUE-ARTIFACT: {handle.handle_id}]\n"

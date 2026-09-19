@@ -37,6 +37,7 @@ from src.dashboard.module_utils import (
     match_module_entry,
     normalize_module_id,
 )
+from src.dashboard.routers.database import router as database_router
 from src.dashboard.routers.dream_rsi import router as dream_rsi_router
 from src.dashboard.routers.governance import router as governance_router
 from src.dashboard.routers.overview import router as overview_router
@@ -69,6 +70,7 @@ app.include_router(traces_router)
 app.include_router(resilience_router)
 app.include_router(dream_rsi_router)
 app.include_router(governance_router)
+app.include_router(database_router)
 
 
 def _get_active_project() -> str:

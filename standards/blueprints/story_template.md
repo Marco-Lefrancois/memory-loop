@@ -79,7 +79,7 @@ macrostructure: "workbench" # Optionnel FE/Fullstack : bento-grid | workbench | 
 - **[Nom de l'Opération 1]** : `GET /api/v1/ressource`
 - **[Nom de l'Opération 2]** : `POST /api/v1/ressource`
 
-> 📄 **Spécifications formelles détaillées** : Consulter les schémas JSON exhaustifs et routes OpenAPI dans [Azure DevOps Git (specs/api.md)](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/specs/api.md&version=GBmain&_a=preview).
+> 📄 **Spécifications formelles détaillées** : Consulter les schémas JSON exhaustifs et routes OpenAPI dans [`specs/api.md`](../../backlog/handoff/<STORY_ID>/specs/api.md) *(ou portail Git distant : `https://<DOMAINE_GIT>/<PROJET>/_git/<REPO>?path=/backlog/handoff/<STORY_ID>/specs/api.md`)*.
 
 ---
 
@@ -93,18 +93,18 @@ macrostructure: "workbench" # Optionnel FE/Fullstack : bento-grid | workbench | 
 ## Références
 
 ### 1. Preuves Amont & Traçabilité Factuelle
-- 📂 **Dossier de Preuves Factuelles** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/memory/evidence/<STORY_ID>_fact_dossier.md&version=GBmain&_a=preview)
+- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/<STORY_ID>_fact_dossier.md`](../../memory/evidence/<STORY_ID>_fact_dossier.md) *(Portail Git distant : `https://<DOMAINE_GIT>/<PROJET>/_git/<REPO>?path=/memory/evidence/<STORY_ID>_fact_dossier.md`)*
 
 ### 2. Spécifications & Modèles de Données SSOT
-- 🏛️ **Modèle de Données SSOT** : [Structure-de-données (Wiki SIGPA)](https://dev.azure.com/Projet-SIGPA/SIGPA/_wiki/wikis/SIGPA.wiki/196/Structure-de-donn%C3%A9es)
-- 📋 **Cas d'Utilisation Métier** : [Cas XX — Titre (Wiki SIGPA)](https://dev.azure.com/Projet-SIGPA/SIGPA/_wiki/wikis/SIGPA.wiki/...)
-- 📜 **ADR d'Architecture** : [ADR-0366 — Standard Story 2.0 (Azure DevOps Git)](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/standards/adr-system/...)
+- 🏛️ **Modèle de Données SSOT** : [Structure-de-données](../../reference/modeles/<FICHIER_MODELE>.md) *(Wiki distant : `https://<WIKI_URL>/...`)*
+- 📋 **Cas d'Utilisation Métier** : [Cas XX — Titre](../../docs/00-ingested/<CAS_UTILISATION>.md)
+- 📜 **ADR d'Architecture** : [ADR-XXXX — Titre Architecture](../../standards/adr-system/<ADR_ID>-<SLUG>.md)
 
 ### 3. Paquet OpenSpec (Handoff Développeur)
-- 📄 **Proposition Technique (proposal.md)** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/proposal.md&version=GBmain&_a=preview)
-- 📋 **Spécifications d'Échange (specs/api.md)** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/specs/api.md&version=GBmain&_a=preview)
-- 🎯 **Plan de Découpage TDD (tasks.md)** : [Azure DevOps Git](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/backlog/handoff/<STORY_ID>/tasks.md&version=GBmain&_a=preview)
-- ✅ **Definition of Done** : [DoD Normative (Azure DevOps Git)](https://dev.azure.com/Projet-SIGPA/SIGPA/_git/Wiki_AF_Segment2?path=/reference/definition-of-done.md&version=GBmain&_a=preview)
+- 📄 **Proposition Technique (proposal.md)** : [`backlog/handoff/<STORY_ID>/proposal.md`](../../backlog/handoff/<STORY_ID>/proposal.md) *(Portail Git distant : `https://<DOMAINE_GIT>/<PROJET>/_git/<REPO>?path=/backlog/handoff/<STORY_ID>/proposal.md`)*
+- 📋 **Spécifications d'Échange (specs/api.md)** : [`backlog/handoff/<STORY_ID>/specs/api.md`](../../backlog/handoff/<STORY_ID>/specs/api.md) *(Portail Git distant : `https://<DOMAINE_GIT>/<PROJET>/_git/<REPO>?path=/backlog/handoff/<STORY_ID>/specs/api.md`)*
+- 🎯 **Plan de Découpage TDD (tasks.md)** : [`backlog/handoff/<STORY_ID>/tasks.md`](../../backlog/handoff/<STORY_ID>/tasks.md) *(Portail Git distant : `https://<DOMAINE_GIT>/<PROJET>/_git/<REPO>?path=/backlog/handoff/<STORY_ID>/tasks.md`)*
+- ✅ **Definition of Done** : [DoD Normative](../../reference/definition-of-done.md) *(Portail Git distant : `https://<DOMAINE_GIT>/<PROJET>/_git/<REPO>?path=/reference/definition-of-done.md`)*
 
 ---
 

@@ -28,3 +28,11 @@ Nous officialisons une **frontière hermétique** :
 - **Zéro Spec-Drift** : L'IA ne subit aucun conflit d'autorité décisionnelle.
 - **Clarté du Dépôt** : Isolation parfaite entre spécifications d'affaires (mLoop) et répertoires de build physique (OpenSpec).
 - **Synergie Dual-Agent** : Flux fluide entre l'analyse fonctionnelle amont et le build assisté par IA en aval.
+
+---
+
+## 4. Évolution & Internalisation Native ([ADR-0382](0382-moteur-natif-specification-continue-et-gestionnaire-changes-sdd-souverain.md))
+
+L'interdiction initiale formulée dans cette ADR ciblait la **dépendance logicielle externe** (le binaire CLI npm/Node.js tiers `openspec`) et la pollution potentielle des dépôts d'analyse client.  
+Avec la ratification de l'**ADR-0382**, la méthodologie de Specification-Driven Development (SDD) — *Living Specs* et *Changesets* (`proposal.md`, `specs/api.md`, `tasks.md`) — est désormais **internalisée nativement au sein de mLoop en pur Python standard**, éliminant tout binaire externe tout en outillant directement la transition vers la Phase 3 (Build) et le harnais déterministe ([ADR-0381](0381-standard-harnais-phase-3-linter-ast-tournoi-tdd-red-green.md)).
+

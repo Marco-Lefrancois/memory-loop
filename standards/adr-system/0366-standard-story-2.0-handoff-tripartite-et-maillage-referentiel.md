@@ -4,7 +4,7 @@
 - **Date** : 2026-09-13
 - **Auteurs** : Équipe mLoop Swarm & Co-Architecte Agentique
 - **Périmètre** : Récits utilisateurs (`backlog/stories/`), Gabarits (`standards/blueprints/story_template.md`), Paquet de Handoff (`backlog/handoff/`), Checklists d'intégrité (`.agents/references/`), Linters de validation (`src/pipelines/struct_checker.py`, `src/pipelines/evidence_pack.py`)
-- **Autorité** : [ADR-0100](0100-structure-repertoire-projet-client.md), [ADR-0103](0103-segmentation-memory-loop-openspec.md), [ADR-0301](0301-standard-gherkin-outlines-4-piliers.md), [ADR-0319](0319-dual-agent-handoff-openspec-ready.md), [ADR-0326](0326-fact-search-socle-factuel.md), [ADR-0365](0365-harmonisation-symbiotique-skills-et-standard-agent-skills.md)
+- **Autorité** : [ADR-0100](0100-structure-repertoire-projet-client.md), [ADR-0103](0103-segmentation-memory-loop-openspec.md), [ADR-0301](0301-standard-gherkin-outlines-4-piliers.md), [ADR-0319](0319-dual-agent-handoff-openspec-ready.md), [ADR-0326](0326-fact-search-socle-factuel.md), [ADR-0365](0365-harmonisation-symbiotique-skills-et-standard-agent-skills.md), [ADR-0382](0382-moteur-natif-specification-continue-et-gestionnaire-changes-sdd-souverain.md)
 
 ---
 
@@ -63,7 +63,7 @@ L'harmonisation symbiotique des compétences (ADR-0365) a doté Memory Loop d'un
 
 ### 2.1 Séparation Stricte : Récit Fonctionnel (Cœur) vs Handoff Technique (Aval)
 - **Le Récit Fonctionnel (`backlog/stories/`)** : Reste 100% métier, lisible par les Product Owners et l'équipe d'affaires. Il obéit à la règle **No-Code** stricte de l'ADR-0319 : aucun snippet de code source (C#, Swift, TypeScript), aucune présomption de framework UI, description déclarative des contrats d'échange.
-- **Le Paquet de Handoff Tripartite (`backlog/handoff/<ID>/`)** : Fournit le pont technique immédiat vers l'implémentation logicielle, rédigé en Markdown souverain sans exiger aucun binaire externe ni dépendance npm :
+- **Le Paquet de Handoff Tripartite (`backlog/handoff/<ID>/` ou `specs/changes/<ID>/`)** : Fournit le pont technique immédiat vers l'implémentation logicielle, rédigé en Markdown souverain sans exiger aucun binaire externe ni dépendance npm. Avec l'[ADR-0382](0382-moteur-natif-specification-continue-et-gestionnaire-changes-sdd-souverain.md), ce paquet est généré, suivi en TDD (ADR-0381) et fusionné nativement par le moteur mLoop :
   1. `proposal.md` : Rationale technique, impact sur les tables de données, découplage architectural, considérations de performance et sécurité.
   2. `specs/api.md` (ou `specs/<domaine>.md`) : Contrats d'échange formels, spécification OpenAPI / JSON Schema, codes d'état HTTP, idempotence et gestion d'erreurs.
   3. `tasks.md` : Découpage ordonné en micro-tâches atomiques (< 5 fichiers) suivant le cycle Red-Green-Refactor et la Règle de Beyoncé ("Si tu y tiens, écris un test").

@@ -5,6 +5,31 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [2.32.0] - 2026-09-19
+
+### Added
+- **Observabilité Agentique Souveraine & Boundary Tracing (ADR-0380)** :
+  - Création de `src/engine/artifacts/boundary_wrapper.py` pour le traçage systématique des frontières d'outils et artefacts.
+  - Logging d'événements au format OpenInference (`src/utils/event_logger.py`) et garde anti-boucle ping-pong (`test_ping_pong_guard.py`).
+  - Dashboard Cockpit 2.0 : Visualiseur interactif de Knowledge Graph et explorateur direct de bases de données SQLite (`src/dashboard/routers/database.py`).
+- **Harnais Déterministe Phase 3 — Linter AST, Tournoi & TDD Red-Green (ADR-0381)** :
+  - Linter AST déterministe (`src/core/ast_checker.py`) pour la validation sans LLM des structures de code.
+  - Moteur de tournoi de code (`src/pipelines/code_tournament.py`) pour le départage multi-implémentations.
+  - Module d'application TDD stricte Red-Green (`src/core/tdd_enforcer.py`) et commandes de harnais de build (`src/commands/handlers/build_harness.py`).
+- **Moteur Natif de Spécification Continue & SDD Souverain (ADR-0382)** :
+  - Gestionnaire de changements et traçabilité des spécifications continues sans dépendance externe.
+- **Validation Renforcée Phase 4 & Gate 4 QA** :
+  - Module de certification Gate 4 (`src/core/gate4_validator.py`, `src/pipelines/qa_certifier.py`).
+  - Auditeur de natural language inference NLI (`src/pipelines/nli_auditor.py`).
+  - Modularisation de l'auditeur WikiFix (`src/pipelines/wikifix_core.py`, `src/pipelines/wikifix_auditors.py`).
+  - 12 nouvelles suites de tests (882 tests au vert, 0 échec).
+
+### Changed
+- **Guide CLI SSOT (ADR-0370)** : Compteur élevé à 121 commandes réelles synchronisées (`standards/protocols/CLI_PIPELINE_GUIDE.md`).
+- **Doctrine & Architecture mLoop** : Harmonisation du Tao de mLoop et de l'architecture du harnais avec le principe de *Harness Supremacy* et l'*Universal Dev Handoff*.
+
+---
+
 ## [2.31.0] - 2026-09-19
 
 ### Added

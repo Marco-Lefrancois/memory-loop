@@ -34,4 +34,4 @@ Bienvenue dans le centre de documentation et de connaissance de **Memory Loop (m
 - 💳 **[Suivi Budget LiteLLM (tools/budget/README.md)](../tools/budget/README.md)** : Monitoring des coûts NMedia Cloud.
 
 ---
-*Dernière consolidation SSOT : Septembre 2026 (v2.31.0)*
+*Dernière consolidation SSOT : Septembre 2026 (v2.32.0)*

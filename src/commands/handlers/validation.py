@@ -58,3 +58,44 @@ def handle_plugin_validate(args: argparse.Namespace, state: LoopState, project_p
     )
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0 if result.get("status") == "PASS" else 1
+
+
+def handle_validate_sprint(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Certification déterministe de sprint Phase 4 (ADR-0383 / MLOOP-090-BE)."""
+    from src.pipelines.qa_certifier import QaCertifierEngine, format_qa_markdown
+    project_name = getattr(args, "project", None) or (project_path.name if project_path else "mLoop")
+    timeout = getattr(args, "timeout", 240.0)
+    test_dir_raw = getattr(args, "test_dir", None)
+    test_dir = Path(test_dir_raw) if test_dir_raw else None
+    engine = QaCertifierEngine(project_path=project_path, project_name=project_name, default_timeout=timeout)
+    report = engine.certify_sprint(save_reports=True, test_dir=test_dir)
+    print(format_qa_markdown(report))
+    ZeroFluffConsole.step_s1(
+        "Bilan Certification QA Sprint",
+        f"Résultat : {'CERTIFIÉ CONFORME' if report.is_certified else 'REJETÉ (NON CONFORME)'}"
+    )
+    return 0 if report.is_certified else 1
+
+
+def handle_nli_audit(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Audit contradictoire NLI et Verification Leakage Gate (ADR-0326 & ADR-0354 / MLOOP-091-BE)."""
+    from src.pipelines.nli_auditor import NliAuditorEngine
+    project_name = getattr(args, "project", None) or (project_path.name if project_path else "mLoop")
+    engine = NliAuditorEngine(project_path=project_path, project_name=project_name)
+    leakage, nli = engine.run_full_audit()
+    ZeroFluffConsole.step_s1(
+        "Audit Anti-Fuite (Verification Leakage Gate)",
+        f"{'PASS' if leakage.passed else 'FAIL'} ({leakage.critical_violations} critique(s), {leakage.files_audited} fichier(s))"
+    )
+    ZeroFluffConsole.step_s1(
+        "Audit Contradiction NLI (Documentation vs Invariants)",
+        f"{'PASS' if nli.passed else 'FAIL'} ({nli.contradictions} contradiction(s), {nli.claims_verified} assertion(s))"
+    )
+    if leakage.details:
+        for d in leakage.details:
+            ZeroFluffConsole.warning(f"  * {d}")
+    if nli.details:
+        for d in nli.details:
+            ZeroFluffConsole.warning(f"  * {d}")
+    return 0 if (leakage.passed and nli.passed) else 1
+

@@ -155,6 +155,17 @@ logger.info(
 
 ---
 
+### Standard 4b : Sobriété des Commentaires & Compaction Contextuelle (ADR-0202 & ADR-0365)
+
+- **Principe** : Le code survit à la maintenance par son expressivité et son typage, pas par une prolifération de prose en commentaires inline ou docstrings hypertrophiées.
+- **Règle de Compaction (Auto-Learning RHO)** :
+  1. **Compacter les chaînes et commentaires verbeux** : Privilégier des commentaires atomiques d'une ligne ciblés sur le *pourquoi*. Raccourcir ou supprimer les commentaires paraphrasant le code.
+  2. **Extraction de modules légers** : Dès qu'un fichier approche le plafond de 300 lignes (ADR-0202), extraire les fonctions de registre/stockage dans des modules satellites dédiés (ex: `rho_registry.py`) plutôt que d'alourdir le flux principal.
+  3. **Vérification déterministe** : Le module `src/pipelines/deterministic_checks.py` traque les blocs de commentaires excédant 5 lignes consécutives via `check_compact_strings_and_comments()`.
+
+
+---
+
 ### Standard 5 : Tester le Contrat de Rupture (*Failure Contract*), Pas Seulement le Happy Path
 
 - **Principe** : Valider une entrée nominale ne renseigne en rien sur la tenue sous pression. Les tests doivent systématiquement vérifier les erreurs aux frontières (entrées vides, types invalides, erreurs HTTP, timeouts).
@@ -209,3 +220,5 @@ Avant de fusionner du code Python dans `src/`, tout développeur ou agent IA doi
 - [ ] **3. Délais** : Existe-t-il un appel `subprocess.run` ou réseau sans `timeout` explicite ?
 - [ ] **4. Observabilité** : Les erreurs non bloquantes sont-elles loggées avec du contexte (`extra={...}`) plutôt que masquées par `pass` ?
 - [ ] **5. Robustesse aux tests** : Les cas d'erreurs (codes HTTP inattendus, payloads corrompus) sont-ils couverts par `@pytest.mark.parametrize` ?
+- [ ] **6. Sobriété Contextuelle & Compaction (ADR-0202 & ADR-0365)** : Les blocs de commentaires et docstrings sont-ils compacts et concis ? Les longues chaînes multi-lignes et commentaires verbeux sont-ils raccourcis ou déportés en documentation externe pour préserver le budget de 300 lignes / 15 Ko ?
+

@@ -60,3 +60,25 @@ def test_optimize_rho_creates_rule(tmp_path: Path, monkeypatch):
     assert len(data["rules"]) == 1
     assert data["rules"][0]["keyword"] == "onetrust"
     assert data["rules"][0]["status"] == "ACTIVE"
+
+
+def test_optimize_rho_compact_strings_bifurcation(tmp_path: Path, monkeypatch):
+    """Vérifie que les découvertes de compaction de commentaires bifurquent vers un linter déterministe."""
+    monkeypatch.chdir(tmp_path)
+    project_name = "TestProject"
+
+    success = optimize_rho(
+        project_name=project_name,
+        keyword="commentaires verbeux",
+        msg="Compacter les longues strings multi-lignes et commentaires verbeux",
+        scope="global"
+    )
+
+    assert success is True
+    det_file = tmp_path / "standards" / "linters" / "deterministic_rules.json"
+    assert det_file.exists()
+
+    import json
+    data = json.loads(det_file.read_text(encoding="utf-8"))
+    assert any(r["check_type"] == "compact_strings_and_comments" for r in data)
+

@@ -151,6 +151,7 @@ COMMAND_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
     "aoep": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "eval": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "audit-loop": ProjectLifecycleStage.STAGE_4_VALIDATE,
+    "validate-sprint": ProjectLifecycleStage.STAGE_4_VALIDATE,
     
     # Phase 5 : SHIP & SYNC
     "jira-sync": ProjectLifecycleStage.STAGE_5_SHIP,
@@ -537,6 +538,10 @@ class ProjectLifecycleManager:
                     f"mais aucun document normalisé n'a été trouvé sous docs/00-ingested/ pour '{project_path.name}'. "
                     f"Lancez 'python src/swarm.py ingest --project {project_path.name}' avant d'approuver la Gate 1."
                 )
+        # Validations bloquantes spécifiques Gate 4 (ADR-0383 / MLOOP-092-BE : Recette QA Opposable)
+        if gate_number == 4:
+            from src.core.gate4_validator import validate_gate4_approval
+            validate_gate4_approval(project_path, approver)
 
         # Calcul d'empreinte de sécurité sur les livrables de la phase
         checksum = cls._compute_stage_deliverables_hash(project_path, state.current_stage)

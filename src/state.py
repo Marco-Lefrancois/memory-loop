@@ -367,6 +367,7 @@ class LoopState(BaseModel):
     ingest_initiative: Optional[str] = None
 
     token_budget: TokenBudget = Field(default_factory=TokenBudget)
+    hitl_required: bool = Field(default=False)
 
     # ─── GRAPHIFY INTEGRATION (ADR-0018) ─────────────────────────
     graph_path: str = "graphify-out/graph.json"
