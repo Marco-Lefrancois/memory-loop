@@ -10,7 +10,7 @@ et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/l
 ### Added
 - **Runtimes Workers Pluggables pour Herdr — Multi-CLI (ADR-0346)** :
   - `src/core/worker_runtimes.py` : registre SSOT multi-runtimes déclaratif des workers Herdr — chaque CLI (opencode, cline, pi, omp, …) est une entrée `WorkerRuntimeSpec` (flags one-shot, flag modèle, modèle par défaut, résolution binaire Windows shim→exe). OpenCode à la sémantique historique intangible (`--yolo`) ; Cline 3.x ajouté (auto-apprové natif, modèle `glm-5.3-flash`) ; extensible à tout nouveau CLI par simple entrée de registre — **le pipeline worker est désormais multi-CLI, zéro branche par runtime dans `herdr_adapter`**.
-  - `src/core/cline_adapter.py` : réduite en façade de compatibilité déléguant au registre (API publique conservée — 5 tests au vert).
+  - `src/core/cline_adapter.py` : réduite en façade de compatibilité déléguant au registre (API publique conservée — 6 tests au vert).
   - Catalogue `agent_probe.py` : Cline listé comme runtime disponible (version détectée dynamiquement).
   - Registry `worker-spawn` : option `--kind cline` documentée dans l'aide CLI.
 

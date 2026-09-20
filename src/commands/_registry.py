@@ -9,6 +9,25 @@ Chaque entrée définit :
 - no_project : (optionnel) True si la commande n'exige pas de contexte projet
 """
 
+def _worker_runtime_kinds() -> str:
+    """Déduit la liste des runtimes workers déclarés (SSOT `worker_runtimes`).
+
+    Objectif : interdire **par construction** toute dérive entre l'aide CLI
+    `--kind` et les runtimes réellement enregistrés (ADR-0346 / ADR-0370).
+    Un repli statique borné est retourné si le registre est indisponible.
+    """
+    try:
+        from src.core.worker_runtimes import WORKER_RUNTIMES
+
+        return ", ".join(sorted(WORKER_RUNTIMES))
+    except ImportError:
+        return "opencode, cline, pi, omp"
+
+
+# Liste dérivée du registre SSOT multi-runtimes (ADR-0346) — jamais dupliquée à la main.
+WORKER_KIND_HELP = _worker_runtime_kinds()
+
+
 COMMANDS: dict[str, dict] = {
     # ── Projet ─────────────────────────────────────────────
     "guide": {
@@ -1441,7 +1460,7 @@ COMMANDS: dict[str, dict] = {
                 "name": "--kind",
                 "type": str,
                 "default": "opencode",
-                "help": "Type d'agent (opencode, cline, pi, omp, agy)",
+                "help": f"Type d'agent ({WORKER_KIND_HELP})",
             },
             {
                 "name": "--model",
