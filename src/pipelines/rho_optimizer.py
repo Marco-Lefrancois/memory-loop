@@ -2,6 +2,7 @@
 Retrospective Harness Optimization (RHO) & Hypotheses Impact Tracker.
 Gère le cycle de vie des règles heuristiques résiduelles (ADR-0365).
 """
+
 import argparse
 import logging
 import os
@@ -24,12 +25,12 @@ from src.pipelines.rho_registry import (
 )
 
 
-
 def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "project") -> bool:
     ZeroFluffConsole.section("Retrospective Harness Optimization (RHO)")
 
     # 0. Classification Déterministe vs Jugement (PR #1083 / ADR-0365)
     from src.pipelines.deterministic_checks import classify_anomaly
+
     category, check_type = classify_anomaly(f"{keyword} {msg}")
 
     if category == "MECHANICAL":
@@ -46,6 +47,7 @@ def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "projec
         if det_file.exists():
             try:
                 import json
+
                 det_rules = json.loads(det_file.read_text(encoding="utf-8"))
             except Exception as exc:
                 logger.debug("Erreur lecture deterministic_rules.json : %s", exc, exc_info=True)
@@ -53,15 +55,20 @@ def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "projec
 
         if not any(r.get("keyword") == keyword.lower() for r in det_rules):
             import json
-            det_rules.append({
-                "keyword": keyword.lower(),
-                "check_type": check_type,
-                "msg": msg,
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "scope": scope,
-                "status": "ACTIVE_DETERMINISTIC",
-            })
-            det_file.write_text(json.dumps(det_rules, indent=2, ensure_ascii=False), encoding="utf-8")
+
+            det_rules.append(
+                {
+                    "keyword": keyword.lower(),
+                    "check_type": check_type,
+                    "msg": msg,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "scope": scope,
+                    "status": "ACTIVE_DETERMINISTIC",
+                }
+            )
+            det_file.write_text(
+                json.dumps(det_rules, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
             ZeroFluffConsole.success(f"Contrôle déterministe consigné dans {det_file.as_posix()}")
         return True
 
@@ -101,21 +108,26 @@ def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "projec
             return False
 
     # Ajouter la nouvelle règle
-    rules_data["rules"].append({
-        "keyword": keyword.lower(),
-        "msg": f"[RHO] {msg}",
-        "status": "ACTIVE",
-    })
+    rules_data["rules"].append(
+        {
+            "keyword": keyword.lower(),
+            "msg": f"[RHO] {msg}",
+            "status": "ACTIVE",
+        }
+    )
 
     try:
         with open(target_file, "w", encoding="utf-8") as f:
             yaml.dump(rules_data, f, allow_unicode=True, sort_keys=False)
-        ZeroFluffConsole.success(f"Nouvelle règle RHO ajoutée ({scope} scope) dans {target_file.as_posix()}")
+        ZeroFluffConsole.success(
+            f"Nouvelle règle RHO ajoutée ({scope} scope) dans {target_file.as_posix()}"
+        )
         ZeroFluffConsole.info(f"Keyword: '{keyword}' -> Msg: '[RHO] {msg}'")
 
-        # Enregistrement dans la base RAG Vectorielle (Ollama + SQLite)
+        # Enregistrement dans la base RAG Vectorielle (embeddings locaux mxbai-embed-large via Ollama + SQLite)
         try:
             from src.loop_mem.db import add_rho_rule
+
             add_rho_rule(project_name, keyword, keyword, msg)
             ZeroFluffConsole.success("Règle RHO indexée sémantiquement dans loop_mem.db.")
         except Exception as e:
@@ -124,6 +136,7 @@ def optimize_rho(project_name: str, keyword: str, msg: str, scope: str = "projec
         # Journal d'audit au dashboard
         try:
             from src.state import JournalEntry
+
             p_path = Path("Projects") / project_name
             if p_path.exists():
                 state = LoopState(project_name=project_name)
@@ -202,20 +215,30 @@ def dream_collector(project_name: str) -> Dict[str, Any]:
                     content_lower = adr["content"].lower()
                     if kw.lower() in content_lower and any(
                         term in content_lower
-                        for term in ["obsolète", "déprécié", "superseded", "remplacé par", "tombstone"]
+                        for term in [
+                            "obsolète",
+                            "déprécié",
+                            "superseded",
+                            "remplacé par",
+                            "tombstone",
+                        ]
                     ):
                         rule["status"] = "TOMBSTONE"
                         rule["tombstone_reason"] = f"Contradicted or superseded by {adr['path']}"
                         deprecated_count += 1
                         modified = True
                         tombstone_reports.append(f"Rule '{kw}' marked TOMBSTONE by {adr['path']}")
-                        ZeroFluffConsole.warning(f"Règle RHO '{kw}' dépréciée (TOMBSTONE) suite à {adr['path']}")
+                        ZeroFluffConsole.warning(
+                            f"Règle RHO '{kw}' dépréciée (TOMBSTONE) suite à {adr['path']}"
+                        )
                         break
 
             if modified:
                 with open(fpath, "w", encoding="utf-8") as f:
                     yaml.dump(data, f, allow_unicode=True, sort_keys=False)
-                ZeroFluffConsole.success(f"Fichier {fpath.name} mis à jour avec les nouveaux TOMBSTONES.")
+                ZeroFluffConsole.success(
+                    f"Fichier {fpath.name} mis à jour avec les nouveaux TOMBSTONES."
+                )
         except Exception as e:
             ZeroFluffConsole.error(f"Erreur durant dream_collector sur {fpath}: {e}")
 
@@ -225,20 +248,24 @@ def dream_collector(project_name: str) -> Dict[str, Any]:
         "tombstones_applied": deprecated_count,
         "reports": tombstone_reports,
     }
-    ZeroFluffConsole.info(f"Dream hygiene terminée : {deprecated_count} règle(s) passée(s) en TOMBSTONE sur {checked_rules} vérifiée(s).")
+    ZeroFluffConsole.info(
+        f"Dream hygiene terminée : {deprecated_count} règle(s) passée(s) en TOMBSTONE sur {checked_rules} vérifiée(s)."
+    )
     return summary
-
-
 
 
 def main() -> None:
     """Point d'entrée CLI du module RHO Optimizer."""
-    parser = argparse.ArgumentParser(description="RHO Optimizer — Retrospective Harness Optimization")
+    parser = argparse.ArgumentParser(
+        description="RHO Optimizer — Retrospective Harness Optimization"
+    )
     parser.add_argument("--project", required=True)
     parser.add_argument("--keyword", help="Le mot-clé ou motif qui déclenche la règle")
     parser.add_argument("--msg", help="Le message ou la directive à afficher")
     parser.add_argument("--scope", choices=["project", "global"], default="project")
-    parser.add_argument("--dream", action="store_true", help="Lance le Dream Collector (Tombstones)")
+    parser.add_argument(
+        "--dream", action="store_true", help="Lance le Dream Collector (Tombstones)"
+    )
     args = parser.parse_args()
     if args.dream:
         dream_collector(args.project)

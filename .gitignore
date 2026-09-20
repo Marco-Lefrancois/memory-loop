@@ -167,3 +167,7 @@ $RECYCLE.BIN/
 .Trashes
 *.bak
 *.tmp
+
+# Cache d'embeddings vectoriels de documents (MLOOP-102-BE, regenerable)
+vector_cache.db
+**/memory/vector_cache.db

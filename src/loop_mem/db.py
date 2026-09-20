@@ -1,9 +1,12 @@
 import sqlite3
 import json
+import logging
 import re
 import os
 from pathlib import Path
 from typing import List, Dict, Any, Optional
+
+logger = logging.getLogger(__name__)
 
 
 def get_active_project() -> Optional[str]:
@@ -18,9 +21,7 @@ def get_active_project() -> Optional[str]:
     return None
 
 
-def search_in_memory(
-    project_path: Path, query: str, limit: int = 10
-) -> List[Dict[str, Any]]:
+def search_in_memory(project_path: Path, query: str, limit: int = 10) -> List[Dict[str, Any]]:
     """
     Recherche plein texte en mémoire dans le graphe consolidé du projet.
     Fusionne knowledge_graph.json et graph.json, et filtre sur les attributs textuels.
@@ -89,11 +90,7 @@ def search_in_memory(
 
             # Snippet d'aperçu propre
             snippet_source = text_chunk or desc or "Pas de description."
-            snippet = (
-                snippet_source[:150] + "..."
-                if len(snippet_source) > 150
-                else snippet_source
-            )
+            snippet = snippet_source[:150] + "..." if len(snippet_source) > 150 else snippet_source
 
             results.append(
                 {
@@ -152,6 +149,7 @@ def get_observation_db_session(db_path: Path = _OBSERVATION_DB_PATH):
 def _get_observation_conn() -> sqlite3.Connection:
     """Retourne une connexion à la base des observations (Legacy helper déprécié — ADR-0369)."""
     import warnings
+
     warnings.warn(
         "_get_observation_conn() is deprecated (ADR-0369); use 'with get_observation_db_session() as conn:' instead.",
         DeprecationWarning,
@@ -316,9 +314,7 @@ def search_observations(
         conditions: List[str] = []
 
         # Nettoyer la requête pour FTS5 (enlever les opérateurs spéciaux risquant des syntax errors)
-        cleaned_query = "".join(
-            c if c.isalnum() or c.isspace() else " " for c in query
-        ).strip()
+        cleaned_query = "".join(c if c.isalnum() or c.isspace() else " " for c in query).strip()
         if not cleaned_query:
             cleaned_query = "*"
 
@@ -413,9 +409,7 @@ def get_observation_by_id(obs_id: int) -> Optional[Dict[str, Any]]:
 # ═══════════════════════════════════════════════════════════
 
 
-def add_rho_rule(
-    project_name: str, keyword: str, error_trace: str, solution: str
-) -> int:
+def add_rho_rule(project_name: str, keyword: str, error_trace: str, solution: str) -> int:
     """Ajoute une règle RHO avec son embedding Ollama pour recherche sémantique."""
     from src.loop_mem.ollama_embed import get_embedding
 
@@ -435,9 +429,7 @@ def add_rho_rule(
         return cursor.lastrowid
 
 
-def search_rho_solution(
-    error_trace: str, threshold: float = 0.8
-) -> List[Dict[str, Any]]:
+def search_rho_solution(error_trace: str, threshold: float = 0.70) -> List[Dict[str, Any]]:
     """Cherche la solution la plus similaire dans la mémoire RHO via similarité cosinus locale."""
     from src.loop_mem.ollama_embed import get_embedding, cosine_similarity
 
@@ -468,7 +460,11 @@ def search_rho_solution(
                             }
                         )
             except Exception:
-                pass
+                logger.debug(
+                    "Ligne RHO ignorée (embedding illisible ou incompatible)",
+                    exc_info=True,
+                    extra={"rho_id": row["id"], "project": row["project_name"]},
+                )
 
     # Tri par score décroissant
     results.sort(key=lambda x: x["score"], reverse=True)
@@ -528,7 +524,9 @@ def upsert_lexicon_term(
                 now_iso,
             ),
         )
-        cursor.execute("SELECT id FROM project_lexicon WHERE project_name=? AND term=?", (project_name, term))
+        cursor.execute(
+            "SELECT id FROM project_lexicon WHERE project_name=? AND term=?", (project_name, term)
+        )
         row = cursor.fetchone()
         lex_id = row[0] if row else cursor.lastrowid
 
@@ -676,9 +674,7 @@ def sync_project_lexicon_from_disk(project_name: str) -> int:
                 h1_val = h1_m.group(1).strip()
                 # Extraire le nom de domaine principal (ex: "Boire & Frères")
                 domain_parts = re.split(r"[-–—:]", h1_val)
-                main_domain = (
-                    domain_parts[-1].strip() if len(domain_parts) > 1 else h1_val
-                )
+                main_domain = domain_parts[-1].strip() if len(domain_parts) > 1 else h1_val
                 upsert_lexicon_term(
                     project_name=project_name,
                     term=h1_val,
@@ -720,9 +716,7 @@ def sync_project_lexicon_from_disk(project_name: str) -> int:
     # 3. Scanner les glossaires et lexiques sous docs/
     docs_dir = project_dir / "docs"
     if docs_dir.exists():
-        glossary_files = list(docs_dir.rglob("*glossair*.md")) + list(
-            docs_dir.rglob("*lexiq*.md")
-        )
+        glossary_files = list(docs_dir.rglob("*glossair*.md")) + list(docs_dir.rglob("*lexiq*.md"))
         for g_file in glossary_files:
             try:
                 g_text = g_file.read_text(encoding="utf-8", errors="ignore")
@@ -756,9 +750,7 @@ def sync_project_lexicon_from_disk(project_name: str) -> int:
                     def_clean = raw_def.strip()
                     # Séparer les alias par slash ou parenthèses (ex: "Buggy / Chariot" -> "Buggy", "Chariot")
                     term_aliases = [
-                        t.strip()
-                        for t in re.split(r"[/,\(\)]", term_clean)
-                        if t.strip()
+                        t.strip() for t in re.split(r"[/,\(\)]", term_clean) if t.strip()
                     ]
                     upsert_lexicon_term(
                         project_name=project_name,
@@ -815,9 +807,7 @@ def _determine_ssot_layer(rel_path: str) -> str:
 # ──────────────────────────────────────────────────────────────────────────────
 # 6. MOTEUR FACT-SEARCH 2.0 (Délégation Canonique vers src.engine.fact_search)
 # ──────────────────────────────────────────────────────────────────────────────
-def index_project_docs_to_fts5(
-    project_name: str, db_path: Optional[Path] = None
-) -> int:
+def index_project_docs_to_fts5(project_name: str, db_path: Optional[Path] = None) -> int:
     """Scanne et indexe les documents d'un projet dans SQLite FTS5 via TriFusionChunker."""
     from src.engine.fact_search import FactSearchIndexer
 

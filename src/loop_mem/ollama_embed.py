@@ -1,23 +1,49 @@
 import json
+import logging
 import urllib.request
 import math
 from typing import List
 
-# On utilise llama3.1:8b comme modèle par défaut car il est garanti d'être présent dans la configuration de l'agent.
-OLLAMA_EMBED_MODEL = "llama3.1:8b"
+logger = logging.getLogger(__name__)
+
+# Modèle d'embedding local dédié installé via Ollama pour la mémoire RHO.
+# `mxbai-embed-large` a été retenu après benchmark sur la tâche RHO réelle
+# (meilleure marge discriminante positif/négatif et meilleur cross-lingue EN->FR
+# que `bge-m3`). Dimension de sortie : 1024 (compatible table `rho_memory`).
+OLLAMA_EMBED_MODEL = "mxbai-embed-large"
+
+# Deadline explicite pour l'appel réseau synchrone (ADR-0369 : Zero-Unbounded-Wait).
+OLLAMA_EMBED_TIMEOUT_SECONDS = 30.0
+
+# Borne de sécurité sur la longueur du texte soumis à l'embedding.
+# `mxbai-embed-large` a une fenêtre de contexte d'environ 512 tokens : au-delà,
+# l'API renvoie une erreur serveur (HTTP 500). On tronque donc sur un préfixe
+# représentatif (~512 tokens, marge de sécurité), largement suffisant pour la
+# proximité sémantique d'une trace d'erreur RHO ou d'un préambule documentaire.
+OLLAMA_EMBED_MAX_CHARS = 1500
+
 
 def get_embedding(text: str, model: str = OLLAMA_EMBED_MODEL) -> List[float]:
     """Récupère le vecteur d'embedding depuis l'API locale Ollama."""
+    if text and len(text) > OLLAMA_EMBED_MAX_CHARS:
+        text = text[:OLLAMA_EMBED_MAX_CHARS]
     url = "http://localhost:11434/api/embeddings"
     data = {"model": model, "prompt": text}
-    req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers={"Content-Type": "application/json"})
+    req = urllib.request.Request(
+        url, data=json.dumps(data).encode("utf-8"), headers={"Content-Type": "application/json"}
+    )
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=OLLAMA_EMBED_TIMEOUT_SECONDS) as response:
             result = json.loads(response.read().decode("utf-8"))
             return result.get("embedding", [])
-    except Exception as e:
-        print(f"[Ollama Embed] Erreur lors de la récupération de l'embedding : {e}")
+    except Exception as exc:
+        logger.warning(
+            "Échec de récupération de l'embedding Ollama (RHO en mode dégradé)",
+            exc_info=True,
+            extra={"model": model, "url": url, "text_len": len(text)},
+        )
         return []
+
 
 def cosine_similarity(v1: List[float], v2: List[float]) -> float:
     """Calcule la similarité cosinus entre deux vecteurs."""
