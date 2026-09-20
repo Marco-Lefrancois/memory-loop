@@ -159,14 +159,35 @@ class HerdrAdapter:
                 )
             else:
                 kwargs["start_new_session"] = True
-            subprocess.Popen(
-                [self.herdr_bin, "server"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                **kwargs,
-            )
+            try:
+                proc = subprocess.Popen(
+                    [self.herdr_bin, "server"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    **kwargs,
+                )
+                # Deadline explicite (ADR-0369) : borne l'attente d'attachement du daemon.
+                try:
+                    proc.wait(timeout=2)
+                except subprocess.TimeoutExpired:
+                    # Comportement attendu : le daemon détaché survit au processus CLI.
+                    logger.debug(
+                        "Daemon 'herdr server' détaché et toujours actif après 2s (attendu).",
+                        extra={"pid": proc.pid},
+                    )
+            except Exception as e:
+                logger.error(
+                    f"Échec du lancement de 'herdr server' : {e}",
+                    exc_info=True,
+                    extra={"bin": self.herdr_bin},
+                )
+                return False
         except Exception as e:
-            logger.error(f"Échec du lancement de 'herdr server' : {e}")
+            logger.error(
+                f"Erreur inattendue durant l'auto-heal du daemon Herdr : {e}",
+                exc_info=True,
+                extra={"bin": self.herdr_bin},
+            )
             return False
 
         # Re-sondage jusqu'à wait_sec secondes (poll toutes les 0.5s)
@@ -283,22 +304,28 @@ class HerdrAdapter:
         timeout_sec = max(10, timeout_ms // 1000 + 5)
         res = self._exec(args, timeout=timeout_sec)
 
-        # Sur Windows, si opencode est un script .cmd/.ps1, herdr agent start échoue avec
-        # "Start-Process : %1 n'est pas une application Win32 valide". On effectue un fallback via pane run.
+        # Sur Windows, les shims npm (.cmd/.ps1) ne sont pas exécutables via Start-Process
+        # ("%1 n'est pas une application Win32 valide"). On résout le .exe réel via le
+        # registre SSOT multi-runtimes (ADR-0346) — zéro branche par runtime ici.
         if not res.get("success"):
-            # Résoudre le chemin absolu vers le .exe réel pour éviter que Windows résolve opencode.cmd
             resolved_bin = kind
-            if sys.platform == "win32" and kind == "opencode":
-                appdata = os.environ.get("APPDATA", "")
-                exe_candidate = Path(appdata) / "npm" / "opencode.exe"
-                if exe_candidate.exists():
-                    resolved_bin = str(exe_candidate)
-                    logger.info(f"Windows fallback: résolution vers exe absolu '{resolved_bin}'")
-                else:
-                    # Dernier recours : shutil.which avec extension forcée
-                    found = shutil.which("opencode.exe") or shutil.which("opencode")
-                    if found and found.endswith(".exe"):
-                        resolved_bin = found
+            if sys.platform == "win32":
+                try:
+                    from src.core.worker_runtimes import get_worker_runtime
+
+                    runtime_spec = get_worker_runtime(kind)
+                except (ImportError, KeyError) as exc:
+                    logger.debug(
+                        "Registre worker_runtimes indisponible pour ce kind — nom brut conservé.",
+                        exc_info=True,
+                        extra={"kind": kind, "error": str(exc)},
+                    )
+                    runtime_spec = None
+                if runtime_spec is not None:
+                    resolved = runtime_spec.resolve_binary()
+                    if resolved:
+                        resolved_bin = resolved
+                        logger.info(f"Windows fallback: résolution vers exe absolu '{resolved_bin}'")
 
             cmd_str = (
                 f'& "{resolved_bin}" {" ".join(extra_args or [])}'.strip()
@@ -309,8 +336,14 @@ class HerdrAdapter:
             self.run_pane_command(pane_id, cmd_str)
             try:
                 self._exec(["agent", "rename", pane_id, agent_name])
-            except Exception:
-                pass
+            except Exception as exc:
+                # ADR-0369 Zero-Silent-Pass : un rename échoué désynchronise le nom
+                # Herdr du worker (source de workers fantômes en supervision).
+                logger.debug(
+                    "Renommage post-fallback du worker échoué (nom Herdr possiblement désynchronisé).",
+                    exc_info=True,
+                    extra={"pane_id": pane_id, "agent_name": agent_name, "error": str(exc)},
+                )
             return {
                 "success": True,
                 "fallback": "pane_run",
@@ -671,6 +704,23 @@ class HerdrAdapter:
             if not target_model:
                 target_model = "nmedia_cloud/claude-opus-4.8"
 
+        # 2-bis. Modèle par défaut déclaratif (ADR-0346) : chaque runtime peut déclarer
+        # son modèle par défaut (ex: Cline → glm-5.3-flash), qui prime sur TASK_MODEL_MAP
+        # sauf --model explicite. Le --task-type reste utilisé comme label de mission.
+        try:
+            from src.core.worker_runtimes import get_worker_runtime
+
+            runtime_spec = get_worker_runtime(kind)
+        except (ImportError, KeyError) as exc:
+            logger.debug(
+                "Runtime worker non enregistré — sémantique héritée appliquée.",
+                exc_info=True,
+                extra={"kind": kind, "error": str(exc)},
+            )
+            runtime_spec = None
+        if runtime_spec is not None and runtime_spec.default_model and not model:
+            target_model = runtime_spec.default_model
+
         # 3. Create a workspace or split pane
         split_res = self._exec(["pane", "split", "--direction", "right", "--no-focus"])
         pane_id = None
@@ -689,27 +739,25 @@ class HerdrAdapter:
             pane_id = "p_fallback_1"
             logger.warning(f"Could not retrieve pane_id from Herdr, using fallback '{pane_id}'")
 
-        # 4. Configure agent flags with resolved model
-        flags = (
-            list(extra_args)
-            if extra_args
-            else (["--yolo"] if kind == "opencode" else ["--dangerously-skip-permissions"])
-        )
-        if target_model:
-            if kind == "opencode" and "--model" not in flags and "-m" not in flags:
-                flags.extend(["--model", target_model])
-            elif kind in ["pi", "omp"] and "--model" not in flags:
-                flags.extend(["--model", target_model])
+        # 4. Configure agent flags with resolved model (ADR-0346 : routing déclaratif
+        # via le registre SSOT worker_runtimes — OpenCode one-shot --yolo, Cline
+        # auto-apprové natif, pi/omp interactifs ; zéro branche par runtime ici).
+        if runtime_spec is not None:
+            flags = runtime_spec.build_flags(model=target_model, extra_args=extra_args)
+        elif extra_args:
+            flags = list(extra_args)
+        else:
+            flags = ["--dangerously-skip-permissions"]
 
         start_res = self.start_agent(
             agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
         )
 
-        # 5. Délai d'initialisation — attendre que OpenCode soit idle/ready
+        # 5. Délai d'initialisation — attendre que le runtime worker soit idle/ready
         # avant d'envoyer le prompt (Fix: prompt perdu si envoyé trop tôt)
         import time
 
-        time.sleep(3)  # Délai fixe minimal pour laisser OpenCode démarrer son UI
+        time.sleep(3)  # Délai fixe minimal pour laisser le runtime démarrer son UI
         # Tentative de wait_agent pour confirmer l'état idle (non-bloquant si timeout)
         try:
             self.wait_agent(worker_name, until_states=["idle", "done", "blocked"], timeout_ms=5000)

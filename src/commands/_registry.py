@@ -1441,7 +1441,7 @@ COMMANDS: dict[str, dict] = {
                 "name": "--kind",
                 "type": str,
                 "default": "opencode",
-                "help": "Type d'agent (opencode, pi, omp, agy)",
+                "help": "Type d'agent (opencode, cline, pi, omp, agy)",
             },
             {
                 "name": "--model",
