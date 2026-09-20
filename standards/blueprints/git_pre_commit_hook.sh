@@ -1,10 +1,61 @@
 #!/bin/sh
-# mLoop Git Pre-Commit Hook (Auto-protection anti-amnésie & hygiène de projet)
-echo "🛡️ [mLoop Pre-Commit] Exécution du Guardrail Vibe-Check..."
-cd "{{ROOT_DIR}}"
-python "{{SWARM_PY}}" vibe-check --project {{PROJECT_NAME}}
-if [ $? -ne 0 ]; then
-    echo "❌ [mLoop Pre-Commit] Commit bloqué : Échec du Guardrail Vibe-Check."
+# mLoop Git Pre-Commit Hook — Garde-Fou Déterministe (MLOOP-105-BE)
+# Audite les fichiers indexés via code-check (AST ADR-0202/0369) et struct-check (récits C1-C9).
+# Bypass souverain d'urgence : MLOOP_SKIP_HOOKS=1 git commit ...
+
+if [ "$MLOOP_SKIP_HOOKS" = "1" ]; then
+    echo "⚠️  [mLoop Pre-Commit] Bypass souverain activé (MLOOP_SKIP_HOOKS=1)."
+    exit 0
+fi
+
+cd "{{ROOT_DIR}}" || exit 1
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+if [ -z "$STAGED" ]; then
+    exit 0
+fi
+
+PY_FILES=""
+STORY_FILES=""
+for file in $STAGED; do
+    case "$file" in
+        *.py)
+            case "$file" in
+                src/*) PY_FILES="$PY_FILES $file" ;;
+            esac
+            ;;
+        backlog/stories/*.md|Projects/*/backlog/stories/*.md)
+            STORY_FILES="$STORY_FILES $file"
+            ;;
+    esac
+done
+
+if [ -z "$PY_FILES" ] && [ -z "$STORY_FILES" ]; then
+    echo "✅ [mLoop Pre-Commit] Aucun fichier régi (code/récit) indexé — validation instantanée."
+    exit 0
+fi
+
+FAILED=0
+
+for file in $PY_FILES; do
+    python "{{SWARM_PY}}" code-check --file "$file"
+    if [ $? -ne 0 ]; then
+        FAILED=1
+    fi
+done
+
+for file in $STORY_FILES; do
+    python "{{SWARM_PY}}" struct-check --project {{PROJECT_NAME}} --file "$file"
+    if [ $? -ne 0 ]; then
+        FAILED=1
+    fi
+done
+
+if [ $FAILED -ne 0 ]; then
+    echo "❌ [mLoop Pre-Commit] Commit bloqué : violations détectées (code-check / struct-check)."
+    echo "   Corrigez les violations ci-dessus, ou forcez avec MLOOP_SKIP_HOOKS=1 (urgence souveraine)."
     exit 1
 fi
+
+echo "✅ [mLoop Pre-Commit] Tous les fichiers indexés sont conformes — commit autorisé."
 exit 0

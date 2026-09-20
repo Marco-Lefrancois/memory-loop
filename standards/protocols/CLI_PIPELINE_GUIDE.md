@@ -154,7 +154,7 @@ flowchart LR
 | `python src/swarm.py rubber-duck` | Agent Sentinel — revue contradictoire de fond (Avocat du Diable avec discernement & rigueur) | [--file <STR>] [--suggest-patch <STR>] | Rapport sémantique 4 Piliers |
 | `python src/swarm.py struct-check` | Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence du gabarit blueprint (pré-Sentinel) | [--file <STR>] [--strict <STR>] [--verbose <STR>] | Rapport violations C1–C7 |
 | `python src/swarm.py tree` | Afficher l'arbre d'exécution Depth Tree et l'état des gates (ADR-0341) | [--file <STR>] [--scope <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py validate-sprint` | Certification déterministe de sprint Phase 4 (tests, linter AST, CEL 4-piliers) (ADR-0383 / MLOOP-090-BE) | [--timeout <FLOAT>] | Rapports d'assurance qualité QA (`qa_certification_report.md` et `.json`) |
+| `python src/swarm.py validate-sprint` | Certification déterministe de sprint Phase 4 (tests, linter AST, CEL 4-piliers) (ADR-0383 / MLOOP-090-BE) | [--timeout <FLOAT>] [--test-dir <STR>] | Rapports d'assurance qualité QA (`qa_certification_report.md` et `.json`) |
 | `python src/swarm.py wikifix` | Alias de sync (audit de cohérence WikiFix) | [--verbose <STR>] [--incremental <STR>] [--fast <STR>] [--story <STR>] | `memory/wikifix_report.md` |
 
 ---
@@ -168,7 +168,7 @@ flowchart LR
 | `python src/swarm.py calibrate` | Auto-étalonnage de l'écosystème mLoop | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py cycle-status` | Afficher le statut du cycle courant | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py guide-export` | Exporter un guide de revue autonome HTML portable via Plannotator | [--snapshot <STR>] [--id <STR>] [--out <STR>] | Guide HTML autonome Plannotator |
-| `python src/swarm.py install-hooks` | Installer les hooks Git de protection (pre-commit vibe-check) | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py install-hooks` | Installer/désinstaller le hook Git pre-commit déterministe (code-check + struct-check — MLOOP-105-BE) | [--uninstall <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py jira_sync` | Synchronisation ciblée Jira Cloud (Fail-Closed). Requiert --story ou --stories pour cibler des tickets. Le mode dry-run est actif par défaut ; utiliser --apply + --confirm-scope pour écrire. | [--story <STR>] [--stories <STR>] [--apply <STR>] [--confirm-scope <STR>] [--all <STR>] [--confirm-all-project-stories <STR>] [--allow-in-analyze <STR>] [--dry-run <STR>] | Tickets et champs Jira Cloud à jour |
 | `python src/swarm.py notebooklm` | Gestion, export SSOT et connexion au carnet Google NotebookLM officiel | [--bundle <STR>] [--status <STR>] [--auth <STR>] | Export SSOT vers carnet officiel |
 | `python src/swarm.py plugin-export` | Exporter un package Agent Plugin 1.0 portable | [--output <STR>] | Package AP 1.0 redistribuable |

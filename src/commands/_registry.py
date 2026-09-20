@@ -144,8 +144,14 @@ COMMANDS: dict[str, dict] = {
     },
     "install-hooks": {
         "handler": "project:handle_install_hooks",
-        "help": "Installer les hooks Git de protection (pre-commit vibe-check)",
-        "args": [],
+        "help": "Installer/désinstaller le hook Git pre-commit déterministe (code-check + struct-check — MLOOP-105-BE)",
+        "args": [
+            {
+                "name": "--uninstall",
+                "action": "store_true",
+                "help": "Désinstaller le hook pre-commit géré par mLoop (refusé sur hook étranger)",
+            },
+        ],
     },
     "hook": {
         "handler": "hook:handle_hook",
