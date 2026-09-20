@@ -5,6 +5,22 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [2.33.0] - 2026-09-20
+
+### Added
+- **Runtimes Workers Pluggables pour Herdr — Multi-CLI (ADR-0346)** :
+  - `src/core/worker_runtimes.py` : registre SSOT multi-runtimes déclaratif des workers Herdr — chaque CLI (opencode, cline, pi, omp, …) est une entrée `WorkerRuntimeSpec` (flags one-shot, flag modèle, modèle par défaut, résolution binaire Windows shim→exe). OpenCode à la sémantique historique intangible (`--yolo`) ; Cline 3.x ajouté (auto-apprové natif, modèle `glm-5.3-flash`) ; extensible à tout nouveau CLI par simple entrée de registre — **le pipeline worker est désormais multi-CLI, zéro branche par runtime dans `herdr_adapter`**.
+  - `src/core/cline_adapter.py` : réduite en façade de compatibilité déléguant au registre (API publique conservée — 5 tests au vert).
+  - Catalogue `agent_probe.py` : Cline listé comme runtime disponible (version détectée dynamiquement).
+  - Registry `worker-spawn` : option `--kind cline` documentée dans l'aide CLI.
+
+### Changed
+- **Refactoring Utils MLOOP-101-BE (ADR-0202 / ADR-0369)** :
+  - Packages `src/utils/lexicon/` (`entity_matcher.py`, `project_resolver.py`) et `src/utils/token_ledger/` (`key_info.py`, `reporting.py`) sous façades publiques intangibles (lexicon_resolver 141L, token_ledger 227L — zéro violation code-check sur les 8 modules utils).
+  - Purge de 12 `except` silencieux (ADR-0369 Zero-Silent-Pass) et encapsulation du `sqlite3.connect` nu d'`opencode_meter.py` (RULE-AST-02).
+  - Harnais de latence `tests/performance/test_utils_latency.py` (15 tests : plafonds 300L/15 Ko + latence < 5 ms).
+- 17 tests d'intégration Cline/Herdr au vert ; suite de non-régression MLOOP-101-BE : 28/28 PASS.
+
 ## [2.32.0] - 2026-09-19
 
 ### Added

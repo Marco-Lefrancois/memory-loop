@@ -83,6 +83,15 @@ AGENT_CATALOG: dict[str, AgentDefinition] = {
         role="Deep Refactoring & Spike",
         critical_in_stages=(),
     ),
+    "cline": AgentDefinition(
+        id="cline",
+        name="Cline CLI",
+        bin_name="cline",
+        version_args=["--version"],
+        min_version="3.0.0",
+        role="Build Worker Délégué (ADR-0346)",
+        critical_in_stages=("STAGE_BUILD",),
+    ),
     "aider": AgentDefinition(
         id="aider",
         name="Aider",
