@@ -109,6 +109,33 @@ def test_resolve_npm_windows_binary_returns_none_without_exe(tmp_path, monkeypat
     assert _resolve_npm_windows_binary("opencode") is None
 
 
+def test_resolve_npm_windows_binary_falls_back_to_cmd_shim(tmp_path, monkeypatch):
+    """Cline-like : aucun .exe npm -> le shim .cmd est résolu (topologie npm réelle).
+
+    Ground truth locale : `cline` n'installe que `cline`/`cline.cmd`/`cline.ps1`
+    (aucun `.exe`), contrairement à opencode. Le `.cmd` reste exécutable par
+    l'opérateur d'appel PowerShell `&` utilisé par le fallback pane-run.
+    """
+    fake_cmd = tmp_path / "npm" / "cline.cmd"
+    fake_cmd.parent.mkdir()
+    fake_cmd.write_text("@ECHO off\r\n", encoding="utf-8")
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+    monkeypatch.setattr("shutil.which", lambda name: None)
+    assert _resolve_npm_windows_binary("cline") == str(fake_cmd)
+
+
+def test_resolve_npm_windows_binary_prefers_exe_over_cmd(tmp_path, monkeypatch):
+    """Si les deux existent, le .exe natif prime sur le shim .cmd."""
+    npm_dir = tmp_path / "npm"
+    npm_dir.mkdir()
+    exe = npm_dir / "cline.exe"
+    exe.write_bytes(b"MZ")
+    (npm_dir / "cline.cmd").write_text("@ECHO off\r\n", encoding="utf-8")
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+    monkeypatch.setattr("shutil.which", lambda name: None)
+    assert _resolve_npm_windows_binary("cline") == str(exe)
+
+
 def test_spec_without_resolver_returns_none():
     """Un runtime sans résolveur déclaré (pi/omp) retourne None (passthrough)."""
     assert get_worker_runtime("pi").resolve_binary() is None

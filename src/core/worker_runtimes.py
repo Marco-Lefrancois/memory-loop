@@ -66,20 +66,29 @@ class WorkerRuntimeSpec:
 
 
 def _resolve_npm_windows_binary(bin_name: str) -> Optional[str]:
-    """Résout le `.exe` npm réel sous Windows pour le binaire `bin_name`.
+    """Résout le binaire d'un CLI npm sous Windows pour le fallback pane-run.
 
-    Les shims npm (`<bin>.ps1`, `<bin>.cmd`) ne sont pas exécutables via
-    Start-Process sous Windows : on résout donc le chemin absolu du `.exe`
-    du paquet npm (`$APPDATA/npm/<bin>.exe`), sinon via shutil.which
-    (résultat retenu uniquement s'il s'agit d'un `.exe`).
+    Deux topologies npm coexistent (ground truth locale) :
+
+    - paquets embarquant un ``.exe`` (ex: ``opencode-ai``) — résolu en priorité ;
+    - paquets ne générant que des shims (ex: ``cline``) → ``<bin>.cmd`` /
+      ``<bin>.ps1``. Ces shims ne sont **pas** exécutables via ``Start-Process``
+      ("%1 n'est pas une application Win32 valide") mais le sont via l'opérateur
+      d'appel PowerShell ``& "<chemin>"`` employé par le fallback pane-run.
+
+    Priorité de résolution : ``$APPDATA/npm/<bin>.exe`` → ``<bin>.cmd`` →
+    ``shutil.which(<bin>.exe)`` → ``shutil.which(<bin>.cmd)``.
     """
     appdata = os.environ.get("APPDATA", "")
-    exe_candidate = Path(appdata) / "npm" / f"{bin_name}.exe"
-    if exe_candidate.exists():
-        return str(exe_candidate)
-    found = shutil.which(f"{bin_name}.exe") or shutil.which(bin_name)
-    if found and found.endswith(".exe"):
-        return found
+    npm_dir = Path(appdata) / "npm"
+    for suffix in (".exe", ".cmd"):
+        candidate = npm_dir / f"{bin_name}{suffix}"
+        if candidate.exists():
+            return str(candidate)
+    for suffix in (".exe", ".cmd"):
+        found = shutil.which(f"{bin_name}{suffix}")
+        if found:
+            return found
     return None
 
 
