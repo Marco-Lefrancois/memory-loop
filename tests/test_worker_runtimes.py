@@ -157,3 +157,28 @@ def test_spec_is_extensible_without_branches():
         kind="futur-cli", one_shot_flags=["--auto"], model_flag="--model"
     )
     assert custom.build_flags(model="x") == ["--auto", "--model", "x"]
+
+
+def test_needs_pane_run_fallback_for_cmd_shim(tmp_path, monkeypatch):
+    """Shim .cmd (Cline) : court-circuit vers pane-run (Herdr échoue/volet fantôme)."""
+    fake_cmd = tmp_path / "npm" / "cline.cmd"
+    fake_cmd.parent.mkdir()
+    fake_cmd.write_text("@ECHO off\r\n", encoding="utf-8")
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+    monkeypatch.setattr("shutil.which", lambda name: None)
+    assert get_worker_runtime("cline").needs_pane_run_fallback() is True
+
+
+def test_needs_pane_run_fallback_false_for_native_exe(tmp_path, monkeypatch):
+    """Exe natif (OpenCode) : lancement Herdr natif conservé (pas de court-circuit)."""
+    fake_exe = tmp_path / "npm" / "opencode.exe"
+    fake_exe.parent.mkdir()
+    fake_exe.write_bytes(b"MZ")
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+    monkeypatch.setattr("shutil.which", lambda name: None)
+    assert get_worker_runtime("opencode").needs_pane_run_fallback() is False
+
+
+def test_needs_pane_run_fallback_false_without_resolver():
+    """Runtime sans résolveur déclaré (pi/omp) : décision False."""
+    assert get_worker_runtime("pi").needs_pane_run_fallback() is False

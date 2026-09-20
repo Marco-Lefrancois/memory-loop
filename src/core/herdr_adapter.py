@@ -305,9 +305,11 @@ class HerdrAdapter:
         res = self._exec(args, timeout=timeout_sec)
 
         # Sur Windows, les shims npm (.cmd/.ps1) ne sont pas exécutables via Start-Process
-        # ("%1 n'est pas une application Win32 valide"). On résout le .exe réel via le
-        # registre SSOT multi-runtimes (ADR-0346) — zéro branche par runtime ici.
-        if not res.get("success"):
+        # ("%1 n'est pas une application Win32 valide") et l'échec Herdr est ASYNCHRONE
+        # (retour `launch_pending` puis volet mort → worker fantôme). On court-circuite
+        # donc d'emblée vers le fallback `pane run` déterministe, en résolvant le binaire
+        # réel via le registre SSOT multi-runtimes (ADR-0346) — zéro branche par runtime.
+        if not res.get("success") or self._runtime_needs_pane_run(kind):
             resolved_bin = kind
             if sys.platform == "win32":
                 try:
@@ -352,6 +354,28 @@ class HerdrAdapter:
             }
 
         return res
+
+    def _runtime_needs_pane_run(self, kind: str) -> bool:
+        """True si le runtime exige d'emblée le fallback `pane run` (shim npm).
+
+        Sur Windows, Herdr ne peut pas lancer un shim npm (`.cmd`/`.ps1`) et son
+        échec est asynchrone (worker fantôme). La décision est déléguée au
+        registre SSOT multi-runtimes (ADR-0346), seul détenteur de la topologie
+        binaire de chaque CLI.
+        """
+        if sys.platform != "win32":
+            return False
+        try:
+            from src.core.worker_runtimes import get_worker_runtime
+
+            return get_worker_runtime(kind).needs_pane_run_fallback()
+        except (ImportError, KeyError) as exc:
+            logger.debug(
+                "Registre worker_runtimes indisponible pour la décision pane-run.",
+                exc_info=True,
+                extra={"kind": kind, "error": str(exc)},
+            )
+            return False
 
     def prompt_agent(
         self,

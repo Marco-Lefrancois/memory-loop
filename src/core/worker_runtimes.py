@@ -64,6 +64,18 @@ class WorkerRuntimeSpec:
             return None
         return self.resolve_windows_binary()
 
+    def needs_pane_run_fallback(self) -> bool:
+        """Indique si le fallback `pane run` doit court-circuiter le lancement Herdr.
+
+        Herdr lance l'agent via ``Start-Process`` sous Windows : un shim npm
+        (``.cmd``/``.ps1``) échoue (« %1 n'est pas une application Win32 valide »)
+        et **l'échec est asynchrone** — Herdr retourne ``launch_pending`` puis le
+        volet meurt, produisant un worker fantôme. Dès que le binaire résolu
+        n'est pas un ``.exe`` natif, le fallback déterministe est requis d'emblée.
+        """
+        binary = self.resolve_binary()
+        return bool(binary) and not binary.lower().endswith(".exe")
+
 
 def _resolve_npm_windows_binary(bin_name: str) -> Optional[str]:
     """Résout le binaire d'un CLI npm sous Windows pour le fallback pane-run.
