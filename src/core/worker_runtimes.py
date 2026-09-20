@@ -28,10 +28,13 @@ from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
 # Modèle par défaut des missions de build déléguées au runtime Cline.
-# Route LiteLLM nmedia_cloud (même proxy qu'OpenCode). Identifiant demandé
-# explicitement par l'humain ; à confirmer à l'E2E (proxy injoignable 429
-# lors de l'audit : `GET /v1/models` en échec temporaire).
-DEFAULT_CLINE_MODEL = "nmedia_cloud/glm-5.3-flash"
+# Fournisseur natif Cline 3.x (ground truth @cline/llms/dist/models.js) :
+# - Gratuit  : `cline-free/deepseek-v4.1-flash`  (confirmé dans le binaire installé)
+# - Payant  : `cline-pass/deepseek-v4.1-flash`
+# Ce modèle N'EST PAS routé via le proxy LiteLLM nmedia_cloud ; il utilise
+# l'infrastructure Cline Bot Inc. directement (auto-approbation native,
+# pas de clé utilisateur requise).
+DEFAULT_CLINE_MODEL = "cline-free/deepseek-v4.1-flash"
 
 
 @dataclass(frozen=True)

@@ -72,9 +72,9 @@ def test_cline_one_shot_native_auto_approve():
 
 
 def test_cline_default_model_is_glm():
-    """Cline : modèle par défaut glm-5.3-flash (choix humain, route nmedia_cloud)."""
+    """Cline : modèle par défaut gratuit natif (DeepSeek-V4.1-Flash via Cline Free)."""
     spec = get_worker_runtime("cline")
-    assert spec.default_model == DEFAULT_CLINE_MODEL == "nmedia_cloud/glm-5.3-flash"
+    assert spec.default_model == DEFAULT_CLINE_MODEL == "cline-free/deepseek-v4.1-flash"
     assert spec.build_flags(model=DEFAULT_CLINE_MODEL) == [
         "--model",
         DEFAULT_CLINE_MODEL,
