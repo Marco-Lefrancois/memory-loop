@@ -46,8 +46,12 @@ class OpenCodeMeter:
                             fps.add(f"opencode_{meta['opencode_session_id']}")
                         else:
                             fps.add(f"{e.get('timestamp')}_{e.get('action')}_{e.get('target')}")
-                    except Exception:
-                        pass
+                    except (json.JSONDecodeError, KeyError) as e:
+                        logger.debug(
+                            "Ligne fingerprint OpenCode invalide ignorée",
+                            exc_info=True,
+                            extra={"error": str(e)},
+                        )
         except Exception as err:
             logger.debug(f"Erreur lecture fingerprints OpenCode: {err}")
         return fps
@@ -63,7 +67,21 @@ class OpenCodeMeter:
         comb = f"{t} {d}"
 
         # 1. Boire & Frères
-        if any(k in comb for k in ["boire", "couv", "inc-", "rec-", "vnt-", "incubation", "réception", "reception", "poussin", "couvoir"]):
+        if any(
+            k in comb
+            for k in [
+                "boire",
+                "couv",
+                "inc-",
+                "rec-",
+                "vnt-",
+                "incubation",
+                "réception",
+                "reception",
+                "poussin",
+                "couvoir",
+            ]
+        ):
             proj = "BoireFrere_Segment2"
             if any(k in comb for k in ["rec", "réception", "reception", "quai"]):
                 mod = "01-reception"
@@ -76,8 +94,13 @@ class OpenCodeMeter:
             return proj, mod
 
         # 2. Metro (Alimentation, Commerce, Santé / Pharma)
-        if any(k in comb for k in ["metro", "onetrust", "papercut", "mma-", "circulaire", "rabais"]):
-            if any(k in comb for k in ["sante", "santé", "pharma", "rxpro", "jean coutu", "brunet", "dossier"]):
+        if any(
+            k in comb for k in ["metro", "onetrust", "papercut", "mma-", "circulaire", "rabais"]
+        ):
+            if any(
+                k in comb
+                for k in ["sante", "santé", "pharma", "rxpro", "jean coutu", "brunet", "dossier"]
+            ):
                 proj = "Metro_SANTE"
                 mod = "AccesDossier" if "dossier" in comb else "OneTrust_SANTE"
             elif any(k in comb for k in ["commerce", "ecom"]):
@@ -114,15 +137,19 @@ class OpenCodeMeter:
                 data = json.loads(raw_model)
                 if isinstance(data, dict):
                     return data.get("id") or data.get("name") or raw_model
-            except Exception:
-                pass
+            except json.JSONDecodeError as e:
+                logger.debug(
+                    "Parsing JSON du modèle OpenCode ignoré",
+                    exc_info=True,
+                    extra={"raw_model": raw_model, "error": str(e)},
+                )
             return raw_model
         if isinstance(raw_model, dict):
             return raw_model.get("id") or raw_model.get("name") or "claude-opus-4.8"
         return str(raw_model)
 
     @classmethod
-    def sync(cls, opencode_db_path: Optional[Path] = None) -> Dict[str, int]:
+    def sync(cls, opencode_db_path: Optional[Path] = None) -> Dict[str, Any]:
         """
         Synchronise les sessions OpenCode Desktop vers les token_ledger.jsonl (projet et global).
         Idempotent : ne réinjecte jamais une session déjà indexée.
@@ -140,25 +167,28 @@ class OpenCodeMeter:
         try:
             # Connexion URI read-only pour ne jamais bloquer l'IDE OpenCode
             uri = f"file:{db_path.as_posix()}?mode=ro"
-            conn = sqlite3.connect(uri, uri=True, timeout=5.0)
-            cur = conn.cursor()
-
-            cur.execute("""
-                SELECT id, slug, title, directory, cost, tokens_input, tokens_output, model, time_created, time_updated
-                FROM session
-                WHERE (tokens_input > 0 OR tokens_output > 0)
-                ORDER BY time_created ASC
-            """)
-            sessions = cur.fetchall()
-            conn.close()
+            with sqlite3.connect(uri, uri=True, timeout=5.0) as conn:
+                cur = conn.cursor()
+                cur.execute("""
+                    SELECT id, slug, title, directory, cost, tokens_input, tokens_output, model, time_created, time_updated
+                    FROM session
+                    WHERE (tokens_input > 0 OR tokens_output > 0)
+                    ORDER BY time_created ASC
+                """)
+                sessions = cur.fetchall()
         except Exception as e:
-            logger.warning(f"Erreur d'accès à la base OpenCode {db_path}: {e}")
+            logger.warning(
+                "Erreur d'accès à la base OpenCode",
+                extra={"db_path": str(db_path), "error": str(e)},
+            )
             return {"synced": 0, "skipped": 0, "error": str(e)}
 
         entries_to_append: List[Dict[str, Any]] = []
 
         for row in sessions:
-            s_id, slug, title, directory, cost_db, t_in, t_out, model_raw, t_created, t_updated = row
+            s_id, slug, title, directory, cost_db, t_in, t_out, model_raw, t_created, t_updated = (
+                row
+            )
             fp = f"opencode_{s_id}"
             if fp in existing_fps:
                 skipped_count += 1
@@ -220,6 +250,8 @@ class OpenCodeMeter:
                         with open(proj_ledger, "a", encoding="utf-8") as pf:
                             pf.write(json.dumps(ent, ensure_ascii=False) + "\n")
 
-            logger.info(f"[OPENCODE METER] {synced_count} sessions OpenCode Desktop synchronisées dans le Token Ledger.")
+            logger.info(
+                f"[OPENCODE METER] {synced_count} sessions OpenCode Desktop synchronisées dans le Token Ledger."
+            )
 
         return {"synced": synced_count, "skipped": skipped_count}

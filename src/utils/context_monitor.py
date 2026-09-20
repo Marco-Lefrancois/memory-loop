@@ -9,14 +9,18 @@ lorsque la session dépasse 60% du budget token maximal.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Any, Optional, List
+
+logger = logging.getLogger("context_monitor")
 
 
 @dataclass
 class ContextHealthReport:
     """Rapport de santé contextuelle et estimation de la zone de raisonnement."""
+
     total_chars: int
     estimated_tokens: int
     max_context_window: int
@@ -42,8 +46,8 @@ class ContextMonitor:
 
     # Seuils de référence standards
     DEFAULT_MAX_CONTEXT = 200_000  # 200k tokens par défaut
-    SMART_THRESHOLD = 0.40         # 40%
-    DUMB_ZONE_THRESHOLD = 0.60     # 60% (Saturation cognitive)
+    SMART_THRESHOLD = 0.40  # 40%
+    DUMB_ZONE_THRESHOLD = 0.60  # 60% (Saturation cognitive)
 
     def __init__(self, max_context_tokens: int = DEFAULT_MAX_CONTEXT) -> None:
         self.max_context_tokens = max_context_tokens
@@ -89,12 +93,26 @@ class ContextMonitor:
         if path.exists():
             for f in path.rglob("*.md"):
                 rel = str(f).replace("\\", "/")
-                if any(x in rel for x in ["node_modules", ".git", "reference", "memory/cache", "scratch", ".system_generated"]):
+                if any(
+                    x in rel
+                    for x in [
+                        "node_modules",
+                        ".git",
+                        "reference",
+                        "memory/cache",
+                        "scratch",
+                        ".system_generated",
+                    ]
+                ):
                     continue
                 try:
                     total_text.append(f.read_text(encoding="utf-8", errors="ignore"))
-                except Exception:
-                    pass
+                except OSError as e:
+                    logger.debug(
+                        "Lecture fichier projet ignorée",
+                        exc_info=True,
+                        extra={"file": str(f), "error": str(e)},
+                    )
 
         combined = "\n".join(total_text)
         return self.evaluate_text(combined, label=f"project_{path.name}")
@@ -115,9 +133,13 @@ class ContextMonitor:
         bar_length = 30
         filled = min(bar_length, int((report.occupancy_pct / 100.0) * bar_length))
         bar = "█" * filled + "░" * (bar_length - filled)
-        
-        status_icon = "🟢" if report.zone == "SMART_ZONE" else ("🟡" if report.zone == "CAUTION_ZONE" else "🔴")
-        
+
+        status_icon = (
+            "🟢"
+            if report.zone == "SMART_ZONE"
+            else ("🟡" if report.zone == "CAUTION_ZONE" else "🔴")
+        )
+
         lines = [
             f"Context Meter: [{bar}] {report.occupancy_pct:.1f}% ({report.estimated_tokens:,} / {report.max_context_window:,} tokens)",
             f"{status_icon} Zone: {report.zone} — {report.recommendation}",

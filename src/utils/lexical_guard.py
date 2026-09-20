@@ -12,11 +12,14 @@ Inspiré de l'architecture OKF Token Injection (Towards Data Science / Aug 2026)
 from __future__ import annotations
 
 import hashlib
+import logging
 import re
 import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+
+logger = logging.getLogger("lexical_guard")
 
 
 ROSETTA_CANARY_PHRASE = "mLoop SSOT: Règles RM-01 & isolation d'état. BPE-Check [!NOTE] 🚀"
@@ -38,6 +41,7 @@ SENSITIVE_CONTROL_TOKENS = [
 @dataclass
 class LexicalCheckResult:
     """Résultat du contrôle d'intégrité lexicale."""
+
     canary_hash: str
     is_unicode_nfc: bool
     control_token_leaks: List[str]
@@ -96,9 +100,16 @@ class LexicalIntegrityGuard:
             return ""
         sanitized = text
         for pattern in SENSITIVE_CONTROL_TOKENS:
+
             def repl(m):
                 val = m.group(0)
-                return val.replace("<", "&lt;").replace(">", "&gt;").replace("[", "\\[").replace("]", "\\]")
+                return (
+                    val.replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("[", "\\[")
+                    .replace("]", "\\]")
+                )
+
             sanitized = re.sub(pattern, repl, sanitized)
         return sanitized
 
@@ -127,20 +138,28 @@ class LexicalIntegrityGuard:
         """Inspecte tous les EvidencePacks et Stories du projet pour s'assurer de l'absence de fuites."""
         path = Path(project_path)
         all_text = []
-        
+
         if path.exists():
             for f in path.rglob("*.json"):
                 if "evidence" in str(f) or "supersession" in str(f):
                     try:
                         all_text.append(f.read_text(encoding="utf-8", errors="ignore"))
-                    except Exception:
-                        pass
+                    except OSError as e:
+                        logger.debug(
+                            "Lecture evidence JSON ignorée",
+                            exc_info=True,
+                            extra={"file": str(f), "error": str(e)},
+                        )
             for f in path.rglob("*.md"):
                 if "backlog" in str(f) or "docs" in str(f):
                     try:
                         all_text.append(f.read_text(encoding="utf-8", errors="ignore"))
-                    except Exception:
-                        pass
+                    except OSError as e:
+                        logger.debug(
+                            "Lecture story MD ignorée",
+                            exc_info=True,
+                            extra={"file": str(f), "error": str(e)},
+                        )
 
         combined = "\n".join(all_text)
         return cls.inspect_text(combined)

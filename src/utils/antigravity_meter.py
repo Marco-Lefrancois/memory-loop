@@ -42,8 +42,12 @@ class AntigravityMeter:
                             fps.add(f"{meta['conversation_id']}_{meta['antigravity_step']}")
                         else:
                             fps.add(f"{e.get('timestamp')}_{e.get('action')}_{e.get('target')}")
-                    except Exception:
-                        pass
+                    except (json.JSONDecodeError, KeyError) as e:
+                        logger.debug(
+                            "Ligne fingerprint Antigravity invalide ignorée",
+                            exc_info=True,
+                            extra={"error": str(e)},
+                        )
         except Exception as e:
             logger.debug(f"Erreur lecture fingerprints: {e}")
         return fps
@@ -83,7 +87,13 @@ class AntigravityMeter:
             return []
 
         def flush_turn():
-            nonlocal current_user_request, current_user_time, turn_prompt_chars, turn_completion_chars, turn_step_indices, turn_actions
+            nonlocal \
+                current_user_request, \
+                current_user_time, \
+                turn_prompt_chars, \
+                turn_completion_chars, \
+                turn_step_indices, \
+                turn_actions
             if not turn_step_indices:
                 return
 
@@ -103,9 +113,15 @@ class AntigravityMeter:
 
             # Modèle & Tarification Gemini 3.8 Flash ($0.15 input / $0.60 output per 1M)
             pricing = TokenLedger.DEFAULT_PRICING_PER_1M.get(active_model, (0.15, 0.60))
-            cost_usd = (prompt_tokens / 1_000_000.0) * pricing[0] + (completion_tokens / 1_000_000.0) * pricing[1]
+            cost_usd = (prompt_tokens / 1_000_000.0) * pricing[0] + (
+                completion_tokens / 1_000_000.0
+            ) * pricing[1]
 
-            target_text = current_user_request[:120].strip() if current_user_request else f"Turn step {turn_step_indices[0]}-{last_step}"
+            target_text = (
+                current_user_request[:120].strip()
+                if current_user_request
+                else f"Turn step {turn_step_indices[0]}-{last_step}"
+            )
             target_text = re.sub(r"\s+", " ", target_text)
 
             ts = current_user_time or datetime.now(timezone.utc).isoformat()
@@ -181,13 +197,23 @@ class AntigravityMeter:
                 resp_content = data.get("content", "") or ""
                 tool_calls = data.get("tool_calls", []) or []
 
-                turn_completion_chars += len(thinking) + len(resp_content) + len(json.dumps(tool_calls))
+                turn_completion_chars += (
+                    len(thinking) + len(resp_content) + len(json.dumps(tool_calls))
+                )
                 if tool_calls:
                     for tc in tool_calls:
                         t_name = tc.get("name") or "tool"
                         turn_actions.append(t_name)
 
-            elif s_type in ("RUN_COMMAND", "VIEW_FILE", "GREP_SEARCH", "CODE_ACTION", "LIST_DIRECTORY", "READ_URL_CONTENT", "BROWSER_SUBAGENT"):
+            elif s_type in (
+                "RUN_COMMAND",
+                "VIEW_FILE",
+                "GREP_SEARCH",
+                "CODE_ACTION",
+                "LIST_DIRECTORY",
+                "READ_URL_CONTENT",
+                "BROWSER_SUBAGENT",
+            ):
                 turn_step_indices.append(step_idx)
                 turn_prompt_chars += len(content)
 
@@ -214,7 +240,12 @@ class AntigravityMeter:
 
         brain_dir = DEFAULT_BRAIN_DIR
         if not brain_dir.exists():
-            return {"synced": 0, "total_tokens": 0, "total_cost_usd": 0.0, "message": "Répertoire brain introuvable"}
+            return {
+                "synced": 0,
+                "total_tokens": 0,
+                "total_cost_usd": 0.0,
+                "message": "Répertoire brain introuvable",
+            }
 
         conv_dirs: List[Path] = []
         if conversation_id:
@@ -245,7 +276,9 @@ class AntigravityMeter:
         total_toks = sum(e["total_tokens_est"] for e in all_new_entries)
         total_cost = sum(e["cost_usd_est"] for e in all_new_entries)
 
-        logger.info(f"Synchronisation Antigravity : {len(all_new_entries)} tours synchronisés ({total_toks:,} tokens, ${total_cost:.4f})")
+        logger.info(
+            f"Synchronisation Antigravity : {len(all_new_entries)} tours synchronisés ({total_toks:,} tokens, ${total_cost:.4f})"
+        )
 
         return {
             "synced_turns": len(all_new_entries),

@@ -11,6 +11,7 @@ Verrou consultatif inter-processus et inter-thread compatible Windows et Unix :
 
 from __future__ import annotations
 
+import logging
 import os
 import sys
 import time
@@ -18,6 +19,8 @@ import uuid
 import threading
 from pathlib import Path
 from typing import Optional
+
+logger = logging.getLogger("file_lock")
 
 
 class FileLockTimeoutError(TimeoutError):
@@ -46,6 +49,7 @@ def _try_os_lock(fd: int) -> bool:
     """Tente d'acquérir le verrou OS en mode non-bloquant."""
     if sys.platform == "win32":
         import msvcrt
+
         try:
             # Revenir au début du fichier et verrouiller 1 octet
             os.lseek(fd, 0, os.SEEK_SET)
@@ -55,6 +59,7 @@ def _try_os_lock(fd: int) -> bool:
             return False
     else:
         import fcntl
+
         try:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             return True
@@ -66,17 +71,27 @@ def _unlock_os_lock(fd: int) -> None:
     """Libère le verrou OS."""
     if sys.platform == "win32":
         import msvcrt
+
         try:
             os.lseek(fd, 0, os.SEEK_SET)
             msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)
-        except (OSError, IOError):
-            pass
+        except (OSError, IOError) as e:
+            logger.debug(
+                "Déverrouillage OS (Windows) ignoré",
+                exc_info=True,
+                extra={"fd": fd, "error": str(e)},
+            )
     else:
         import fcntl
+
         try:
             fcntl.flock(fd, fcntl.LOCK_UN)
-        except (OSError, IOError):
-            pass
+        except (OSError, IOError) as e:
+            logger.debug(
+                "Déverrouillage OS (Unix) ignoré",
+                exc_info=True,
+                extra={"fd": fd, "error": str(e)},
+            )
 
 
 class InterProcessFileLock:
@@ -151,8 +166,12 @@ class InterProcessFileLock:
                 _unlock_os_lock(self._fd)
                 try:
                     os.close(self._fd)
-                except OSError:
-                    pass
+                except OSError as e:
+                    logger.debug(
+                        "Fermeture du descripteur (release) ignorée",
+                        exc_info=True,
+                        extra={"fd": self._fd, "path": str(self.path), "error": str(e)},
+                    )
                 self._fd = None
         finally:
             if self._thread_lock is not None:
@@ -163,8 +182,12 @@ class InterProcessFileLock:
         if self._fd is not None:
             try:
                 os.close(self._fd)
-            except OSError:
-                pass
+            except OSError as e:
+                logger.debug(
+                    "Fermeture du descripteur (cleanup) ignorée",
+                    exc_info=True,
+                    extra={"fd": self._fd, "path": str(self.path), "error": str(e)},
+                )
             self._fd = None
         if self._thread_lock is not None:
             self._thread_lock.release()
