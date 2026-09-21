@@ -5,6 +5,48 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [2.34.0] - 2026-09-21
+
+### Added
+- **EPIC-13 Code Graph Intelligence — 6/6 stories DONE_TESTED** :
+  - `MLOOP-131-BE` : Pipeline hybride CodeGraph → Graft → Intersection (`src/pipelines/hybrid_context_engine.py`, 253L, 22 tests)
+  - `MLOOP-132-BE` : Test Graft Deep Build pour QA sémantique (`src/pipelines/graft_deep_test.py`, 286L, 21 tests)
+  - `MLOOP-133-BE` : Fallback automatique Graft→CodeGraph (intégré dans `hybrid_context_engine.py`, 32 tests)
+  - `MLOOP-134-BE` : Mesure tokens réelle via APIs LiteLLM (`src/pipelines/token_counter.py`, 263L, 18 tests)
+  - `MLOOP-135-BE` : Benchmark multi-dépôts 3 tailles (`src/pipelines/multi_repo_benchmark.py`, 176L, 22 tests)
+  - `MLOOP-130-BE` : Spike PoC Graft vs CodeGraph (benchmark empirique, rapport d'arbitrage)
+
+### Changed
+- **EPIC-12 Phase 4 Hardening — 4/4 stories DONE_TESTED** :
+  - `MLOOP-120-BE` : ADR-0383 Harnais QA Phase 4 déterministe + checklist + parité CLI
+  - `MLOOP-122-BE` : `qa_certification_hash` SHA-256 dans `GateApprovalRecord` + Handoff Phase 4
+  - `MLOOP-123-BE` : Vibe-check WARNING Phase 4 (Check 17) + Zombie Reap systématique (toutes gates)
+  - `MLOOP-124-BE` : Logs structurés 5 niveaux + `qa_certifier.py` refactoré 282L (split models + CEL)
+
+- **EPIC-11 Error Observability — 1/1 story DONE_TESTED** :
+  - `MLOOP-110-BE` : RotatingFileHandler (errors.log 5Mo/5 backups, mloop.log 10Mo/3 backups)
+
+- **EPIC-10 Sovereign Excellence — 10/10 stories DONE_TESTED** :
+  - `MLOOP-100-BE` : Jira sync_engine 914L→237L + 6 sous-modules
+  - `MLOOP-102-BE` : RHO hybrid search BM25+Vector+Graph + embeddings locales (mxbai-embed-large)
+  - `MLOOP-103-BE` : MCP SSE transport (mcp_event_bus, mcp_sse_server, FastAPI)
+  - `MLOOP-104-FE` : Visualiseur D3.js force-directed graph dans Cockpit
+  - `MLOOP-106-BE` : 4 handlers CLI découpés (analysis, project, export, architecture) → 8 nouveaux modules
+  - `MLOOP-107-BE` : Focus lock 5 bugs corrigés + 8 tests TDD
+  - `MLOOP-108-BE` : Harnais E2E boot stabilisé + alignement clé LiteLLM Metro
+  - `MLOOP-109-BE` : `herdr_adapter.py` 1017L→44L façade + 5 mixins (core, daemon, panes, agents, worker)
+
+- **Standards & Protocoles** :
+  - `STORY_LIFECYCLE_PROTOCOL.md` : 8 statuts unifiés (DRAFT→IN_ANALYZE→READY_FOR_GROOMING→READY_FOR_DEV→IN_DEV→DONE_TESTED→SHIPPED + IN_REVIEW)
+  - `ADR-0383` : Harnais QA Phase 4 déterministe 6 niveaux (Pytest L1, AST L2, CEL L3, NLI L4, Leakage L5, Sentinel L6)
+  - `CLI_PIPELINE_GUIDE.md` : 122 commandes synchronisées (ADR-0370)
+
+### Fixed
+- 93 nouveaux tests EPIC-13 (100% passing)
+- Suite complète 955 tests au vert (2 échecs pré-existants non-bloquants)
+
+---
+
 ## [2.33.0] - 2026-09-20
 
 ### Added
