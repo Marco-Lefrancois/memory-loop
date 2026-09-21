@@ -3,9 +3,12 @@ Sous-module Jira : md_cleaner.py
 Responsabilité : Chargement et nettoyage des descriptions Markdown locales
 avant envoi vers l'API Jira Cloud.
 """
+import logging
 import re
 from pathlib import Path
 from src.state import ProjectLayout
+
+logger = logging.getLogger(__name__)
 
 
 def load_rich_description(project_path: Path, relative_path_str: str, default_desc: str) -> str:
@@ -17,8 +20,8 @@ def load_rich_description(project_path: Path, relative_path_str: str, default_de
     if exact_file.exists():
         try:
             return exact_file.read_text(encoding="utf-8")
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.debug(f"Erreur lecture {exact_file}: {exc}", exc_info=True)
     return default_desc
 
 

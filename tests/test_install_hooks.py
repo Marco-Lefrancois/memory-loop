@@ -53,7 +53,7 @@ class TestInstallHooks:
         assert "pre-commit" in out
 
     def test_install_fails_gracefully_without_git(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.setattr("src.commands.handlers.project._FRAMEWORK_ROOT", tmp_path / "no_git_root")
+        monkeypatch.setattr("src.commands.handlers.project_core._FRAMEWORK_ROOT", tmp_path / "no_git_root")
         no_git = tmp_path / "project_no_git"
         no_git.mkdir()
         rc = handle_install_hooks(_make_args(), _make_state(), no_git)

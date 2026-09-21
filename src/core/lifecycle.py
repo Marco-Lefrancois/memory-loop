@@ -25,11 +25,18 @@ logger = logging.getLogger("lifecycle")
 
 class ProjectLifecycleStage(str, Enum):
     """Les 5 phases séquentielles officielles du cycle de vie mLoop (ADR-0375)."""
-    STAGE_1_INGEST = "STAGE_1_INGEST"                 # Phase 1 : INGEST & EXPLORE (Amorçage, Ingestion & Cartographie)
-    STAGE_2_PLAN_ANALYSE = "STAGE_2_PLAN_ANALYSE"     # Phase 2 : PLAN & ANALYSE (Macro-Planification T-Shirt/SOW & Micro-Analyse Stories)
-    STAGE_3_BUILD = "STAGE_3_BUILD"                   # Phase 3 : BUILD & DEV (Développement physique & Tests unitaires)
-    STAGE_4_VALIDATE = "STAGE_4_VALIDATE"             # Phase 4 : VALIDATE & QA (Audit QA, Evals & Non-régression)
-    STAGE_5_SHIP = "STAGE_5_SHIP"                     # Phase 5 : SHIP & SYNC (Distribution Jira, Git & Clôture)
+
+    STAGE_1_INGEST = (
+        "STAGE_1_INGEST"  # Phase 1 : INGEST & EXPLORE (Amorçage, Ingestion & Cartographie)
+    )
+    STAGE_2_PLAN_ANALYSE = "STAGE_2_PLAN_ANALYSE"  # Phase 2 : PLAN & ANALYSE (Macro-Planification T-Shirt/SOW & Micro-Analyse Stories)
+    STAGE_3_BUILD = (
+        "STAGE_3_BUILD"  # Phase 3 : BUILD & DEV (Développement physique & Tests unitaires)
+    )
+    STAGE_4_VALIDATE = (
+        "STAGE_4_VALIDATE"  # Phase 4 : VALIDATE & QA (Audit QA, Evals & Non-régression)
+    )
+    STAGE_5_SHIP = "STAGE_5_SHIP"  # Phase 5 : SHIP & SYNC (Distribution Jira, Git & Clôture)
 
     # Rétro-compatibilité legacy ADR-0339 (préservés pour compatibilité sérialisation & tests)
     STAGE_0_TSHIRT = "STAGE_0_TSHIRT"
@@ -120,7 +127,6 @@ COMMAND_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
     "lifecycle-status": ProjectLifecycleStage.STAGE_1_INGEST,
     "lifecycle-clean": ProjectLifecycleStage.STAGE_1_INGEST,
     "gate-approve": ProjectLifecycleStage.STAGE_1_INGEST,
-    
     # Phase 2 : PLAN & ANALYSE (Macro-Planification & Micro-Analyse)
     "to-tshirt": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
     "to-sow": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
@@ -139,20 +145,17 @@ COMMAND_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
     "worker-status": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
     "worker-close": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
     "worker-harvest": ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
-    
     # Phase 3 : BUILD & DEV
     "self-dev": ProjectLifecycleStage.STAGE_3_BUILD,
     "confidence": ProjectLifecycleStage.STAGE_3_BUILD,
     "worker-spawn": ProjectLifecycleStage.STAGE_3_BUILD,
     "code-impact": ProjectLifecycleStage.STAGE_3_BUILD,
     "code-affected": ProjectLifecycleStage.STAGE_3_BUILD,
-    
     # Phase 4 : VALIDATE & QA
     "aoep": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "eval": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "audit-loop": ProjectLifecycleStage.STAGE_4_VALIDATE,
     "validate-sprint": ProjectLifecycleStage.STAGE_4_VALIDATE,
-    
     # Phase 5 : SHIP & SYNC
     "jira-sync": ProjectLifecycleStage.STAGE_5_SHIP,
     "jira_sync": ProjectLifecycleStage.STAGE_5_SHIP,
@@ -171,16 +174,19 @@ WORKER_TASK_TYPE_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
 
 class GateApprovalRecord(BaseModel):
     """Enregistrement infalsifiable d'approbation d'une Porte de Gouvernance."""
+
     gate_number: int
     gate_name: str
     approved_at_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     approver: str
     notes: str = ""
     checksum: str = ""
+    qa_certification_hash: Optional[str] = None
 
 
 class ProjectLifecycleState(BaseModel):
     """État persistant et canonique du cycle de vie d'un projet client (SSOT)."""
+
     project_name: str
     current_stage: ProjectLifecycleStage = ProjectLifecycleStage.STAGE_1_INGEST
     gates: Dict[str, GateApprovalRecord] = Field(default_factory=dict)
@@ -189,7 +195,10 @@ class ProjectLifecycleState(BaseModel):
 
     @property
     def canonical_stage(self) -> ProjectLifecycleStage:
-        if self.current_stage in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST):
+        if self.current_stage in (
+            ProjectLifecycleStage.STAGE_0_TSHIRT,
+            ProjectLifecycleStage.STAGE_1_INGEST,
+        ):
             return ProjectLifecycleStage.STAGE_1_INGEST
         if self.current_stage in (
             ProjectLifecycleStage.STAGE_1_SOW,
@@ -286,9 +295,11 @@ class ProjectLifecycleManager:
                 raw_existing = ProjectLifecycleStage(existing_data.get("current_stage"))
                 existing_canonical = (
                     ProjectLifecycleStage.STAGE_1_INGEST
-                    if raw_existing in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
+                    if raw_existing
+                    in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
                     else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
-                    if raw_existing in (
+                    if raw_existing
+                    in (
                         ProjectLifecycleStage.STAGE_1_SOW,
                         ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
                         ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
@@ -405,21 +416,33 @@ class ProjectLifecycleManager:
         """
         Contrôle déterministe pré-vol : vérifie si la commande CLI est autorisée
         pour l'étape actuelle du projet.
-        
+
         Args:
             project_path: Chemin vers la racine du projet
             command_name: Nom de la commande CLI
             task_type: Type de mission pour les workers (deepening, deepsearch, validation, build, compaction)
-            
+
         Returns:
             Tuple (allowed: bool, reason: str)
         """
         # Commandes universellement autorisées quel que soit le projet ou la phase
         universal_commands = {
-            "resume", "vibe-check", "guide", "doctor", "sync", "help",
-            "fact-search", "graph-query", "code-explore", "lifecycle-status",
-            "lifecycle-clean", "gate-approve", "init",
-            "agent-resilience", "topology", "rollback",
+            "resume",
+            "vibe-check",
+            "guide",
+            "doctor",
+            "sync",
+            "help",
+            "fact-search",
+            "graph-query",
+            "code-explore",
+            "lifecycle-status",
+            "lifecycle-clean",
+            "gate-approve",
+            "init",
+            "agent-resilience",
+            "topology",
+            "rollback",
             "dream-rsi",
         }
         cmd_norm = command_name.lower().replace("_", "-")
@@ -436,7 +459,9 @@ class ProjectLifecycleManager:
         if cmd_norm == "worker-spawn":
             if task_type:
                 t_norm = task_type.lower().strip()
-                min_required = WORKER_TASK_TYPE_MIN_STAGE.get(t_norm, ProjectLifecycleStage.STAGE_3_BUILD)
+                min_required = WORKER_TASK_TYPE_MIN_STAGE.get(
+                    t_norm, ProjectLifecycleStage.STAGE_3_BUILD
+                )
             else:
                 min_required = ProjectLifecycleStage.STAGE_3_BUILD
 
@@ -447,9 +472,11 @@ class ProjectLifecycleManager:
         current_idx = STAGE_ORDER.index(state.canonical_stage)
         req_stage = (
             ProjectLifecycleStage.STAGE_1_INGEST
-            if min_required in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
+            if min_required
+            in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
             else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
-            if min_required in (
+            if min_required
+            in (
                 ProjectLifecycleStage.STAGE_1_SOW,
                 ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
                 ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
@@ -460,11 +487,17 @@ class ProjectLifecycleManager:
 
         if current_idx < required_idx:
             # Violation de porte
-            gate_needed = current_idx + 1  # La porte à franchir pour avancer (Gate 1 pour sortir de Phase 1)
+            gate_needed = (
+                current_idx + 1
+            )  # La porte à franchir pour avancer (Gate 1 pour sortir de Phase 1)
             gate_def = GATE_DEFINITIONS.get(gate_needed, {})
             gate_name = gate_def.get("name", f"Gate {gate_needed}")
             detail = ""
-            if cmd_norm == "worker-spawn" and not task_type and current_idx == STAGE_ORDER.index(ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE):
+            if (
+                cmd_norm == "worker-spawn"
+                and not task_type
+                and current_idx == STAGE_ORDER.index(ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE)
+            ):
                 detail = " En Phase 2 (STAGE_2_PLAN_ANALYSE), spécifiez un --task-type d'analyse ('deepening', 'deepsearch', 'validation') pour déléguer."
 
             return (
@@ -472,7 +505,7 @@ class ProjectLifecycleManager:
                 f"La commande '{cmd_norm}' requiert au minimum l'étape '{min_required.value}' ({STAGE_NAMES.get(min_required, min_required.value)}). "
                 f"Le projet est actuellement en '{state.current_stage.value}' ({STAGE_NAMES.get(state.current_stage, state.current_stage.value)}).{detail} "
                 f"Vous devez d'abord franchir la '{gate_name}' via "
-                f"'python src/swarm.py gate-approve --project {project_path.name} --gate {gate_needed} --approver <nom>'."
+                f"'python src/swarm.py gate-approve --project {project_path.name} --gate {gate_needed} --approver <nom>'.",
             )
 
         return True, "Étape valide."
@@ -499,9 +532,11 @@ class ProjectLifecycleManager:
         current_canonical = state.canonical_stage
         expected_canonical = (
             ProjectLifecycleStage.STAGE_1_INGEST
-            if expected_stage in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
+            if expected_stage
+            in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
             else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
-            if expected_stage in (
+            if expected_stage
+            in (
                 ProjectLifecycleStage.STAGE_1_SOW,
                 ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
                 ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,
@@ -518,7 +553,9 @@ class ProjectLifecycleManager:
         if gate_number in (0, 1):
             stories_dir = project_path / "backlog" / "stories"
             if stories_dir.exists():
-                premature = [sf.name for sf in stories_dir.glob("*.md") if sf.name.lower() != "readme.md"]
+                premature = [
+                    sf.name for sf in stories_dir.glob("*.md") if sf.name.lower() != "readme.md"
+                ]
                 if premature:
                     raise ValueError(
                         f"Approbation de Gate {gate_number} refusée (Check 13 / Anti-Ghost-Bias) : "
@@ -541,10 +578,47 @@ class ProjectLifecycleManager:
         # Validations bloquantes spécifiques Gate 4 (ADR-0383 / MLOOP-092-BE : Recette QA Opposable)
         if gate_number == 4:
             from src.core.gate4_validator import validate_gate4_approval
+
             validate_gate4_approval(project_path, approver)
+
+        # Nettoyage systématique des workers zombies (Zero Zombie Policy - ADR-0306 / ADR-0345)
+        # Exécuté AVANT la création du GateApprovalRecord, pour TOUTES les gates.
+        try:
+            from src.core.herdr_adapter import HerdrAdapter
+
+            herdr = HerdrAdapter()
+            reap_result = herdr.audit_and_reap_zombies(project_name=project_path.name)
+            reaped_count = reap_result.get("reaped_count", 0)
+            if reaped_count > 0:
+                logger.debug(
+                    f"[LIFECYCLE] {reaped_count} worker(s) zombie(s) purgé(s) avant Gate {gate_number}.",
+                    extra={"project": project_path.name, "reaped_count": reaped_count},
+                )
+        except Exception as reap_err:
+            logger.debug(
+                f"[LIFECYCLE] Zombie reap non critique ignoré avant Gate {gate_number} : {reap_err}",
+                exc_info=True,
+                extra={"project": project_path.name},
+            )
 
         # Calcul d'empreinte de sécurité sur les livrables de la phase
         checksum = cls._compute_stage_deliverables_hash(project_path, state.current_stage)
+
+        # Traçabilité Phase 4 : hash SHA-256 du rapport de certification QA (MLOOP-122-BE)
+        qa_cert_hash: Optional[str] = None
+        if gate_number == 4:
+            qa_report_path = cls._find_qa_certification_report(project_path)
+            if qa_report_path is not None:
+                qa_cert_hash = cls._compute_file_sha256(qa_report_path)
+                logger.info(
+                    f"[LIFECYCLE] Hash SHA-256 du rapport QA calculé : {qa_cert_hash[:16]}...",
+                    extra={"project": project_path.name, "qa_report": str(qa_report_path)},
+                )
+            else:
+                logger.warning(
+                    "[LIFECYCLE] Aucun rapport qa_certification_report.json trouvé pour le calcul du hash.",
+                    extra={"project": project_path.name},
+                )
 
         record = GateApprovalRecord(
             gate_number=gate_number,
@@ -552,6 +626,7 @@ class ProjectLifecycleManager:
             approver=approver,
             notes=notes,
             checksum=checksum,
+            qa_certification_hash=qa_cert_hash,
         )
 
         state.gates[str(gate_number)] = record
@@ -569,9 +644,7 @@ class ProjectLifecycleManager:
         return state
 
     @classmethod
-    def clean_premature_stories(
-        cls, project_path: Path, confirm: bool = False
-    ) -> Dict[str, Any]:
+    def clean_premature_stories(cls, project_path: Path, confirm: bool = False) -> Dict[str, Any]:
         """
         Déplace et archive de manière réversible les stories créées prématurément
         et leurs EvidencePacks dans memory/archive/premature_stories/<timestamp>/
@@ -623,13 +696,19 @@ class ProjectLifecycleManager:
                     deleted_stories.append(sf_name)
                     logger.warning(
                         f"[LIFECYCLE-CLEAN] Story prématurée archivée : {sf_name} -> {target_dest}",
-                        extra={"project": project_path.name, "file": sf_name, "archive": str(target_dest)},
+                        extra={
+                            "project": project_path.name,
+                            "file": sf_name,
+                            "archive": str(target_dest),
+                        },
                     )
 
         # 2. Déplacement des EvidencePacks et fact_dossiers sous memory/evidence/ vers l'archive
         evidence_dir = project_path / "memory" / "evidence"
         if evidence_dir.exists():
-            for ef in list(evidence_dir.glob("*_evidence.json")) + list(evidence_dir.glob("*_fact_dossier.md")):
+            for ef in list(evidence_dir.glob("*_evidence.json")) + list(
+                evidence_dir.glob("*_fact_dossier.md")
+            ):
                 archive_dir.mkdir(parents=True, exist_ok=True)
                 ef_name = ef.name
                 target_dest = archive_dir / ef_name
@@ -637,7 +716,11 @@ class ProjectLifecycleManager:
                 deleted_evidence.append(ef_name)
                 logger.warning(
                     f"[LIFECYCLE-CLEAN] Preuve prématurée archivée : {ef_name} -> {target_dest}",
-                    extra={"project": project_path.name, "file": ef_name, "archive": str(target_dest)},
+                    extra={
+                        "project": project_path.name,
+                        "file": ef_name,
+                        "archive": str(target_dest),
+                    },
                 )
 
         # 3. Réalignement macroscopique de sprint_backlog.md
@@ -670,6 +753,27 @@ class ProjectLifecycleManager:
         }
         return res_dict
 
+    @staticmethod
+    def _compute_file_sha256(file_path: Path) -> str:
+        """Calcule le hash SHA-256 d'un fichier avec context manager (ADR-0369)."""
+        h = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                h.update(chunk)
+        return h.hexdigest()
+
+    @staticmethod
+    def _find_qa_certification_report(project_path: Path) -> Optional[Path]:
+        """Recherche le fichier qa_certification_report.json dans les emplacements canoniques."""
+        candidates = [
+            project_path / "memory" / "evidence" / "qa_certification_report.json",
+            project_path / "qa_certification_report.json",
+        ]
+        for candidate in candidates:
+            if candidate.exists():
+                return candidate
+        return None
+
     @classmethod
     def _compute_stage_deliverables_hash(
         cls, project_path: Path, stage: ProjectLifecycleStage
@@ -682,7 +786,8 @@ class ProjectLifecycleManager:
             ProjectLifecycleStage.STAGE_1_INGEST
             if stage in (ProjectLifecycleStage.STAGE_0_TSHIRT, ProjectLifecycleStage.STAGE_1_INGEST)
             else ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE
-            if stage in (
+            if stage
+            in (
                 ProjectLifecycleStage.STAGE_1_SOW,
                 ProjectLifecycleStage.STAGE_2_PLAN_GRILL,
                 ProjectLifecycleStage.STAGE_2_PLAN_ANALYSE,

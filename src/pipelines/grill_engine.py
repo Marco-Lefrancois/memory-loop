@@ -5,6 +5,7 @@ Séparation stricte Faits vs Décisions, Porte de confirmation, Auto-ADR et Marq
 Support du Fact-Search préalable et journalisation (ADR-0326).
 """
 
+import logging
 from pathlib import Path
 import datetime
 import json
@@ -12,6 +13,8 @@ import re
 from typing import Dict, List, Optional, Any
 from src.state import ProjectLayout
 from src.cli import ZeroFluffConsole
+
+logger = logging.getLogger(__name__)
 
 ADR_TEMPLATE = """# 🏛️ ADR-{adr_id:03d} : {title}
 
@@ -143,8 +146,8 @@ class GrillEngine:
         try:
             with open(log_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.debug(f"Erreur écriture fact_search_log: {exc}", exc_info=True)
 
         if results:
             top = results[0]

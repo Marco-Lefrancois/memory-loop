@@ -1,12 +1,14 @@
 #!/bin/sh
 # mLoop Git Pre-Commit Hook — Garde-Fou Déterministe (MLOOP-105-BE)
 # Audite les fichiers indexés via code-check (AST ADR-0202/0369) et struct-check (récits C1-C9).
-# Bypass souverain d'urgence : MLOOP_SKIP_HOOKS=1 git commit ...
+# Bypass souverain d'urgence : définir MLOOP_SKIP_HOOKS à 1/true/yes (toute casse, zéro dépendance externe).
 
-if [ "$MLOOP_SKIP_HOOKS" = "1" ]; then
-    echo "⚠️  [mLoop Pre-Commit] Bypass souverain activé (MLOOP_SKIP_HOOKS=1)."
-    exit 0
-fi
+case "$MLOOP_SKIP_HOOKS" in
+    1|[Tt][Rr][Uu][Ee]|[Yy][Ee][Ss])
+        echo "⚠️  [mLoop Pre-Commit] Bypass souverain activé (MLOOP_SKIP_HOOKS=$MLOOP_SKIP_HOOKS)."
+        exit 0
+        ;;
+esac
 
 cd "{{ROOT_DIR}}" || exit 1
 

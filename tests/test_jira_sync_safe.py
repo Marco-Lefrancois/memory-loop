@@ -113,8 +113,8 @@ def test_no_target_returns_exit_2(tmp_path):
     args = _make_args()  # Aucun ciblage
     state = _make_state()
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 2, "Doit échouer avec exit 2 si aucun ciblage n'est fourni"
@@ -131,8 +131,8 @@ def test_dry_run_default_no_http_call(tmp_path):
     args = _make_args(story="MMA-9001")
     state = _make_state()
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
 
         mock_preview.return_value = {
             "manifest_id": "abc12345",
@@ -151,8 +151,8 @@ def test_explicit_dry_run_flag_no_http_call(tmp_path):
     args = _make_args(story="MMA-9001", dry_run=True, confirm_scope="MMA-9001")
     state = _make_state()
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
 
         mock_preview.return_value = {"manifest_id": "x", "file_hashes": {}}
         rc = handle_jira_sync(args, state, tmp_path)
@@ -170,7 +170,7 @@ def test_all_without_apply_blocked(tmp_path):
     args = _make_args(all=True)
     state = _make_state()
 
-    with patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 2
@@ -182,7 +182,7 @@ def test_all_with_apply_but_no_confirm_blocked(tmp_path):
     args = _make_args(all=True, apply=True, confirm_all_project_stories=False)
     state = _make_state()
 
-    with patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 2
@@ -194,9 +194,9 @@ def test_all_mode_requires_triple_lock(tmp_path):
     args = _make_args(all=True, apply=True, confirm_all_project_stories=True)
     state = _make_state()
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync, \
-         patch("src.commands.handlers.export._verify_sha256_manifest", return_value=True), \
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync, \
+         patch("src.commands.handlers.export_story._verify_sha256_manifest", return_value=True), \
          patch("src.commands.handlers.export.run_sync"):
 
         mock_preview.return_value = {"manifest_id": "m1", "file_hashes": {}}
@@ -217,7 +217,7 @@ def test_temp_key_in_story_arg_blocked(tmp_path):
     args = _make_args(story="TEMP-123")
     state = _make_state()
 
-    with patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 2
@@ -229,7 +229,7 @@ def test_temp_key_in_stories_arg_blocked(tmp_path):
     args = _make_args(stories="MMA-9001,TEMP-456")
     state = _make_state()
 
-    with patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 2
@@ -248,8 +248,8 @@ def test_temp_key_on_item_jira_key_rejected_in_eligible(tmp_path):
         captured_rejected.extend(kwargs.get("rejected_items", []))
         return {"manifest_id": "x", "file_hashes": {}}
 
-    with patch("src.commands.handlers.export.build_sync_preview", side_effect=capture_preview), \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview", side_effect=capture_preview), \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 0  # Dry-run réussi
@@ -280,8 +280,8 @@ def test_blocked_status_without_flag_rejected(tmp_path, blocked_status):
         captured_rejected.extend(kwargs.get("rejected_items", []))
         return {"manifest_id": "x", "file_hashes": {}}
 
-    with patch("src.commands.handlers.export.build_sync_preview", side_effect=capture_preview), \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview", side_effect=capture_preview), \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 0
@@ -306,8 +306,8 @@ def test_in_analyze_allowed_with_flag(tmp_path):
         captured_eligible.extend(kwargs.get("eligible_items", []))
         return {"manifest_id": "x", "file_hashes": {}}
 
-    with patch("src.commands.handlers.export.build_sync_preview", side_effect=capture_preview), \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview", side_effect=capture_preview), \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         rc = handle_jira_sync(args, state, tmp_path)
 
     assert rc == 0
@@ -326,8 +326,8 @@ def test_apply_without_confirm_scope_blocked(tmp_path):
     args = _make_args(story="MMA-9001", apply=True, confirm_scope=None)
     state = _make_state(items=[item])
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         mock_preview.return_value = {"manifest_id": "x", "file_hashes": {}}
         rc = handle_jira_sync(args, state, tmp_path)
 
@@ -349,8 +349,8 @@ def test_apply_confirm_scope_mismatch_fail_closed(tmp_path):
     args = _make_args(story="MMA-9001", apply=True, confirm_scope="MMA-9999")
     state = _make_state(items=[item])
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         mock_preview.return_value = {"manifest_id": "x", "file_hashes": {}}
         rc = handle_jira_sync(args, state, tmp_path)
 
@@ -366,8 +366,8 @@ def test_apply_confirm_scope_extra_key_fail_closed(tmp_path):
     args = _make_args(story="MMA-9001", apply=True, confirm_scope="MMA-9001,MMA-9002")
     state = _make_state(items=[item])
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync:
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync:
         mock_preview.return_value = {"manifest_id": "x", "file_hashes": {}}
         rc = handle_jira_sync(args, state, tmp_path)
 
@@ -389,9 +389,9 @@ def test_apply_confirm_scope_exact_match_triggers_sync(tmp_path):
     args = _make_args(story="MMA-9001", apply=True, confirm_scope="MMA-9001")
     state = _make_state(items=[item])
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync, \
-         patch("src.commands.handlers.export._verify_sha256_manifest", return_value=True), \
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync, \
+         patch("src.commands.handlers.export_story._verify_sha256_manifest", return_value=True), \
          patch("src.commands.handlers.export.run_sync"):
 
         mock_preview.return_value = {"manifest_id": "abc", "file_hashes": {}}
@@ -412,9 +412,9 @@ def test_apply_confirm_scope_by_logical_id(tmp_path):
     args = _make_args(story="US-01", apply=True, confirm_scope="US-01")
     state = _make_state(items=[item])
 
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync, \
-         patch("src.commands.handlers.export._verify_sha256_manifest", return_value=True), \
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync, \
+         patch("src.commands.handlers.export_story._verify_sha256_manifest", return_value=True), \
          patch("src.commands.handlers.export.run_sync"):
 
         mock_preview.return_value = {"manifest_id": "xyz", "file_hashes": {}}
@@ -439,9 +439,9 @@ def test_sha256_manifest_divergence_fail_closed(tmp_path):
     state = _make_state(items=[item])
 
     # Simuler une divergence SHA-256
-    with patch("src.commands.handlers.export.build_sync_preview") as mock_preview, \
-         patch("src.commands.handlers.export.sync_targeted_to_jira") as mock_sync, \
-         patch("src.commands.handlers.export._verify_sha256_manifest", return_value=False):
+    with patch("src.commands.handlers.export_story.build_sync_preview") as mock_preview, \
+         patch("src.commands.handlers.export_story.sync_targeted_to_jira") as mock_sync, \
+         patch("src.commands.handlers.export_story._verify_sha256_manifest", return_value=False):
 
         mock_preview.return_value = {"manifest_id": "y", "file_hashes": {"some/file.md": "oldhash"}}
         rc = handle_jira_sync(args, state, tmp_path)

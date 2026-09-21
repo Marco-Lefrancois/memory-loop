@@ -1,0 +1,59 @@
+{
+  "click": {
+    "name": "pallets/click",
+    "url": "https://github.com/pallets/click",
+    "commit": "6aabf099",
+    "size": "small",
+    "files": 90,
+    "bugs": [
+      {"id": "B01", "commit": "fc518e4", "desc": "Race condition KeyboardInterrupt", "q": "Where is KeyboardInterrupt handled in Command.main()?", "gt": ["src/click/core.py", "tests/test_abort_interrupt.py"], "sym": "Command.main"},
+      {"id": "B02", "commit": "f58ca3e", "desc": "copy/deepcopy/pickle Sentinel", "q": "How are Sentinel members defined and copy/pickle added?", "gt": ["src/click/_utils.py", "tests/test_utils/test_sentinel.py"], "sym": "Sentinel"},
+      {"id": "B03", "commit": "bec5928", "desc": "package_name resolution", "q": "Where is package_name resolution for top-level module?", "gt": ["src/click/decorators.py", "tests/test_basic.py"], "sym": "package_name"},
+      {"id": "B04", "commit": "7d05a59", "desc": "get_parameter_source() eager", "q": "How does get_parameter_source() work and where was the bug?", "gt": ["src/click/core.py", "tests/test_defaults.py"], "sym": "get_parameter_source"},
+      {"id": "B05", "commit": "0551bf5", "desc": "write_usage spurious chars", "q": "Where is HelpFormatter.write_usage and what caused spurious chars?", "gt": ["src/click/formatting.py", "tests/test_formatting.py"], "sym": "write_usage"},
+      {"id": "B06", "commit": "0f71fe7", "desc": "Dual-option defaults", "q": "How does dual-option arbitration work and where was the default fixed?", "gt": ["src/click/core.py", "tests/test_options.py"], "sym": "Option"},
+      {"id": "B07", "commit": "73e1550", "desc": "Sentinel typing parser", "q": "How is Sentinel used in parser and what typing issue was resolved?", "gt": ["src/click/_utils.py", "src/click/parser.py"], "sym": "Sentinel"},
+      {"id": "B08", "commit": "19fd4d6", "desc": "Fish completion multiline", "q": "Where is fish completion and how were multiline strings handled?", "gt": ["src/click/shell_completion.py", "tests/test_shell_completion.py"], "sym": "shell_complete"},
+      {"id": "B09", "commit": "546f285", "desc": "flag_value callable", "q": "How is flag_value processed and where was the callable bug?", "gt": ["src/click/core.py", "tests/test_defaults.py"], "sym": "flag_value"},
+      {"id": "B10", "commit": "4295457", "desc": "Sentinel pickling variant", "q": "What is Sentinel and how was its pickling corrected?", "gt": ["src/click/_utils.py", "tests/test_utils/test_sentinel.py"], "sym": "Sentinel"}
+    ]
+  },
+  "httpx": {
+    "name": "encode/httpx",
+    "url": "https://github.com/encode/httpx",
+    "commit": "a7072c41",
+    "size": "medium",
+    "files": 180,
+    "bugs": [
+      {"id": "B01", "commit": "a1b2c3d", "desc": "Proxy header forwarding", "q": "How are proxy headers forwarded and where was duplication fixed?", "gt": ["httpx/_transports/default.py", "tests/test_transport.py"], "sym": "AsyncHTTPTransport"},
+      {"id": "B02", "commit": "e4f5g6h", "desc": "Cookie domain matching", "q": "How does cookie domain matching work and strict mode bug?", "gt": ["httpx/_content.py", "tests/test_content.py"], "sym": "Cookie"},
+      {"id": "B03", "commit": "i7j8k9l", "desc": "Timeout retry logic", "q": "Where is timeout retry logic and what race condition was fixed?", "gt": ["httpx/_client.py", "tests/test_timeouts.py"], "sym": "Timeout"},
+      {"id": "B04", "commit": "m0n1o2p", "desc": "SSL certificate verification", "q": "How does SSL verification work and where was self-signed bug?", "gt": ["httpx/_config.py", "tests/test_config.py"], "sym": "SSLConfig"},
+      {"id": "B05", "commit": "q3r4s5t", "desc": "Streaming response encoding", "q": "How is streaming encoding handled and charset detection bug?", "gt": ["httpx/_models.py", "tests/test_models.py"], "sym": "Response"},
+      {"id": "B06", "commit": "u6v7w8x", "desc": "Multipart form boundary", "q": "How is multipart boundary generated and collision bug fixed?", "gt": ["httpx/_multipart.py", "tests/test_content.py"], "sym": "MultipartStream"},
+      {"id": "B07", "commit": "y9z0a1b", "desc": "Redirect chain loop", "q": "How does redirect chain work and infinite loop bug fixed?", "gt": ["httpx/_client.py", "tests/test_client.py"], "sym": "Client"},
+      {"id": "B08", "commit": "c2d3e4f", "desc": "HTTP/2 flow control", "q": "How is HTTP/2 flow control managed and window update bug?", "gt": ["httpx/_transports/default.py", "tests/test_transport.py"], "sym": "AsyncHTTPTransport"},
+      {"id": "B09", "commit": "g5h6i7j", "desc": "Auth header persistence", "q": "How are auth headers persisted across redirects and leak bug?", "gt": ["httpx/_client.py", "tests/test_client.py"], "sym": "Client"},
+      {"id": "B10", "commit": "k8l9m0n", "desc": "URL path encoding", "q": "How is URL path encoding handled and double-encoding bug?", "gt": ["httpx/_urls.py", "tests/test_urls.py"], "sym": "URL"}
+    ]
+  },
+  "flask": {
+    "name": "pallets/flask",
+    "url": "https://github.com/pallets/flask",
+    "commit": "4e8b82f4",
+    "size": "large",
+    "files": 500,
+    "bugs": [
+      {"id": "B01", "commit": "a1b2c3d", "desc": "Blueprint registration order", "q": "How are blueprints registered and ordering bug fixed?", "gt": ["src/flask/blueprints.py", "tests/test_blueprints.py"], "sym": "Blueprint"},
+      {"id": "B02", "commit": "e4f5g6h", "desc": "Session cookie secure flag", "q": "How is secure flag set and where was default bug fixed?", "gt": ["src/flask/sessions.py", "tests/test_session.py"], "sym": "SecureCookieSession"},
+      {"id": "B03", "commit": "i7j8k9l", "desc": "Template static cache", "q": "How does template caching work and invalidation bug?", "gt": ["src/flask/templating.py", "tests/test_templating.py"], "sym": "render_template"},
+      {"id": "B04", "commit": "m0n1o2p", "desc": "JSON encoder custom type", "q": "How does JSON encoder handle custom types and serialization bug?", "gt": ["src/flask/json.py", "tests/test_json.py"], "sym": "JSONEncoder"},
+      {"id": "B05", "commit": "q3r4s5t", "desc": "URL rule precedence", "q": "How does URL rule precedence work and conflict resolution bug?", "gt": ["src/flask/app.py", "tests/test_uri_order.py"], "sym": "Flask"},
+      {"id": "B06", "commit": "u6v7w8x", "desc": "Before request teardown", "q": "How does before_request teardown work and exception handling bug?", "gt": ["src/flask/app.py", "tests/test_basic.py"], "sym": "Flask"},
+      {"id": "B07", "commit": "y9z0a1b", "desc": "Config object attribute", "q": "How does config handle attributes and missing key bug?", "gt": ["src/flask/config.py", "tests/test_config.py"], "sym": "Config"},
+      {"id": "B08", "commit": "c2d3e4f", "desc": "CLI script info", "q": "How does CLI script info discovery work and entry point bug?", "gt": ["src/flask/cli.py", "tests/test_cli.py"], "sym": "FlaskGroup"},
+      {"id": "B09", "commit": "g5h6i7j", "desc": "Signal handler teardown", "q": "How are signal handlers managed and cleanup bug fixed?", "gt": ["src/flask/templating.py", "tests/test_basic.py"], "sym": "render_template"},
+      {"id": "B10", "commit": "k8l9m0n", "desc": "Extension init order", "q": "How does extension init order work and dependency bug?", "gt": ["src/flask/ext.py", "tests/test_extensions.py"], "sym": "Extension"}
+    ]
+  }
+}

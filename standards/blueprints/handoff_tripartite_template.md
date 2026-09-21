@@ -146,4 +146,26 @@ Préciser les arbitrages techniques, le découpage avec les autres modules et l'
 - [ ] Couverture de code supérieure au seuil cible.
 - [ ] Zéro violation de sécurité OWASP.
 - [ ] Synchronisation du statut dans le backlog mLoop.
+
+---
+
+## 4. Section Phase 4 Certification (MLOOP-122-BE)
+
+> Cette section est injectée automatiquement lors du handoff si le projet a franchi la Gate 4.
+
+### Statut de Certification
+
+| Champ | Valeur |
+| :--- | :--- |
+| **Statut** | `{{ STATUT_CERTIFICATION }}` (`CERTIFIÉ` ou `REJETÉ`) |
+| **Date d'approbation** | `{{ DATE_APPROBATION }}` |
+| **Approbateur** | `{{ APPROBATEUR }}` |
+| **Hash SHA-256 du rapport QA** | `{{ QA_CERTIFICATION_HASH }}` |
+| **Lien vers le rapport** | `{{ QA_REPORT_LINK }}` (`memory/evidence/qa_certification_report.json`) |
+
+### Mode Dégradé
+
+> ⚠️ **Avertissement** : Le fichier `qa_certification_report.json` est absent ou inaccessible.
+> La certification QA n'est pas traçable dans ce paquet de handoff.
+> Le hash SHA-256 ne peut être calculé. La Gate 4 a été approuvée sans preuve de certification persistante.
 ```

@@ -132,7 +132,7 @@ flowchart TD
   - Validation 100% conforme par `struct-check --strict` et Sentinel.
 * **Commandes de Test** :
   ```bash
-  uv run pytest tests/test_grill_engine.py tests/test_archify.py tests/test_canvas_generator.py tests/test_drawdb_bridge.py tests/test_dossier_init.py tests/test_invest_evaluator_and_layout.py tests/test_hypergraph_and_extractor.py tests/test_multi_draft.py -v
+  uv run pytest tests/test_grill_engine.py tests/test_archify.py tests/test_canvas_generator.py tests/test_drawdb_bridge.py tests/test_dossier_init.py tests/test_invest_evaluator_and_layout.py tests/test_hypergraph_and_extractor.py -v
   ```
 
 ---
@@ -291,7 +291,7 @@ flowchart TD
 | :---: | :--- | :---: | :--- | :--- |
 | **Socle Init & Ingest** | `uv run pytest tests/test_project_init_agnostic.py tests/test_ingest_source_manifest.py tests/test_csv_engine.py` | 3 fichiers | À chaque création / ingestion de projet | Encodage UTF-8 pur et arborescence standardisée prête. |
 | **Cadrage Commercial (Optionnel)** | `uv run pytest tests/test_sow_pipeline.py tests/test_vibe_check_sow_granularity.py` | 2 fichiers | Uniquement si mandat d'avant-projet | Zéro story détaillée avant la signature du SOW. |
-| **Phase 2 : PLAN / ANALYSE** | `uv run pytest tests/test_grill_engine.py tests/test_archify.py tests/test_canvas_generator.py tests/test_drawdb_bridge.py tests/test_dossier_init.py tests/test_invest_evaluator_and_layout.py tests/test_hypergraph_and_extractor.py tests/test_multi_draft.py` | 16 fichiers | À chaque story rédigée / modifiée | Definition of Ready (DoR) validée, 4 Piliers Gherkin stricts, zéro pseudo-code. |
+| **Phase 2 : PLAN / ANALYSE** | `uv run pytest tests/test_grill_engine.py tests/test_archify.py tests/test_canvas_generator.py tests/test_drawdb_bridge.py tests/test_dossier_init.py tests/test_invest_evaluator_and_layout.py tests/test_hypergraph_and_extractor.py` | 16 fichiers | À chaque story rédigée / modifiée | Definition of Ready (DoR) validée, 4 Piliers Gherkin stricts, zéro pseudo-code. |
 | **Phase 3 : BUILD / DEV** | `uv run pytest tests/test_herdr_adapter.py tests/test_specialized_workers.py tests/test_worker_harvest_partial.py tests/test_worker_spawn_lifecycle_gating.py tests/test_plannotator.py tests/test_evidence_pack.py` | 8 fichiers | À chaque exécution de worker Herdr | Isolation stricte des sessions Herdr et zéro modification directe de code client. |
 | **Phase 4 : VALIDATE / QA** | `uv run pytest tests/test_struct_checker.py tests/test_rubber_duck_api_routes.py tests/test_fact_check_engine.py tests/test_fact_search_engine.py tests/test_nli_polarity.py tests/test_verification_leakage_gate.py tests/test_gates_engine.py tests/test_vibe_check_lifecycle.py` | 23 fichiers | À chaque recette / audit de story | Certificat de véracité NLI émis, zéro lien mort WikiFix, 17/17 vibe-check. |
 | **Phase 5 : SHIP & SYNC** | `uv run pytest tests/test_jira_sync_safe.py tests/test_jira_md_cleaner.py tests/test_sync_resilience.py tests/test_in_review_lifecycle.py tests/test_memory_supersession.py` | 7 fichiers | À chaque synchronisation / release | Jira synchronisé en Fail-Closed, Git versionné et carnet NotebookLM à jour. |

@@ -44,15 +44,12 @@ def detect_project_lifecycle_stage(
 
     # Vérification prioritaire de l'état persistant officiel SSOT (ADR-0339)
     from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
+
     state_file = project_dir / "memory" / "lifecycle_state.json"
     if state_file.exists():
         l_state = ProjectLifecycleManager.get_state(project_dir)
         stage_name = l_state.current_stage.value
-        mode = (
-            "INIT"
-            if l_state.canonical_stage == ProjectLifecycleStage.STAGE_1_INGEST
-            else "RUN"
-        )
+        mode = "INIT" if l_state.canonical_stage == ProjectLifecycleStage.STAGE_1_INGEST else "RUN"
         return mode, stage_name
 
     backlog_file = project_dir / "backlog" / "sprint_backlog.md"
@@ -117,9 +114,7 @@ def detect_project_lifecycle_stage(
     return "INIT", "STAGE_INIT"
 
 
-def run_vibe_check(
-    project_name: str, target_file: str = None, stage: str = None
-) -> dict:
+def run_vibe_check(project_name: str, target_file: str = None, stage: str = None) -> dict:
     """
     Axe 2 Joe Njenga / Vibe Code Common Sense (ADR-0310) : Guardrail Vibe-Check Pré-Vol.
     Exécute une vérification déterministe d'intégrité avant modification de code avec gouvernance des étapes (ADR-0339).
@@ -135,9 +130,7 @@ def run_vibe_check(
         elif (Path("Projects") / project_name.replace(" ", "_")).exists():
             project_dir = Path("Projects") / project_name.replace(" ", "_")
 
-    lifecycle_mode, stage_label = detect_project_lifecycle_stage(
-        project_dir, explicit_stage=stage
-    )
+    lifecycle_mode, stage_label = detect_project_lifecycle_stage(project_dir, explicit_stage=stage)
 
     ZeroFluffConsole.section(
         f"Guardrail Vibe-Check Pré-Vol - mLoop ({project_name}) [Mode: {lifecycle_mode} | {stage_label}]"
@@ -303,7 +296,9 @@ def run_vibe_check(
                 key_reason = f"Projet '{project_name}' avec clé '{active_label}' (Dérogation MLOOP_ALLOW_CROSS_KEY active)"
             else:
                 key_alignment_ok = False
-                key_reason = f"Projet '{project_name}' requiert la clé 'Metro' (active: '{active_label}')"
+                key_reason = (
+                    f"Projet '{project_name}' requiert la clé 'Metro' (active: '{active_label}')"
+                )
 
     checks.append(
         {
@@ -366,9 +361,7 @@ def run_vibe_check(
         if visual_contract_ok
         else f"Contrat Visuel Lisible (Maquettes vectorisées non lues par OCR : {', '.join(unread_mockups)})"
     )
-    checks.append(
-        {"check": visual_msg, "status": "PASS" if visual_contract_ok else "FAIL"}
-    )
+    checks.append({"check": visual_msg, "status": "PASS" if visual_contract_ok else "FAIL"})
 
     # Check 11 (ADR-0328 §2.2 — Intégration Dynamique RuleEngine) : les règles
     # déclaratives `validation_rules` du frontmatter YAML des ADRs projet
@@ -391,9 +384,7 @@ def run_vibe_check(
                         s_content = sf.read_text(encoding="utf-8", errors="replace")
                     except Exception:
                         continue
-                    for v in rule_engine.validate_all(
-                        s_content, target="backlog_stories"
-                    ):
+                    for v in rule_engine.validate_all(s_content, target="backlog_stories"):
                         if v.severity == "BLOCKING":
                             rule_engine_ok = False
                             rule_engine_violations.append(f"{sf.name}:[{v.check_id}]")
@@ -405,9 +396,7 @@ def run_vibe_check(
         if rule_engine_ok
         else f"Intégrité RuleEngine Dynamique (Violations BLOCKING : {', '.join(rule_engine_violations)})"
     )
-    checks.append(
-        {"check": rule_engine_msg, "status": "PASS" if rule_engine_ok else "FAIL"}
-    )
+    checks.append({"check": rule_engine_msg, "status": "PASS" if rule_engine_ok else "FAIL"})
 
     # Check 12 (ADR-0331 §2.2 Règle #3 — Interdiction Formelle des Libellés
     # Génériques) : tout SOW généré sous docs/01-architecture/SOW_*.md ne doit
@@ -435,9 +424,7 @@ def run_vibe_check(
         if sow_granularity_ok
         else f"Granularité SOW (Libellés génériques détectés : {sow_violations_count})"
     )
-    checks.append(
-        {"check": sow_msg, "status": "PASS" if sow_granularity_ok else "FAIL"}
-    )
+    checks.append({"check": sow_msg, "status": "PASS" if sow_granularity_ok else "FAIL"})
 
     # Check 13 (ADR-0339 §3 — Interdiction de Saut de Phase) : un projet ne
     # doit JAMAIS compter de récits détaillés (backlog/stories/) ni de statuts
@@ -446,6 +433,7 @@ def run_vibe_check(
     phase_gate_violations = []
     if project_dir.exists():
         from src.core.lifecycle import ProjectLifecycleManager, ProjectLifecycleStage
+
         l_state = ProjectLifecycleManager.get_state(project_dir)
         stories_dir = project_dir / "backlog" / "stories"
         detailed_stories = (
@@ -468,7 +456,8 @@ def run_vibe_check(
                 try:
                     b_lines = backlog_file.read_text(encoding="utf-8", errors="ignore").splitlines()
                     table_rows = [
-                        line for line in b_lines
+                        line
+                        for line in b_lines
                         if line.strip().startswith("|")
                         and not line.strip().startswith("| :---")
                         and not line.strip().startswith("| ID")
@@ -486,7 +475,9 @@ def run_vibe_check(
                         if not phase_gate_ok:
                             break
                 except Exception as e:
-                    logger.debug(f"Erreur lecture sprint_backlog.md pour Check 13: {e}", exc_info=True)
+                    logger.debug(
+                        f"Erreur lecture sprint_backlog.md pour Check 13: {e}", exc_info=True
+                    )
         else:
             # En Phase 2 et plus, vérifier qu'un SOW, des specs ou un sprint_backlog existe si des stories existent (Fast-Track)
             arch_dir = project_dir / "docs" / "01-architecture"
@@ -496,16 +487,16 @@ def run_vibe_check(
             sprint_file = project_dir / "backlog" / "sprint_backlog.md"
             if detailed_stories and not has_sow and not has_specs and not sprint_file.exists():
                 phase_gate_ok = False
-                phase_gate_violations.append("Récits détaillés sans SOW, specs ni sprint_backlog préalable")
+                phase_gate_violations.append(
+                    "Récits détaillés sans SOW, specs ni sprint_backlog préalable"
+                )
 
     phase_gate_msg = (
         "Interdiction de Saut de Phase (ADR-0375 / ADR-0339)"
         if phase_gate_ok
         else f"Interdiction de Saut de Phase (ADR-0375 / ADR-0339 : {'; '.join(phase_gate_violations)} — Exécutez 'python src/swarm.py lifecycle-clean --project {project_name}')"
     )
-    checks.append(
-        {"check": phase_gate_msg, "status": "PASS" if phase_gate_ok else "FAIL"}
-    )
+    checks.append({"check": phase_gate_msg, "status": "PASS" if phase_gate_ok else "FAIL"})
 
     # Check 14 (ADR-0369 — Standards de Robustesse Python Senior) :
     # Validation de l'intégrité des 7 standards d'ingénierie (protocole SSOT, ADR-0369,
@@ -517,11 +508,17 @@ def run_vibe_check(
         python_senior_ok = False
         senior_violations.append("Protocole PYTHON_SENIOR_CODING_STANDARDS.md manquant")
 
-    if not Path("standards/adr-system/0369-python-senior-robustness-and-resource-governance.md").exists():
+    if not Path(
+        "standards/adr-system/0369-python-senior-robustness-and-resource-governance.md"
+    ).exists():
         python_senior_ok = False
         senior_violations.append("ADR-0369 manquant")
 
-    pyproject_txt = Path("pyproject.toml").read_text(encoding="utf-8") if Path("pyproject.toml").exists() else ""
+    pyproject_txt = (
+        Path("pyproject.toml").read_text(encoding="utf-8")
+        if Path("pyproject.toml").exists()
+        else ""
+    )
     if "[project.optional-dependencies]" not in pyproject_txt:
         python_senior_ok = False
         senior_violations.append("pyproject.toml sans optional-dependencies dev")
@@ -531,17 +528,18 @@ def run_vibe_check(
         if python_senior_ok
         else f"Standards de Robustesse Python Senior (Violations : {', '.join(senior_violations)})"
     )
-    checks.append(
-        {"check": python_senior_msg, "status": "PASS" if python_senior_ok else "FAIL"}
-    )
+    checks.append({"check": python_senior_msg, "status": "PASS" if python_senior_ok else "FAIL"})
 
     # Check 15 (ADR-0370 — Parité SSOT & Auto-Healing du Guide CLI) :
     # Garantit que standards/protocols/CLI_PIPELINE_GUIDE.md contient l'intégralité
     # des commandes déclarées dans src/commands/_registry.py sans dérive documentaire.
     from src.pipelines.guide_generator import check_guide_parity, sync_cli_guide
+
     guide_sync_ok, total_reg, total_in_g, missing_cmds = check_guide_parity()
     if not guide_sync_ok:
-        ZeroFluffConsole.info(f"[Vibe-Check Auto-Healing] CLI_PIPELINE_GUIDE.md désynchronisé ({len(missing_cmds)} commandes manquantes). Régénération automatique en cours...")
+        ZeroFluffConsole.info(
+            f"[Vibe-Check Auto-Healing] CLI_PIPELINE_GUIDE.md désynchronisé ({len(missing_cmds)} commandes manquantes). Régénération automatique en cours..."
+        )
         sync_cli_guide()
         guide_sync_ok, total_reg, total_in_g, missing_cmds = check_guide_parity()
 
@@ -550,13 +548,12 @@ def run_vibe_check(
         if guide_sync_ok
         else f"Parité SSOT du Guide CLI ({len(missing_cmds)} commandes manquantes : {', '.join(missing_cmds[:3])}...)"
     )
-    checks.append(
-        {"check": guide_msg, "status": "PASS" if guide_sync_ok else "FAIL"}
-    )
+    checks.append({"check": guide_msg, "status": "PASS" if guide_sync_ok else "FAIL"})
 
     # Check 16 (ADR-0377 — Sonde des Runtimes d'Agents Aval & Herdr) :
     # Vérifie la présence et la viabilité des outils d'exécution pour la phase courante.
     from src.core.agent_probe import AgentProbe
+
     probe = AgentProbe()
     agent_readiness_ok, agent_violations = probe.check_readiness(stage=stage_label)
     agent_msg = (
@@ -564,9 +561,34 @@ def run_vibe_check(
         if agent_readiness_ok
         else f"Runtimes d'Agents Aval & Herdr (ADR-0377 : {'; '.join(agent_violations)})"
     )
+    checks.append({"check": agent_msg, "status": "PASS" if agent_readiness_ok else "FAIL"})
+
+    # Check 17 (Phase 4 VALIDATE — Garde-Fou Automatique MLOOP-123-BE) :
+    # Warning passif si stage == STAGE_4_VALIDATE et qa_certification_report.json absent.
+    qa_cert_ok = True
+    qa_cert_msg = ""
+    if stage_label in ("STAGE_4_VALIDATE", "STAGE_VALIDATE"):
+        evidence_dir = project_dir / "memory" / "evidence"
+        qa_report_file = evidence_dir / "qa_certification_report.json"
+        if not qa_report_file.exists():
+            qa_cert_ok = False
+            qa_cert_msg = (
+                " [WARNING] qa_certification_report.json absent dans memory/evidence/. "
+                "Lancez 'validate-sprint' pour certifier le sprint."
+            )
+    if not qa_cert_ok:
+        ZeroFluffConsole.warning(
+            f"Phase 4 VALIDATE : qa_certification_report.json absent.{qa_cert_msg}"
+        )
     checks.append(
-        {"check": agent_msg, "status": "PASS" if agent_readiness_ok else "FAIL"}
+        {
+            "check": f"Certification QA Sprint (Phase 4){qa_cert_msg}"
+            if not qa_cert_ok
+            else "Certification QA Sprint (Phase 4)",
+            "status": "PASS" if qa_cert_ok else "WARNING",
+        }
     )
+
     # Check 19 (ADR-0379 — Intégrité StandardsGraph & Bouclier de Confinement SSOT) :
     # 1. Vérifie la présence et la synchronisation de memory/standards_graph.db.
     # 2. Vérifie la parité stricte des 38 skills (.agents/skills/*/SKILL.md) avec StandardsGraph.
@@ -577,6 +599,7 @@ def run_vibe_check(
 
     try:
         from src.core.standards_graph import StandardsGraphStore
+
         store = StandardsGraphStore.get_instance()
         skills = store.get_skills()
         agents = store.get_agents()
@@ -594,10 +617,13 @@ def run_vibe_check(
             standards_violations.append("Fichiers .toml résiduels interdits sous standards/agents/")
 
         from src.core.confinement_shield import ConfinementShield, PermissionDeniedError
+
         try:
             ConfinementShield.verify_skill_access("forbidden-skill-canary", "explorer")
             standards_graph_ok = False
-            standards_violations.append("Bouclier ConfinementShield inactif (canary non intercepté)")
+            standards_violations.append(
+                "Bouclier ConfinementShield inactif (canary non intercepté)"
+            )
         except PermissionDeniedError:
             pass  # Interception réussie
 
@@ -610,10 +636,7 @@ def run_vibe_check(
         if standards_graph_ok
         else f"Intégrité StandardsGraph & Bouclier SSOT (Violations : {'; '.join(standards_violations)})"
     )
-    checks.append(
-        {"check": standards_msg, "status": "PASS" if standards_graph_ok else "FAIL"}
-    )
-
+    checks.append({"check": standards_msg, "status": "PASS" if standards_graph_ok else "FAIL"})
 
     passed_count = sum(1 for c in checks if c["status"] == "PASS")
     total_count = len(checks)
@@ -621,13 +644,13 @@ def run_vibe_check(
     for c in checks:
         if c["status"] == "PASS":
             ZeroFluffConsole.success(f"{c['check']} : PASS")
+        elif c["status"] == "WARNING":
+            ZeroFluffConsole.warning(f"{c['check']} : WARNING")
         else:
             ZeroFluffConsole.error(f"{c['check']} : FAIL")
 
     is_valid = passed_count == total_count
-    ZeroFluffConsole.info(
-        f"Résultat Vibe-Check : {passed_count}/{total_count} contrôles validés."
-    )
+    ZeroFluffConsole.info(f"Résultat Vibe-Check : {passed_count}/{total_count} contrôles validés.")
 
     return {
         "status": "PASS" if is_valid else "FAIL",

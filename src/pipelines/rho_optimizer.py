@@ -254,6 +254,34 @@ def dream_collector(project_name: str) -> Dict[str, Any]:
     return summary
 
 
+def search_similar_rho(
+    project_name: str,
+    error_trace: str,
+    top_k: int = 5,
+    weights: Optional[Dict[str, float]] = None,
+) -> Dict[str, Any]:
+    """
+    Recherche de solutions RHO similaires via recherche hybride (MLOOP-102-BE).
+
+    Args:
+        project_name: Nom du projet
+        error_trace: Trace d'erreur à rechercher
+        top_k: Nombre de résultats
+        weights: Poids personnalisés pour BM25, Vector, Graph
+
+    Returns:
+        Résultats de recherche avec pertinence et latence
+    """
+    from src.loop_mem.rho_hybrid_search import search_rho_hybrid
+
+    return search_rho_hybrid(
+        project_name=project_name,
+        query=error_trace,
+        top_k=top_k,
+        weights=weights,
+    )
+
+
 def main() -> None:
     """Point d'entrée CLI du module RHO Optimizer."""
     parser = argparse.ArgumentParser(
@@ -266,9 +294,27 @@ def main() -> None:
     parser.add_argument(
         "--dream", action="store_true", help="Lance le Dream Collector (Tombstones)"
     )
+    parser.add_argument("--search", type=str, help="Recherche hybride de solutions RHO similaires")
+    parser.add_argument(
+        "--top-k", type=int, default=5, help="Nombre de résultats pour la recherche (défaut: 5)"
+    )
     args = parser.parse_args()
     if args.dream:
         dream_collector(args.project)
+    elif args.search:
+        results = search_similar_rho(
+            project_name=args.project,
+            error_trace=args.search,
+            top_k=args.top_k,
+        )
+        ZeroFluffConsole.section("Recherche Hybride RHO")
+        ZeroFluffConsole.info(f"Requête: {args.search}")
+        ZeroFluffConsole.info(f"Latence: {results['latency_ms']}ms")
+        ZeroFluffConsole.info(f"Total résultats: {results['total']}")
+        for i, r in enumerate(results["results"], 1):
+            ZeroFluffConsole.info(
+                f"{i}. [{r['relevance']:.3f}] {r['title']} (flux: {', '.join(r['streams'])})"
+            )
     elif args.keyword and args.msg:
         optimize_rho(args.project, args.keyword, args.msg, args.scope)
     else:

@@ -1,4 +1,4 @@
-﻿"""
+"""
 Package Résilience Agentique & Point-in-Time Recovery mLoop (ADR-0202 & ADR-0371).
 """
 from src.pipelines.resilience.topology import (

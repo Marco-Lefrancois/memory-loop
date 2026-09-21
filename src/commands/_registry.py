@@ -9,6 +9,7 @@ Chaque entrée définit :
 - no_project : (optionnel) True si la commande n'exige pas de contexte projet
 """
 
+
 def _worker_runtime_kinds() -> str:
     """Déduit la liste des runtimes workers déclarés (SSOT `worker_runtimes`).
 
@@ -1245,7 +1246,6 @@ COMMANDS: dict[str, dict] = {
             },
         ],
     },
-
     # ── Code Intelligence (CodeGraph - ADR-0204) ───────────
     "code-init": {
         "handler": "code_intelligence:handle_code_init",
@@ -1640,6 +1640,25 @@ COMMANDS: dict[str, dict] = {
         "args": [],
         "no_project": True,
     },
+    "mcp-serve": {
+        "handler": "mcp_serve:handle_mcp_serve",
+        "help": "Démarrer le serveur MCP transport réseau SSE (MLOOP-103-BE)",
+        "args": [
+            {
+                "name": "--host",
+                "type": str,
+                "default": "127.0.0.1",
+                "help": "Adresse de bind (défaut: 127.0.0.1)",
+            },
+            {
+                "name": "--port",
+                "type": int,
+                "default": 8380,
+                "help": "Port HTTP SSE (défaut: 8380)",
+            },
+        ],
+        "no_project": True,
+    },
     "guardian-status": {
         "handler": "daemon:handle_guardian_status",
         "help": "Afficher l'état du Guardian Auto-Reviewer et du Circuit Breaker",
@@ -1759,7 +1778,6 @@ COMMANDS: dict[str, dict] = {
         "args": [],
         "phase": "validate",
     },
-
     # ── Visual Review & Annotation (Plannotator ADR-0305 / ADR-0307) ──
     "review": {
         "handler": "plannotator:handle_review",
@@ -2008,5 +2026,3 @@ COMMANDS: dict[str, dict] = {
         ],
     },
 }
-
-

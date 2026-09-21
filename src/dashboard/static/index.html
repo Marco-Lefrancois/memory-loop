@@ -707,6 +707,41 @@
                 </div>
             </div>
 
+            <!-- SECTION MOYENNE : VISUALISEUR FORCE-DIRECTED D3.js (MLOOP-104-FE) -->
+            <div class="glass-cyber p-4 rounded-xl space-y-3 border-l-4 border-l-emerald-400" id="force-graph-container">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b border-cyberborder/40 pb-2">
+                    <div class="flex items-center gap-2 font-tech text-xs">
+                        <span class="text-white font-bold">FORCE-DIRECTED GRAPH (D3.js)</span>
+                        <span id="force-graph-stats" class="text-gray-400 text-[11px]">-- nœuds | -- liens</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1.5 text-[10px] font-tech text-gray-400">
+                            <span>FILTRE TYPE :</span>
+                            <select id="force-filter-type" onchange="applyForceFilter()" class="cyber-select text-[10px] cursor-pointer">
+                                <option value="ALL">Tous</option>
+                            </select>
+                        </div>
+                        <button onclick="resetForceGraph()" class="px-2 py-1 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/30 text-cybercyan text-[10px] font-tech transition">↻ Réinitialiser</button>
+                    </div>
+                </div>
+
+                <div id="force-graph-box" class="w-full h-[480px] rounded-lg overflow-hidden bg-cybercard border border-cyberborder relative">
+                    <svg id="force-graph-svg" class="w-full h-full"></svg>
+                    <div id="force-graph-empty" class="hidden absolute inset-0 bg-cybercard/95 flex flex-col items-center justify-center p-6 text-center space-y-3 font-tech">
+                        <div class="text-3xl">🕸️</div>
+                        <div class="text-sm font-bold text-gray-200">Aucune donnée de graphe disponible</div>
+                        <div class="text-xs text-gray-400 max-w-md">Lancez la compilation du graphe ou attendez des données Ground Truth.</div>
+                        <code class="px-3 py-1.5 rounded bg-black border border-emerald-500/40 text-cyberemerald text-xs select-all">python src/swarm.py graph-run</code>
+                    </div>
+                </div>
+
+                <!-- LÉGENDE DYNAMIQUE -->
+                <div id="force-graph-legend" class="flex items-center gap-3 flex-wrap text-[10px] font-tech text-gray-400"></div>
+
+                <!-- TOOLTIP NŒUD -->
+                <div id="force-graph-tooltip" class="hidden fixed z-50 px-3 py-2 rounded-lg bg-[#080e1e] border border-cyan-500/50 text-xs font-tech text-white shadow-xl shadow-cyan-950/50 pointer-events-none max-w-xs"></div>
+            </div>
+
             <!-- SECTION BASSE : EXPLORATEUR SQLITE SOUVERAIN (READ-ONLY) -->
             <div class="glass-cyber p-5 rounded-xl space-y-4 border-l-4 border-l-cyan-400">
                 <div class="flex items-center justify-between flex-wrap gap-3 border-b border-cyberborder/40 pb-3">
@@ -799,6 +834,7 @@
     </div>
 
     <!-- ── SCRIPTS COCKPIT 2.0 (SSOT & PERSISTANCE DÉTERMINISTE) ──────── -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         // ── 0. GESTION PERSISTANCE LOCALE & FUSEAU HORAIRE ──────────
         const CockpitStorage = {
@@ -2474,6 +2510,7 @@
             }
 
             await loadDatabasesList();
+            await loadForceGraph();
         }
 
         async function loadDatabasesList() {
@@ -2631,6 +2668,224 @@
                 });
             } else {
                 document.exitFullscreen();
+            }
+        }
+
+        // ── MLOOP-104-FE : VISUALISEUR FORCE-DIRECTED D3.js ────────────
+        let forceGraphSimulation = null;
+        let forceGraphData = { nodes: [], links: [] };
+        let forceGraphFilter = 'ALL';
+        let forceGraphSvg = null;
+        let forceGraphG = null;
+        let forceGraphZoom = null;
+
+        const FORCE_COLORS = {
+            'ADR': '#a855f7',
+            'Story': '#22d3ee',
+            'Concept': '#10b981',
+            'File': '#f59e0b',
+            'Module': '#f43f5e',
+            'Rule': '#6366f1',
+            'Agent': '#ec4899',
+            'default': '#6b7280',
+        };
+
+        function getForceColor(type) {
+            if (!type) return FORCE_COLORS.default;
+            for (const [key, color] of Object.entries(FORCE_COLORS)) {
+                if (type.toLowerCase().includes(key.toLowerCase())) return color;
+            }
+            return FORCE_COLORS.default;
+        }
+
+        async function loadForceGraph() {
+            const emptyState = document.getElementById('force-graph-empty');
+            const statsEl = document.getElementById('force-graph-stats');
+
+            try {
+                const res = await fetch(`/api/graph/force?project=${encodeURIComponent(activeProject)}`);
+                const data = await res.json();
+                forceGraphData = data;
+
+                if (!data.nodes || data.nodes.length === 0) {
+                    if (emptyState) emptyState.classList.remove('hidden');
+                    if (statsEl) statsEl.textContent = 'Aucune donnée';
+                    return;
+                }
+
+                if (emptyState) emptyState.classList.add('hidden');
+                if (statsEl) statsEl.textContent = `${data.nodes.length} nœuds | ${data.links.length} liens`;
+
+                populateForceFilter(data.nodes);
+                renderForceGraph(data);
+            } catch (err) {
+                console.error('Erreur chargement force graph:', err);
+                if (emptyState) emptyState.classList.remove('hidden');
+            }
+        }
+
+        function populateForceFilter(nodes) {
+            const sel = document.getElementById('force-filter-type');
+            if (!sel) return;
+            const types = new Set(nodes.map(n => n.type || 'Concept'));
+            sel.innerHTML = '<option value="ALL">Tous les types</option>';
+            [...types].sort().forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                if (t === forceGraphFilter) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+
+        function applyForceFilter() {
+            const sel = document.getElementById('force-filter-type');
+            forceGraphFilter = sel ? sel.value : 'ALL';
+            renderForceGraph(forceGraphData);
+        }
+
+        function resetForceGraph() {
+            forceGraphFilter = 'ALL';
+            const sel = document.getElementById('force-filter-type');
+            if (sel) sel.value = 'ALL';
+            renderForceGraph(forceGraphData);
+        }
+
+        function renderForceGraph(data) {
+            const container = document.getElementById('force-graph-box');
+            const svgEl = document.getElementById('force-graph-svg');
+            const legendEl = document.getElementById('force-graph-legend');
+            const tooltipEl = document.getElementById('force-graph-tooltip');
+            if (!container || !svgEl) return;
+
+            const width = container.clientWidth || 800;
+            const height = container.clientHeight || 480;
+
+            d3.select(svgEl).selectAll('*').remove();
+            if (forceGraphSimulation) forceGraphSimulation.stop();
+
+            let filteredNodes = data.nodes;
+            let filteredLinks = data.links;
+
+            if (forceGraphFilter !== 'ALL') {
+                const nodeIds = new Set(data.nodes.filter(n => n.type === forceGraphFilter).map(n => n.id));
+                filteredNodes = data.nodes.filter(n => nodeIds.has(n.id));
+                filteredLinks = data.links.filter(l => nodeIds.has(l.source) && nodeIds.has(l.target));
+            }
+
+            if (filteredNodes.length === 0) {
+                const empty = document.getElementById('force-graph-empty');
+                if (empty) empty.classList.remove('hidden');
+                return;
+            }
+
+            const svg = d3.select(svgEl);
+            const g = svg.append('g');
+
+            forceGraphZoom = d3.zoom()
+                .scaleExtent([0.1, 5])
+                .on('zoom', (event) => g.attr('transform', event.transform));
+            svg.call(forceGraphZoom);
+
+            const nodeMap = {};
+            filteredNodes.forEach(n => { nodeMap[n.id] = n; });
+
+            const simLinks = filteredLinks.map(l => ({
+                source: l.source,
+                target: l.target,
+                label: l.label || '',
+                weight: l.weight || 1,
+            })).filter(l => nodeMap[l.source] && nodeMap[l.target]);
+
+            forceGraphSimulation = d3.forceSimulation(filteredNodes)
+                .force('link', d3.forceLink(simLinks).id(d => d.id).distance(120).strength(0.5))
+                .force('charge', d3.forceManyBody().strength(-300).distanceMax(500))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(d => 8 + (d.size || 1) * 3))
+                .force('x', d3.forceX(width / 2).strength(0.05))
+                .force('y', d3.forceY(height / 2).strength(0.05));
+
+            const link = g.append('g')
+                .selectAll('line')
+                .data(simLinks)
+                .join('line')
+                .attr('stroke', '#1f293d')
+                .attr('stroke-width', d => Math.min(3, d.weight || 1))
+                .attr('stroke-opacity', 0.6);
+
+            const node = g.append('g')
+                .selectAll('g')
+                .data(filteredNodes)
+                .join('g')
+                .attr('cursor', 'grab')
+                .call(d3.drag()
+                    .on('start', (event, d) => {
+                        if (!event.active) forceGraphSimulation.alphaTarget(0.3).restart();
+                        d.fx = d.x;
+                        d.fy = d.y;
+                    })
+                    .on('drag', (event, d) => {
+                        d.fx = event.x;
+                        d.fy = event.y;
+                    })
+                    .on('end', (event, d) => {
+                        if (!event.active) forceGraphSimulation.alphaTarget(0);
+                        d.fx = null;
+                        d.fy = null;
+                    }));
+
+            node.append('circle')
+                .attr('r', d => 5 + Math.min(5, (d.size || 1) * 1.5))
+                .attr('fill', d => getForceColor(d.type))
+                .attr('stroke', '#030712')
+                .attr('stroke-width', 1.5)
+                .on('mouseover', (event, d) => {
+                    d3.select(event.target).attr('r', 8 + Math.min(6, (d.size || 1) * 2)).attr('stroke', '#22d3ee').attr('stroke-width', 2);
+                    if (tooltipEl) {
+                        tooltipEl.innerHTML = `
+                            <div class="font-bold text-cybercyan">${d.label || d.id}</div>
+                            <div class="text-gray-400 mt-1">Type: <span class="text-white">${d.type}</span></div>
+                            <div class="text-gray-400">Poids: <span class="text-white">${d.size || 1}</span></div>
+                        `;
+                        tooltipEl.classList.remove('hidden');
+                        tooltipEl.style.left = `${event.clientX + 12}px`;
+                        tooltipEl.style.top = `${event.clientY - 10}px`;
+                    }
+                })
+                .on('mousemove', (event) => {
+                    if (tooltipEl) {
+                        tooltipEl.style.left = `${event.clientX + 12}px`;
+                        tooltipEl.style.top = `${event.clientY - 10}px`;
+                    }
+                })
+                .on('mouseout', (event, d) => {
+                    d3.select(event.target).attr('r', 5 + Math.min(5, (d.size || 1) * 1.5)).attr('stroke', '#030712').attr('stroke-width', 1.5);
+                    if (tooltipEl) tooltipEl.classList.add('hidden');
+                });
+
+            node.append('text')
+                .text(d => (d.label || d.id).length > 18 ? (d.label || d.id).slice(0, 16) + '…' : (d.label || d.id))
+                .attr('dx', d => 8 + Math.min(5, (d.size || 1) * 1.5))
+                .attr('dy', 3)
+                .attr('fill', '#9ca3af')
+                .attr('font-size', '9px')
+                .attr('font-family', 'JetBrains Mono, monospace')
+                .attr('pointer-events', 'none');
+
+            forceGraphSimulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            if (legendEl) {
+                const types = new Set(filteredNodes.map(n => n.type || 'Concept'));
+                legendEl.innerHTML = [...types].sort().map(t =>
+                    `<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full" style="background:${getForceColor(t)}"></span>${t}</span>`
+                ).join('');
             }
         }
 

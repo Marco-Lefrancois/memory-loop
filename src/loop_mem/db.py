@@ -471,6 +471,30 @@ def search_rho_solution(error_trace: str, threshold: float = 0.70) -> List[Dict[
     return results
 
 
+def search_rho_hybrid_solution(
+    project_name: str,
+    query: str,
+    top_k: int = 5,
+    weights: Optional[Dict[str, float]] = None,
+) -> Dict[str, Any]:
+    """
+    Recherche hybride RHO combinant BM25, Vector et Graph (MLOOP-102-BE).
+
+    Args:
+        project_name: Nom du projet
+        query: Requête de recherche
+        top_k: Nombre de résultats à retourner
+        weights: Poids personnalisés pour BM25, Vector, Graph
+
+    Returns:
+        Dictionnaire avec les résultats, latence et métadonnées
+    """
+    from src.loop_mem.rho_hybrid_search import RHOHybridSearch
+
+    searcher = RHOHybridSearch(project_name, weights=weights)
+    return searcher.search(query, top_k=top_k)
+
+
 # ═══════════════════════════════════════════════════════════
 # Lexique Métier & Base Sémantique Dynamique (ADR-0327)
 # ═══════════════════════════════════════════════════════════

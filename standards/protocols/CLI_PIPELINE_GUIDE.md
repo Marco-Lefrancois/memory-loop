@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 121 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 122 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 121 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 122 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -198,6 +198,7 @@ flowchart LR
 | `python src/swarm.py graph-run` | Exécution Graph Engineering (DAG Multi-Agents) | [--title <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py guide` | Afficher le guide d'utilisation du pipeline CLI mLoop par phase ou synchroniser le SSOT | [--phase <STR>] [--sync <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py hook` | Déclencher ou tester un hook de cycle de vie ou de pré-compaction (ADR-0364) | [--event <STR>] [--format <STR>] [--story <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py mcp-serve` | Démarrer le serveur MCP transport réseau SSE (MLOOP-103-BE) | [--host <STR>] [--port <INT>] | Console / Mémoire d'état |
 | `python src/swarm.py memo-search` | Sélectionner la stratégie mémoire ALMA optimale | [--query <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py memory-hygiene` | Balayage de confiance de la mémoire vive | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py optimize` | Optimisation RHO | --keyword <STR> --msg <STR> [--scope <STR>] | Console / Mémoire d'état |

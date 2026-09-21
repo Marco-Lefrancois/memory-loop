@@ -5,67 +5,7 @@ requis par l'API Jira Cloud v3 pour un rendu premium et fidèle.
 """
 
 import re
-
-
-def parse_inline_text(text: str) -> list:
-    """
-    Analyse une ligne de texte pour y détecter et structurer les éléments inline ADF
-    (bold, italic, code, liens). Prévient tout conflit d'interprétation avec les crochets
-    en utilisant la structure JSON sémantique d'ADF.
-    """
-    pattern = re.compile(
-        r"(\*\*(.*?)\*\*)|"  # 1, 2: **bold**
-        r"(\*(.*?)\*)|"  # 3, 4: *italic/bold*
-        r"(_(.*?)_)|"  # 5, 6: _italic_
-        r"(`([^`]+)`)|"  # 7, 8: `code`
-        r"(\[([^\]]+)\]\(([^)]+)\))"  # 9, 10, 11: [text](url)
-    )
-
-    nodes = []
-    last_idx = 0
-
-    for match in pattern.finditer(text):
-        start, end = match.span()
-        if start > last_idx:
-            nodes.append({"type": "text", "text": text[last_idx:start]})
-
-        g_bold = match.group(1)
-        g_italic_star = match.group(3)
-        g_italic_under = match.group(5)
-        g_code = match.group(7)
-        g_link = match.group(9)
-
-        if g_bold:
-            nodes.append(
-                {"type": "text", "text": match.group(2), "marks": [{"type": "strong"}]}
-            )
-        elif g_italic_star:
-            nodes.append(
-                {"type": "text", "text": match.group(4), "marks": [{"type": "em"}]}
-            )
-        elif g_italic_under:
-            nodes.append(
-                {"type": "text", "text": match.group(6), "marks": [{"type": "em"}]}
-            )
-        elif g_code:
-            nodes.append(
-                {"type": "text", "text": match.group(8), "marks": [{"type": "code"}]}
-            )
-        elif g_link:
-            nodes.append(
-                {
-                    "type": "text",
-                    "text": match.group(10),
-                    "marks": [{"type": "link", "attrs": {"href": match.group(11)}}],
-                }
-            )
-
-        last_idx = end
-
-    if last_idx < len(text):
-        nodes.append({"type": "text", "text": text[last_idx:]})
-
-    return [n for n in nodes if n.get("text") != ""]
+from src.pipelines.jira.adf_inline import parse_inline_text
 
 
 def markdown_to_adf(md: str) -> dict:
@@ -88,10 +28,6 @@ def markdown_to_adf(md: str) -> dict:
     list_type = None
     list_items = []
 
-    # Suivi de la numérotation continue des listes ordonnées (Bug 1) :
-    # quand une orderedList est interrompue par un bloc (code, citation, paragraphe)
-    # puis reprend, la seconde liste doit démarrer à l'ordinal suivant (attrs.order)
-    # plutôt que de redémarrer à 1.
     ordered_counter = 0
     prev_block_was_ordered = False
 
@@ -119,7 +55,6 @@ def markdown_to_adf(md: str) -> dict:
             while i < len(items):
                 indent, text = items[i]
 
-                # Regrouper tous les enfants ayant une indentation strictement supérieure
                 children = []
                 j = i + 1
                 while j < len(items) and items[j][0] > indent:
@@ -128,13 +63,10 @@ def markdown_to_adf(md: str) -> dict:
 
                 list_item = {
                     "type": "listItem",
-                    "content": [
-                        {"type": "paragraph", "content": parse_inline_text(text)}
-                    ],
+                    "content": [{"type": "paragraph", "content": parse_inline_text(text)}],
                 }
 
                 if children:
-                    # Les sous-listes sont toujours des bulletList par défaut dans ce parseur simplifié
                     child_list = build_list(children, "bulletList")
                     if child_list:
                         list_item["content"].append(child_list)
@@ -147,10 +79,8 @@ def markdown_to_adf(md: str) -> dict:
         adf_node = build_list(list_items, list_type)
         if adf_node:
             if list_type == "orderedList":
-                # Nombre d'items de premier niveau de cette liste ordonnée
                 top_level_count = len(adf_node.get("content", []))
                 if prev_block_was_ordered and ordered_counter > 0:
-                    # Reprise d'une numérotation interrompue : démarrer à l'ordinal suivant
                     adf_node.setdefault("attrs", {})["order"] = ordered_counter + 1
                 ordered_counter += top_level_count
                 prev_block_was_ordered = True
@@ -175,9 +105,7 @@ def markdown_to_adf(md: str) -> dict:
                 row_cells.append(
                     {
                         "type": cell_type,
-                        "content": [
-                            {"type": "paragraph", "content": parse_inline_text(cell)}
-                        ],
+                        "content": [{"type": "paragraph", "content": parse_inline_text(cell)}],
                     }
                 )
             adf_rows.append({"type": "tableRow", "content": row_cells})
@@ -189,7 +117,6 @@ def markdown_to_adf(md: str) -> dict:
     for line in lines:
         stripped = line.strip()
 
-        # 1. Code blocks
         if stripped.startswith("```"):
             flush_paragraph()
             flush_list()
@@ -219,7 +146,6 @@ def markdown_to_adf(md: str) -> dict:
             code_lines.append(line)
             continue
 
-        # 2. Tables
         if stripped.startswith("|"):
             flush_paragraph()
             flush_list()
@@ -234,12 +160,10 @@ def markdown_to_adf(md: str) -> dict:
             if in_table:
                 flush_table()
 
-        # 3. Headings
         if stripped.startswith("#"):
             flush_paragraph()
             flush_list()
             flush_table()
-            # Un titre rompt toute séquence de numérotation ordonnée
             ordered_counter = 0
             prev_block_was_ordered = False
             match = re.match(r"^(#+)\s+(.*)$", stripped)
@@ -255,7 +179,6 @@ def markdown_to_adf(md: str) -> dict:
                 )
                 continue
 
-        # 4. Bullet lists
         bullet_match = re.match(r"^(\s*)([-*])\s+(.*)$", line)
         if bullet_match:
             flush_paragraph()
@@ -268,7 +191,6 @@ def markdown_to_adf(md: str) -> dict:
             list_items.append((indent, content))
             continue
 
-        # 5. Ordered lists
         ordered_match = re.match(r"^(\s*)\d+\.\s+(.*)$", line)
         if ordered_match:
             flush_paragraph()
@@ -281,17 +203,14 @@ def markdown_to_adf(md: str) -> dict:
             list_items.append((indent, content))
             continue
 
-        # Non-list line
         flush_list()
 
-        # 6. Horizontal Rules
         if stripped in ["---", "***", "___"]:
             flush_paragraph()
             flush_table()
             adf_content.append({"type": "rule"})
             continue
 
-        # 7. Blockquotes
         if stripped.startswith(">"):
             flush_paragraph()
             flush_table()
@@ -340,14 +259,11 @@ def markdown_to_adf(md: str) -> dict:
                 adf_content.append(
                     {
                         "type": "blockquote",
-                        "content": [
-                            {"type": "paragraph", "content": parse_inline_text(content)}
-                        ],
+                        "content": [{"type": "paragraph", "content": parse_inline_text(content)}],
                     }
                 )
             continue
 
-        # 8. Regular lines — groupées dans un paragraphe compact avec hardBreaks
         if stripped == "":
             flush_paragraph()
         else:
