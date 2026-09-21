@@ -8,7 +8,6 @@ Conforme ADR-0202 (<=300 lignes, <=15 Ko) et ADR-0369 (Python Senior).
 from __future__ import annotations
 
 import json
-import logging
 import re
 import subprocess
 import time
@@ -25,8 +24,9 @@ from src.pipelines.qa_certifier_models import (
     QaCertificationReport,
     format_qa_markdown,
 )
+from src.utils.logger import get_logger
 
-logger = logging.getLogger("pipelines.qa_certifier")
+logger = get_logger("pipelines.qa_certifier")
 
 
 class QaCertifierEngine:
@@ -43,6 +43,20 @@ class QaCertifierEngine:
         self.project_name = project_name
         self.pytest_runner = pytest_runner
         self.default_timeout = default_timeout
+
+    def _log_pytest_error(self, message: str, violation_type: str) -> None:
+        """Journalise une erreur d'invocation pytest avec contexte métier (ADR-0369)."""
+        logger.error(
+            message,
+            exc_info=True,
+            extra={
+                "project": self.project_name,
+                "gate": 3,
+                "phase": "STAGE_4_VALIDATE",
+                "check_name": "pytest_suite",
+                "violation_type": violation_type,
+            },
+        )
 
     def run_pytest_suite(
         self, test_dir: Optional[Path] = None, timeout_seconds: Optional[float] = None
@@ -81,6 +95,9 @@ class QaCertifierEngine:
                 details=output[:600],
             )
         except subprocess.TimeoutExpired as exc:
+            self._log_pytest_error(
+                f"Délai d'exécution expiré (> {timeout}s) lors de pytest.", "timeout"
+            )
             return PytestExecutionResult(
                 all_passed=False,
                 total_tests=0,
@@ -90,6 +107,9 @@ class QaCertifierEngine:
                 details=f"Délai d'exécution expiré (> {timeout}s) : {exc}",
             )
         except Exception as exc:
+            self._log_pytest_error(
+                "Erreur d'invocation du banc de tests pytest.", "invocation_error"
+            )
             return PytestExecutionResult(
                 all_passed=False,
                 total_tests=0,
@@ -117,19 +137,13 @@ class QaCertifierEngine:
                     if "__pycache__" not in str(f) and ".venv" not in str(f)
                 ]
 
-        violations_list = []
-        for pf in py_files:
-            rep: AstAuditReport = AstChecker.audit_file(pf)
-            if not rep.passed:
-                for v in rep.violations:
-                    violations_list.append(
-                        {
-                            "file": str(pf),
-                            "rule_id": v.rule_id,
-                            "line": v.line_number,
-                            "message": v.message,
-                        }
-                    )
+        reports = [(pf, AstChecker.audit_file(pf)) for pf in py_files]
+        violations_list = [
+            {"file": str(pf), "rule_id": v.rule_id, "line": v.line_number, "message": v.message}
+            for pf, rep in reports
+            if not rep.passed
+            for v in rep.violations
+        ]
 
         return AstAuditSummary(
             files_audited=len(py_files),

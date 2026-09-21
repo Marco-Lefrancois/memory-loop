@@ -4,10 +4,14 @@ Gestionnaire CLI du verrou d'attention et des transitions de la State Machine (F
 """
 
 import os
+import time
 import yaml
 from pathlib import Path
 from src.state import StoryStatus
 from src.pipelines.state_machine import StateMachineEngine, StateTransitionError
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.focus")
 
 
 def set_focus(project_name: str, story_rel_path: str, base_projects_dir: str = "Projects"):
@@ -16,6 +20,15 @@ def set_focus(project_name: str, story_rel_path: str, base_projects_dir: str = "
     normalise les autres stories non-terminées à OPEN/ON-HOLD,
     et valide l'unicité du focus via le moteur StateMachineEngine.
     """
+    t0 = time.perf_counter()
+    logger.info(
+        f"[FOCUS] Début verrouillage attention sur '{story_rel_path}' (projet={project_name}).",
+        extra={
+            "story_id": story_rel_path,
+            "lock_type": "focus_lock",
+            "phase": "STAGE_2_PLAN_ANALYSE",
+        },
+    )
     project_path = Path(base_projects_dir) / project_name
     if not project_path.exists():
         raise FileNotFoundError(f"Projet introuvable : {project_path}")
@@ -54,7 +67,16 @@ def set_focus(project_name: str, story_rel_path: str, base_projects_dir: str = "
                         matches.append(f)
                         break
                 except Exception as e:
-                    print(f"Warning reading story file {f}: {e}")
+                    logger.error(
+                        f"Erreur de lecture du fichier de story '{f}' lors de la résolution du focus.",
+                        exc_info=True,
+                        extra={
+                            "story_id": story_rel_path,
+                            "lock_type": "focus_read",
+                            "phase": "STAGE_2_PLAN_ANALYSE",
+                            "file_path": str(f),
+                        },
+                    )
 
         if matches:
             target_story_file = matches[0]
@@ -118,15 +140,43 @@ def set_focus(project_name: str, story_rel_path: str, base_projects_dir: str = "
         except StateTransitionError:
             raise
         except Exception as e:
-            print(f"Warning normalizing {file}: {e}")
+            logger.error(
+                f"Erreur de normalisation du frontmatter pour '{file}'.",
+                exc_info=True,
+                extra={
+                    "story_id": story_rel_path,
+                    "lock_type": "frontmatter",
+                    "phase": "STAGE_2_PLAN_ANALYSE",
+                    "file_path": str(file),
+                },
+            )
 
     # 2. Validation déterministe par le moteur State Machine
     engine.validate_single_in_analyze()
 
+    duration_ms = round((time.perf_counter() - t0) * 1000, 2)
     if focus_changed:
         print(f"[FOCUS STATE MACHINE] Récit '{story_rel_path}' positionné au statut IN_ANALYZE.")
+        logger.info(
+            f"[FOCUS] Verrou d'attention positionné sur '{story_rel_path}' (IN_ANALYZE).",
+            extra={
+                "story_id": story_rel_path,
+                "lock_type": "focus_lock",
+                "phase": "STAGE_2_PLAN_ANALYSE",
+                "duration_ms": duration_ms,
+            },
+        )
     else:
         print(
             f"[FOCUS STATE MACHINE] Récit '{story_rel_path}' déjà au statut IN_ANALYZE (idempotent)."
+        )
+        logger.info(
+            f"[FOCUS] Récit '{story_rel_path}' déjà au statut IN_ANALYZE (idempotent).",
+            extra={
+                "story_id": story_rel_path,
+                "lock_type": "focus_lock",
+                "phase": "STAGE_2_PLAN_ANALYSE",
+                "duration_ms": duration_ms,
+            },
         )
     return focus_changed

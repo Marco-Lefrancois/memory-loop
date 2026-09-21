@@ -7,10 +7,13 @@ Réutilise le pattern d'authentification de sync_engine (JIRA_URL / JIRA_EMAIL /
 JIRA_API_TOKEN chargés depuis l'environnement, jamais affichés).
 """
 
+import logging
 import os
 import httpx
 
 from src.cli import ZeroFluffConsole
+
+logger = logging.getLogger(__name__)
 
 
 def _adf_inline_to_md(node: dict) -> str:
@@ -76,9 +79,7 @@ def adf_to_markdown(desc: dict) -> str:
             for r_i, row in enumerate(children):
                 cells = row.get("content", [])
                 texts = [
-                    "".join(render(c) for c in cell.get("content", []))
-                    .strip()
-                    .replace("\n", " ")
+                    "".join(render(c) for c in cell.get("content", [])).strip().replace("\n", " ")
                     for cell in cells
                 ]
                 rows.append("| " + " | ".join(texts) + " |")
@@ -108,15 +109,17 @@ def read_jira_issue(issue_key: str) -> dict | None:
 
     if not all([jira_url, jira_email, jira_token]):
         ZeroFluffConsole.error("Identifiants Jira manquants dans le fichier .env.")
+        logger.error(
+            "jira.read.config_missing",
+            extra={"jira_key": issue_key, "config_missing": True},
+        )
         return None
 
     auth = (str(jira_email), str(jira_token))
     headers = {"Accept": "application/json", "Accept-Encoding": "gzip, deflate"}
 
     try:
-        with httpx.Client(
-            base_url=jira_url, auth=auth, headers=headers, timeout=30.0
-        ) as client:
+        with httpx.Client(base_url=jira_url, auth=auth, headers=headers, timeout=30.0) as client:
             resp = client.get(
                 f"/rest/api/3/issue/{issue_key}",
                 params={"fields": "summary,status,description"},
@@ -125,9 +128,38 @@ def read_jira_issue(issue_key: str) -> dict | None:
             data = resp.json()
     except httpx.HTTPStatusError as e:
         ZeroFluffConsole.error(f"Jira API {e.response.status_code} pour {issue_key}.")
+        if e.response.status_code == 429:
+            logger.warning(
+                "jira.read.rate_limited",
+                extra={
+                    "jira_key": issue_key,
+                    "http_status": 429,
+                    "retry_after": e.response.headers.get("Retry-After"),
+                    "fields_requested": "summary,status,description",
+                },
+            )
+        else:
+            logger.error(
+                "jira.read.http_error",
+                extra={
+                    "jira_key": issue_key,
+                    "http_status": e.response.status_code,
+                    "fields_requested": "summary,status,description",
+                },
+                exc_info=True,
+            )
         return None
     except Exception as e:  # noqa: BLE001
         ZeroFluffConsole.error(f"Erreur lecture Jira {issue_key}: {type(e).__name__}.")
+        logger.error(
+            "jira.read.unexpected_error",
+            extra={
+                "jira_key": issue_key,
+                "fields_requested": "summary,status,description",
+                "mapping_errors": type(e).__name__,
+            },
+            exc_info=True,
+        )
         return None
 
     fields = data.get("fields", {})

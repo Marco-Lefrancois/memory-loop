@@ -146,27 +146,6 @@ def get_observation_db_session(db_path: Path = _OBSERVATION_DB_PATH):
         conn.close()
 
 
-def _get_observation_conn() -> sqlite3.Connection:
-    """Retourne une connexion à la base des observations (Legacy helper déprécié — ADR-0369)."""
-    import warnings
-
-    warnings.warn(
-        "_get_observation_conn() is deprecated (ADR-0369); use 'with get_observation_db_session() as conn:' instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    _OBSERVATION_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(str(_OBSERVATION_DB_PATH), timeout=20.0)
-    conn.row_factory = sqlite3.Row
-    try:
-        conn.execute("PRAGMA journal_mode=WAL;")
-        conn.execute("PRAGMA busy_timeout=20000;")
-    except Exception:
-        pass
-    _init_observation_db(conn, _OBSERVATION_DB_PATH)
-    return conn
-
-
 _INITIALIZED_DBS = set()
 
 

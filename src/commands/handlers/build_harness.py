@@ -3,6 +3,7 @@ Handlers CLI mLoop pour le Harnais Déterministe de Phase 3 (ADR-0381 / EPIC-8).
 Regroupe les commandes de vérification statique AST (code-check), tournoi (code-tournament)
 et protocole TDD Red-Green (tdd-enforce).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -11,11 +12,18 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
-from src.cli import ZeroFluffConsole
+from typing import Any
+
+from src.cli import ZeroFluffConsole, LoggingConsole
 from src.core.ast_checker import check_file_ast, format_audit_report
 
 if TYPE_CHECKING:
     from src.state import LoopState
+
+
+def _log_err(command: str, msg: str, args: Any = None, **ctx: Any) -> None:
+    """Route une erreur handler vers LoggingConsole.error avec contexte standardise (MLOOP-142-BE)."""
+    LoggingConsole.error(msg, command=command, project=getattr(args, "project", None), **ctx)
 
 
 def handle_code_check(
@@ -52,11 +60,17 @@ def handle_code_check(
         src_dir = Path("src")
         if src_dir.exists():
             files_to_check = [
-                f for f in src_dir.rglob("*.py")
+                f
+                for f in src_dir.rglob("*.py")
                 if "__pycache__" not in str(f) and ".venv" not in str(f)
             ]
     else:
-        ZeroFluffConsole.error("Veuillez spécifier --file <chemin>, --story <ID> ou --all.")
+        _log_err(
+            "code-check",
+            "Veuillez spécifier --file <chemin>, --story <ID> ou --all.",
+            args,
+            story_id=story_arg,
+        )
         return 1
 
     total_violations = 0
@@ -66,14 +80,16 @@ def handle_code_check(
         report = check_file_ast(f_path)
         if report.passed:
             total_passed += 1
-            ZeroFluffConsole.info(f"[PASS] {f_path.as_posix()} ({report.line_count} lignes, {report.duration_ms:.1f}ms)")
+            ZeroFluffConsole.info(
+                f"[PASS] {f_path.as_posix()} ({report.line_count} lignes, {report.duration_ms:.1f}ms)"
+            )
         else:
             total_violations += len(report.violations)
             print(format_audit_report(report), file=sys.stderr)
 
     ZeroFluffConsole.step_s1(
         "Bilan code-check AST",
-        f"{total_passed}/{len(files_to_check)} conformes | {total_violations} violation(s)"
+        f"{total_passed}/{len(files_to_check)} conformes | {total_violations} violation(s)",
     )
     return 0 if total_violations == 0 else 1
 
@@ -96,7 +112,12 @@ def handle_code_tournament(
     test_arg = getattr(args, "test_file", None)
 
     if not story_id or not target_arg:
-        ZeroFluffConsole.error("Arguments obligatoires manquants : --story <ID> et --target <chemin>.")
+        _log_err(
+            "code-tournament",
+            "Arguments obligatoires manquants : --story <ID> et --target <chemin>.",
+            args,
+            story_id=story_id,
+        )
         return 1
 
     target_path = Path(target_arg)
@@ -119,7 +140,12 @@ def handle_code_tournament(
         story_slug = story_id.lower().replace("-", "_")
         candidates = list(Path("tests").glob(f"*{story_slug}*.py"))
         if not candidates:
-            ZeroFluffConsole.error(f"Aucun banc de test trouvé pour {story_id} sous tests/.")
+            _log_err(
+                "code-tournament",
+                f"Aucun banc de test trouvé pour {story_id} sous tests/.",
+                args,
+                story_id=story_id,
+            )
             return 1
         test_file = candidates[0]
 
@@ -133,99 +159,30 @@ def handle_code_tournament(
         )
         report = engine.run_tournament()
         print(format_tournament_report(report))
-        ZeroFluffConsole.info(f"Golden Master promu avec succès : {report.winner_id} -> {target_path.as_posix()}")
+        ZeroFluffConsole.info(
+            f"Golden Master promu avec succès : {report.winner_id} -> {target_path.as_posix()}"
+        )
         return 0
     except (DraftFolderNotFoundError, NoQualifiedCandidateError) as e:
-        ZeroFluffConsole.error(f"Échec du tournoi de code : {e}")
+        _log_err(
+            "code-tournament",
+            f"Échec du tournoi de code : {e}",
+            args,
+            story_id=story_id,
+            exc_info=True,
+        )
         return 1
     except Exception as e:
-        ZeroFluffConsole.error(f"Erreur inattendue pendant le tournoi : {e}")
+        _log_err(
+            "code-tournament",
+            f"Erreur inattendue pendant le tournoi : {e}",
+            args,
+            story_id=story_id,
+            exc_info=True,
+        )
         return 1
 
 
-def handle_tdd_enforce(
-    args: argparse.Namespace,
-    state: Optional[LoopState] = None,
-    project_path: Optional[Path] = None,
-) -> int:
-    """Commande d'enforcement et de traçabilité du cycle TDD Red-Green (ADR-0381)."""
-    from src.core.tdd_enforcer import (
-        TddEnforcer,
-        format_tdd_status,
-        MissingRedSnapshotError,
-        UnexpectedPassingTestError,
-        TestFailureError,
-        AstViolationError,
-    )
-
-    phase = getattr(args, "phase", None)
-    story_id = getattr(args, "story", None)
-    test_arg = getattr(args, "test_file", None)
-    source_arg = getattr(args, "source_file", None)
-
-    if not phase or not story_id:
-        ZeroFluffConsole.error("Arguments obligatoires : --phase [red|green|verify] et --story <ID>.")
-        return 1
-
-    target_proj = getattr(args, "project", None) or os.getenv("MLOOP_ACTIVE_PROJECT", "mLoop")
-    if project_path:
-        base_dir = project_path
-    elif (Path("Projects") / target_proj).exists():
-        base_dir = Path("Projects") / target_proj
-    else:
-        base_dir = Path(".")
-
-    evidence_file = base_dir / "memory" / "evidence" / f"{story_id}_evidence.json"
-    if not evidence_file.exists() and (Path("Projects") / "mLoop" / "memory" / "evidence" / f"{story_id}_evidence.json").exists():
-        evidence_file = Path("Projects") / "mLoop" / "memory" / "evidence" / f"{story_id}_evidence.json"
-
-    enforcer = TddEnforcer()
-
-    try:
-        if phase == "red":
-            if not test_arg:
-                story_slug = story_id.lower().replace("-", "_")
-                candidates = list(Path("tests").glob(f"*{story_slug}*.py"))
-                if not candidates:
-                    ZeroFluffConsole.error(f"Spécifier --test-file pour la phase RED de {story_id}.")
-                    return 1
-                test_file = candidates[0]
-            else:
-                test_file = Path(test_arg)
-
-            ZeroFluffConsole.step_s1("TDD Enforcer [RED]", f"Vérification de l'échec initial pour {story_id}...")
-            red = enforcer.record_red(story_id, test_file, evidence_file)
-            ZeroFluffConsole.info(f"Sceau RED validé : exit_code={red.exit_code} | SHA-256={red.test_sha256[:12]}...")
-            return 0
-
-        elif phase == "green":
-            if not test_arg or not source_arg:
-                ZeroFluffConsole.error("La phase GREEN exige --test-file et --source-file.")
-                return 1
-
-            ZeroFluffConsole.step_s1("TDD Enforcer [GREEN]", f"Vérification du succès complet pour {story_id}...")
-            green = enforcer.record_green(story_id, Path(test_arg), Path(source_arg), evidence_file)
-            ZeroFluffConsole.info(f"Sceau GREEN validé : exit_code={green.exit_code} | AST=OK | SHA-256={green.source_sha256[:12]}...")
-            return 0
-
-        elif phase == "verify":
-            ZeroFluffConsole.step_s1("TDD Enforcer [VERIFY]", f"Vérification conformité Gate 3 pour {story_id}...")
-            compliant = enforcer.verify_gate_3_compliance(story_id, evidence_file)
-            if compliant:
-                ZeroFluffConsole.info(f"Récit {story_id} certifié TDD Red-Green. Approbation Gate 3 déverrouillée.")
-                return 0
-            else:
-                ZeroFluffConsole.error(f"Récit {story_id} non conforme TDD (couple Red/Green incomplet).")
-                return 1
-        else:
-            ZeroFluffConsole.error(f"Phase inconnue : {phase} (valeurs admises : red, green, verify).")
-            return 1
-
-    except (MissingRedSnapshotError, UnexpectedPassingTestError, TestFailureError, AstViolationError) as e:
-        ZeroFluffConsole.error(f"Violation TDD Enforcer : {e}")
-        return 1
-    except Exception as e:
-        ZeroFluffConsole.error(f"Erreur TDD Enforcer : {e}")
-        return 1
-
-
+# handle_tdd_enforce est extrait dans build_harness_tdd.py (découpage ADR-0202) et
+# réexporté ci-dessous pour préserver le routing '_registry.py' (build_harness:handle_tdd_enforce).
+from src.commands.handlers.build_harness_tdd import handle_tdd_enforce  # noqa: E402,F401

@@ -1,6 +1,10 @@
 import os
+import time
 from pathlib import Path
 from src.cli import ZeroFluffConsole
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.vibe_check")
 
 
 def detect_project_lifecycle_stage(
@@ -92,8 +96,16 @@ def detect_project_lifecycle_stage(
                 if any(kw in row.upper() for kw in engaged_keywords):
                     has_engaged_stories = True
                     break
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(
+                "Erreur de lecture du sprint_backlog.md lors de la détection de phase.",
+                exc_info=True,
+                extra={
+                    "check_name": "detect_project_lifecycle_stage",
+                    "violation_type": "backlog_read_error",
+                    "file_path": str(backlog_file),
+                },
+            )
 
     # Si des récits physiques existent ou si des stories sont activement engagées en analyse/dev
     if has_active_stories or has_engaged_stories:
@@ -130,7 +142,12 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
         elif (Path("Projects") / project_name.replace(" ", "_")).exists():
             project_dir = Path("Projects") / project_name.replace(" ", "_")
 
+    t0 = time.perf_counter()
     lifecycle_mode, stage_label = detect_project_lifecycle_stage(project_dir, explicit_stage=stage)
+    logger.info(
+        f"[VIBE-CHECK] Début du guardrail pré-vol pour '{project_name}'.",
+        extra={"phase": stage_label, "project": project_name},
+    )
 
     ZeroFluffConsole.section(
         f"Guardrail Vibe-Check Pré-Vol - mLoop ({project_name}) [Mode: {lifecycle_mode} | {stage_label}]"
@@ -259,8 +276,16 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
                         leaks = SecretLeakGuard.scan_for_leaks(content)
                         if leaks:
                             secret_leaks.append(f.name)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.error(
+                            f"Erreur de lecture du fichier '{f}' lors du scan de fuite de secrets.",
+                            exc_info=True,
+                            extra={
+                                "check_name": "secret_leak_scan",
+                                "violation_type": "file_read_error",
+                                "file_path": str(f),
+                            },
+                        )
     checks.append(
         {
             "check": "Étanchéité des Secrets & Tokens (Zero-Leak Envsitter Pattern)",
@@ -342,7 +367,16 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
             for mockup_md in maquettes_dir.glob("*.md"):
                 try:
                     mtext = mockup_md.read_text(encoding="utf-8", errors="replace")
-                except Exception:
+                except Exception as e:
+                    logger.error(
+                        f"Erreur de lecture de la maquette '{mockup_md}' (Contrat Visuel).",
+                        exc_info=True,
+                        extra={
+                            "check_name": "visual_contract_ocr",
+                            "violation_type": "mockup_read_error",
+                            "file_path": str(mockup_md),
+                        },
+                    )
                     continue
                 if not mtext.startswith("---"):
                     continue
@@ -382,14 +416,30 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
                 for sf in stories_dir.glob("**/*.md"):
                     try:
                         s_content = sf.read_text(encoding="utf-8", errors="replace")
-                    except Exception:
+                    except Exception as e:
+                        logger.error(
+                            f"Erreur de lecture du récit '{sf}' lors de la validation RuleEngine.",
+                            exc_info=True,
+                            extra={
+                                "check_name": "rule_engine_validation",
+                                "violation_type": "story_read_error",
+                                "file_path": str(sf),
+                            },
+                        )
                         continue
                     for v in rule_engine.validate_all(s_content, target="backlog_stories"):
                         if v.severity == "BLOCKING":
                             rule_engine_ok = False
                             rule_engine_violations.append(f"{sf.name}:[{v.check_id}]")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(
+                "Erreur lors du chargement ou de l'exécution du RuleEngine dynamique (ADR-0328).",
+                exc_info=True,
+                extra={
+                    "check_name": "rule_engine_validation",
+                    "violation_type": "rule_engine_load_error",
+                },
+            )
 
     rule_engine_msg = (
         "Intégrité RuleEngine Dynamique (ADR-0328)"
@@ -416,8 +466,15 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
                     if v:
                         sow_granularity_ok = False
                         sow_violations_count += len(v)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(
+                "Erreur lors de la validation de granularité SOW (ADR-0331).",
+                exc_info=True,
+                extra={
+                    "check_name": "sow_granularity",
+                    "violation_type": "sow_engine_error",
+                },
+            )
 
     sow_msg = (
         "Granularité SOW (ADR-0331)"
@@ -475,8 +532,14 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
                         if not phase_gate_ok:
                             break
                 except Exception as e:
-                    logger.debug(
-                        f"Erreur lecture sprint_backlog.md pour Check 13: {e}", exc_info=True
+                    logger.error(
+                        f"Erreur lecture sprint_backlog.md pour Check 13: {e}",
+                        exc_info=True,
+                        extra={
+                            "check_name": "phase_gate_check13",
+                            "violation_type": "backlog_read_error",
+                            "file_path": str(backlog_file),
+                        },
                     )
         else:
             # En Phase 2 et plus, vérifier qu'un SOW, des specs ou un sprint_backlog existe si des stories existent (Fast-Track)
@@ -630,6 +693,14 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
     except Exception as exc:
         standards_graph_ok = False
         standards_violations.append(f"Erreur StandardsGraph : {exc}")
+        logger.error(
+            "Erreur lors de l'audit d'intégrité StandardsGraph (ADR-0379).",
+            exc_info=True,
+            extra={
+                "check_name": "standards_graph_integrity",
+                "violation_type": "standards_graph_error",
+            },
+        )
 
     standards_msg = (
         "Intégrité StandardsGraph & Bouclier de Confinement SSOT (ADR-0379)"
@@ -651,6 +722,17 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
 
     is_valid = passed_count == total_count
     ZeroFluffConsole.info(f"Résultat Vibe-Check : {passed_count}/{total_count} contrôles validés.")
+
+    duration_ms = round((time.perf_counter() - t0) * 1000, 2)
+    logger.info(
+        f"[VIBE-CHECK] Fin du guardrail pré-vol pour '{project_name}' : {passed_count}/{total_count}.",
+        extra={
+            "phase": stage_label,
+            "project": project_name,
+            "score": f"{passed_count}/{total_count}",
+            "duration_ms": duration_ms,
+        },
+    )
 
     return {
         "status": "PASS" if is_valid else "FAIL",

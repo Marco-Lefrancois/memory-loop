@@ -11,6 +11,7 @@ Sécurité (ADR JIRA_SYNC_SAFE) :
 """
 
 import hashlib
+import logging
 import os
 import uuid
 import httpx
@@ -20,6 +21,8 @@ from pathlib import Path
 from typing import List, Optional
 from src.state import LoopState, SprintBacklogItem
 from src.cli import ZeroFluffConsole
+
+logger = logging.getLogger(__name__)
 from src.pipelines.jira.jira_helpers import (
     _fetch_allowed_subtask_types,
     _validate_subtasks_mapping,
@@ -58,7 +61,15 @@ def build_sync_preview(
                     candidates[0].read_bytes()
                 ).hexdigest()
             except Exception:
-                pass
+                logger.warning(
+                    "jira.sync.preview.hash_failed",
+                    extra={
+                        "manifest_id": manifest_id,
+                        "story_id": item.id,
+                        "story_path": str(candidates[0]),
+                    },
+                    exc_info=True,
+                )
 
     preview = {
         "manifest_id": manifest_id,
@@ -93,6 +104,17 @@ def build_sync_preview(
         )
     except Exception as e:
         ZeroFluffConsole.warning(f"Impossible d'écrire le manifeste SHA-256 : {e}")
+        logger.error(
+            "jira.sync.preview.manifest_write_failed",
+            extra={
+                "manifest_id": manifest_id,
+                "target_keys": target_keys,
+                "eligible_count": len(eligible_items),
+                "dry_run": True,
+                "apply_mode": False,
+            },
+            exc_info=True,
+        )
 
     return preview
 
@@ -118,6 +140,10 @@ def sync_targeted_to_jira(
 
     if not all([jira_url, jira_email, jira_token]):
         ZeroFluffConsole.error("Identifiants Jira manquants dans le fichier .env.")
+        logger.error(
+            "jira.sync.config_missing",
+            extra={"config_missing": True, "manifest_id": manifest_id},
+        )
         return None
 
     auth = (jira_email, jira_token)
@@ -151,7 +177,11 @@ def sync_targeted_to_jira(
             try:
                 jira_cache = json.loads(cache_file.read_text(encoding="utf-8"))
             except Exception:
-                pass
+                logger.warning(
+                    "jira.sync.cache_read_failed",
+                    extra={"manifest_id": manifest_id, "cache_file": str(cache_file)},
+                    exc_info=True,
+                )
 
         actions_log: list = []
         if global_epic_key:
@@ -204,7 +234,15 @@ def sync_targeted_to_jira(
                 encoding="utf-8",
             )
         except Exception:
-            pass
+            logger.warning(
+                "jira.sync.cache_write_failed",
+                extra={
+                    "manifest_id": manifest_id,
+                    "eligible_count": len(eligible_items),
+                    "cache_file": str(cache_file),
+                },
+                exc_info=True,
+            )
 
         _print_audit_report(actions_log)
         _write_markdown_report(project_path, state.project_name, actions_log)
@@ -221,6 +259,10 @@ def sync_backlog_to_jira(state: LoopState) -> LoopState:
         "[COMPAT] sync_backlog_to_jira() est appelée en mode rétro-compatibilité.\n"
         "  Pour une synchronisation sécurisée, utilisez la CLI :\n"
         "  python src/swarm.py jira_sync --project <P> --story <CLE>"
+    )
+    logger.warning(
+        "jira.sync.compat_entrypoint",
+        extra={"apply_mode": False, "dry_run": True, "manifest_id": "compat"},
     )
     project_path = Path(r"C:\Memory Loop\Projects") / state.project_name
     state.discover_backlog(project_path)

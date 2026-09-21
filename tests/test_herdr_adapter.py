@@ -3,6 +3,7 @@ test_herdr_adapter.py - Unit tests for HerdrAdapter, Bloat Filtering, and Worker
 """
 
 import json
+import logging
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
@@ -39,15 +40,11 @@ def test_resolve_project_path(tmp_path):
     proj_a = projects_dir / "Metro_OneTrust"
     proj_a.mkdir()
 
-    resolved = resolve_project_path(
-        "Metro_OneTrust", base_projects_dir=str(projects_dir)
-    )
+    resolved = resolve_project_path("Metro_OneTrust", base_projects_dir=str(projects_dir))
     assert resolved == proj_a
 
     # Case-insensitive resolution
-    resolved_ci = resolve_project_path(
-        "metro_onetrust", base_projects_dir=str(projects_dir)
-    )
+    resolved_ci = resolve_project_path("metro_onetrust", base_projects_dir=str(projects_dir))
     assert resolved_ci == proj_a
 
 
@@ -108,9 +105,7 @@ def test_ensure_server_running_starts_daemon_when_down():
     mock_popen.assert_called_once()
     # La commande lancée doit être 'herdr server'
     launched_args = mock_popen.call_args[0][0]
-    assert "server" in launched_args, (
-        f"Doit lancer 'herdr server', reçu : {launched_args}"
-    )
+    assert "server" in launched_args, f"Doit lancer 'herdr server', reçu : {launched_args}"
 
 
 @patch.object(HerdrAdapter, "read_agent_output")
@@ -145,11 +140,7 @@ def test_worker_pipeline_commands(mock_exec, tmp_path):
     mock_exec.return_value = {
         "success": True,
         "result": {
-            "result": {
-                "agents": [
-                    {"name": "worker_1", "agent_status": "idle", "pane_id": "p1"}
-                ]
-            }
+            "result": {"agents": [{"name": "worker_1", "agent_status": "idle", "pane_id": "p1"}]}
         },
     }
 
@@ -186,9 +177,7 @@ def test_herdr_v082_primitives(mock_exec):
 
     # 4. Show Notification
     mock_exec.return_value = {"success": True, "result": {}}
-    res_notif = adapter.show_notification(
-        title="Alert", body="Test message", sound="done"
-    )
+    res_notif = adapter.show_notification(title="Alert", body="Test message", sound="done")
     assert res_notif["success"] is True
 
     # 5. Explain Agent
@@ -201,9 +190,7 @@ def test_herdr_v082_primitives(mock_exec):
 
     # 6. Plugin Invoke
     mock_exec.return_value = {"success": True, "result": {}}
-    res_plugin = adapter.plugin_invoke(
-        "reap_zombies", plugin_id="org.mloop.orchestrator"
-    )
+    res_plugin = adapter.plugin_invoke("reap_zombies", plugin_id="org.mloop.orchestrator")
     assert res_plugin["success"] is True
 
 
@@ -264,9 +251,7 @@ def test_mcp_herdr_tool_dispatch():
         res = handle_tool_call("herdr_layout_export", {"tab_id": "t1"})
         assert res["success"] is True
 
-    with patch.object(
-        HerdrAdapter, "show_notification", return_value={"success": True}
-    ):
+    with patch.object(HerdrAdapter, "show_notification", return_value={"success": True}):
         res = handle_tool_call("herdr_notification_show", {"title": "Test Toast"})
         assert res["success"] is True
 
@@ -303,3 +288,135 @@ def test_mcp_herdr_tool_dispatch():
         res = handle_tool_call("herdr_agent_wait", {"agent_name_or_pane": "worker_1"})
         assert res["success"] is True
         assert res["agent_status"] == "working"
+
+
+# ---------------------------------------------------------------------------
+# MLOOP-143-BE : Failure Contract — Instrumentation logging workers Herdr
+# ---------------------------------------------------------------------------
+
+
+def _find_record(caplog, logger_name, level, message_substr):
+    """Retourne le premier LogRecord correspondant (logger/level/message)."""
+    for rec in caplog.records:
+        if (
+            rec.name == logger_name
+            and rec.levelno == level
+            and message_substr.lower() in rec.getMessage().lower()
+        ):
+            return rec
+    return None
+
+
+@patch.object(HerdrAdapter, "ensure_server_running", return_value=True)
+@patch.object(HerdrAdapter, "prompt_agent", return_value={"success": True})
+@patch.object(HerdrAdapter, "start_agent", return_value={"success": True})
+@patch.object(HerdrAdapter, "wait_agent", side_effect=RuntimeError("PTY hang"))
+@patch.object(HerdrAdapter, "_exec")
+def test_spawn_worker_logs_pty_wait_timeout(
+    mock_exec, mock_wait, mock_start, mock_prompt, mock_ensure, tmp_path, caplog
+):
+    """Simulation panne PTY au spawn : wait_agent lève -> WARNING structuré + spawn résilient."""
+    mock_exec.return_value = {"success": True, "result": {"pane": {"pane_id": "p_pty_1"}}}
+    adapter = HerdrAdapter(herdr_bin="herdr")
+
+    with caplog.at_level(logging.WARNING, logger="mloop.herdr_worker_core"):
+        res = adapter.spawn_story_worker(
+            project_name="TestProject",
+            story_id="US-PTY-01",
+            kind="opencode",
+            task_type="build",
+            root_dir=str(tmp_path),
+        )
+
+    # Résilience : le worker est quand même instancié malgré le hang PTY
+    assert res["success"] is True
+
+    rec = _find_record(caplog, "mloop.herdr_worker_core", logging.WARNING, "wait_agent timeout")
+    assert rec is not None, "Un WARNING de panne PTY doit être journalisé."
+    assert rec.exc_info is not None, "exc_info=True requis (ADR-0369 Zero-Silent-Pass)."
+    assert rec.worker_id == "worker_us_pty_01"
+    assert rec.pane_id == "p_pty_1"
+    assert rec.agent_kind == "opencode"
+    assert rec.task_type == "build"
+
+
+@patch.object(HerdrAdapter, "read_agent_output")
+def test_harvest_corrupt_evidence_logs_warning(mock_read, tmp_path, caplog):
+    """EvidencePack existant corrompu : WARNING structuré + repli résilient (harvest OK)."""
+    proj_dir = tmp_path / "Projects" / "TestProject"
+    evidence_dir = proj_dir / "memory" / "evidence"
+    evidence_dir.mkdir(parents=True)
+    corrupt_file = evidence_dir / "US-CORRUPT-01_evidence.json"
+    corrupt_file.write_text("{ this is : not valid json ]", encoding="utf-8")
+
+    mock_read.return_value = {"success": True, "raw_output": "[PASS] ok"}
+    adapter = HerdrAdapter(herdr_bin="herdr")
+
+    with caplog.at_level(logging.WARNING, logger="mloop.herdr_worker_core"):
+        res = adapter.harvest_story_evidence(
+            project_name="TestProject",
+            story_id="US-CORRUPT-01",
+            project_path=str(proj_dir),
+        )
+
+    assert res["success"] is True
+    rec = _find_record(
+        caplog, "mloop.herdr_worker_core", logging.WARNING, "EvidencePack existant illisible"
+    )
+    assert rec is not None, "Un WARNING d'EvidencePack illisible doit être journalisé."
+    assert rec.exc_info is not None
+    assert rec.worker_id == "worker_us_corrupt_01"
+    assert "US-CORRUPT-01_evidence.json" in rec.evidence_file
+
+
+@patch.object(HerdrAdapter, "list_agents")
+@patch.object(HerdrAdapter, "close_pane")
+def test_zombie_reap_logs_warning_and_error_on_close_fail(mock_close, mock_list, caplog):
+    """Zombie reap : WARNING systématique + ERROR si la fermeture du volet échoue."""
+    mock_list.return_value = {
+        "success": True,
+        "result": {
+            "agents": [{"name": "worker_z1", "pane_id": "p_zombie_1", "agent_status": "idle"}]
+        },
+    }
+    # La fermeture du volet zombie échoue -> doit déclencher un ERROR
+    mock_close.return_value = {"success": False, "error": "pane_locked"}
+    adapter = HerdrAdapter(herdr_bin="herdr")
+
+    with caplog.at_level(logging.WARNING, logger="mloop.herdr_worker_core"):
+        reap_res = adapter.audit_and_reap_zombies()
+
+    assert reap_res["success"] is True
+
+    warn_rec = _find_record(caplog, "mloop.herdr_worker_core", logging.WARNING, "Zombie reap")
+    assert warn_rec is not None, "Un WARNING de reap zombie doit être journalisé (standard)."
+    assert warn_rec.worker_id == "worker_z1"
+    assert warn_rec.pane_id == "p_zombie_1"
+    assert warn_rec.status == "idle"
+
+    err_rec = _find_record(caplog, "mloop.herdr_worker_core", logging.ERROR, "Échec reap zombie")
+    assert err_rec is not None, "Un ERROR doit être journalisé si le reap échoue."
+    assert err_rec.pane_id == "p_zombie_1"
+    assert err_rec.close_error == "pane_locked"
+
+
+@patch.object(HerdrAdapter, "spawn_story_worker")
+def test_worker_pipeline_spawn_failure_logs_error(mock_spawn, tmp_path, caplog):
+    """Échec spawn côté pipeline : logger.error structuré parallèle à ZeroFluffConsole."""
+    mock_spawn.return_value = {"success": False, "error": "daemon_unreachable"}
+
+    with caplog.at_level(logging.ERROR, logger="mloop.worker_pipeline"):
+        res = run_worker_spawn(
+            project_name="TestProject",
+            story_id="US-FAIL-01",
+            kind="opencode",
+            task_type="validation",
+        )
+
+    assert res["success"] is False
+    rec = _find_record(caplog, "mloop.worker_pipeline", logging.ERROR, "Échec spawn worker")
+    assert rec is not None, "Un ERROR de spawn doit être journalisé par le pipeline."
+    assert rec.worker_id == "US-FAIL-01"
+    assert rec.agent_kind == "opencode"
+    assert rec.task_type == "validation"
+    assert rec.error == "daemon_unreachable"

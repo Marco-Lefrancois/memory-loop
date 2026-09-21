@@ -3,11 +3,27 @@ Sous-module Jira : jira_item_sync.py
 Responsabilité : Synchronisation individuelle d'un récit vers Jira Cloud.
 """
 
+import hashlib
+import json
+import logging
 import os
 import httpx
 from pathlib import Path
 from src.state import LoopState, SprintBacklogItem
 from src.cli import ZeroFluffConsole
+
+logger = logging.getLogger(__name__)
+
+
+def _adf_hash(adf: dict) -> str:
+    """Empreinte SHA-256 (16 car.) d'un payload ADF pour tra\u00e7abilit\u00e9 sans fuite de contenu."""
+    try:
+        raw = json.dumps(adf, sort_keys=True, ensure_ascii=False).encode("utf-8")
+        return hashlib.sha256(raw).hexdigest()[:16]
+    except Exception:
+        return "unhashable"
+
+
 from src.pipelines.jira.md_cleaner import load_rich_description, clean_markdown_description
 from src.pipelines.jira.adf_converter import markdown_to_adf
 from src.pipelines.jira.jira_helpers import (
@@ -48,9 +64,41 @@ def _update_existing_story(
                 struct_payload["fields"]["parent"] = {"key": story_epic_key}
             client.put(f"/rest/api/3/issue/{story_key}", json=struct_payload)
         except Exception:
-            pass
+            logger.warning(
+                "jira.item.struct_update_failed",
+                extra={
+                    "story_id": item.id,
+                    "jira_key": story_key,
+                    "action": "MISE_A_JOUR",
+                },
+                exc_info=True,
+            )
+
+        if r_update.status_code == 429:
+            logger.warning(
+                "jira.item.rate_limited",
+                extra={
+                    "story_id": item.id,
+                    "jira_key": story_key,
+                    "action": "MISE_A_JOUR",
+                    "http_status": 429,
+                    "retry_after": r_update.headers.get("Retry-After"),
+                },
+            )
 
         if r_update.status_code in [200, 204]:
+            logger.info(
+                "jira.item.updated",
+                extra={
+                    "story_id": item.id,
+                    "jira_key": story_key,
+                    "action": "MISE_A_JOUR",
+                    "http_status": r_update.status_code,
+                    "adf_payload_hash": _adf_hash(adf_description),
+                    "summary": clean_story_title,
+                    "issuetype": "Story",
+                },
+            )
             actions_log.append(
                 {
                     "type": "Story",
@@ -73,6 +121,18 @@ def _update_existing_story(
                 state,
             )
         else:
+            logger.error(
+                "jira.item.update_failed",
+                extra={
+                    "story_id": item.id,
+                    "jira_key": story_key,
+                    "action": "MISE_A_JOUR",
+                    "http_status": r_update.status_code,
+                    "adf_payload_hash": _adf_hash(adf_description),
+                    "summary": clean_story_title,
+                    "issuetype": "Story",
+                },
+            )
             actions_log.append(
                 {
                     "type": "Story",
@@ -83,6 +143,18 @@ def _update_existing_story(
                 }
             )
     except Exception as e:
+        logger.error(
+            "jira.item.update_exception",
+            extra={
+                "story_id": item.id,
+                "jira_key": story_key,
+                "action": "MISE_A_JOUR",
+                "adf_payload_hash": _adf_hash(adf_description),
+                "summary": clean_story_title,
+                "issuetype": "Story",
+            },
+            exc_info=True,
+        )
         actions_log.append(
             {
                 "type": "Story",

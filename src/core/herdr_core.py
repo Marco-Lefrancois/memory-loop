@@ -111,8 +111,16 @@ class HerdrCoreMixin:
                 return {"success": True, "raw_output": stdout_str}
 
         except subprocess.TimeoutExpired:
-            logger.error(f"Herdr command timed out after {timeout}s: {' '.join(cmd)}")
+            logger.error(
+                f"Herdr command timed out after {timeout}s: {' '.join(cmd)}",
+                exc_info=True,
+                extra={"herdr_bin": self.herdr_bin, "cmd": " ".join(cmd), "timeout_sec": timeout},
+            )
             return {"success": False, "error": "timeout", "timeout_sec": timeout}
         except Exception as e:
-            logger.error(f"Exception executing Herdr command: {str(e)}")
+            logger.error(
+                f"Exception executing Herdr command: {str(e)}",
+                exc_info=True,
+                extra={"herdr_bin": self.herdr_bin, "cmd": " ".join(cmd), "error": str(e)},
+            )
             return {"success": False, "error": str(e)}

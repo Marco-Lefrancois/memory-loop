@@ -6,11 +6,14 @@ harvests execution evidence from PTY output, and automates resource teardown.
 """
 
 import json
+import logging
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 
 from src.cli import ZeroFluffConsole
 from src.core.herdr_adapter import herdr
+
+logger = logging.getLogger("mloop.worker_pipeline")
 
 
 def resolve_project_path(project_name: str, base_projects_dir: str = "Projects") -> Path:
@@ -68,9 +71,28 @@ def run_worker_spawn(
         ZeroFluffConsole.info(
             f"Récit cible : Projects/{project_name}/backlog/stories/{story_id}.md"
         )
+        logger.info(
+            "Worker lifecycle: spawn OK",
+            extra={
+                "worker_id": res.get("worker_name") or story_id,
+                "pane_id": res.get("pane_id"),
+                "agent_kind": res.get("kind", kind),
+                "task_type": task_type,
+                "model": res.get("model"),
+            },
+        )
     else:
         ZeroFluffConsole.error(
             f"Échec de l'instanciation du worker Herdr : {res.get('error', 'Inconnu')}"
+        )
+        logger.error(
+            "Échec spawn worker Herdr.",
+            extra={
+                "worker_id": story_id,
+                "agent_kind": kind,
+                "task_type": task_type,
+                "error": res.get("error"),
+            },
         )
 
     return res
@@ -111,9 +133,12 @@ def run_worker_status(
     # Inspection ciblée d'une story spécifique via PTY read non-bloquant (Contournement L-01)
     if story_id:
         import re
+
         clean_id = re.sub(r"[^a-zA-Z0-9_]", "_", story_id).lower()
         worker_name = f"worker_{clean_id}"[:32]
-        ZeroFluffConsole.info(f"\n[Sondage PTY non-bloquant pour '{story_id}'] (Worker: {worker_name})")
+        ZeroFluffConsole.info(
+            f"\n[Sondage PTY non-bloquant pour '{story_id}'] (Worker: {worker_name})"
+        )
         read_res = herdr.read_agent_output(worker_name, lines=15, source="recent-unwrapped")
         raw_out = read_res.get("raw_output") or ""
         if isinstance(read_res.get("result"), dict):
@@ -127,6 +152,7 @@ def run_worker_status(
         if project_name:
             proj_path = resolve_project_path(project_name)
             from src.core.worker_signal import read_worker_signal
+
             signal = read_worker_signal(proj_path, story_id)
             if signal:
                 ZeroFluffConsole.success(
@@ -191,6 +217,10 @@ def run_worker_harvest(project_name: str, story_id: str, lines: int = 150) -> Di
 
         if evidence_res.status == GateStatus.FAIL:
             ZeroFluffConsole.error(f"Échec Gate d'évidence : {'; '.join(evidence_res.reasons)}")
+            logger.error(
+                "Gate d'évidence FAIL.",
+                extra={"worker_id": story_id, "reasons": evidence_res.reasons},
+            )
         elif evidence_res.status == GateStatus.DEGENERATE_CANDIDATE:
             ZeroFluffConsole.warning(
                 f"Alerte Gate d'évidence (HITL requis) : {'; '.join(evidence_res.reasons)}"
@@ -211,8 +241,25 @@ def run_worker_harvest(project_name: str, story_id: str, lines: int = 150) -> Di
                 gk.execute(file_path=str(gate_candidate), mode="reverify", reverify=True)
         except Exception as exc:
             ZeroFluffConsole.warning(f"Re-vérification des gates ignorée ou échouée : {exc}")
+            logger.warning(
+                "Re-vérification des gates échouée.",
+                exc_info=True,
+                extra={"worker_id": story_id, "error": str(exc)},
+            )
+        logger.info(
+            "Worker lifecycle: harvest",
+            extra={
+                "worker_id": story_id,
+                "partial_harvest": res.get("partial_harvest"),
+                "cleaned_lines": res.get("cleaned_lines"),
+            },
+        )
     else:
         ZeroFluffConsole.error(f"Échec de la moisson d'évidences : {res.get('error', 'Inconnu')}")
+        logger.error(
+            "Échec moisson d'évidences.",
+            extra={"worker_id": story_id, "error": res.get("error")},
+        )
 
     return res
 
@@ -227,9 +274,17 @@ def run_worker_close(project_name: str, story_id: str) -> Dict[str, Any]:
     res = herdr.cleanup_worker(worker_name)
     if res.get("success"):
         ZeroFluffConsole.success(f"Worker et volet {worker_name} fermés avec succès.")
+        logger.info(
+            "Worker lifecycle: close",
+            extra={"worker_id": worker_name, "story_id": story_id},
+        )
     else:
         ZeroFluffConsole.warning(
             f"Fermeture volet {worker_name} : {res.get('error', 'Volet déjà clos ou non existant')}"
+        )
+        logger.warning(
+            "Fermeture volet worker non confirmée (déjà clos ou inexistant).",
+            extra={"worker_id": worker_name, "story_id": story_id, "error": res.get("error")},
         )
 
     return res
@@ -258,6 +313,14 @@ def run_worker_reap(
         ZeroFluffConsole.warning(f"Purge avec avertissements : {len(errors)} erreur(s).")
         for err in errors:
             ZeroFluffConsole.error(f" - Volet {err.get('pane_id')}: {err.get('error')}")
+            logger.error(
+                "Échec fermeture volet au reap.",
+                extra={
+                    "worker_id": err.get("name"),
+                    "pane_id": err.get("pane_id"),
+                    "error": err.get("error"),
+                },
+            )
 
     return res
 

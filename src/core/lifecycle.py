@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import logging
 import shutil
 import time
 from datetime import datetime, timezone
@@ -20,7 +19,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
-logger = logging.getLogger("lifecycle")
+from src.utils.logger import get_logger
+
+logger = get_logger("core.lifecycle")
 
 
 class ProjectLifecycleStage(str, Enum):
@@ -524,8 +525,19 @@ class ProjectLifecycleManager:
         if gate_number not in GATE_DEFINITIONS:
             raise ValueError(f"Porte inconnue : Gate {gate_number}. Portes valides : 1 à 5.")
 
+        t0 = time.perf_counter()
         state = cls.get_state(project_path)
         gate_def = GATE_DEFINITIONS[gate_number]
+        from_status_start = state.current_stage.value
+        logger.info(
+            f"[LIFECYCLE] Début approbation Gate {gate_number} par '{approver}'.",
+            extra={
+                "project": project_path.name,
+                "gate": gate_number,
+                "from_status": from_status_start,
+                "phase": state.canonical_stage.value,
+            },
+        )
 
         # Vérification d'alignement de phase (avec support canonique)
         expected_stage = gate_def["from_stage"]
@@ -598,7 +610,7 @@ class ProjectLifecycleManager:
             logger.debug(
                 f"[LIFECYCLE] Zombie reap non critique ignoré avant Gate {gate_number} : {reap_err}",
                 exc_info=True,
-                extra={"project": project_path.name},
+                extra={"project": project_path.name, "gate": gate_number},
             )
 
         # Calcul d'empreinte de sécurité sur les livrables de la phase
@@ -637,9 +649,18 @@ class ProjectLifecycleManager:
             state.current_stage = next_stage
 
         cls.save_state(project_path, state)
+        duration_ms = round((time.perf_counter() - t0) * 1000, 2)
         logger.info(
             f"[LIFECYCLE] Gate {gate_number} approuvée par '{approver}'. "
-            f"Projet '{project_path.name}' transite vers '{state.current_stage.value}'."
+            f"Projet '{project_path.name}' transite vers '{state.current_stage.value}'.",
+            extra={
+                "project": project_path.name,
+                "gate": gate_number,
+                "from_status": from_status_start,
+                "to_status": state.current_stage.value,
+                "duration_ms": duration_ms,
+                "phase": state.canonical_stage.value,
+            },
         )
         return state
 
@@ -735,7 +756,11 @@ class ProjectLifecycleManager:
                 with open(backlog_file, "w", encoding="utf-8") as f:
                     f.write(content)
             except Exception as e:
-                logger.debug(f"Erreur mise à jour sprint_backlog.md : {e}", exc_info=True)
+                logger.debug(
+                    f"Erreur mise à jour sprint_backlog.md : {e}",
+                    exc_info=True,
+                    extra={"project": project_path.name, "phase": "STAGE_1_INGEST"},
+                )
 
         res_dict = {
             "status": "completed",

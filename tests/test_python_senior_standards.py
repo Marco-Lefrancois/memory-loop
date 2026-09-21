@@ -13,7 +13,12 @@ from pathlib import Path
 import pytest
 
 from src.utils.logger import MLoopFormatter, MLoopLoggerAdapter, get_logger
-from src.loop_mem.db import _get_observation_conn, get_observation_db_session, add_rho_rule, search_rho_solution
+from src.loop_mem.db import (
+    _get_observation_conn,
+    get_observation_db_session,
+    add_rho_rule,
+    search_rho_solution,
+)
 from src.commands.handlers.code_intelligence import _run_codegraph_command
 
 
@@ -31,7 +36,7 @@ class TestPythonSeniorStandards:
             conn.execute("CREATE TABLE test_table (id INT, val TEXT)")
             conn.execute("INSERT INTO test_table VALUES (1, 'val1')")
             # En sortie de bloc, commit et close doivent s'exécuter
-        
+
         # Vérification externe : la table et la valeur sont bien persistées
         check_conn = sqlite3.connect(str(db_file))
         row = check_conn.execute("SELECT val FROM test_table WHERE id=1").fetchone()
@@ -68,8 +73,12 @@ class TestPythonSeniorStandards:
         assert sig.parameters["timeout"].default == 30.0
 
     def test_ast_check_subprocess_has_timeout_in_code_intelligence(self):
-        """Audit statique AST : vérifie que subprocess.run dans code_intelligence.py spécifie timeout."""
-        source_file = Path("src/commands/handlers/code_intelligence.py")
+        """Audit statique AST : vérifie que subprocess.run spécifie timeout.
+
+        Depuis le découpage ADR-0202 (MLOOP-142-BE), l'appel subprocess.run réside
+        dans le sous-module partagé _codegraph_common.py (extrait de code_intelligence.py).
+        """
+        source_file = Path("src/commands/handlers/_codegraph_common.py")
         tree = ast.parse(source_file.read_text(encoding="utf-8"))
 
         subprocess_run_calls = []
@@ -83,7 +92,9 @@ class TestPythonSeniorStandards:
         assert len(subprocess_run_calls) > 0, "Aucun appel subprocess.run trouvé"
         for call_node in subprocess_run_calls:
             keyword_names = [kw.arg for kw in call_node.keywords]
-            assert "timeout" in keyword_names, f"subprocess.run à la ligne {call_node.lineno} n'a pas de timeout !"
+            assert "timeout" in keyword_names, (
+                f"subprocess.run à la ligne {call_node.lineno} n'a pas de timeout !"
+            )
 
     # ═══════════════════════════════════════════════════════════
     # STANDARD 4 : LOGS CONTEXTUELS EXTRA={...} & LOGGER ADAPTER
@@ -169,4 +180,3 @@ class TestPythonSeniorStandards:
         with pytest.deprecated_call():
             conn = _get_observation_conn()
             conn.close()
-

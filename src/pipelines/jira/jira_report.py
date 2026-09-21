@@ -3,11 +3,14 @@ Sous-module Jira : jira_report.py
 Responsabilité : Génération des rapports d'audit et journaux de synchronisation.
 """
 
+import logging
 import os
 import re
 from datetime import datetime
 from pathlib import Path
 from src.cli import ZeroFluffConsole
+
+logger = logging.getLogger(__name__)
 
 
 def _print_audit_report(actions_log: list) -> None:
@@ -73,8 +76,23 @@ def _write_markdown_report(project_path: Path, project_name: str, actions_log: l
         ZeroFluffConsole.success(
             "Rapport de synchronisation rédigé sous memory/jira_sync_report.md"
         )
+        logger.info(
+            "jira.report.written",
+            extra={
+                "report_path": str(report_path),
+                "stories_synced": len(actions_log),
+            },
+        )
     except Exception as e:
         ZeroFluffConsole.error(f"Échec de l'écriture du rapport Jira : {e}")
+        logger.error(
+            "jira.report.write_failed",
+            extra={
+                "report_path": str(report_path),
+                "stories_synced": len(actions_log),
+            },
+            exc_info=True,
+        )
 
     history_lines = [
         f"\n---\n",
@@ -98,3 +116,11 @@ def _write_markdown_report(project_path: Path, project_name: str, actions_log: l
         ZeroFluffConsole.success("Journal cumulatif mis à jour sous memory/jira_sync_history.md")
     except Exception as e:
         ZeroFluffConsole.error(f"Échec de l'écriture du journal cumulatif : {e}")
+        logger.error(
+            "jira.report.history_write_failed",
+            extra={
+                "report_path": str(history_path),
+                "stories_synced": len(actions_log),
+            },
+            exc_info=True,
+        )

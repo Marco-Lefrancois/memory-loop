@@ -59,6 +59,14 @@ class HerdrDaemonMixin:
                     stderr=subprocess.DEVNULL,
                     **kwargs,
                 )
+                # RULE-AST-03: timeout explicite sur Popen via wait()
+                try:
+                    proc.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    logger.debug(
+                        "Daemon 'herdr server' détaché et toujours actif après 10s.",
+                        extra={"pid": proc.pid},
+                    )
                 try:
                     proc.wait(timeout=2)
                 except subprocess.TimeoutExpired:
