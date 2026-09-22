@@ -8,6 +8,9 @@ import re
 import httpx
 from pathlib import Path
 from src.state import LoopState
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.jira.jira_helpers")
 
 
 class JiraMappingRequiredError(Exception):
@@ -80,8 +83,17 @@ def _fetch_allowed_subtask_types(client: httpx.Client, project_key: str) -> dict
                     it_id = it.get("id")
                     clean_name = it_name.lstrip("- ").lower()
                     allowed_subtasks[clean_name] = {"id": it_id, "name": it_name}
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Récupération des types de sous-tâche Jira échouée, dict vide retourné",
+            exc_info=True,
+            extra={
+                "component": "pipelines.jira.jira_helpers",
+                "operation": "fetch_allowed_subtask_types",
+                "project_key": project_key,
+                "error": str(e),
+            },
+        )
     return allowed_subtasks
 
 
@@ -164,8 +176,17 @@ def _fetch_existing_stories(client: httpx.Client, state: LoopState) -> dict:
                 start_at += max_results
             else:
                 break
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Récupération des stories Jira existantes échouée, map vide retournée",
+            exc_info=True,
+            extra={
+                "component": "pipelines.jira.jira_helpers",
+                "operation": "fetch_existing_stories",
+                "project_key": state.jira_project_key,
+                "error": str(e),
+            },
+        )
     return existing_stories_map
 
 
@@ -180,8 +201,17 @@ def _fetch_existing_subtask_data(client: httpx.Client, story_key: str) -> dict:
                 sub_summary = sub.get("fields", {}).get("summary", "")
                 sub_key = sub.get("key")
                 existing_sub_data[sub_summary.strip().lower()] = sub_key
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Récupération des sous-tâches existantes échouée, dict vide retourné",
+            exc_info=True,
+            extra={
+                "component": "pipelines.jira.jira_helpers",
+                "operation": "fetch_existing_subtask_data",
+                "story_key": story_key,
+                "error": str(e),
+            },
+        )
     return existing_sub_data
 
 

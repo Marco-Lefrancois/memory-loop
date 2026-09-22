@@ -166,8 +166,16 @@ class HerdrSocketAdapter:
                     sound="done",
                     position="bottom-right"
                 )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Notification d'événement DAG non affichée",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.graph_router",
+                    "operation": "handle_graph_event",
+                    "error": str(e),
+                },
+            )
 
 
 class GraphRouter:

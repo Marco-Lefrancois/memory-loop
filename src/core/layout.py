@@ -6,6 +6,9 @@ Source unique de vérité pour la structure des répertoires des projets clients
 import json
 from pathlib import Path
 from typing import Dict, Any
+from src.utils.logger import get_logger
+
+logger = get_logger("core.layout")
 
 
 def load_adr_contracts() -> Dict[str, Any]:
@@ -18,8 +21,16 @@ def load_adr_contracts() -> Dict[str, Any]:
         contracts = StandardsGraphStore.get_instance().get_layout_contracts()
         if contracts:
             return contracts
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Contrats d'architecture via StandardsGraphStore échoués, repli sur adr-contracts.json",
+            exc_info=True,
+            extra={
+                "component": "core.layout",
+                "operation": "load_layout_contracts",
+                "error": str(e),
+            },
+        )
 
     contracts_path = Path(__file__).resolve().parent.parent.parent / "standards" / "adr-contracts.json"
     if contracts_path.exists():

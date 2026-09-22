@@ -55,14 +55,20 @@ def strip_tracking_params(raw_url: str) -> str:
     try:
         parsed = urllib.parse.urlparse(raw_url)
         query_dict = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
-        filtered = {k: v for k, v in query_dict.items() if k not in TRACKING_PARAMS and not k.startswith("utm_")}
+        filtered = {
+            k: v
+            for k, v in query_dict.items()
+            if k not in TRACKING_PARAMS and not k.startswith("utm_")
+        }
         new_query = urllib.parse.urlencode(filtered, doseq=True)
         return urllib.parse.urlunparse(parsed._replace(query=new_query, fragment=""))
     except Exception:
         return raw_url
 
 
-def normalize_url(raw_url: str, base_url: Optional[str] = None, ignore_query: bool = False) -> Optional[str]:
+def normalize_url(
+    raw_url: str, base_url: Optional[str] = None, ignore_query: bool = False
+) -> Optional[str]:
     """Normalise et dédoublonne une URL."""
     try:
         if base_url:
@@ -155,10 +161,13 @@ def is_empty_spa_shell(html_content: str, text_content: str) -> bool:
     if len(text_content.strip()) > 500:
         return False
     spa_markers = [
-        'id="root"', 'id="app"', 'id="__next"', 'id="__nuxt"',
-        'noscript>You need to enable JavaScript',
-        'noscript>Please enable JavaScript',
-        'You need to enable JavaScript to run this app',
+        'id="root"',
+        'id="app"',
+        'id="__next"',
+        'id="__nuxt"',
+        "noscript>You need to enable JavaScript",
+        "noscript>Please enable JavaScript",
+        "You need to enable JavaScript to run this app",
     ]
     return any(marker in html_content for marker in spa_markers)
 
@@ -167,16 +176,29 @@ def delegate_playwright_scrape(url: str, output_dir: Path) -> Optional[str]:
     """Délègue l'aspiration d'une page SPA au moteur local Playwright de mloop-crawler."""
     try:
         from src.bridges.mcp_crawler import resolve_crawler_cli_path
+
         cli_path = resolve_crawler_cli_path()
         if not cli_path.exists():
             return None
 
         import subprocess
+
         output_dir.mkdir(parents=True, exist_ok=True)
-        cmd = ["node", str(cli_path), "scrape", url, "--engine", "playwright", "--out", str(output_dir)]
+        cmd = [
+            "node",
+            str(cli_path),
+            "scrape",
+            url,
+            "--engine",
+            "playwright",
+            "--out",
+            str(output_dir),
+        ]
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
         if proc.returncode == 0:
-            candidates = sorted(output_dir.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True)
+            candidates = sorted(
+                output_dir.glob("*.md"), key=lambda f: f.stat().st_mtime, reverse=True
+            )
             if candidates:
                 return candidates[0].read_text(encoding="utf-8")
     except Exception as e:
@@ -231,12 +253,14 @@ class WebCrawlerAgent:
     def _html_to_clean_markdown(self, html_content: str, url: str = None) -> str:
         """Convertit le HTML brut en Markdown lisible sans scripts ni styles parasites."""
         if BeautifulSoup is None:
-            text = re.sub(r'<script.*?>.*?</script>', '', html_content, flags=re.DOTALL | re.IGNORECASE)
-            text = re.sub(r'<style.*?>.*?</style>', '', text, flags=re.DOTALL | re.IGNORECASE)
-            text = re.sub(r'<[^>]+>', ' ', text)
-            return re.sub(r'\s+', ' ', text).strip()
+            text = re.sub(
+                r"<script.*?>.*?</script>", "", html_content, flags=re.DOTALL | re.IGNORECASE
+            )
+            text = re.sub(r"<style.*?>.*?</style>", "", text, flags=re.DOTALL | re.IGNORECASE)
+            text = re.sub(r"<[^>]+>", " ", text)
+            return re.sub(r"\s+", " ", text).strip()
 
-        soup = BeautifulSoup(html_content, 'html.parser')
+        soup = BeautifulSoup(html_content, "html.parser")
         for tag in ["script", "style", "noscript", "iframe", "svg", "header", "footer", "nav"]:
             for el in soup.find_all(tag):
                 el.decompose()
@@ -246,14 +270,14 @@ class WebCrawlerAgent:
         else:
             markdown_text = soup.get_text(separator="\n\n")
 
-        return re.sub(r'\n{3,}', '\n\n', markdown_text).strip()
+        return re.sub(r"\n{3,}", "\n\n", markdown_text).strip()
 
     def _extract_links(self, html_content: str, base_url: str) -> List[str]:
         """Extrait les liens valides d'une page HTML en respectant les filtres de domaine et de chemin."""
         if BeautifulSoup is None:
             return []
 
-        soup = BeautifulSoup(html_content, 'html.parser')
+        soup = BeautifulSoup(html_content, "html.parser")
         found_links = []
 
         for a in soup.find_all("a", href=True):
@@ -281,8 +305,8 @@ class WebCrawlerAgent:
     def _extract_markdown_links(self, markdown_content: str, base_url: str) -> List[str]:
         """Extrait les liens valides d'un contenu Markdown ([label](href)) en respectant les filtres."""
         found_links = []
-        for m in re.finditer(r'\[([^\]]+)\]\(([^)]+)\)', markdown_content):
-            href = m.group(2).strip().split('#')[0].split()[0]
+        for m in re.finditer(r"\[([^\]]+)\]\(([^)]+)\)", markdown_content):
+            href = m.group(2).strip().split("#")[0].split()[0]
             if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
                 continue
 
@@ -336,21 +360,45 @@ class WebCrawlerAgent:
 
             for cand_url, cand_type in candidates:
                 try:
-                    res = await client.get(cand_url, headers=headers, timeout=5.0, follow_redirects=True)
+                    res = await client.get(
+                        cand_url, headers=headers, timeout=5.0, follow_redirects=True
+                    )
                     if res.status_code == 200:
                         ct = res.headers.get("content-type", "").lower()
                         text = res.text
-                        if ("text" in ct or "markdown" in ct or text.startswith("#") or "http" in text) and len(text.strip()) > 30:
+                        if (
+                            "text" in ct
+                            or "markdown" in ct
+                            or text.startswith("#")
+                            or "http" in text
+                        ) and len(text.strip()) > 30:
                             url_hash = hashlib.sha256(cand_url.encode("utf-8")).hexdigest()[:12]
                             domain = parsed.netloc.replace(".", "_")
                             out_file = docs_cache_dir / f"crawl_{domain}_{url_hash}.md"
-                            out_file.write_text(f"sha256: {url_hash}\nsource: {cand_url}\ntype: {cand_type}\n\n{text}", encoding="utf-8")
-                            ZeroFluffConsole.success(f"[LLMS-TXT] Fast-Path découvert : {cand_type} ({len(text)} octets) sauvegardé sous {out_file.name}")
+                            out_file.write_text(
+                                f"sha256: {url_hash}\nsource: {cand_url}\ntype: {cand_type}\n\n{text}",
+                                encoding="utf-8",
+                            )
+                            ZeroFluffConsole.success(
+                                f"[LLMS-TXT] Fast-Path découvert : {cand_type} ({len(text)} octets) sauvegardé sous {out_file.name}"
+                            )
                             return out_file
-                except Exception:
+                except Exception as e:
+                    logger.debug(
+                        "Candidat llms.txt inaccessible, passage au suivant",
+                        exc_info=True,
+                        extra={
+                            "component": "crawler",
+                            "operation": "_fetch_llms_txt",
+                            "candidate_url": cand_url,
+                            "cand_type": cand_type,
+                            "error": str(e),
+                        },
+                    )
                     continue
         except Exception as e:
             logger.debug(f"Vérification llms.txt ignorée pour {url}: {e}")
+
     async def _fetch_github_repo_tree(
         self,
         client: "httpx.AsyncClient",
@@ -391,7 +439,18 @@ class WebCrawlerAgent:
                         tree_items = data.get("tree", [])
                         active_branch = b
                         break
-                except Exception:
+                except Exception as e:
+                    logger.debug(
+                        "Récupération de l'arbre Git échouée, essai de la branche suivante",
+                        exc_info=True,
+                        extra={
+                            "component": "crawler",
+                            "operation": "_fetch_github_repo_tree",
+                            "tree_url": tree_url,
+                            "branch": b,
+                            "error": str(e),
+                        },
+                    )
                     continue
 
             if not tree_items:
@@ -428,15 +487,19 @@ class WebCrawlerAgent:
                         tier2_matches.append(path_str)
 
             # Priorité absolue aux compétences et manifests (Tier 1), complété par la doc (Tier 2)
-            matched_paths = tier1_matches[:self.max_github_files]
+            matched_paths = tier1_matches[: self.max_github_files]
             remaining_quota = self.max_github_files - len(matched_paths)
             if remaining_quota > 0:
                 matched_paths.extend(tier2_matches[:remaining_quota])
 
-            ZeroFluffConsole.info(f"[GITHUB-TREE] {len(matched_paths)} fichier(s) prioritaire(s) découverts pour {user}/{repo} (Tier 1: {len(tier1_matches)}, Tier 2: {len(tier2_matches)})...")
+            ZeroFluffConsole.info(
+                f"[GITHUB-TREE] {len(matched_paths)} fichier(s) prioritaire(s) découverts pour {user}/{repo} (Tier 1: {len(tier1_matches)}, Tier 2: {len(tier2_matches)})..."
+            )
 
             for item_path in matched_paths:
-                raw_url = f"https://raw.githubusercontent.com/{user}/{repo}/{active_branch}/{item_path}"
+                raw_url = (
+                    f"https://raw.githubusercontent.com/{user}/{repo}/{active_branch}/{item_path}"
+                )
                 try:
                     file_res = await client.get(raw_url, headers=headers, timeout=8.0)
                     if file_res.status_code == 200:
@@ -448,7 +511,9 @@ class WebCrawlerAgent:
                     logger.debug(f"Erreur aspiration raw GitHub {item_path}: {ex}")
 
             if discovered_files:
-                ZeroFluffConsole.success(f"[GITHUB-TREE] {len(discovered_files)} artefact(s) sauvegardés sous {repo_cache_dir.name}/")
+                ZeroFluffConsole.success(
+                    f"[GITHUB-TREE] {len(discovered_files)} artefact(s) sauvegardés sous {repo_cache_dir.name}/"
+                )
         except Exception as e:
             logger.debug(f"Exploration Git Tree GitHub ignorée pour {url}: {e}")
 
@@ -462,10 +527,21 @@ class WebCrawlerAgent:
             mtime = output_file.stat().st_mtime
             age = time.time() - mtime
             if age <= self.max_age:
-                ZeroFluffConsole.info(f"[CACHE] Hit valide pour {output_file.name} (âge: {int(age)}s <= TTL: {self.max_age}s)")
+                ZeroFluffConsole.info(
+                    f"[CACHE] Hit valide pour {output_file.name} (âge: {int(age)}s <= TTL: {self.max_age}s)"
+                )
                 return True
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Lecture du mtime du cache échouée, traité comme cache expiré",
+                exc_info=True,
+                extra={
+                    "component": "crawler",
+                    "operation": "_check_max_age_cache",
+                    "output_file": str(output_file),
+                    "error": str(e),
+                },
+            )
         return False
 
     async def _crawl_single_url(
@@ -477,9 +553,15 @@ class WebCrawlerAgent:
         state: LoopState,
     ) -> Tuple[Optional[Path], List[str]]:
         """Télécharge et convertit une URL unique sous contrôle de sémaphore."""
-        url_clean = normalize_url(url.rstrip(".,;:\"'`)"), ignore_query=self.ignore_query_parameters) or url
+        url_clean = (
+            normalize_url(url.rstrip(".,;:\"'`)"), ignore_query=self.ignore_query_parameters) or url
+        )
         is_local = "localhost" in url_clean or state.project_name.lower() in url_clean
-        docs_cache_dir = project_path / ProjectLayout.MEMORY / "docs_cache" if is_local else Path(ProjectLayout.MEMORY) / "crawler" / "cache"
+        docs_cache_dir = (
+            project_path / ProjectLayout.MEMORY / "docs_cache"
+            if is_local
+            else Path(ProjectLayout.MEMORY) / "crawler" / "cache"
+        )
         docs_cache_dir.mkdir(parents=True, exist_ok=True)
 
         url_hash = hashlib.sha256(url_clean.encode("utf-8")).hexdigest()[:12]
@@ -490,7 +572,9 @@ class WebCrawlerAgent:
         # Vérification du quota de requêtes par domaine (Anti-épuisement / HarnessDev)
         curr_domain_count = self.domain_request_counts.get(parsed_netloc, 0)
         if curr_domain_count >= self.max_domain_requests:
-            ZeroFluffConsole.warning(f"[QUOTA] Plafond de requêtes atteint ({self.max_domain_requests}) pour {parsed_netloc}. URL ignorée : {url_clean}")
+            ZeroFluffConsole.warning(
+                f"[QUOTA] Plafond de requêtes atteint ({self.max_domain_requests}) pour {parsed_netloc}. URL ignorée : {url_clean}"
+            )
             return None, []
         self.domain_request_counts[parsed_netloc] = curr_domain_count + 1
 
@@ -514,8 +598,17 @@ class WebCrawlerAgent:
                         existing_etag = l.split(":", 1)[1].strip()
                     elif l.startswith("last_modified:"):
                         existing_last_modified = l.split(":", 1)[1].strip()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Lecture de l'en-tête ETag/Last-Modified depuis le cache échouée, revalidation complète prévue",
+                    exc_info=True,
+                    extra={
+                        "component": "crawler",
+                        "operation": "_crawl_single_url",
+                        "output_file": str(output_file),
+                        "error": str(e),
+                    },
+                )
 
         if existing_etag:
             headers["If-None-Match"] = existing_etag
@@ -531,7 +624,12 @@ class WebCrawlerAgent:
         # Conversion automatique des URLs GitHub vers raw README
         fetch_url = url_clean
         is_github_repo = False
-        if "github.com" in url_clean and "github.blog" not in url_clean and "/tree/" not in url_clean and "/blob/" not in url_clean:
+        if (
+            "github.com" in url_clean
+            and "github.blog" not in url_clean
+            and "/tree/" not in url_clean
+            and "/blob/" not in url_clean
+        ):
             parts = [p for p in urllib.parse.urlparse(url_clean).path.strip("/").split("/") if p]
             if len(parts) == 2:
                 is_github_repo = True
@@ -544,20 +642,35 @@ class WebCrawlerAgent:
         async with semaphore:
             try:
                 ZeroFluffConsole.info(f"Crawling {url_clean}...")
-                response = await client.get(fetch_url, headers=headers, timeout=12.0, follow_redirects=True)
+                response = await client.get(
+                    fetch_url, headers=headers, timeout=12.0, follow_redirects=True
+                )
 
                 # Fallback master branch sur GitHub
                 if response.status_code == 404 and "main/README.md" in fetch_url:
                     fetch_url = fetch_url.replace("main/README.md", "master/README.md")
-                    response = await client.get(fetch_url, headers=headers, timeout=12.0, follow_redirects=True)
+                    response = await client.get(
+                        fetch_url, headers=headers, timeout=12.0, follow_redirects=True
+                    )
 
                 # Traitement HTTP 304 Not Modified
                 if response.status_code == 304:
-                    ZeroFluffConsole.success(f"[HTTP 304] Non modifié (ETag/Cache valide). Réutilisation instantanée de {output_file.name}")
+                    ZeroFluffConsole.success(
+                        f"[HTTP 304] Non modifié (ETag/Cache valide). Réutilisation instantanée de {output_file.name}"
+                    )
                     try:
                         output_file.touch()
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(
+                            "Rafraîchissement du mtime du cache 304 échoué",
+                            exc_info=True,
+                            extra={
+                                "component": "crawler",
+                                "operation": "_crawl_single_url",
+                                "output_file": str(output_file),
+                                "error": str(e),
+                            },
+                        )
                     return output_file, []
 
                 if response.status_code == 200:
@@ -565,12 +678,24 @@ class WebCrawlerAgent:
                     resp_last_modified = response.headers.get("last-modified")
 
                     content_type = response.headers.get("content-type", "").lower()
-                    is_doc_ext = any(fetch_url.lower().endswith(ext) for ext in [".pdf", ".docx", ".xlsx", ".pptx", ".zip"])
-                    is_doc_ct = any(ct in content_type for ct in ["application/pdf", "application/vnd", "application/msword", "application/zip"])
+                    is_doc_ext = any(
+                        fetch_url.lower().endswith(ext)
+                        for ext in [".pdf", ".docx", ".xlsx", ".pptx", ".zip"]
+                    )
+                    is_doc_ct = any(
+                        ct in content_type
+                        for ct in [
+                            "application/pdf",
+                            "application/vnd",
+                            "application/msword",
+                            "application/zip",
+                        ]
+                    )
 
                     if is_doc_ext or is_doc_ct:
                         try:
                             from markitdown import MarkItDown
+
                             md_converter = MarkItDown()
                             temp_bin = docs_cache_dir / f"temp_{url_hash}"
                             temp_bin.write_bytes(response.content)
@@ -578,18 +703,29 @@ class WebCrawlerAgent:
                             content_md = res.text_content
                             if temp_bin.exists():
                                 temp_bin.unlink()
-                            ZeroFluffConsole.info(f"Conversion par MarkItDown appliquée pour {url_clean}")
+                            ZeroFluffConsole.info(
+                                f"Conversion par MarkItDown appliquée pour {url_clean}"
+                            )
                         except Exception as ex:
-                            logger.warning(f"Fallback MarkItDown vers HTML/Texte basique pour {url_clean}: {ex}")
+                            logger.warning(
+                                f"Fallback MarkItDown vers HTML/Texte basique pour {url_clean}: {ex}"
+                            )
                             content_md = self._html_to_clean_markdown(response.text, url_clean)
 
-                    elif fetch_url.endswith(".md") or "raw.githubusercontent" in fetch_url or "text/plain" in content_type or "text/markdown" in content_type:
+                    elif (
+                        fetch_url.endswith(".md")
+                        or "raw.githubusercontent" in fetch_url
+                        or "text/plain" in content_type
+                        or "text/markdown" in content_type
+                    ):
                         content_md = response.text
                         if self.max_depth > 0:
                             discovered_links = self._extract_markdown_links(content_md, fetch_url)
 
                         if is_github_repo and self.github_tree:
-                            await self._fetch_github_repo_tree(client, url_clean, docs_cache_dir, headers)
+                            await self._fetch_github_repo_tree(
+                                client, url_clean, docs_cache_dir, headers
+                            )
 
                     else:
                         # RÈGLE 3 : Détection Markdown Twin URL
@@ -597,12 +733,20 @@ class WebCrawlerAgent:
                         if not fetch_url.endswith(".md"):
                             try:
                                 md_twin_url = f"{fetch_url.rstrip('/')}.md"
-                                response_twin = await client.get(md_twin_url, headers=headers, timeout=5.0, follow_redirects=True)
+                                response_twin = await client.get(
+                                    md_twin_url, headers=headers, timeout=5.0, follow_redirects=True
+                                )
                                 twin_ct = response_twin.headers.get("content-type", "").lower()
-                                if response_twin.status_code == 200 and ("text/markdown" in twin_ct or "text/plain" in twin_ct or response_twin.text.startswith("#")):
+                                if response_twin.status_code == 200 and (
+                                    "text/markdown" in twin_ct
+                                    or "text/plain" in twin_ct
+                                    or response_twin.text.startswith("#")
+                                ):
                                     content_md = response_twin.text
                                     is_markdown_twin_used = True
-                                    ZeroFluffConsole.info(f"Markdown Twin auto-détecté pour {url_clean} ({md_twin_url})")
+                                    ZeroFluffConsole.info(
+                                        f"Markdown Twin auto-détecté pour {url_clean} ({md_twin_url})"
+                                    )
                             except Exception as e:
                                 logger.debug(f"Markdown twin non disponible sur {url_clean}: {e}")
 
@@ -612,7 +756,9 @@ class WebCrawlerAgent:
                                 rendered = delegate_playwright_scrape(url_clean, docs_cache_dir)
                                 if rendered and len(rendered.strip()) > len(content_md.strip()):
                                     content_md = rendered
-                                    ZeroFluffConsole.info(f"[SPA-RENDER] Rendu Playwright appliqué avec succès ({len(content_md)} octets)")
+                                    ZeroFluffConsole.info(
+                                        f"[SPA-RENDER] Rendu Playwright appliqué avec succès ({len(content_md)} octets)"
+                                    )
 
                             if self.max_depth > 0:
                                 discovered_links = self._extract_links(response.text, url_clean)
@@ -626,10 +772,20 @@ class WebCrawlerAgent:
                     meta_prefix = "\n".join(header_meta)
 
                     # Détection de contenu identique (Anti-redondance / HarnessDev)
-                    content_hash_digest = hashlib.sha256(content_md.strip().encode("utf-8")).hexdigest()
-                    if content_hash_digest in self.seen_content_hashes and len(content_md.strip()) > 80:
-                        ZeroFluffConsole.info(f"[DEDUP] Contenu dupliqué détecté pour {url_clean} (Hash identique). Re-crawl ignoré.")
-                        output_file.write_text(f"{meta_prefix}\ndedup_of: {content_hash_digest}\n\n{content_md}", encoding="utf-8")
+                    content_hash_digest = hashlib.sha256(
+                        content_md.strip().encode("utf-8")
+                    ).hexdigest()
+                    if (
+                        content_hash_digest in self.seen_content_hashes
+                        and len(content_md.strip()) > 80
+                    ):
+                        ZeroFluffConsole.info(
+                            f"[DEDUP] Contenu dupliqué détecté pour {url_clean} (Hash identique). Re-crawl ignoré."
+                        )
+                        output_file.write_text(
+                            f"{meta_prefix}\ndedup_of: {content_hash_digest}\n\n{content_md}",
+                            encoding="utf-8",
+                        )
                         return output_file, []
                     self.seen_content_hashes.add(content_hash_digest)
 
@@ -637,13 +793,17 @@ class WebCrawlerAgent:
                     ZeroFluffConsole.success(f"Sauvegarde du crawl sous {output_file.name}")
                     return output_file, discovered_links
                 else:
-                    ZeroFluffConsole.warning(f"Échec du crawl ({response.status_code}) pour {url_clean}")
+                    ZeroFluffConsole.warning(
+                        f"Échec du crawl ({response.status_code}) pour {url_clean}"
+                    )
                     return None, []
             except Exception as e:
                 logger.warning(f"Erreur lors du crawl de {url_clean} : {e}")
                 return None, []
 
-    async def _execute_async(self, state: LoopState, explicit_url: Optional[str] = None) -> LoopState:
+    async def _execute_async(
+        self, state: LoopState, explicit_url: Optional[str] = None
+    ) -> LoopState:
         """Exécute le crawl des URLs avec support de la découverte récursive (max_depth)."""
         if httpx is None:
             ZeroFluffConsole.warning("httpx n'est pas installé dans l'environnement Python.")
@@ -659,7 +819,12 @@ class WebCrawlerAgent:
             initial_urls = [explicit_url]
         else:
             sources_text = ""
-            for d in [ProjectLayout.DOCS, ProjectLayout.DIRECTIVES, ProjectLayout.REFERENCE, ProjectLayout.BACKLOG]:
+            for d in [
+                ProjectLayout.DOCS,
+                ProjectLayout.DIRECTIVES,
+                ProjectLayout.REFERENCE,
+                ProjectLayout.BACKLOG,
+            ]:
                 dir_path = project_path / d
                 if dir_path.exists():
                     for ext in ["*.md", "*.txt"]:
@@ -669,7 +834,7 @@ class WebCrawlerAgent:
                             except Exception as e:
                                 logger.debug(f"Lecture ignorée sur {f}: {e}")
 
-            initial_urls = list(set(re.findall(r'https?://[^\s)\]]+', sources_text)))
+            initial_urls = list(set(re.findall(r"https?://[^\s)\]]+", sources_text)))
             if explicit_url:
                 initial_urls.append(explicit_url)
             initial_urls = list(set(initial_urls))
@@ -678,7 +843,9 @@ class WebCrawlerAgent:
             ZeroFluffConsole.step_s1(self.name, "Aucune URL externe détectée.")
             return state
 
-        ZeroFluffConsole.info(f"Lancement du crawl asynchrone pour {len(initial_urls)} URL(s) (concurrence max: {self.max_concurrency}, profondeur: {self.max_depth})...")
+        ZeroFluffConsole.info(
+            f"Lancement du crawl asynchrone pour {len(initial_urls)} URL(s) (concurrence max: {self.max_concurrency}, profondeur: {self.max_depth})..."
+        )
         semaphore = asyncio.Semaphore(self.max_concurrency)
 
         visited: Set[str] = set()
@@ -686,9 +853,13 @@ class WebCrawlerAgent:
 
         async with AsyncExitStack() as stack:
             try:
-                client = await stack.enter_async_context(httpx.AsyncClient(http2=True, verify=False))
+                client = await stack.enter_async_context(
+                    httpx.AsyncClient(http2=True, verify=False)
+                )
             except Exception:
-                client = await stack.enter_async_context(httpx.AsyncClient(http2=False, verify=False))
+                client = await stack.enter_async_context(
+                    httpx.AsyncClient(http2=False, verify=False)
+                )
 
             for current_depth in range(self.max_depth + 1):
                 if not current_queue:
@@ -701,13 +872,17 @@ class WebCrawlerAgent:
                 if not to_fetch:
                     break
 
-                ZeroFluffConsole.info(f"[Depth {current_depth}] Traitement de {len(to_fetch)} URL(s)...")
+                ZeroFluffConsole.info(
+                    f"[Depth {current_depth}] Traitement de {len(to_fetch)} URL(s)..."
+                )
 
                 results: List[Any] = [None] * len(to_fetch)
 
                 async def _crawl_worker(idx: int, target_url: str):
                     try:
-                        results[idx] = await self._crawl_single_url(client, semaphore, target_url, project_path, state)
+                        results[idx] = await self._crawl_single_url(
+                            client, semaphore, target_url, project_path, state
+                        )
                     except Exception as e:
                         results[idx] = e
 
@@ -742,6 +917,7 @@ class WebCrawlerAgent:
 
             if loop and loop.is_running():
                 import nest_asyncio
+
                 nest_asyncio.apply()
                 return loop.run_until_complete(self._execute_async(state, explicit_url))
             else:
@@ -749,4 +925,3 @@ class WebCrawlerAgent:
         except Exception as e:
             logger.warning(f"Erreur d'exécution du crawler asynchrone: {e}")
             return state
-

@@ -14,6 +14,9 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.dream_consolidator")
 
 
 class DreamConsolidationDaemon:
@@ -48,8 +51,16 @@ class DreamConsolidationDaemon:
                     "alerts": a_count,
                     "status": "CONSOLIDATED",
                 })
-            except Exception:
-                continue
+            except Exception as e:
+                logger.debug(
+                    "EvidencePack illisible lors de la consolidation, ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.dream_consolidator",
+                        "operation": "consolidate_evidence",
+                        "error": str(e),
+                    },
+                )
 
         # 2. Sauvegarder l'index complet des EvidencePacks dans un fichier satellite
         summaries_dir = self.evidence_dir / "summaries"
@@ -96,8 +107,16 @@ class DreamConsolidationDaemon:
                 f"- **Compétences Volumineuses (> 2k tok)** : `{summ.get('oversized_skills_count', 0)}`",
                 "",
             ]
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Section SkillDoctor indisponible, bilan sans hygiene",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.dream_consolidator",
+                    "operation": "build_health_report",
+                    "error": str(e),
+                },
+            )
 
         lines = [
             "# 🧠 Bilan de Santé & Consolidation Mémorielle (Dream Daemon)",

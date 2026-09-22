@@ -45,7 +45,17 @@ class FactSearchIndexer:
         if cache_path.exists():
             try:
                 return json.loads(cache_path.read_text(encoding="utf-8"))
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Cache de hachage MD5 illisible ou corrompu, réindexation complète",
+                    exc_info=True,
+                    extra={
+                        "component": "fact_search.indexer",
+                        "operation": "_load_hashes",
+                        "cache_path": str(cache_path),
+                        "error": str(e),
+                    },
+                )
                 return {}
         return {}
 
@@ -69,9 +79,7 @@ class FactSearchIndexer:
         try:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
             tmp_path = cache_path.with_suffix(".tmp")
-            tmp_path.write_text(
-                json.dumps(hashes, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+            tmp_path.write_text(json.dumps(hashes, indent=2, ensure_ascii=False), encoding="utf-8")
             tmp_path.replace(cache_path)
         except Exception as e:
             logger.warning(f"Impossible de sauvegarder le cache MD5 {cache_path}: {e}")
@@ -157,7 +165,9 @@ class FactSearchIndexer:
                     try:
                         content = cls._read_file_safe(md_file)
                         rel_path = md_file.as_posix()
-                        layer_val = "01-architecture" if "adr" in rel_path.lower() else "02-business-rules"
+                        layer_val = (
+                            "01-architecture" if "adr" in rel_path.lower() else "02-business-rules"
+                        )
                         raw_files.append((md_file, rel_path, layer_val, content))
                     except Exception as e:
                         logger.warning(f"Erreur lecture standard {md_file}: {e}")

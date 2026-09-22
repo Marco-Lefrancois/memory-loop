@@ -16,8 +16,17 @@ def get_active_project() -> Optional[str]:
         try:
             with open(active_json, "r", encoding="utf-8") as f:
                 return json.load(f).get("active_project")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Lecture de active_project.json échouée",
+                exc_info=True,
+                extra={
+                    "component": "loop_mem.db",
+                    "operation": "get_active_project",
+                    "path": str(active_json),
+                    "error": str(e),
+                },
+            )
     return None
 
 
@@ -34,8 +43,17 @@ def search_in_memory(project_path: Path, query: str, limit: int = 10) -> List[Di
         try:
             with open(kg_file, "r", encoding="utf-8") as f:
                 nodes.extend(json.load(f).get("nodes", []))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Lecture de knowledge_graph.json échouée (recherche mémoire partielle)",
+                exc_info=True,
+                extra={
+                    "component": "loop_mem.db",
+                    "operation": "search_in_memory",
+                    "kg_file": str(kg_file),
+                    "error": str(e),
+                },
+            )
 
     # 2. Charger graph.json
     graph_file = project_path / "graphify-out" / "graph.json"
@@ -43,8 +61,17 @@ def search_in_memory(project_path: Path, query: str, limit: int = 10) -> List[Di
         try:
             with open(graph_file, "r", encoding="utf-8") as f:
                 nodes.extend(json.load(f).get("nodes", []))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Lecture de graph.json échouée (recherche mémoire partielle)",
+                exc_info=True,
+                extra={
+                    "component": "loop_mem.db",
+                    "operation": "search_in_memory",
+                    "graph_file": str(graph_file),
+                    "error": str(e),
+                },
+            )
 
     # Dédupliquer les nœuds par ID pour éviter les doublons de fusion
     seen_ids = set()
@@ -133,8 +160,17 @@ def get_observation_db_session(db_path: Path = _OBSERVATION_DB_PATH):
     try:
         conn.execute("PRAGMA journal_mode=WAL;")
         conn.execute("PRAGMA busy_timeout=20000;")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Configuration des PRAGMA WAL/busy_timeout échouée (mode SQLite dégradé)",
+            exc_info=True,
+            extra={
+                "component": "loop_mem.db",
+                "operation": "get_observation_db_session",
+                "db_path": str(db_path),
+                "error": str(e),
+            },
+        )
     _init_observation_db(conn, db_path)
     try:
         yield conn
@@ -144,6 +180,36 @@ def get_observation_db_session(db_path: Path = _OBSERVATION_DB_PATH):
         raise RuntimeError(f"[DB ERROR] Transaction annulée sur {db_path} : {e}") from e
     finally:
         conn.close()
+
+
+def _get_observation_conn() -> sqlite3.Connection:
+    """Retourne une connexion à la base des observations (Legacy helper déprécié — ADR-0369)."""
+    import warnings
+
+    warnings.warn(
+        "_get_observation_conn() is deprecated (ADR-0369); use 'with get_observation_db_session() as conn:' instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    _OBSERVATION_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(_OBSERVATION_DB_PATH), timeout=20.0)
+    conn.row_factory = sqlite3.Row
+    try:
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("PRAGMA busy_timeout=20000;")
+    except Exception as e:
+        logger.warning(
+            "Configuration des PRAGMA WAL/busy_timeout échouée (mode SQLite dégradé, helper legacy)",
+            exc_info=True,
+            extra={
+                "component": "loop_mem.db",
+                "operation": "_get_observation_conn",
+                "db_path": str(_OBSERVATION_DB_PATH),
+                "error": str(e),
+            },
+        )
+    _init_observation_db(conn, _OBSERVATION_DB_PATH)
+    return conn
 
 
 _INITIALIZED_DBS = set()
@@ -663,7 +729,17 @@ def sync_project_lexicon_from_disk(project_name: str) -> int:
                     source_file=str(md_file.relative_to(project_dir).as_posix()),
                 )
                 count += 1
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Indexation lexique d'une story échouée, passage à la suivante",
+                    exc_info=True,
+                    extra={
+                        "component": "loop_mem.db",
+                        "operation": "index_project_lexicon",
+                        "md_file": str(md_file),
+                        "error": str(e),
+                    },
+                )
                 continue
 
     # 2. Scanner CONTEXT.md (Lexique et concepts directeurs du domaine)
@@ -713,8 +789,17 @@ def sync_project_lexicon_from_disk(project_name: str) -> int:
                     source_file="CONTEXT.md",
                 )
                 count += 1
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Indexation des concepts CONTEXT.md échouée",
+                exc_info=True,
+                extra={
+                    "component": "loop_mem.db",
+                    "operation": "index_project_lexicon",
+                    "context_file": str(context_file),
+                    "error": str(e),
+                },
+            )
 
     # 3. Scanner les glossaires et lexiques sous docs/
     docs_dir = project_dir / "docs"
@@ -766,7 +851,17 @@ def sync_project_lexicon_from_disk(project_name: str) -> int:
                         source_file=str(g_file.relative_to(project_dir).as_posix()),
                     )
                     count += 1
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Indexation d'un glossaire échouée, passage au fichier suivant",
+                    exc_info=True,
+                    extra={
+                        "component": "loop_mem.db",
+                        "operation": "index_project_lexicon",
+                        "g_file": str(g_file),
+                        "error": str(e),
+                    },
+                )
                 continue
 
     return count

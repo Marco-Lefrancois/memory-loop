@@ -20,101 +20,14 @@ from src.dashboard.project_utils import (
     resolve_project_canonical_name,
     resolve_project_path,
 )
+from src.dashboard._module_metadata import (
+    MODULE_METADATA,
+    get_module_friendly_info,
+    normalize_module_id,
+)
+from src.utils.logger import get_logger
 
-MODULE_METADATA: Dict[str, Dict[str, str]] = {
-    "01-reception": {
-        "label": "🐣 Réception & Quai",
-        "description": "Réception des œufs, traçabilité camions, pesées et quai de déchargement",
-        "category": "core",
-    },
-    "02-incubation": {
-        "label": "🥚 Incubation & Mirage",
-        "description": "Salles d'incubation, chariots, sondes thermiques et mirage",
-        "category": "core",
-    },
-    "03-ventes": {
-        "label": "🤝 Ventes & Expéditions",
-        "description": "Commandes couvoir, ventilation poussins, bons de livraison et facturation",
-        "category": "core",
-    },
-    "onetrust_food": {
-        "label": "🔒 OneTrust Alimentation",
-        "description": "Bannière cookies, conformité Loi 25 et télémétrie e-commerce alimentaire",
-        "category": "compliance",
-    },
-    "papercuts": {
-        "label": "✂️ Papercuts (Gate 0)",
-        "description": "Optimisations UX, leaderboard Criteo sur PLP et suivi de commande",
-        "category": "ux",
-    },
-    "metro_food_offers": {
-        "label": "🏷️ Offres & Rabais",
-        "description": "Circulaires, coupons personnalisés et moteur de promotions Metro Food",
-        "category": "feature",
-    },
-    "rbc_avion": {
-        "label": "✈️ RBC Avion",
-        "description": "Intégration du programme de points et récompenses RBC Avion",
-        "category": "loyalty",
-    },
-    "onetrust_commerce": {
-        "label": "🔒 OneTrust E-Commerce",
-        "description": "Gestion des consentements et pixels tiers sur le portail e-commerce",
-        "category": "compliance",
-    },
-    "onetrust_sante": {
-        "label": "🔒 OneTrust Santé / Pharma",
-        "description": "Consentements et confidentialité des dossiers santé (Jean Coutu & Brunet)",
-        "category": "compliance",
-    },
-    "accesdossier": {
-        "label": "🩺 Accès Dossier Patient",
-        "description": "Interopérabilité dossiers patients et prescription RxPro",
-        "category": "health",
-    },
-    "onetrust": {
-        "label": "🔒 OneTrust Socle",
-        "description": "Composants partagés et intégration SDK OneTrust transversale",
-        "category": "compliance",
-    },
-    "loi25-rgpd": {
-        "label": "⚖️ Loi 25 & RGPD",
-        "description": "Règles d'anonymisation et gouvernance légale des données clients",
-        "category": "compliance",
-    },
-    "programme-moi": {
-        "label": "💳 Programme Moi",
-        "description": "Identité numérique et programme de fidélité transverse",
-        "category": "loyalty",
-    },
-    "sdk-maui": {
-        "label": "📱 SDK MAUI",
-        "description": "Composants mobiles natifs .NET MAUI pour les applications Metro",
-        "category": "tech",
-    },
-}
-
-
-def normalize_module_id(module_id: str) -> str:
-    """Normalise un identifiant de module pour la comparaison tolérante."""
-    if not module_id:
-        return ""
-    return module_id.strip().replace("\\", "/").split("/")[-1].strip().lower()
-
-
-def get_module_friendly_info(module_id: str, project_name: str = "") -> Dict[str, str]:
-    """Retourne les métadonnées UI pour un module donné."""
-    norm = normalize_module_id(module_id)
-    if norm in MODULE_METADATA:
-        return MODULE_METADATA[norm]
-
-    ck = canonical_key(norm)
-    for k, v in MODULE_METADATA.items():
-        if ck == canonical_key(k):
-            return v
-
-    pretty = module_id.replace("_", " ").replace("-", " ").title()
-    return {"label": f"📁 {pretty}", "description": f"Module {module_id} ({project_name or 'actif'})", "category": "module"}
+logger = get_logger("dashboard.module_utils")
 
 
 def _find_module_key(name: str, existing: Dict[str, Any]) -> Optional[str]:
@@ -143,40 +56,90 @@ def discover_project_modules(project_name: Optional[str] = None) -> List[Dict[st
     if stories_root.exists() and stories_root.is_dir():
         for sub in sorted(stories_root.iterdir()):
             if sub.is_dir() and not sub.name.startswith((".", "_")):
-                md_count = len([f for f in sub.glob("*.md") if f.name.lower() not in ("readme.md", "sprint_backlog.md")])
+                md_count = len(
+                    [
+                        f
+                        for f in sub.glob("*.md")
+                        if f.name.lower() not in ("readme.md", "sprint_backlog.md")
+                    ]
+                )
                 modules[sub.name] = {
-                    "id": sub.name, "name": sub.name, "has_stories": True,
-                    "stories_count": md_count, "has_docs": False, "has_reference": False, "source": "backlog",
+                    "id": sub.name,
+                    "name": sub.name,
+                    "has_stories": True,
+                    "stories_count": md_count,
+                    "has_docs": False,
+                    "has_reference": False,
+                    "source": "backlog",
                 }
 
     # 2. Initiatives sous docs/
     docs_root = p_root / "docs"
-    excluded_docs = {"00-ingested", "01-architecture", "02-business-rules", "03-models", "04-transverse", "05-assets", "adr", "diagrammes", "templates"}
+    excluded_docs = {
+        "00-ingested",
+        "01-architecture",
+        "02-business-rules",
+        "03-models",
+        "04-transverse",
+        "05-assets",
+        "adr",
+        "diagrammes",
+        "templates",
+    }
     if docs_root.exists() and docs_root.is_dir():
         for sub in sorted(docs_root.iterdir()):
-            if sub.is_dir() and not sub.name.startswith(".") and sub.name.lower() not in excluded_docs:
+            if (
+                sub.is_dir()
+                and not sub.name.startswith(".")
+                and sub.name.lower() not in excluded_docs
+            ):
                 k = _find_module_key(sub.name, modules)
                 if k:
                     modules[k]["has_docs"] = True
                 else:
                     modules[sub.name] = {
-                        "id": sub.name, "name": sub.name, "has_stories": False,
-                        "stories_count": 0, "has_docs": True, "has_reference": False, "source": "docs",
+                        "id": sub.name,
+                        "name": sub.name,
+                        "has_stories": False,
+                        "stories_count": 0,
+                        "has_docs": True,
+                        "has_reference": False,
+                        "source": "docs",
                     }
 
     # 3. Dossiers sous reference/
     ref_root = p_root / "reference"
-    excluded_ref = {"codebase", "codebases", "research", "schemas", "shared", "graphify-out", "anciens_recits", "legacy_sigpa_docs", "sigpa.wiki", "crawled"}
+    excluded_ref = {
+        "codebase",
+        "codebases",
+        "research",
+        "schemas",
+        "shared",
+        "graphify-out",
+        "anciens_recits",
+        "legacy_sigpa_docs",
+        "sigpa.wiki",
+        "crawled",
+    }
     if ref_root.exists() and ref_root.is_dir():
         for sub in sorted(ref_root.iterdir()):
-            if sub.is_dir() and not sub.name.startswith(".") and sub.name.lower() not in excluded_ref:
+            if (
+                sub.is_dir()
+                and not sub.name.startswith(".")
+                and sub.name.lower() not in excluded_ref
+            ):
                 k = _find_module_key(sub.name, modules)
                 if k:
                     modules[k]["has_reference"] = True
                 else:
                     modules[sub.name] = {
-                        "id": sub.name, "name": sub.name, "has_stories": False,
-                        "stories_count": 0, "has_docs": False, "has_reference": True, "source": "reference",
+                        "id": sub.name,
+                        "name": sub.name,
+                        "has_stories": False,
+                        "stories_count": 0,
+                        "has_docs": False,
+                        "has_reference": True,
+                        "source": "reference",
                     }
 
     result = []
@@ -184,7 +147,14 @@ def discover_project_modules(project_name: Optional[str] = None) -> List[Dict[st
         if data["stories_count"] == 0 and not data["has_docs"] and not data["has_reference"]:
             continue
         meta = get_module_friendly_info(m_id, canon)
-        result.append({**data, "label": meta["label"], "description": meta["description"], "category": meta["category"]})
+        result.append(
+            {
+                **data,
+                "label": meta["label"],
+                "description": meta["description"],
+                "category": meta["category"],
+            }
+        )
 
     result.sort(key=lambda x: (not x["has_stories"], x["id"]))
     return result
@@ -196,8 +166,17 @@ def get_story_module(story_path: Path, project_root: Path) -> str:
         parts = story_path.relative_to(project_root).parts
         if len(parts) >= 4 and parts[0].lower() == "backlog" and parts[1].lower() == "stories":
             return parts[2]
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(
+            "Déduction du module depuis le chemin story échouée, fallback sur 'default'",
+            exc_info=True,
+            extra={
+                "component": "dashboard.module_utils",
+                "operation": "get_story_module",
+                "story_path": str(story_path),
+                "error": str(e),
+            },
+        )
     return "default"
 
 

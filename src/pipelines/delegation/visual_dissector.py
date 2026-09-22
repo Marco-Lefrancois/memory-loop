@@ -13,6 +13,9 @@ from typing import Dict, Any, Optional, List
 
 from src.cli import ZeroFluffConsole
 from src.core.herdr_adapter import herdr
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.delegation.visual_dissector")
 
 
 UI_8_STATES = [
@@ -114,8 +117,16 @@ def run_visual_dissector(
     if out_file.exists():
         try:
             matrix_data = json.loads(out_file.read_text(encoding="utf-8"))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Matrice de dissection UI illisible, sortie vide utilisée",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.delegation.visual_dissector",
+                    "operation": "read_dissection_matrix",
+                    "error": str(e),
+                },
+            )
 
     ZeroFluffConsole.success(f"Dissection visuelle terminée pour {src_asset.name}.")
     herdr.show_notification(

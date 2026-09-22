@@ -297,8 +297,17 @@ class SavepointManager:
                 oldest = checkpoints.pop(0)
                 try:
                     oldest.unlink(missing_ok=True)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "Suppression d'un checkpoint obsolète échouée (ignorée)",
+                        exc_info=True,
+                        extra={
+                            "component": "state",
+                            "operation": "prune_old_checkpoints",
+                            "checkpoint": str(oldest),
+                            "error": str(e),
+                        },
+                    )
         except Exception as e:
             logger.debug(f"Erreur de nettoyage des checkpoints: {e}")
 
@@ -540,15 +549,33 @@ class LoopState(BaseModel):
                     if "properties" in n:
                         try:
                             journal_entries.append(JournalEntry.model_validate(n["properties"]))
-                        except:
-                            pass
+                        except Exception as e:
+                            logger.debug(
+                                "Entrée de journal invalide ignorée lors du chargement du graphe",
+                                exc_info=True,
+                                extra={
+                                    "component": "state",
+                                    "operation": "load_from_graph",
+                                    "node_id": n.get("id", ""),
+                                    "error": str(e),
+                                },
+                            )
 
                 # Trier chronologiquement (au cas où)
                 journal_entries.sort(key=lambda x: x.timestamp)
                 self.journal = journal_entries
 
         except Exception as e:
-            print("Erreur de chargement depuis le graphe:", e)
+            logger.warning(
+                "Chargement de l'état depuis le graphe échoué",
+                exc_info=True,
+                extra={
+                    "component": "state",
+                    "operation": "load_from_graph",
+                    "graph_file": str(graph_file),
+                    "error": str(e),
+                },
+            )
 
     def add_to_journal(self, event: str, details: str, impacted_nodes: List[str] = None) -> None:
         """Ajoute une entrée au journal et la lie sémantiquement au graphe."""
@@ -571,8 +598,17 @@ class LoopState(BaseModel):
                 try:
                     with open(graph_file, "r", encoding="utf-8") as f:
                         graph_data = json.load(f)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "Lecture du graphe existant échouée, reconstruction à partir d'un squelette vide",
+                        exc_info=True,
+                        extra={
+                            "component": "state",
+                            "operation": "save_to_graph",
+                            "graph_file": str(graph_file),
+                            "error": str(e),
+                        },
+                    )
 
             nodes_list = graph_data.get("nodes", [])
             edges_list = graph_data.get("edges", [])
@@ -718,7 +754,17 @@ class LoopState(BaseModel):
                         invest_score=str(frontmatter.get("invest_score", "N/A")),
                     )
                     discovered_items.append(item)
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Parsing d'une story du sprint backlog échoué, fichier ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "state",
+                        "operation": "load_sprint_backlog",
+                        "story_file": str(md_file),
+                        "error": str(e),
+                    },
+                )
                 continue
 
         self.sprint_backlog = discovered_items

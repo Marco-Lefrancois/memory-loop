@@ -4,6 +4,9 @@ from typing import Dict, List, Any
 from src.state import LoopState
 from src.cli import ZeroFluffConsole
 from src.pipelines.completion_gate import CompletionGate, GateStatus
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.self_dev_pipeline")
 
 class DiagnosticFirstTraceAnalyzer:
     """
@@ -33,8 +36,16 @@ class DiagnosticFirstTraceAnalyzer:
                         taxonomy["SCHEMA_VIOLATIONS"].append(line.strip())
                     elif "ERROR" in line or "FAIL" in line or "Traceback" in line:
                         taxonomy["RUNTIME_ERRORS"].append(line.strip())
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(
+                    "Rapport wikifix illisible, taxonomie de violations partielle",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.self_dev_pipeline",
+                        "operation": "classify_wikifix_violations",
+                        "error": str(e),
+                    },
+                )
 
         return {k: v[:5] for k, v in taxonomy.items() if v}
 

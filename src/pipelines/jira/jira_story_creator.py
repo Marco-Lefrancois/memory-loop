@@ -8,6 +8,9 @@ import httpx
 from pathlib import Path
 from src.state import LoopState, ProjectLayout, SprintBacklogItem
 from src.pipelines.jira.jira_subtasks import _create_subtask
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.jira.jira_story_creator")
 
 
 def _update_local_files(
@@ -102,8 +105,16 @@ def create_new_story(
                 }
             )
             return
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Vérification de doublon Jira échouée, création poursuivie",
+            exc_info=True,
+            extra={
+                "component": "pipelines.jira.jira_story_creator",
+                "operation": "ensure_unique_story",
+                "error": str(e),
+            },
+        )
 
     payload = {
         "fields": {

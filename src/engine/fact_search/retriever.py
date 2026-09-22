@@ -34,32 +34,138 @@ LAYER_WEIGHTS = {
 }
 
 FRENCH_STOPWORDS = {
-    "le", "la", "les", "un", "une", "des", "du", "de", "d", "en", "dans", "pour",
-    "par", "sur", "avec", "sans", "est", "sont", "ete", "etre", "avoir", "fait",
-    "qui", "que", "quoi", "dont", "ou", "mais", "donc", "or", "ni", "car",
-    "ce", "cet", "cette", "ces", "mon", "ton", "son", "notre", "votre", "leur",
-    "nous", "vous", "ils", "elles", "au", "aux", "tout", "tous", "toute", "toutes"
+    "le",
+    "la",
+    "les",
+    "un",
+    "une",
+    "des",
+    "du",
+    "de",
+    "d",
+    "en",
+    "dans",
+    "pour",
+    "par",
+    "sur",
+    "avec",
+    "sans",
+    "est",
+    "sont",
+    "ete",
+    "etre",
+    "avoir",
+    "fait",
+    "qui",
+    "que",
+    "quoi",
+    "dont",
+    "ou",
+    "mais",
+    "donc",
+    "or",
+    "ni",
+    "car",
+    "ce",
+    "cet",
+    "cette",
+    "ces",
+    "mon",
+    "ton",
+    "son",
+    "notre",
+    "votre",
+    "leur",
+    "nous",
+    "vous",
+    "ils",
+    "elles",
+    "au",
+    "aux",
+    "tout",
+    "tous",
+    "toute",
+    "toutes",
 }
 
 TEMPORAL_KEYWORDS = {
-    "date", "dates", "récent", "récente", "récents", "récentes", "dernier", "dernière",
-    "derniers", "dernières", "chronologie", "historique", "évolution", "recent", "latest",
-    "timeline", "décision", "décisions", "arbitrage", "arbitrages", "réunion", "réunions",
-    "meeting", "compte-rendu", "cr", "atelier", "statut", "validé", "approuvé", "accord",
-    "revue", "sprint", "jalon", "milestone", "decision", "review", "kickoff", "échéance", "echeance"
+    "date",
+    "dates",
+    "récent",
+    "récente",
+    "récents",
+    "récentes",
+    "dernier",
+    "dernière",
+    "derniers",
+    "dernières",
+    "chronologie",
+    "historique",
+    "évolution",
+    "recent",
+    "latest",
+    "timeline",
+    "décision",
+    "décisions",
+    "arbitrage",
+    "arbitrages",
+    "réunion",
+    "réunions",
+    "meeting",
+    "compte-rendu",
+    "cr",
+    "atelier",
+    "statut",
+    "validé",
+    "approuvé",
+    "accord",
+    "revue",
+    "sprint",
+    "jalon",
+    "milestone",
+    "decision",
+    "review",
+    "kickoff",
+    "échéance",
+    "echeance",
 }
 
 MONTH_NAMES_FR_EN = {
-    "janvier", "fevrier", "février", "mars", "avril", "mai", "juin", "juillet",
-    "aout", "août", "septembre", "octobre", "novembre", "decembre", "décembre",
-    "january", "february", "march", "april", "may", "june", "july", "august",
-    "september", "october", "november", "december"
+    "janvier",
+    "fevrier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "aout",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "decembre",
+    "décembre",
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
 }
 
 _DATE_PATTERNS = [
-    re.compile(r'\b\d{4}-\d{2}-\d{2}\b'),
-    re.compile(r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b'),
-    re.compile(r'\b\d{1,2}\s+(?:' + '|'.join(MONTH_NAMES_FR_EN) + r')(?:\s+\d{4})?\b', re.IGNORECASE),
+    re.compile(r"\b\d{4}-\d{2}-\d{2}\b"),
+    re.compile(r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b"),
+    re.compile(
+        r"\b\d{1,2}\s+(?:" + "|".join(MONTH_NAMES_FR_EN) + r")(?:\s+\d{4})?\b", re.IGNORECASE
+    ),
 ]
 
 
@@ -81,16 +187,21 @@ class FactSearchRetriever:
         """
         if not snippet:
             return False
-        cleaned = re.sub(r'[#*\-_`|\[\]()]+', ' ', snippet)
+        cleaned = re.sub(r"[#*\-_`|\[\]()]+", " ", snippet)
         cleaned = cleaned.replace("...", " ").strip()
         words = [
-            w for w in re.findall(r'\b\w+\b', cleaned.lower())
+            w
+            for w in re.findall(r"\b\w+\b", cleaned.lower())
             if len(w) > 2 and w not in FRENCH_STOPWORDS and not w.isdigit()
         ]
         if len(words) < 6:
             return False
         lower_cleaned = cleaned.lower()
-        if ("table des matieres" in lower_cleaned or "sommaire" in lower_cleaned or "table of contents" in lower_cleaned) and len(words) < 12:
+        if (
+            "table des matieres" in lower_cleaned
+            or "sommaire" in lower_cleaned
+            or "table of contents" in lower_cleaned
+        ) and len(words) < 12:
             return False
         return True
 
@@ -108,19 +219,21 @@ class FactSearchRetriever:
         Consulte le registre de supersession et les métadonnées de frontmatter.
         """
         # 1. Vérification directe dans le contenu / frontmatter
-        if re.search(r'(?i)\bstatus\s*:\s*(SUPERSEDED|DEPRECATED)\b', content):
-            rep_match = re.search(r'(?i)(?:superseded by|remplacé par)\s*:?\s*\[?([A-Z0-9_\-]+)\]?', content)
+        if re.search(r"(?i)\bstatus\s*:\s*(SUPERSEDED|DEPRECATED)\b", content):
+            rep_match = re.search(
+                r"(?i)(?:superseded by|remplacé par)\s*:?\s*\[?([A-Z0-9_\-]+)\]?", content
+            )
             return {
                 "target_id": Path(doc_path).stem,
                 "superseded_by": rep_match.group(1) if rep_match else "DOCUMENT_CADUC",
-                "reason": "Statut SUPERSEDED ou DEPRECATED explicite dans l'en-tête du document"
+                "reason": "Statut SUPERSEDED ou DEPRECATED explicite dans l'en-tête du document",
             }
 
         # 2. Extraction des identifiants (ADR-XXX, RM-XXX)
         combined = f"{doc_path} {breadcrumb}"
-        identifiers = set(re.findall(r'\b(ADR-\d+|RM-\d+)\b', combined, re.IGNORECASE))
+        identifiers = set(re.findall(r"\b(ADR-\d+|RM-\d+)\b", combined, re.IGNORECASE))
         filename = Path(doc_path).name
-        m = re.search(r'(\d{4})', filename)
+        m = re.search(r"(\d{4})", filename)
         if m:
             identifiers.add(f"ADR-{m.group(1)}")
             identifiers.add(f"ADR-{int(m.group(1))}")
@@ -129,7 +242,13 @@ class FactSearchRetriever:
         if db_path:
             db_path_obj = Path(db_path)
             if project_name:
-                ledgers.append(db_path_obj.parent.parent / "Projects" / project_name / "memory" / "supersession_ledger.json")
+                ledgers.append(
+                    db_path_obj.parent.parent
+                    / "Projects"
+                    / project_name
+                    / "memory"
+                    / "supersession_ledger.json"
+                )
             ledgers.append(db_path_obj.parent / "supersession_ledger.json")
 
         if project_name and (Path("Projects") / project_name).exists():
@@ -145,8 +264,17 @@ class FactSearchRetriever:
                         norm_id = ident.upper()
                         if norm_id in items:
                             return items[norm_id]
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "Lecture d'un ledger de supersession échouée, ledger suivant essayé",
+                        exc_info=True,
+                        extra={
+                            "component": "fact_search.retriever",
+                            "operation": "_lookup_supersession",
+                            "ledger_file": str(ledger_file),
+                            "error": str(e),
+                        },
+                    )
         return None
 
     @classmethod
@@ -164,7 +292,7 @@ class FactSearchRetriever:
         et que le document/chunk correspond, applique jusqu'à +30% (+35% sur date exacte).
         """
         q_lower = query.lower()
-        q_tokens = set(re.findall(r'\b\w+\b', q_lower))
+        q_tokens = set(re.findall(r"\b\w+\b", q_lower))
 
         # 1. Extraire les dates explicites de la requête
         query_dates = []
@@ -184,9 +312,18 @@ class FactSearchRetriever:
 
         # 3. Correspondance d'événements décisionnels récents (+30%)
         is_meeting_or_decision_doc = any(
-            k in target_context for k in (
-                "compte-rendu", "réunion", "reunion", "meeting", "atelier",
-                "décision", "decision", "arbitrage", "sprint review", "kickoff"
+            k in target_context
+            for k in (
+                "compte-rendu",
+                "réunion",
+                "reunion",
+                "meeting",
+                "atelier",
+                "décision",
+                "decision",
+                "arbitrage",
+                "sprint review",
+                "kickoff",
             )
         )
         has_dates_in_chunk = any(pat.search(target_context) for pat in _DATE_PATTERNS)
@@ -215,12 +352,11 @@ class FactSearchRetriever:
         filtrage de supersession (Option A) et enregistreur de vol (ADR-0353).
         """
         clean_words = [
-            w for w in re.findall(r'\w+', query.lower())
-            if len(w) > 2 and w not in FRENCH_STOPWORDS
+            w for w in re.findall(r"\w+", query.lower()) if len(w) > 2 and w not in FRENCH_STOPWORDS
         ]
         if not clean_words:
             # Fallback si tous les mots étaient filtrés
-            clean_words = [w for w in re.findall(r'\w+', query.lower()) if len(w) > 1]
+            clean_words = [w for w in re.findall(r"\w+", query.lower()) if len(w) > 1]
             if not clean_words:
                 return []
 
@@ -231,11 +367,19 @@ class FactSearchRetriever:
                 try:
                     lex_matches = search_lexicon_terms(w, project_name=project_name, limit=3)
                     for m in lex_matches:
-                        term_words = re.findall(r'\w+', m.get("term", "").lower())
-                        expanded_terms.update([tw for tw in term_words if len(tw) > 2 and tw not in FRENCH_STOPWORDS])
+                        term_words = re.findall(r"\w+", m.get("term", "").lower())
+                        expanded_terms.update(
+                            [tw for tw in term_words if len(tw) > 2 and tw not in FRENCH_STOPWORDS]
+                        )
                         for alias in m.get("aliases", []):
-                            alias_words = re.findall(r'\w+', alias.lower())
-                            expanded_terms.update([aw for aw in alias_words if len(aw) > 2 and aw not in FRENCH_STOPWORDS])
+                            alias_words = re.findall(r"\w+", alias.lower())
+                            expanded_terms.update(
+                                [
+                                    aw
+                                    for aw in alias_words
+                                    if len(aw) > 2 and aw not in FRENCH_STOPWORDS
+                                ]
+                            )
                 except Exception as e:
                     logger.debug(f"Erreur expansion synonymique pour '{w}': {e}")
 
@@ -244,7 +388,7 @@ class FactSearchRetriever:
         results: List[Dict[str, Any]] = []
         rejected_candidates: List[Dict[str, Any]] = []
         session_kwargs = {"db_path": db_path} if db_path else {}
-        
+
         with get_observation_db_session(**session_kwargs) as conn:
             cursor = conn.cursor()
 
@@ -256,7 +400,7 @@ class FactSearchRetriever:
                 JOIN docs_chunks c ON c.id = CAST(f.chunk_id AS INTEGER)
                 WHERE docs_chunks_fts MATCH ?
             """
-            params = [fts_expression]
+            params: list = [fts_expression]
             if project_name:
                 sql += " AND f.project_name = ?"
                 params.append(project_name)
@@ -298,23 +442,29 @@ class FactSearchRetriever:
 
                 if superseded_info and not include_superseded:
                     superseded_by = superseded_info.get("superseded_by", "inconnu")
-                    rejected_candidates.append({
-                        "chunk_id": row["id"],
-                        "breadcrumb": row["breadcrumb"],
-                        "doc_path": row["doc_path"],
-                        "relevance_score": round(bm25_magnitude * weight, 3),
-                        "reason": f"REJECTED_SUPERSEDED: Document caduc, remplacé par {superseded_by}",
-                    })
+                    rejected_candidates.append(
+                        {
+                            "chunk_id": row["id"],
+                            "breadcrumb": row["breadcrumb"],
+                            "doc_path": row["doc_path"],
+                            "relevance_score": round(bm25_magnitude * weight, 3),
+                            "reason": f"REJECTED_SUPERSEDED: Document caduc, remplacé par {superseded_by}",
+                        }
+                    )
                     continue
 
                 supersession_penalty = 0.2 if (superseded_info and include_superseded) else 1.0
 
                 # 3. Multiplicateur d'autorité pour les sources maîtresses actives
-                is_authoritative = row_layer in ("01-architecture", "02-business-rules") and not superseded_info
+                is_authoritative = (
+                    row_layer in ("01-architecture", "02-business-rules") and not superseded_info
+                )
                 authority_boost = 1.25 if is_authoritative else 1.0
 
                 # Génération du snippet KWIC centré sur le terme trouvé
-                kwic_snippet, match_line_offset = cls.generate_kwic_snippet(content_text, list(expanded_terms))
+                kwic_snippet, match_line_offset = cls.generate_kwic_snippet(
+                    content_text, list(expanded_terms)
+                )
 
                 # Boost Titre & Breadcrumb (+35%)
                 header_context = f"{row['breadcrumb'] or ''} {row['section_h1'] or ''} {row['section_h2'] or ''}".lower()
@@ -329,14 +479,20 @@ class FactSearchRetriever:
                 temporal_boost = cls.calculate_temporal_boost(
                     query=query,
                     content=content_text,
-                    breadcrumb=row['breadcrumb'] or '',
-                    section_h1=row['section_h1'] or '',
-                    doc_path=row['doc_path'] or '',
+                    breadcrumb=row["breadcrumb"] or "",
+                    section_h1=row["section_h1"] or "",
+                    doc_path=row["doc_path"] or "",
                 )
 
                 normalized_relevance = round(
-                    bm25_magnitude * weight * title_boost * substance_factor * supersession_penalty * authority_boost * temporal_boost,
-                    3
+                    bm25_magnitude
+                    * weight
+                    * title_boost
+                    * substance_factor
+                    * supersession_penalty
+                    * authority_boost
+                    * temporal_boost,
+                    3,
                 )
 
                 actual_start = row["line_start"] + match_line_offset if row["line_start"] else 1
@@ -346,22 +502,24 @@ class FactSearchRetriever:
                 if superseded_info and include_superseded:
                     breadcrumb_display += f" [SUPERSEDED by {superseded_info.get('superseded_by')}]"
 
-                results.append({
-                    "chunk_id": row["id"],
-                    "project_name": row["project_name"],
-                    "doc_path": row["doc_path"],
-                    "ssot_layer": row_layer,
-                    "breadcrumb": breadcrumb_display,
-                    "section_h1": row["section_h1"],
-                    "section_h2": row["section_h2"],
-                    "line_start": actual_start,
-                    "line_end": actual_end,
-                    "snippet": kwic_snippet,
-                    "is_substantive": is_sub,
-                    "superseded_info": superseded_info,
-                    "temporal_boost": temporal_boost,
-                    "relevance_score": normalized_relevance,
-                })
+                results.append(
+                    {
+                        "chunk_id": row["id"],
+                        "project_name": row["project_name"],
+                        "doc_path": row["doc_path"],
+                        "ssot_layer": row_layer,
+                        "breadcrumb": breadcrumb_display,
+                        "section_h1": row["section_h1"],
+                        "section_h2": row["section_h2"],
+                        "line_start": actual_start,
+                        "line_end": actual_end,
+                        "snippet": kwic_snippet,
+                        "is_substantive": is_sub,
+                        "superseded_info": superseded_info,
+                        "temporal_boost": temporal_boost,
+                        "relevance_score": normalized_relevance,
+                    }
+                )
 
         results.sort(key=lambda x: x["relevance_score"], reverse=True)
         substantive_results = [r for r in results if r.get("is_substantive", True)]
@@ -369,13 +527,15 @@ class FactSearchRetriever:
         if substantive_results:
             for r in results:
                 if not r.get("is_substantive", True):
-                    rejected_candidates.append({
-                        "chunk_id": r["chunk_id"],
-                        "breadcrumb": r["breadcrumb"],
-                        "doc_path": r["doc_path"],
-                        "relevance_score": r["relevance_score"],
-                        "reason": "REJECTED_LOW_SUBSTANCE: Densité sémantique insuffisante (< 6 mots ou en-tête seul)",
-                    })
+                    rejected_candidates.append(
+                        {
+                            "chunk_id": r["chunk_id"],
+                            "breadcrumb": r["breadcrumb"],
+                            "doc_path": r["doc_path"],
+                            "relevance_score": r["relevance_score"],
+                            "reason": "REJECTED_LOW_SUBSTANCE: Densité sémantique insuffisante (< 6 mots ou en-tête seul)",
+                        }
+                    )
             accepted_pool = substantive_results
         else:
             accepted_pool = results
@@ -383,13 +543,15 @@ class FactSearchRetriever:
         final_results = accepted_pool[:limit]
 
         for r in accepted_pool[limit:]:
-            rejected_candidates.append({
-                "chunk_id": r["chunk_id"],
-                "breadcrumb": r["breadcrumb"],
-                "doc_path": r["doc_path"],
-                "relevance_score": r["relevance_score"],
-                "reason": "REJECTED_RANKING_LIMIT: Score inférieur au seuil top-k",
-            })
+            rejected_candidates.append(
+                {
+                    "chunk_id": r["chunk_id"],
+                    "breadcrumb": r["breadcrumb"],
+                    "doc_path": r["doc_path"],
+                    "relevance_score": r["relevance_score"],
+                    "reason": "REJECTED_RANKING_LIMIT: Score inférieur au seuil top-k",
+                }
+            )
 
         # 4. Décision d'Enregistreur de Vol & Aveu des Limites (ADR-0353)
         if len(final_results) >= 2 and any(r["relevance_score"] >= 2.0 for r in final_results):
@@ -437,7 +599,7 @@ class FactSearchRetriever:
     def _build_fts_query(cls, clean_words: List[str], expanded_terms: set) -> str:
         """Construit une expression FTS5 équilibrée entre précision et rappel."""
         if len(clean_words) >= 2:
-            near_clause = f'NEAR({" ".join(clean_words[:3])}, 15)'
+            near_clause = f"NEAR({' '.join(clean_words[:3])}, 15)"
             or_terms = " OR ".join([f"{t}*" for t in list(expanded_terms)[:8]])
             return f"({near_clause}) OR ({or_terms})"
         return " OR ".join([f"{t}*" for t in list(expanded_terms)[:10]])
@@ -460,7 +622,10 @@ class FactSearchRetriever:
         if not lines:
             return ("", 0)
 
-        pattern = re.compile(r'\b(' + '|'.join(re.escape(w) for w in target_words if len(w) > 1) + r')', re.IGNORECASE)
+        pattern = re.compile(
+            r"\b(" + "|".join(re.escape(w) for w in target_words if len(w) > 1) + r")",
+            re.IGNORECASE,
+        )
 
         # Chercher les indices des lignes qui matchent
         candidate_indices = [idx for idx, line in enumerate(lines) if pattern.search(line)]
@@ -471,7 +636,11 @@ class FactSearchRetriever:
         best_idx = candidate_indices[0]
         for idx in candidate_indices:
             l = lines[idx].strip()
-            if not l.startswith("#") and not re.match(r'^[*-]\s+\[.*?\]\(.*?\)', l) and len(l.split()) >= 4:
+            if (
+                not l.startswith("#")
+                and not re.match(r"^[*-]\s+\[.*?\]\(.*?\)", l)
+                and len(l.split()) >= 4
+            ):
                 best_idx = idx
                 break
 
@@ -488,11 +657,7 @@ class FactSearchRetriever:
         return (snippet_text[:350], start_idx)
 
     @classmethod
-    def _log_search_audit(
-        cls,
-        flight_record: Dict[str, Any],
-        project_name: Optional[str] = None
-    ):
+    def _log_search_audit(cls, flight_record: Dict[str, Any], project_name: Optional[str] = None):
         """Écrit l'enregistrement de vol structuré (Flight Recorder) dans fact_search_log.jsonl."""
         log_paths = [Path("memory/fact_search_log.jsonl")]
         if project_name and (Path("Projects") / project_name).exists():
@@ -503,5 +668,14 @@ class FactSearchRetriever:
                 lp.parent.mkdir(parents=True, exist_ok=True)
                 with open(lp, "a", encoding="utf-8") as f:
                     f.write(json.dumps(flight_record, ensure_ascii=False) + "\n")
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(
+                    "Écriture du Flight Recorder échouée, traçabilité fact-search partielle",
+                    exc_info=True,
+                    extra={
+                        "component": "fact_search.retriever",
+                        "operation": "record_flight",
+                        "log_path": str(lp),
+                        "error": str(e),
+                    },
+                )

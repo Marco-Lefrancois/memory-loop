@@ -7,6 +7,9 @@ import re
 import httpx
 from src.state import SprintBacklogItem
 from src.pipelines.jira.jira_helpers import is_jira_status_closed
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.jira.jira_story_resolver")
 
 
 def resolve_story_key(
@@ -33,8 +36,17 @@ def resolve_story_key(
                 itype = r_chk.json().get("fields", {}).get("issuetype", {})
                 if itype.get("subtask", False):
                     forced_key = None
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Vérification du type d'issue pour la clé forcée échouée, clé conservée",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.jira.jira_story_resolver",
+                    "operation": "forced_key_issuetype_check",
+                    "forced_key": forced_key,
+                    "error": str(e),
+                },
+            )
 
     epic_match = re.search(r"epic_key:\s*([A-Z0-9-]+)", rich_description)
     story_epic_key = epic_match.group(1) if epic_match else global_epic_key
@@ -79,8 +91,17 @@ def enrich_components_from_existing(
                         current_billing_id = b_f.get("id")
                     elif b_f:
                         current_billing_id = str(b_f)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Enrichissement depuis la story Jira existante échoué, valeurs inchangées",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.jira.jira_story_resolver",
+                    "operation": "enrich_components_from_existing",
+                    "story_key": story_key,
+                    "error": str(e),
+                },
+            )
 
     if story_epic_key and (not current_billing_id or not current_components):
         try:
@@ -100,7 +121,16 @@ def enrich_components_from_existing(
                             {"id": c["id"]} if "id" in c else {"name": c["name"]}
                             for c in epic_comps
                         ]
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Enrichissement depuis l'epic Jira échoué, valeurs inchangées",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.jira.jira_story_resolver",
+                    "operation": "enrich_components_from_epic",
+                    "story_epic_key": story_epic_key,
+                    "error": str(e),
+                },
+            )
 
     return None, None, current_billing_id, current_components

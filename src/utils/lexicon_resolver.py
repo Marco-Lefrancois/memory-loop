@@ -129,8 +129,16 @@ class SemanticLexiconResolver:
                 if score > 0:
                     candidates.append((score, f))
 
-            except Exception:
-                continue
+            except Exception as e:
+                logger.debug(
+                    "Fichier lexique inexploitable lors du scoring, ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "utils.lexicon_resolver",
+                        "operation": "resolve_lexicon",
+                        "error": str(e),
+                    },
+                )
 
         if candidates:
             candidates.sort(key=lambda x: x[0], reverse=True)

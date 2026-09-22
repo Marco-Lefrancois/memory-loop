@@ -15,6 +15,9 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+from src.utils.logger import get_logger
+
+logger = get_logger("core.skill_impact_tracker")
 
 
 @dataclass
@@ -159,8 +162,16 @@ class SkillImpactTracker:
                         if verdict_filter and entry.get("verdict") != verdict_filter.upper():
                             continue
                         results.append(entry)
-                    except json.JSONDecodeError:
-                        continue
+                    except json.JSONDecodeError as e:
+                        logger.debug(
+                            "Ligne JSON illisible du registre d'impact skill ignorée",
+                            exc_info=True,
+                            extra={
+                                "component": "core.skill_impact_tracker",
+                                "operation": "query_skill_impacts",
+                                "error": str(e),
+                            },
+                        )
         except Exception:
             return []
 

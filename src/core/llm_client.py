@@ -50,8 +50,7 @@ class AsyncLLMClient:
     ):
         self.base_url = (
             base_url
-            or os.environ.get("LITELLM_BASE_URL", "https://api-ia.nmedia.ca").rstrip("/")
-            + "/v1"
+            or os.environ.get("LITELLM_BASE_URL", "https://api-ia.nmedia.ca").rstrip("/") + "/v1"
         )
         self.api_key = api_key or self._resolve_api_key()
         self.semaphore = asyncio.Semaphore(max_concurrency)
@@ -69,7 +68,16 @@ class AsyncLLMClient:
                         limits=httpx.Limits(max_keepalive_connections=50, max_connections=100),
                         timeout=60.0,
                     )
-                except Exception:
+                except Exception as e:
+                    logger.warning(
+                        "Initialisation HTTP/2 échouée, repli sur client HTTP/1.1",
+                        exc_info=True,
+                        extra={
+                            "component": "core.llm_client",
+                            "operation": "__init__",
+                            "error": str(e),
+                        },
+                    )
                     self._http_client = httpx.AsyncClient(timeout=60.0)
 
             self._openai_client = AsyncOpenAI(
@@ -105,13 +113,22 @@ class AsyncLLMClient:
         """Résout la clé API active depuis les variables d'environnement ou les secrets."""
         try:
             from dotenv import load_dotenv
+
             env_file = Path(__file__).resolve().parents[2] / ".env"
             if env_file.exists():
                 load_dotenv(dotenv_path=env_file, override=True)
             else:
                 load_dotenv(override=True)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Chargement du fichier .env échoué, lecture des variables d'environnement système",
+                exc_info=True,
+                extra={
+                    "component": "core.llm_client",
+                    "operation": "_resolve_api_key",
+                    "error": str(e),
+                },
+            )
 
         active_val = os.environ.get("LITELLM_API_KEY")
         if active_val:
@@ -155,8 +172,17 @@ class AsyncLLMClient:
             if secret_path.exists():
                 try:
                     return secret_path.read_text(encoding="utf-8").strip()
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning(
+                        "Lecture du fichier secret de clé API échouée",
+                        exc_info=True,
+                        extra={
+                            "component": "core.llm_client",
+                            "operation": "_resolve_api_key",
+                            "secret_path": str(secret_path),
+                            "error": str(e),
+                        },
+                    )
         return "sk-placeholder"
 
     @staticmethod
@@ -213,7 +239,7 @@ class AsyncLLMClient:
 
         # 2. Exécution asynchrone avec contrôle de flux (Semaphore)
         messages = self._format_messages_for_prefix_cache(system_prompt, user_prompt)
-        
+
         async with self.semaphore:
             if self._openai_client is None:
                 raise RuntimeError("AsyncOpenAI n'est pas installé ou initialisé.")
@@ -225,16 +251,22 @@ class AsyncLLMClient:
             }
 
             if response_schema:
-                kwargs["response_format"] = {
-                    "type": "json_object"
-                }
+                kwargs["response_format"] = {"type": "json_object"}
 
             response = await self._openai_client.chat.completions.create(**kwargs)
             res_text = response.choices[0].message.content or ""
-            
+
             usage = getattr(response, "usage", None)
-            p_tok = getattr(usage, "prompt_tokens", len(system_prompt + user_prompt) // 4) if usage else len(system_prompt + user_prompt) // 4
-            c_tok = getattr(usage, "completion_tokens", len(res_text) // 4) if usage else len(res_text) // 4
+            p_tok = (
+                getattr(usage, "prompt_tokens", len(system_prompt + user_prompt) // 4)
+                if usage
+                else len(system_prompt + user_prompt) // 4
+            )
+            c_tok = (
+                getattr(usage, "completion_tokens", len(res_text) // 4)
+                if usage
+                else len(res_text) // 4
+            )
 
         # 3. Extraction / Parsing JSON optionnel
         parsed_json = None
@@ -244,8 +276,17 @@ class AsyncLLMClient:
                 clean_json = re.sub(r"^```json\s*", "", res_text.strip(), flags=re.MULTILINE)
                 clean_json = re.sub(r"\s*```$", "", clean_json, flags=re.MULTILINE).strip()
                 parsed_json = json.loads(clean_json)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(
+                    "Parsing JSON de la réponse LLM échoué (réponse retournée en texte brut)",
+                    exc_info=True,
+                    extra={
+                        "component": "core.llm_client",
+                        "operation": "complete",
+                        "model": model,
+                        "error": str(e),
+                    },
+                )
 
         # 4. Enregistrement dans le SemanticCache
         if self.enable_cache and self.cache:

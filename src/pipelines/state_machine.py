@@ -15,6 +15,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, List
 from src.state import StoryStatus
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.state_machine")
 
 DEFAULT_TTL_CYCLES = 3
 
@@ -25,7 +28,16 @@ def _clean_yaml_str(raw_yaml: str) -> dict:
     try:
         res = yaml.safe_load(sanitized)
         return res if isinstance(res, dict) else {}
-    except Exception:
+    except Exception as e:
+        logger.debug(
+            "Parse YAML tolérant échoué, retour d'un dict vide",
+            exc_info=True,
+            extra={
+                "component": "pipelines.state_machine",
+                "operation": "clean_yaml_str",
+                "error": str(e),
+            },
+        )
         return {}
 
 
@@ -210,7 +222,17 @@ class StateMachineEngine:
                     if isinstance(data, dict) and data.get("status") == "IN_ANALYZE":
                         rel_path = file.relative_to(self.stories_path).as_posix()
                         in_analyze_stories.append(rel_path)
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Lecture/parse d'un récit échouée, fichier ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.state_machine",
+                        "operation": "validate_single_in_analyze",
+                        "file": str(file),
+                        "error": str(e),
+                    },
+                )
                 continue
 
         if len(in_analyze_stories) > 1:
@@ -236,9 +258,7 @@ class StateMachineEngine:
 
         candidates = []
         if category:
-            candidates.append(
-                self.reviews_path / category / f"rubber_duck_{story_stem}.md"
-            )
+            candidates.append(self.reviews_path / category / f"rubber_duck_{story_stem}.md")
         candidates.append(self.reviews_path / f"rubber_duck_{story_stem}.md")
 
         review_file = None
@@ -279,9 +299,7 @@ class StateMachineEngine:
 
     # ─── 1b. Gate C9 : Dossier de Preuves Documentaires (Phase 2) ──────────
 
-    def validate_fact_dossier_gate(
-        self, story_file: Path, strict: bool = False
-    ) -> bool:
+    def validate_fact_dossier_gate(self, story_file: Path, strict: bool = False) -> bool:
         """
         Gate déterministe sur le Dossier de Preuves Documentaires (ADR-0320 §H,
         ADR-0326, DOSSIER_DE_PREUVES_PROTOCOL.md) pour les récits en statut
@@ -332,9 +350,7 @@ class StateMachineEngine:
         content = parts[2]
 
         # 1. Lien direct dans '## Références' pointant vers un _fact_dossier.md existant
-        dossier_links = re.findall(
-            r"\[([^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content
-        )
+        dossier_links = re.findall(r"\[([^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content)
         has_valid_link = any(
             (story_file.parent / link_target).resolve().exists()
             for _, link_target in dossier_links
@@ -379,6 +395,7 @@ class StateMachineEngine:
                     if strict:
                         raise StateTransitionError(msg)
                     from src.cli import ZeroFluffConsole
+
                     ZeroFluffConsole.warning(msg)
 
                 if not has_facts or len(dossier_txt.strip()) < 100:
@@ -389,11 +406,22 @@ class StateMachineEngine:
                     if strict:
                         raise StateTransitionError(msg)
                     from src.cli import ZeroFluffConsole
+
                     ZeroFluffConsole.warning(msg)
             except StateTransitionError:
                 raise
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Évaluation du dossier de preuves échouée, le gate retourne True (non bloquant)",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.state_machine",
+                        "operation": "validate_fact_dossier_gate",
+                        "story_file": str(story_file),
+                        "strict": strict,
+                        "error": str(e),
+                    },
+                )
             return True
 
         message = (
@@ -412,8 +440,17 @@ class StateMachineEngine:
             from src.cli import ZeroFluffConsole
 
             ZeroFluffConsole.warning(message)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Affichage console du warning Gate C9 échoué",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.state_machine",
+                    "operation": "gate_c9_console_warning",
+                    "story_file": str(story_file),
+                    "error": str(e),
+                },
+            )
         return True
 
     # ─── 2. Cryptographic Anti-Tampering ───────────────────────────────────

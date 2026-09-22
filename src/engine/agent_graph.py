@@ -12,6 +12,9 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 import time
+from src.utils.logger import get_logger
+
+logger = get_logger("engine.agent_graph")
 
 
 class ThreadSpawnEdgeStatus:
@@ -45,8 +48,16 @@ class AgentGraphStore:
         try:
             conn.execute("PRAGMA journal_mode=WAL;")
             conn.execute("PRAGMA busy_timeout=10000;")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "PRAGMA WAL/busy_timeout de l'agent graph échoués (mode dégradé)",
+                exc_info=True,
+                extra={
+                    "component": "engine.agent_graph",
+                    "operation": "get_connection",
+                    "error": str(e),
+                },
+            )
         return conn
 
     def _init_db(self):

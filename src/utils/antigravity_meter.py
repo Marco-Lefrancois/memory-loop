@@ -164,8 +164,16 @@ class AntigravityMeter:
                 continue
             try:
                 data = json.loads(line)
-            except Exception:
-                continue
+            except Exception as e:
+                logger.debug(
+                    "Ligne JSON du métrage antigravity illisible, ignorée",
+                    exc_info=True,
+                    extra={
+                        "component": "utils.antigravity_meter",
+                        "operation": "parse_meter_events",
+                        "error": str(e),
+                    },
+                )
 
             s_type = data.get("type", "")
             step_idx = data.get("step_index", 0)

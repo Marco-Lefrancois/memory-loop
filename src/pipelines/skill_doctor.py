@@ -8,6 +8,7 @@ Inspiré du /skill-doctor de Claude Code (v2.1.261) et du framework WikiSkill (A
 - Croise l'activité avec les journaux de session (token_ledger.jsonl, events.jsonl) pour détecter les compétences dormantes.
 - Évalue le score de risque de « Context Rot » et propose le passage en TOMBSTONE des règles et compétences obsolètes.
 """
+
 from __future__ import annotations
 
 import json
@@ -16,10 +17,13 @@ import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-from src.cli import ZeroFluffConsole
+from src.utils.logger import get_logger
+from src.pipelines._skill_doctor_report import SkillDoctorReportMixin
+
+logger = get_logger("pipelines.skill_doctor")
 
 
-class SkillDoctor:
+class SkillDoctor(SkillDoctorReportMixin):
     """Moteur déterministe de diagnostic d'hygiène mémorielle et de coût en jetons des compétences."""
 
     def __init__(
@@ -46,6 +50,7 @@ class SkillDoctor:
             return 0
         try:
             import tiktoken  # type: ignore
+
             enc = tiktoken.get_encoding("cl100k_base")
             return len(enc.encode(text))
         except Exception:
@@ -104,11 +109,13 @@ class SkillDoctor:
                     line = line.strip()
                     if ":" in line and not line.startswith("#"):
                         k, v = line.split(":", 1)
-                        metadata[k.strip()] = v.strip().strip('"\'')
+                        metadata[k.strip()] = v.strip().strip("\"'")
 
         name = metadata.get("name", skill_file.parent.name)
         description = metadata.get("description", "")
-        disable_model_invocation = metadata.get("disable-model-invocation", "false").lower() == "true"
+        disable_model_invocation = (
+            metadata.get("disable-model-invocation", "false").lower() == "true"
+        )
 
         desc_tokens = self.estimate_tokens(description)
         frontmatter_tokens = self.estimate_tokens(frontmatter_raw)
@@ -118,7 +125,11 @@ class SkillDoctor:
         return {
             "name": name,
             "dir_name": skill_file.parent.name,
-            "file_path": str(skill_file.relative_to(self.workspace_root) if skill_file.is_relative_to(self.workspace_root) else skill_file),
+            "file_path": str(
+                skill_file.relative_to(self.workspace_root)
+                if skill_file.is_relative_to(self.workspace_root)
+                else skill_file
+            ),
             "description": description,
             "disable_model_invocation": disable_model_invocation,
             "description_tokens": desc_tokens,
@@ -128,47 +139,8 @@ class SkillDoctor:
             "valid": True,
         }
 
-    def collect_usage_statistics(self) -> Dict[str, int]:
-        """Collecte la fréquence d'utilisation des compétences depuis les journaux récents."""
-        usage_counts: Dict[str, int] = {}
-
-        # 1. Analyse du ledger de jetons
-        if self.token_ledger_path.exists():
-            try:
-                for line in self.token_ledger_path.read_text(encoding="utf-8", errors="ignore").splitlines():
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        entry = json.loads(line)
-                        skill = entry.get("skill") or entry.get("skill_name") or entry.get("operation")
-                        if skill and isinstance(skill, str):
-                            usage_counts[skill] = usage_counts.get(skill, 0) + 1
-                    except Exception:
-                        continue
-            except Exception:
-                pass
-
-        # 2. Analyse des événements
-        if self.events_path.exists():
-            try:
-                for line in self.events_path.read_text(encoding="utf-8", errors="ignore").splitlines():
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        event = json.loads(line)
-                        payload = event.get("payload", {})
-                        action = event.get("event", "") or payload.get("action", "")
-                        for s_name in usage_counts:
-                            if s_name in action:
-                                usage_counts[s_name] = usage_counts.get(s_name, 0) + 1
-                    except Exception:
-                        continue
-            except Exception:
-                pass
-
-        return usage_counts
+    # collect_usage_statistics / render_console_report : hérités de
+    # SkillDoctorReportMixin (src/pipelines/_skill_doctor_report.py, ADR-0202).
 
     def audit(self, suggest_tombstone: bool = True) -> Dict[str, Any]:
         """Exécute un audit complet d'hygiène sur le catalogue de compétences."""
@@ -226,7 +198,11 @@ class SkillDoctor:
                 flags.append("MISSING_TRIGGER ('Use when...')")
 
             # Candidat au tombstone si dormant ET volumineux ou redondant
-            if suggest_tombstone and invocations == 0 and (total_tokens > self.individual_threshold or "thinking-" in name):
+            if (
+                suggest_tombstone
+                and invocations == 0
+                and (total_tokens > self.individual_threshold or "thinking-" in name)
+            ):
                 tombstone_candidates.append(name)
 
             parsed["flags"] = flags
@@ -234,25 +210,32 @@ class SkillDoctor:
 
         # Détection des collisions lexicales de routing (> 75% similarité cosinus - ADR-0365)
         collisions: List[Dict[str, Any]] = []
-        active_skills = [s for s in skills_report if not s["disable_model_invocation"] and s["description"]]
+        active_skills = [
+            s for s in skills_report if not s["disable_model_invocation"] and s["description"]
+        ]
         for i in range(len(active_skills)):
             for j in range(i + 1, len(active_skills)):
                 s1 = active_skills[i]
                 s2 = active_skills[j]
                 sim = self.compute_lexical_similarity(s1["description"], s2["description"])
                 if sim >= 0.75:
-                    collisions.append({
-                        "skill_a": s1["name"],
-                        "skill_b": s2["name"],
-                        "similarity": round(sim, 2),
-                    })
+                    collisions.append(
+                        {
+                            "skill_a": s1["name"],
+                            "skill_b": s2["name"],
+                            "similarity": round(sim, 2),
+                        }
+                    )
 
         # Calcul du score de risque de Context Rot (ADR-0362 & ADR-0365)
         # La fenêtre d'attention au démarrage est directement impactée par le budget des descriptions injectées
         context_rot_risk = "LOW"
         if total_boot_description_tokens > self.description_budget_threshold:
             context_rot_risk = "HIGH"
-        elif total_boot_description_tokens > (self.description_budget_threshold * 0.7) or len(collisions) >= 3:
+        elif (
+            total_boot_description_tokens > (self.description_budget_threshold * 0.7)
+            or len(collisions) >= 3
+        ):
             context_rot_risk = "MEDIUM"
 
         summary = {
@@ -260,7 +243,9 @@ class SkillDoctor:
             "total_catalog_tokens": total_catalog_tokens,
             "total_boot_description_tokens": total_boot_description_tokens,
             "boot_budget_max_tokens": self.description_budget_threshold,
-            "boot_budget_usage_pct": round((total_boot_description_tokens / max(1, self.description_budget_threshold)) * 100, 1),
+            "boot_budget_usage_pct": round(
+                (total_boot_description_tokens / max(1, self.description_budget_threshold)) * 100, 1
+            ),
             "oversized_skills_count": len(oversized_skills),
             "dormant_skills_count": len(dormant_skills),
             "tombstone_candidates_count": len(tombstone_candidates),
@@ -277,41 +262,6 @@ class SkillDoctor:
             "collisions": collisions,
             "skills": skills_report,
         }
-
-    def render_console_report(self, result: Dict[str, Any]) -> None:
-        """Affiche le bilan d'hygiène sous forme de diagnostic clair et sans superflu."""
-        if not result.get("success"):
-            ZeroFluffConsole.error(f"Échec de l'audit SkillDoctor : {result.get('error')}")
-            return
-
-        summary = result["summary"]
-        risk = summary["context_rot_risk"]
-        risk_icon = "🟢" if risk == "LOW" else ("🟡" if risk == "MEDIUM" else "🔴")
-
-        ZeroFluffConsole.section("🩺 Bilan d'Hygiène Contextuelle & Diagnostic des Compétences (Skill-Doctor)")
-        print(f"• Compétences Détectées : {summary['total_skills']}")
-        print(f"• Empreinte Totale du Catalogue : ~{summary['total_catalog_tokens']:,} jetons")
-        print(f"• Poids Descriptions de Démarrage : ~{summary['total_boot_description_tokens']:,} / {summary['boot_budget_max_tokens']:,} jetons ({summary['boot_budget_usage_pct']}%)")
-        print(f"• Risque de Context Rot : {risk_icon} [{risk}]")
-        print(f"• Compétences de Référence (> {self.individual_threshold} tok) : {summary['oversized_skills_count']}")
-        print(f"• Collisions Lexicales (> 75%) : {summary.get('collisions_count', 0)}")
-        print(f"• Compétences Dormantes (0 appel tracé) : {summary['dormant_skills_count']}")
-
-        if result.get("collisions"):
-            collision_str = ", ".join([f"{c['skill_a']} <-> {c['skill_b']} ({int(c['similarity']*100)}%)" for c in result["collisions"][:5]])
-            ZeroFluffConsole.warning(f"Collisions de routing potentielles : {collision_str}")
-
-        if result.get("oversized_skills"):
-            ZeroFluffConsole.info(f"Compétences de référence volumineuses : {', '.join(result['oversized_skills'][:10])}")
-
-        if result.get("tombstone_candidates"):
-            ZeroFluffConsole.info(f"Candidats recommandés au Tombstone (ADR-0348) : {', '.join(result['tombstone_candidates'][:10])}")
-
-        print("\nTop 5 des compétences les plus lourdes :")
-        sorted_by_size = sorted(result.get("skills", []), key=lambda x: x.get("total_tokens", 0), reverse=True)[:5]
-        for s in sorted_by_size:
-            flags_str = f" [{', '.join(s['flags'])}]" if s.get("flags") else ""
-            print(f"  - `{s['name']}` : ~{s['total_tokens']:,} jetons (Desc: {s['description_tokens']} tok, Appels: {s.get('invocation_count', 0)}){flags_str}")
 
 
 def run_skill_doctor(

@@ -14,6 +14,10 @@ import unicodedata
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from src.utils.logger import get_logger
+
+logger = get_logger("dashboard.project_utils")
+
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
@@ -73,17 +77,32 @@ def resolve_project_canonical_name(project_name: Optional[str]) -> str:
     # 2. Utilisation du résolveur officiel mLoop si disponible
     try:
         from src.swarm import resolve_project_name
+
         resolved = resolve_project_name(clean)
         if resolved:
             return resolved
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(
+            "Résolveur de projet mLoop indisponible, fallback sur le scan physique Projects/",
+            exc_info=True,
+            extra={
+                "component": "dashboard.project_utils",
+                "operation": "resolve_project_canonical_name",
+                "project_input": clean,
+                "error": str(e),
+            },
+        )
 
     # 3. Scan direct des dossiers physiques sous Projects/
     projects_dir = REPO_ROOT / "Projects"
     if projects_dir.exists():
         for p in projects_dir.iterdir():
-            if p.is_dir() and not p.name.startswith(".") and not p.name.startswith("_") and not p.name.endswith("_DEPRECATED"):
+            if (
+                p.is_dir()
+                and not p.name.startswith(".")
+                and not p.name.startswith("_")
+                and not p.name.endswith("_DEPRECATED")
+            ):
                 p_ck = canonical_key(p.name)
                 if ck == p_ck or (ck and (ck in p_ck or p_ck in ck)):
                     return p.name
@@ -107,7 +126,9 @@ def resolve_project_path(project: Optional[str]) -> Path:
     return REPO_ROOT
 
 
-def match_project_alias(candidate: str, target: str, entry: Optional[Dict[str, Any]] = None) -> bool:
+def match_project_alias(
+    candidate: str, target: str, entry: Optional[Dict[str, Any]] = None
+) -> bool:
     """
     Vérifie si une entrée candidate de journal correspond au projet cible.
     Gère la tolérance d'alias et les projets transverses (ex: Metro_OneTrust -> COMMERCE/FOOD/SANTE).
@@ -137,7 +158,9 @@ def match_project_alias(candidate: str, target: str, entry: Optional[Dict[str, A
             if "food" in c_ck:
                 return True
             if candidate == "Metro_OneTrust" and entry:
-                contribs = (str(entry.get("context_contributors", [])) + str(entry.get("target", ""))).lower()
+                contribs = (
+                    str(entry.get("context_contributors", [])) + str(entry.get("target", ""))
+                ).lower()
                 return "food" in contribs
             return False
 
@@ -146,7 +169,9 @@ def match_project_alias(candidate: str, target: str, entry: Optional[Dict[str, A
             if "commerce" in c_ck:
                 return True
             if candidate == "Metro_OneTrust" and entry:
-                contribs = (str(entry.get("context_contributors", [])) + str(entry.get("target", ""))).lower()
+                contribs = (
+                    str(entry.get("context_contributors", [])) + str(entry.get("target", ""))
+                ).lower()
                 return "commerce" in contribs
             return False
 
@@ -155,7 +180,9 @@ def match_project_alias(candidate: str, target: str, entry: Optional[Dict[str, A
             if "sante" in c_ck or "pharma" in c_ck:
                 return True
             if candidate == "Metro_OneTrust" and entry:
-                contribs = (str(entry.get("context_contributors", [])) + str(entry.get("target", ""))).lower()
+                contribs = (
+                    str(entry.get("context_contributors", [])) + str(entry.get("target", ""))
+                ).lower()
                 return "sante" in contribs or "pharma" in contribs
             return False
 
@@ -173,7 +200,13 @@ def match_project_alias(candidate: str, target: str, entry: Optional[Dict[str, A
             return True
         if c_ck in ("mloop", "memoryloop"):
             if entry:
-                haystack = (str(entry.get("target", "")) + " " + str(entry.get("action", "")) + " " + str(entry.get("context_contributors", []))).lower()
+                haystack = (
+                    str(entry.get("target", ""))
+                    + " "
+                    + str(entry.get("action", ""))
+                    + " "
+                    + str(entry.get("context_contributors", []))
+                ).lower()
                 if "dashboard" in haystack:
                     return True
             return True
@@ -204,7 +237,15 @@ def list_available_projects() -> List[str]:
     """Retourne la liste ordonnée de tous les projets disponibles avec les modules métiers en tête."""
     projects = set()
     projects_dir = REPO_ROOT / "Projects"
-    excluded = {"default", "cacheproj", "timeoutproj", "testproject", "testspecial", "testlegacy", "_archive"}
+    excluded = {
+        "default",
+        "cacheproj",
+        "timeoutproj",
+        "testproject",
+        "testspecial",
+        "testlegacy",
+        "_archive",
+    }
 
     if projects_dir.exists():
         for p in projects_dir.iterdir():

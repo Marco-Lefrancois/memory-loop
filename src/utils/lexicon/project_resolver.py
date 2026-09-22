@@ -108,7 +108,17 @@ class ProjectResolver:
                 for md_file in ingested_dir.glob("*.md"):
                     try:
                         head = md_file.read_text(encoding="utf-8", errors="ignore")[:2000]
-                    except Exception:
+                    except Exception as e:
+                        logger.debug(
+                            "Lecture document ingéré ignorée pendant le scoring projet",
+                            exc_info=True,
+                            extra={
+                                "component": "lexicon.project_resolver",
+                                "operation": "_score_project_folder",
+                                "md_file": str(md_file),
+                                "error": str(e),
+                            },
+                        )
                         continue
                     ingested_overlap |= query_tokens.intersection(EntityMatcher.tokenize(head))
                     if ingested_overlap == query_tokens:

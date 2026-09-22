@@ -6,6 +6,9 @@ from typing import Dict, Any, List
 
 from src.cli import ZeroFluffConsole
 from src.state import LoopState, ProjectLayout
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.memory_hygiene")
 
 
 class MemoryHygieneAgent:
@@ -133,8 +136,16 @@ class MemoryHygieneAgent:
             try:
                 data = json.loads(active_memo_file.read_text(encoding="utf-8"))
                 active_memo_name = f"{data.get('name')} (ID: {data.get('profile_id')}, Score: {data.get('score', 0.9):.2f})"
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(
+                    "Profil de mémoire active illisible, nom par défaut conservé",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.memory_hygiene",
+                        "operation": "load_active_memo",
+                        "error": str(e),
+                    },
+                )
 
         report_lines = [
             f"# 🧪 Bilan de Santé de Mémoire - Memory Hygiene ({state.project_name})",

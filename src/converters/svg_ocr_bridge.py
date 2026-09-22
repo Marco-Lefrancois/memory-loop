@@ -20,6 +20,10 @@ import subprocess
 from pathlib import Path
 from typing import Optional, Any
 
+from src.utils.logger import get_logger
+
+logger = get_logger("converters.svg_ocr_bridge")
+
 SKILL_DIR = Path(__file__).resolve().parents[2] / ".agents" / "skills" / "svg-ocr"
 RENDER_SCRIPT = SKILL_DIR / "render_svg.js"
 OCR_SCRIPT = SKILL_DIR / "ocr_png.ps1"
@@ -38,8 +42,17 @@ def _decode_bytes(raw: Any) -> str:
         for enc in ("utf-8", "cp850", "cp1252"):
             try:
                 return raw.decode(enc)
-            except UnicodeDecodeError:
-                pass
+            except UnicodeDecodeError as e:
+                logger.debug(
+                    "Décodage des octets échoué, tentative de l'encodage suivant",
+                    exc_info=True,
+                    extra={
+                        "component": "converters.svg_ocr_bridge",
+                        "operation": "decode_bytes",
+                        "encoding": enc,
+                        "error": str(e),
+                    },
+                )
         return raw.decode("utf-8", errors="replace")
     return str(raw)
 
@@ -61,8 +74,16 @@ def _npm_global_root() -> Optional[str]:
         stdout = _decode_bytes(proc.stdout).strip()
         if proc.returncode == 0 and stdout:
             return stdout
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(
+            "Récupération du chemin npm global échouée, NPM_GLOBAL_ROOT non défini",
+            exc_info=True,
+            extra={
+                "component": "converters.svg_ocr_bridge",
+                "operation": "npm_global_root",
+                "error": str(e),
+            },
+        )
     return None
 
 
@@ -96,10 +117,29 @@ def _render_svg_to_png(svg_path: Path, work_dir: Path) -> Optional[Path]:
             timeout=DEFAULT_RENDER_TIMEOUT_S,
             env=env,
         )
-    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as e:
+        logger.warning(
+            "Rendu SVG -> PNG échoué (outil absent ou timeout), OCR désactivé pour ce fichier",
+            exc_info=True,
+            extra={
+                "component": "converters.svg_ocr_bridge",
+                "operation": "render_svg_to_png",
+                "svg_path": str(svg_path),
+                "error": str(e),
+            },
+        )
         return None
 
     if proc.returncode != 0:
+        logger.warning(
+            "Script de rendu SVG retourné avec un code d'erreur non nul",
+            extra={
+                "component": "converters.svg_ocr_bridge",
+                "operation": "render_svg_to_png",
+                "svg_path": str(svg_path),
+                "returncode": proc.returncode,
+            },
+        )
         return None
 
     out_png = work_dir / (svg_path.stem + ".png")
@@ -127,19 +167,37 @@ def _ocr_png(png_path: Path) -> Optional[str]:
             capture_output=True,
             timeout=DEFAULT_OCR_TIMEOUT_S,
         )
-    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as e:
+        logger.warning(
+            "OCR natif Windows échoué (outil absent ou timeout), retour None",
+            exc_info=True,
+            extra={
+                "component": "converters.svg_ocr_bridge",
+                "operation": "ocr_png",
+                "png_path": str(png_path),
+                "error": str(e),
+            },
+        )
         return None
 
     stdout = _decode_bytes(proc.stdout).strip()
     if proc.returncode != 0 or not stdout:
+        logger.warning(
+            "OCR PNG sans texte exploitable, retour None",
+            extra={
+                "component": "converters.svg_ocr_bridge",
+                "operation": "ocr_png",
+                "png_path": str(png_path),
+                "returncode": proc.returncode,
+                "stdout_len": len(stdout),
+            },
+        )
         return None
 
     return stdout
 
 
-def ocr_vectorized_svg(
-    svg_path: Path, work_dir: Optional[Path] = None
-) -> Optional[str]:
+def ocr_vectorized_svg(svg_path: Path, work_dir: Optional[Path] = None) -> Optional[str]:
     """
     Extrait le texte réel d'un SVG à texte vectorisé (aucune balise <text>/<tspan>)
     via rendu Chromium headless puis OCR natif Windows.
@@ -169,6 +227,16 @@ def ocr_vectorized_svg(
         if png_path is None:
             return None
         return _ocr_png(png_path)
-    except Exception:
+    except Exception as e:
         # Garde-fou ultime : jamais d'exception ne doit remonter au pipeline d'ingestion.
+        logger.warning(
+            "Garde-fou ultime OCR SVG déclenché, retour None",
+            exc_info=True,
+            extra={
+                "component": "converters.svg_ocr_bridge",
+                "operation": "ocr_vectorized_svg",
+                "svg_path": str(svg_path),
+                "error": str(e),
+            },
+        )
         return None

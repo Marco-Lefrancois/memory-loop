@@ -29,6 +29,9 @@ from pathlib import Path
 from typing import Optional
 
 from src.engine.fact_check.domain_invariants import DomainInvariantChecker, InvariantSeverity
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.struct_checker")
 
 
 
@@ -766,8 +769,16 @@ class StructCheckEngine:
                                 line_hint=1,
                             )
                         )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Construction du contrôle sur un dossier de preuves échouée",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.struct_checker",
+                        "operation": "check_declared_contracts",
+                        "error": str(e),
+                    },
+                )
 
         return violations
 

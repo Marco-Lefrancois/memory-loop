@@ -3,6 +3,9 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
+from src.utils.logger import get_logger
+
+logger = get_logger("handler.gates")
 
 if TYPE_CHECKING:
     import argparse
@@ -87,8 +90,16 @@ def handle_check_leakage(args: argparse.Namespace, state: LoopState, project_pat
                 all_passed = False
                 rejected_count += 1
                 print(report.format_summary())
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Fichier de test non vérifiable, contrôle de fuite sauté",
+                exc_info=True,
+                extra={
+                    "component": "commands.handlers.gates",
+                    "operation": "run_leak_gates",
+                    "error": str(e),
+                },
+            )
 
     if all_passed:
         ZeroFluffConsole.success("Aucune fuite de vérification (Zero Verification Leakage) détectée.")

@@ -10,6 +10,9 @@ pour interrompre immédiatement les agents en boucle.
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass, field
 import time
+from src.utils.logger import get_logger
+
+logger = get_logger("engine.guardian")
 
 
 @dataclass
@@ -138,8 +141,16 @@ class GuardianAutoReviewer:
                     target_path.relative_to(Path(r).resolve())
                     is_inside = True
                     break
-                except ValueError:
-                    continue
+                except ValueError as e:
+                    logger.debug(
+                        "Chemin hors racines autorisées, racine suivante testée",
+                        exc_info=True,
+                        extra={
+                            "component": "engine.guardian",
+                            "operation": "is_path_allowed",
+                            "error": str(e),
+                        },
+                    )
             
             if not is_inside:
                 return ReviewDecision(

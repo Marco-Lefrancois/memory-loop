@@ -196,8 +196,16 @@ class FactCheckCertificateGenerator:
                     base_pack = engine.extract_evidence(cand_stories[0])
                     base_pack.update(evidence_data)
                     evidence_data = base_pack
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(
+                    "Fusion du EvidencePack existant échouée, données certifiat conservées",
+                    exc_info=True,
+                    extra={
+                        "component": "engine.fact_check.certificate",
+                        "operation": "attach_evidence_pack",
+                        "error": str(e),
+                    },
+                )
 
         # Mise à jour de la section fact_check_certificate
         evidence_data["story_id"] = cert.story_id

@@ -2,6 +2,7 @@
 Moteur de Génération de Sidecars LOD (Level of Detail L0/L1/L2) et Fraîcheur OKF pour mLoop.
 Standardisé selon l'ADR-0335 & Architecture de Contexte Progressive Disclosure.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -10,6 +11,9 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+from src.utils.logger import get_logger
+
+logger = get_logger("core.lod_generator")
 
 
 class LODGenerator:
@@ -41,10 +45,16 @@ class LODGenerator:
         if not directory_path.exists() or not directory_path.is_dir():
             return "", []
 
-        children = sorted([
-            f for f in directory_path.iterdir()
-            if f.is_file() and not f.name.startswith(".") and f.name not in [".abstract.md", ".overview.md"]
-        ], key=lambda x: x.name)
+        children = sorted(
+            [
+                f
+                for f in directory_path.iterdir()
+                if f.is_file()
+                and not f.name.startswith(".")
+                and f.name not in [".abstract.md", ".overview.md"]
+            ],
+            key=lambda x: x.name,
+        )
 
         combined_hasher = hashlib.sha256()
         entries = []
@@ -53,12 +63,14 @@ class LODGenerator:
             f_hash = cls.compute_file_hash(child)
             combined_hasher.update(f"{child.name}:{f_hash}".encode("utf-8"))
             mtime = datetime.fromtimestamp(child.stat().st_mtime, tz=timezone.utc).isoformat()
-            entries.append({
-                "name": child.name,
-                "size_bytes": child.stat().st_size,
-                "sha256": f_hash,
-                "mtime": mtime
-            })
+            entries.append(
+                {
+                    "name": child.name,
+                    "size_bytes": child.stat().st_size,
+                    "sha256": f_hash,
+                    "mtime": mtime,
+                }
+            )
 
         return combined_hasher.hexdigest(), entries
 
@@ -72,13 +84,22 @@ class LODGenerator:
         for line in lines:
             if line.startswith("# ") and not title:
                 title = line.lstrip("# ").strip()
-            elif not line.startswith("#") and not line.startswith("---") and not line.startswith("```") and not first_p:
+            elif (
+                not line.startswith("#")
+                and not line.startswith("---")
+                and not line.startswith("```")
+                and not first_p
+            ):
                 if len(line) > 20:
                     first_p = line
 
-        summary = f"{title}: {first_p}" if title and first_p else (title or first_p or "Documentation technique.")
+        summary = (
+            f"{title}: {first_p}"
+            if title and first_p
+            else (title or first_p or "Documentation technique.")
+        )
         if len(summary) > cls.DEFAULT_ABSTRACT_MAX_CHARS:
-            summary = summary[:cls.DEFAULT_ABSTRACT_MAX_CHARS - 3] + "..."
+            summary = summary[: cls.DEFAULT_ABSTRACT_MAX_CHARS - 3] + "..."
         return summary
 
     @classmethod
@@ -86,7 +107,7 @@ class LODGenerator:
         cls,
         directory_path: Path,
         source_info: Optional[Dict[str, Any]] = None,
-        project_name: Optional[str] = None
+        project_name: Optional[str] = None,
     ) -> Tuple[Path, Path]:
         """
         Génère les fichiers .abstract.md (L0) et .overview.md (L1) avec frontmatter OKF dans directory_path.
@@ -96,7 +117,7 @@ class LODGenerator:
 
         source_meta = source_info or {
             "kind": "local_ingest",
-            "uri": f"mloop://docs/{directory_path.name}"
+            "uri": f"mloop://docs/{directory_path.name}",
         }
 
         # 1. Extraction des métadonnées des enfants
@@ -108,8 +129,16 @@ class LODGenerator:
             c_text = ""
             try:
                 c_text = c_path.read_text(encoding="utf-8", errors="ignore")
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Lecture d'un fichier enfant impossible, résumé vide utilisé",
+                    exc_info=True,
+                    extra={
+                        "component": "core.lod_generator",
+                        "operation": "build_toc",
+                        "error": str(e),
+                    },
+                )
 
             doc_summary = cls.extract_document_summary(c_text)
             nav_entries.append(f"- [`{entry['name']}`]({entry['name']}) : {doc_summary}")
@@ -121,22 +150,22 @@ class LODGenerator:
             first_items = "; ".join(abstract_summaries[:3])
             abstract_body = f"Documentation {directory_path.name} : {first_items}"
             if len(abstract_body) > cls.DEFAULT_ABSTRACT_MAX_CHARS:
-                abstract_body = abstract_body[:cls.DEFAULT_ABSTRACT_MAX_CHARS - 3] + "..."
+                abstract_body = abstract_body[: cls.DEFAULT_ABSTRACT_MAX_CHARS - 3] + "..."
 
         abstract_frontmatter = (
             "---\n"
-            f"directory: \"{directory_path.as_posix()}\"\n"
+            f'directory: "{directory_path.as_posix()}"\n'
             f"source:\n"
-            f"  kind: \"{source_meta.get('kind', 'ingest')}\"\n"
-            f"  uri: \"{source_meta.get('uri', directory_path.as_posix())}\"\n"
+            f'  kind: "{source_meta.get("kind", "ingest")}"\n'
+            f'  uri: "{source_meta.get("uri", directory_path.as_posix())}"\n'
             f"generated_by:\n"
-            f"  component: \"LODGenerator\"\n"
-            f"  version: \"1.0.0\"\n"
+            f'  component: "LODGenerator"\n'
+            f'  version: "1.0.0"\n'
             f"freshness:\n"
             f"  total_entries: {len(child_entries)}\n"
-            f"  sha256_hash: \"{dir_hash}\"\n"
+            f'  sha256_hash: "{dir_hash}"\n'
             f"  pending_child_changes: 0\n"
-            f"  last_updated: \"{datetime.now(timezone.utc).isoformat()}\"\n"
+            f'  last_updated: "{datetime.now(timezone.utc).isoformat()}"\n'
             "---\n\n"
         )
 
@@ -156,19 +185,19 @@ class LODGenerator:
 
         overview_frontmatter = (
             "---\n"
-            f"directory: \"{directory_path.as_posix()}\"\n"
-            f"project: \"{project_name or 'mLoop'}\"\n"
+            f'directory: "{directory_path.as_posix()}"\n'
+            f'project: "{project_name or "mLoop"}"\n'
             f"source:\n"
-            f"  kind: \"{source_meta.get('kind', 'ingest')}\"\n"
-            f"  uri: \"{source_meta.get('uri', directory_path.as_posix())}\"\n"
+            f'  kind: "{source_meta.get("kind", "ingest")}"\n'
+            f'  uri: "{source_meta.get("uri", directory_path.as_posix())}"\n'
             f"generated_by:\n"
-            f"  component: \"LODGenerator\"\n"
-            f"  version: \"1.0.0\"\n"
+            f'  component: "LODGenerator"\n'
+            f'  version: "1.0.0"\n'
             f"freshness:\n"
             f"  total_entries: {len(child_entries)}\n"
-            f"  sha256_hash: \"{dir_hash}\"\n"
+            f'  sha256_hash: "{dir_hash}"\n'
             f"  pending_child_changes: 0\n"
-            f"  last_updated: \"{datetime.now(timezone.utc).isoformat()}\"\n"
+            f'  last_updated: "{datetime.now(timezone.utc).isoformat()}"\n'
             "---\n\n"
         )
 
@@ -194,13 +223,13 @@ class LODGenerator:
                     "status": "MISSING",
                     "directory": directory_path.as_posix(),
                     "pending_child_changes": len(child_entries),
-                    "message": "Sidecar .overview.md manquant."
+                    "message": "Sidecar .overview.md manquant.",
                 }
             return {
                 "status": "PASS",
                 "directory": directory_path.as_posix(),
                 "pending_child_changes": 0,
-                "message": "Répertoire vide ou sans fichiers enfants."
+                "message": "Répertoire vide ou sans fichiers enfants.",
             }
 
         # Lecture du frontmatter
@@ -214,7 +243,7 @@ class LODGenerator:
             hash_m = re.search(r'sha256_hash:\s*["\']?([a-fA-F0-9]+)["\']?', fm_text)
             if hash_m:
                 stored_hash = hash_m.group(1)
-            entries_m = re.search(r'total_entries:\s*(\d+)', fm_text)
+            entries_m = re.search(r"total_entries:\s*(\d+)", fm_text)
             if entries_m:
                 stored_entries_count = int(entries_m.group(1))
 
@@ -226,7 +255,7 @@ class LODGenerator:
                 "directory": directory_path.as_posix(),
                 "pending_child_changes": 0,
                 "total_entries": len(current_entries),
-                "message": "Sidecar LOD synchronisé."
+                "message": "Sidecar LOD synchronisé.",
             }
 
         # Détection du nombre de modifications
@@ -236,63 +265,26 @@ class LODGenerator:
             "pending_child_changes": abs(len(current_entries) - max(0, stored_entries_count)) or 1,
             "stored_hash": stored_hash,
             "current_hash": current_hash,
-            "message": "Sidecar LOD obsolète par rapport aux fichiers physiques enfants."
+            "message": "Sidecar LOD obsolète par rapport aux fichiers physiques enfants.",
         }
 
     @classmethod
     def split_markdown_chapters(
-        cls,
-        file_path: Path,
-        output_dir: Path,
-        min_chars_per_chapter: int = 1200
+        cls, file_path: Path, output_dir: Path, min_chars_per_chapter: int = 1200
     ) -> List[Path]:
         """
         Découpe un document Markdown massif par chapitres (# ou ##) sous output_dir
         et génère les sidecars LOD .abstract.md et .overview.md.
         """
-        if not file_path.exists() or not file_path.is_file():
-            return []
+        from src.core._lod_split import split_markdown_chapters as _split
 
-        text = file_path.read_text(encoding="utf-8", errors="ignore")
-        lines = text.splitlines()
-
-        chapters: List[Tuple[str, List[str]]] = []
-        current_title = "00_Introduction"
-        current_lines: List[str] = []
-
-        for line in lines:
-            # Détection d'un titre de chapitre de niveau 1 ou 2
-            if re.match(r"^#{1,2}\s+[A-Za-z0-9]", line.strip()):
-                if current_lines and len("\n".join(current_lines)) >= min_chars_per_chapter:
-                    chapters.append((current_title, current_lines))
-                    current_title = line.strip().lstrip("#").strip()
-                    current_lines = [line]
-                else:
-                    if not current_lines:
-                        current_title = line.strip().lstrip("#").strip()
-                    current_lines.append(line)
-            else:
-                current_lines.append(line)
-
-        if current_lines:
-            chapters.append((current_title, current_lines))
-
-        output_dir.mkdir(parents=True, exist_ok=True)
-        created_files: List[Path] = []
-
-        for idx, (title, ch_lines) in enumerate(chapters, start=1):
-            clean_name = re.sub(r'[^a-zA-Z0-9_\-]', '_', title).strip('_').lower()
-            if not clean_name:
-                clean_name = f"section_{idx}"
-            file_name = f"{idx:02d}_{clean_name}.md"
-            out_file = output_dir / file_name
-            out_file.write_text("\n".join(ch_lines) + "\n", encoding="utf-8")
-            created_files.append(out_file)
+        created = _split(file_path, output_dir, min_chars_per_chapter=min_chars_per_chapter)
 
         # Génération des sidecars LOD
-        cls.generate_lod_sidecars(
-            directory_path=output_dir,
-            source_info={"kind": "split_chapter", "source_file": file_path.name}
-        )
+        if created:
+            cls.generate_lod_sidecars(
+                directory_path=output_dir,
+                source_info={"kind": "split_chapter", "source_file": file_path.name},
+            )
 
-        return created_files
+        return created

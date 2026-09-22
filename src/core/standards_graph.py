@@ -187,8 +187,16 @@ class StandardsGraphStore:
             try:
                 stat = f.stat()
                 hasher.update(f"{f.name}:{stat.st_mtime}:{stat.st_size}".encode("utf-8"))
-            except OSError:
-                continue
+            except OSError as e:
+                logger.debug(
+                    "Stat d'un fichier standards indisponible, exclu du hash",
+                    exc_info=True,
+                    extra={
+                        "component": "core.standards_graph",
+                        "operation": "compute_directory_hash",
+                        "error": str(e),
+                    },
+                )
         return hasher.hexdigest(), files
 
     _last_check_time: float = 0.0

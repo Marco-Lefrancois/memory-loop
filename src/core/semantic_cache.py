@@ -12,6 +12,9 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
+from src.utils.logger import get_logger
+
+logger = get_logger("core.semantic_cache")
 
 
 class SemanticCache:
@@ -39,8 +42,16 @@ class SemanticCache:
         try:
             conn.execute("PRAGMA journal_mode=WAL;")
             conn.execute("PRAGMA busy_timeout=10000;")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "PRAGMA WAL/busy_timeout du cache semantique echoues (mode degrade)",
+                exc_info=True,
+                extra={
+                    "component": "core.semantic_cache",
+                    "operation": "semantic_cache_connection",
+                    "error": str(e),
+                },
+            )
         try:
             yield conn
         finally:
@@ -119,8 +130,16 @@ class SemanticCache:
                 if row["response_json"]:
                     try:
                         parsed_json = json.loads(row["response_json"])
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.debug(
+                            "response_json du cache semantique illisible, retour sans parsing",
+                            exc_info=True,
+                            extra={
+                                "component": "core.semantic_cache",
+                                "operation": "get_cached_response",
+                                "error": str(e),
+                            },
+                        )
                         
                 return {
                     "cache_key": row["cache_key"],

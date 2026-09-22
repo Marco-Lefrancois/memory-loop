@@ -169,8 +169,16 @@ class StructuralWikilinkExtractor:
                 if isinstance(fm_data, dict):
                     frontmatter = fm_data
                     body = content[fm_match.end():]
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Frontmatter YAML illisible, extraction du corps seule effectuée",
+                    exc_info=True,
+                    extra={
+                        "component": "engine.fact_search.structural_extractor",
+                        "operation": "extract_structural",
+                        "error": str(e),
+                    },
+                )
 
         wikilink_triples = cls.extract_wikilinks_from_text(file_stem, body)
         fm_triples = cls.extract_frontmatter_relations(file_stem, frontmatter)

@@ -44,6 +44,9 @@ from src.dashboard.routers.overview import router as overview_router
 from src.dashboard.routers.resilience import router as resilience_router
 from src.dashboard.routers.swarm import router as swarm_router
 from src.dashboard.routers.traces import router as traces_router
+from src.utils.logger import get_logger
+
+logger = get_logger("dashboard.server")
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -88,8 +91,17 @@ def _get_active_project() -> str:
                 if str(val).lower() == "default":
                     return "Memory Loop"
                 return _resolve_project_canonical_name(val)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Lecture de memory/active_project.json échouée, fallback sur projet par défaut",
+                exc_info=True,
+                extra={
+                    "component": "dashboard.server",
+                    "operation": "_get_active_project",
+                    "path": str(active_json),
+                    "error": str(e),
+                },
+            )
 
     return "Memory Loop"
 
@@ -102,11 +114,19 @@ def _set_active_project(project_name: str) -> str:
     try:
         active_json.parent.mkdir(parents=True, exist_ok=True)
         active_json.write_text(
-            json.dumps({"active_project": canon}, indent=2, ensure_ascii=False),
-            encoding="utf-8"
+            json.dumps({"active_project": canon}, indent=2, ensure_ascii=False), encoding="utf-8"
         )
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Persistance du projet actif échouée (memory/active_project.json)",
+            exc_info=True,
+            extra={
+                "component": "dashboard.server",
+                "operation": "_set_active_project",
+                "path": str(active_json),
+                "error": str(e),
+            },
+        )
     return canon
 
 
@@ -132,10 +152,7 @@ def get_health() -> Dict[str, Any]:
 def get_projects() -> Dict[str, Any]:
     """Liste tous les projets connus et identifie le projet actif."""
     projs = _list_available_projects()
-    formatted = [
-        {"id": p, "name": get_friendly_project_label(p)}
-        for p in projs
-    ]
+    formatted = [{"id": p, "name": get_friendly_project_label(p)} for p in projs]
     modules_map = get_all_projects_modules()
     return {
         "active_project": _get_active_project(),
@@ -158,7 +175,9 @@ def get_modules(project: Optional[str] = None) -> Dict[str, Any]:
 
 
 @app.post("/api/project/select")
-def select_project(payload: Optional[Dict[str, Any]] = None, project: Optional[str] = Query(None)) -> Dict[str, Any]:
+def select_project(
+    payload: Optional[Dict[str, Any]] = None, project: Optional[str] = Query(None)
+) -> Dict[str, Any]:
     """Persiste le projet actif sélectionné par l'utilisateur."""
     target = project or (payload.get("project") if payload else None)
     if not target:
@@ -179,9 +198,14 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
     # Auto-synchronisation des sessions OpenCode Desktop
     try:
         from src.utils.opencode_meter import OpenCodeMeter
+
         OpenCodeMeter.sync()
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Auto-sync OpenCode Desktop ignorée pour /api/metrics, métriques potentiellement incomplètes",
+            exc_info=True,
+            extra={"component": "dashboard.server", "operation": "get_metrics", "error": str(e)},
+        )
 
     target_project = _resolve_project_canonical_name(project)
     p_root = _get_project_root(target_project)
@@ -214,7 +238,14 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
                         entry_proj = entry.get("project", "")
 
                         # Si le fichier provient directement du dossier du projet cible, tout appartient au projet !
-                        if not is_dedicated and target_project not in ("Memory Loop", "mLoop", "global", "All", "ALL", "*"):
+                        if not is_dedicated and target_project not in (
+                            "Memory Loop",
+                            "mLoop",
+                            "global",
+                            "All",
+                            "ALL",
+                            "*",
+                        ):
                             # Filtre tolérant pour le fichier global
                             if not _match_project_alias(entry_proj, target_project, entry):
                                 continue
@@ -225,10 +256,29 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
                             continue
                         seen_fingerprints.add(fp)
                         entries.append(entry)
-                    except Exception:
+                    except Exception as e:
+                        logger.debug(
+                            "Ligne JSONL illisible dans token_ledger (/api/metrics), ligne ignorée",
+                            exc_info=True,
+                            extra={
+                                "component": "dashboard.server",
+                                "operation": "get_metrics",
+                                "ledger_path": str(l_path),
+                                "error": str(e),
+                            },
+                        )
                         continue
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Lecture du token_ledger échouée, métriques incomplètes",
+                exc_info=True,
+                extra={
+                    "component": "dashboard.server",
+                    "operation": "get_metrics",
+                    "ledger_path": str(l_path),
+                    "error": str(e),
+                },
+            )
 
     # Calculs agrégés
     total_prompt_tokens = sum(e.get("prompt_tokens_est", 0) for e in entries)
@@ -241,7 +291,13 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
     for e in entries:
         m_name = e.get("model", "unknown")
         if m_name not in models_stats:
-            models_stats[m_name] = {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "cost_usd": 0.0}
+            models_stats[m_name] = {
+                "calls": 0,
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_tokens": 0,
+                "cost_usd": 0.0,
+            }
         models_stats[m_name]["calls"] += 1
         models_stats[m_name]["prompt_tokens"] += e.get("prompt_tokens_est", 0)
         models_stats[m_name]["completion_tokens"] += e.get("completion_tokens_est", 0)
@@ -274,7 +330,9 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
         s_raw = (e.get("source") or "").strip()
         if s_raw in ("opencode-desktop", "opencode"):
             s_name = "opencode-desktop"
-        elif s_raw in ("antigravity-chat", "Google", "antigravity") or (e.get("key_label") == "Google Workspace / Enterprise"):
+        elif s_raw in ("antigravity-chat", "Google", "antigravity") or (
+            e.get("key_label") == "Google Workspace / Enterprise"
+        ):
             s_name = "antigravity-chat"
         else:
             s_name = "llm_nmedia_cloud"
@@ -299,7 +357,9 @@ def get_metrics(project: Optional[str] = None) -> Dict[str, Any]:
         "completion_tokens": total_completion_tokens,
         "total_cost_usd": round(total_cost_usd, 4),
         "models_breakdown": models_stats,
-        "top_actions": sorted(actions_stats.items(), key=lambda x: x[1]["tokens"], reverse=True)[:8],
+        "top_actions": sorted(actions_stats.items(), key=lambda x: x[1]["tokens"], reverse=True)[
+            :8
+        ],
         "sources_breakdown": sources_stats,
         "recent_interactions": recent_interactions,
     }
@@ -326,14 +386,24 @@ def get_ledger(
     # Auto-synchronisation légère des sessions Antigravity et OpenCode Desktop
     try:
         from src.utils.antigravity_meter import AntigravityMeter
+
         AntigravityMeter.sync()
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Auto-sync Antigravity ignorée pour /api/ledger, journal potentiellement incomplet",
+            exc_info=True,
+            extra={"component": "dashboard.server", "operation": "get_ledger", "error": str(e)},
+        )
     try:
         from src.utils.opencode_meter import OpenCodeMeter
+
         OpenCodeMeter.sync()
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Auto-sync OpenCode Desktop ignorée pour /api/ledger, journal potentiellement incomplet",
+            exc_info=True,
+            extra={"component": "dashboard.server", "operation": "get_ledger", "error": str(e)},
+        )
 
     target_project = _resolve_project_canonical_name(project)
     p_root = _get_project_root(target_project)
@@ -356,9 +426,18 @@ def get_ledger(
         projects_dir = REPO_ROOT / "Projects"
         if projects_dir.exists():
             for p in projects_dir.iterdir():
-                if p.is_dir() and not p.name.startswith(".") and not p.name.startswith("_") and p.name.lower() not in {"default", "cacheproj", "timeoutproj"}:
+                if (
+                    p.is_dir()
+                    and not p.name.startswith(".")
+                    and not p.name.startswith("_")
+                    and p.name.lower() not in {"default", "cacheproj", "timeoutproj"}
+                ):
                     pl = p / "memory" / "token_ledger.jsonl"
-                    if pl.exists() and (pl, False) not in ledger_files and (pl, True) not in ledger_files:
+                    if (
+                        pl.exists()
+                        and (pl, False) not in ledger_files
+                        and (pl, True) not in ledger_files
+                    ):
                         ledger_files.append((pl, False))
 
     raw_entries = []
@@ -374,7 +453,7 @@ def get_ledger(
                     try:
                         entry = json.loads(line)
                         entry_proj = entry.get("project", "") or "Memory Loop"
-                        
+
                         fp = f"{entry.get('timestamp')}_{entry.get('action')}_{entry.get('total_tokens_est')}_{entry.get('model')}_{entry.get('target')}"
                         if fp in seen_fingerprints:
                             continue
@@ -383,11 +462,16 @@ def get_ledger(
                         # Normalisation de la source (nmedia_cloud vs Google vs opencode-desktop)
                         src_val = entry.get("source")
                         if not src_val:
-                            if "gemini" in (entry.get("model") or "").lower() and entry.get("key_label") == "Google Workspace / Enterprise":
+                            if (
+                                "gemini" in (entry.get("model") or "").lower()
+                                and entry.get("key_label") == "Google Workspace / Enterprise"
+                            ):
                                 src_val = "Google"
                             elif (entry.get("action") or "").startswith("antigravity-"):
                                 src_val = "Google"
-                            elif "opencode" in (entry.get("action") or "") or "opencode" in (entry.get("target") or ""):
+                            elif "opencode" in (entry.get("action") or "") or "opencode" in (
+                                entry.get("target") or ""
+                            ):
                                 src_val = "opencode-desktop"
                             else:
                                 src_val = "nmedia_cloud"
@@ -397,23 +481,55 @@ def get_ledger(
                         mod = entry.get("module")
                         if not mod:
                             for cand in (
-                                "01-reception", "02-incubation", "03-ventes",
-                                "PAPERCUTS", "OneTrust_FOOD", "OneTrust_COMMERCE",
-                                "Metro_Food_Offers", "RBC_Avion", "OneTrust_SANTE", "AccesDossier"
+                                "01-reception",
+                                "02-incubation",
+                                "03-ventes",
+                                "PAPERCUTS",
+                                "OneTrust_FOOD",
+                                "OneTrust_COMMERCE",
+                                "Metro_Food_Offers",
+                                "RBC_Avion",
+                                "OneTrust_SANTE",
+                                "AccesDossier",
                             ):
-                                if match_module_entry(entry.get("target", ""), cand, entry.get("context_contributors", [])):
+                                if match_module_entry(
+                                    entry.get("target", ""),
+                                    cand,
+                                    entry.get("context_contributors", []),
+                                ):
                                     mod = cand
                                     break
                         mod = mod or "general"
                         entry["module"] = mod
-                        entry["module_label"] = get_module_friendly_info(mod, entry_proj).get("label", mod)
+                        entry["module_label"] = get_module_friendly_info(mod, entry_proj).get(
+                            "label", mod
+                        )
 
                         entry["project_display"] = entry_proj
                         raw_entries.append(entry)
-                    except Exception:
+                    except Exception as e:
+                        logger.debug(
+                            "Ligne JSONL illisible dans token_ledger (/api/ledger), ligne ignorée",
+                            exc_info=True,
+                            extra={
+                                "component": "dashboard.server",
+                                "operation": "get_ledger",
+                                "ledger_path": str(l_path),
+                                "error": str(e),
+                            },
+                        )
                         continue
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Lecture du token_ledger échouée, journal détaillé incomplet",
+                exc_info=True,
+                extra={
+                    "component": "dashboard.server",
+                    "operation": "get_ledger",
+                    "ledger_path": str(l_path),
+                    "error": str(e),
+                },
+            )
 
     # Trier par timestamp décroissant (plus récents en tête)
     raw_entries.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
@@ -434,7 +550,11 @@ def get_ledger(
 
     for e in raw_entries:
         p_name = e.get("project") or "Memory Loop"
-        is_tmp = p_name.startswith("tmp") or p_name.lower() in ("default", "cacheproj", "timeoutproj")
+        is_tmp = p_name.startswith("tmp") or p_name.lower() in (
+            "default",
+            "cacheproj",
+            "timeoutproj",
+        )
         summary_key = "🧪 Tests & Éphémères" if is_tmp else p_name
 
         if not is_tmp:
@@ -450,7 +570,9 @@ def get_ledger(
         s_raw = (e.get("source") or "").strip()
         if s_raw in ("opencode-desktop", "opencode"):
             s_name = "opencode-desktop"
-        elif s_raw in ("antigravity-chat", "Google", "antigravity") or (e.get("key_label") == "Google Workspace / Enterprise"):
+        elif s_raw in ("antigravity-chat", "Google", "antigravity") or (
+            e.get("key_label") == "Google Workspace / Enterprise"
+        ):
             s_name = "antigravity-chat"
         else:
             s_name = "llm_nmedia_cloud"
@@ -499,9 +621,16 @@ def get_ledger(
         if module and module.strip() and module.strip().upper() not in ("ALL", "*", "TOUS"):
             target_mod = module.strip()
             e_mod = e.get("module", "")
-            if e_mod and (e_mod.lower() == target_mod.lower() or normalize_module_id(e_mod) == normalize_module_id(target_mod)):
+            if e_mod and (
+                e_mod.lower() == target_mod.lower()
+                or normalize_module_id(e_mod) == normalize_module_id(target_mod)
+            ):
                 pass
-            elif not match_module_entry(e.get("target", ""), target_mod, (e.get("context_contributors", []) or []) + ([e_mod] if e_mod else [])):
+            elif not match_module_entry(
+                e.get("target", ""),
+                target_mod,
+                (e.get("context_contributors", []) or []) + ([e_mod] if e_mod else []),
+            ):
                 continue
 
         # Filtre Source LLM (Tous | antigravity-chat | opencode-desktop | llm_nmedia_cloud)
@@ -564,7 +693,13 @@ def get_ledger(
     for e in filtered:
         m_name = e.get("model") or "unknown"
         if m_name not in models_summary:
-            models_summary[m_name] = {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "tokens": 0, "cost_usd": 0.0}
+            models_summary[m_name] = {
+                "calls": 0,
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "tokens": 0,
+                "cost_usd": 0.0,
+            }
         models_summary[m_name]["calls"] += 1
         models_summary[m_name]["prompt_tokens"] += e.get("prompt_tokens_est", 0)
         models_summary[m_name]["completion_tokens"] += e.get("completion_tokens_est", 0)
@@ -598,7 +733,9 @@ def get_ledger(
         by_module_summary[m_id]["tokens"] += e.get("total_tokens_est", 0)
         by_module_summary[m_id]["cost_usd"] += e.get("cost_usd_est", 0.0)
         s_name = e.get("source", "unknown")
-        by_module_summary[m_id]["by_source"][s_name] = by_module_summary[m_id]["by_source"].get(s_name, 0) + e.get("total_tokens_est", 0)
+        by_module_summary[m_id]["by_source"][s_name] = by_module_summary[m_id]["by_source"].get(
+            s_name, 0
+        ) + e.get("total_tokens_est", 0)
 
     # Compléter avec les modules découverts s'ils n'ont pas encore de logs
     if target_project not in ("ALL", "Memory Loop", "global", "All", "*"):
@@ -620,8 +757,17 @@ def get_ledger(
                         "cost_usd": 0.0,
                         "by_source": {},
                     }
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Découverte des modules du projet échouée, synthèse par module laissée vide",
+                exc_info=True,
+                extra={
+                    "component": "dashboard.server",
+                    "operation": "get_ledger",
+                    "project": target_project,
+                    "error": str(e),
+                },
+            )
 
     for bm in by_module_summary.values():
         bm["cost_usd"] = round(bm["cost_usd"], 4)
@@ -648,7 +794,9 @@ def get_ledger(
         "filtered_completion_tokens": filtered_completion_tokens,
         "filtered_cost_usd": round(filtered_cost_usd, 4),
         "by_model": models_summary,
-        "by_module": sorted(list(by_module_summary.values()), key=lambda x: x["tokens"], reverse=True),
+        "by_module": sorted(
+            list(by_module_summary.values()), key=lambda x: x["tokens"], reverse=True
+        ),
         "summary": {
             "total_calls": total_entries,
             "total_tokens": filtered_tokens,
@@ -660,7 +808,9 @@ def get_ledger(
             "total_calls": len(raw_entries),
             "total_tokens": global_total_tokens,
             "total_cost_usd": round(global_total_cost, 4),
-            "by_project": dict(sorted(by_project_summary.items(), key=lambda x: x[1]["tokens"], reverse=True)),
+            "by_project": dict(
+                sorted(by_project_summary.items(), key=lambda x: x[1]["tokens"], reverse=True)
+            ),
             "by_source": by_source_summary,
         },
         "available_models": sorted(list(all_models)),
@@ -707,7 +857,14 @@ def get_events(
                         continue
                     try:
                         ev = json.loads(line)
-                        if not is_dedicated and target_project not in ("Memory Loop", "mLoop", "global", "All", "ALL", "*"):
+                        if not is_dedicated and target_project not in (
+                            "Memory Loop",
+                            "mLoop",
+                            "global",
+                            "All",
+                            "ALL",
+                            "*",
+                        ):
                             if not _match_project_alias(ev.get("project", ""), target_project):
                                 continue
 
@@ -718,7 +875,9 @@ def get_events(
                         if module and module.upper() not in ("ALL", "*", "TOUS"):
                             details_str = str(ev.get("details", ""))
                             target_str = str(ev.get("target", ""))
-                            if not match_module_entry(target_str, module, [details_str, str(ev.get("file_attention", ""))]):
+                            if not match_module_entry(
+                                target_str, module, [details_str, str(ev.get("file_attention", ""))]
+                            ):
                                 continue
 
                         fp = f"{ev.get('timestamp')}_{ev.get('event_type')}_{ev.get('agent')}_{str(ev.get('details'))[:40]}"
@@ -726,10 +885,29 @@ def get_events(
                             continue
                         seen.add(fp)
                         raw_events.append(ev)
-                    except Exception:
+                    except Exception as e:
+                        logger.debug(
+                            "Événement JSONL illisible dans events.jsonl, ligne ignorée",
+                            exc_info=True,
+                            extra={
+                                "component": "dashboard.server",
+                                "operation": "get_events",
+                                "events_path": str(ef),
+                                "error": str(e),
+                            },
+                        )
                         continue
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Lecture de events.jsonl échouée, journal d'événements incomplet",
+                exc_info=True,
+                extra={
+                    "component": "dashboard.server",
+                    "operation": "get_events",
+                    "events_path": str(ef),
+                    "error": str(e),
+                },
+            )
 
     raw_events.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
     selected = raw_events[:limit]
@@ -756,7 +934,9 @@ async def stream_events(
 
     async def event_generator():
         # 1. Événement initial : 40 derniers événements
-        initial_res = get_events(project=target_project, limit=40, event_type=event_type, module=module)
+        initial_res = get_events(
+            project=target_project, limit=40, event_type=event_type, module=module
+        )
         initial_list = list(reversed(initial_res.get("events", [])))
         yield f"event: initial\ndata: {json.dumps(initial_list, ensure_ascii=False)}\n\n"
 
@@ -798,7 +978,14 @@ async def stream_events(
                             try:
                                 ev = json.loads(line)
                                 entry_proj = ev.get("project", "")
-                                if target_project not in ("Memory Loop", "mLoop", "global", "All", "ALL", "*"):
+                                if target_project not in (
+                                    "Memory Loop",
+                                    "mLoop",
+                                    "global",
+                                    "All",
+                                    "ALL",
+                                    "*",
+                                ):
                                     if not _match_project_alias(entry_proj, target_project):
                                         continue
 
@@ -809,7 +996,11 @@ async def stream_events(
                                 if module and module.upper() not in ("ALL", "*", "TOUS"):
                                     details_str = str(ev.get("details", ""))
                                     target_str = str(ev.get("target", ""))
-                                    if not match_module_entry(target_str, module, [details_str, str(ev.get("file_attention", ""))]):
+                                    if not match_module_entry(
+                                        target_str,
+                                        module,
+                                        [details_str, str(ev.get("file_attention", ""))],
+                                    ):
                                         continue
 
                                 fp = f"{ev.get('timestamp')}_{ev.get('event_type')}_{ev.get('agent')}_{str(ev.get('details'))[:40]}"
@@ -818,12 +1009,34 @@ async def stream_events(
                                 seen_fp.add(fp)
 
                                 yield f"event: message\ndata: {json.dumps(ev, ensure_ascii=False)}\n\n"
-                            except Exception:
+                            except Exception as e:
+                                logger.debug(
+                                    "Événement SSE JSONL illisible, ligne ignorée",
+                                    exc_info=True,
+                                    extra={
+                                        "component": "dashboard.server",
+                                        "operation": "stream_events",
+                                        "events_path": str(events_file),
+                                        "error": str(e),
+                                    },
+                                )
                                 continue
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(
+                            "Lecture incrémentale de events.jsonl échouée, flux SSE suspendu pour ce cycle",
+                            exc_info=True,
+                            extra={
+                                "component": "dashboard.server",
+                                "operation": "stream_events",
+                                "events_path": str(events_file),
+                                "error": str(e),
+                            },
+                        )
         except asyncio.CancelledError:
-            pass
+            logger.debug(
+                "Flux SSE d'événements annulé par le client",
+                extra={"component": "dashboard.server", "operation": "stream_events"},
+            )
 
     return StreamingResponse(
         event_generator(),
@@ -868,7 +1081,9 @@ def get_project_story_detail(project_name: str, story_id: str) -> Dict[str, Any]
             break
 
     if not found_file or not found_file.exists():
-        raise HTTPException(status_code=404, detail=f"Story '{story_id}' introuvable dans '{project_name}'.")
+        raise HTTPException(
+            status_code=404, detail=f"Story '{story_id}' introuvable dans '{project_name}'."
+        )
 
     content = found_file.read_text(encoding="utf-8", errors="ignore")
 
@@ -885,7 +1100,7 @@ def get_project_story_detail(project_name: str, story_id: str) -> Dict[str, Any]
     fm_match = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
     if fm_match:
         fm_text = fm_match.group(1)
-        body = content[fm_match.end():].strip()
+        body = content[fm_match.end() :].strip()
         for line in fm_text.splitlines():
             if ":" in line:
                 k, v = line.split(":", 1)
@@ -908,7 +1123,11 @@ def get_project_story_detail(project_name: str, story_id: str) -> Dict[str, Any]
 
     # Business rules extraction (R-xxx or RM-xxx)
     rules = re.findall(r"(?im)^\s*[\*\-]\s*`?([A-Za-z0-9_\-]+)`?\s*:\s*(.+)$", content)
-    business_rules = [{"code": r[0], "description": r[1].strip()} for r in rules if r[0].upper().startswith(("R-", "RM-", "REGLE", "RULE"))]
+    business_rules = [
+        {"code": r[0], "description": r[1].strip()}
+        for r in rules
+        if r[0].upper().startswith(("R-", "RM-", "REGLE", "RULE"))
+    ]
 
     evidence_data = None
     evidence_dirs = [p_root / "memory" / "evidence", REPO_ROOT / "memory" / "evidence"]
@@ -921,8 +1140,17 @@ def get_project_story_detail(project_name: str, story_id: str) -> Dict[str, Any]
                 try:
                     evidence_data = json.loads(cand.read_text(encoding="utf-8"))
                     break
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "Lecture de l'EvidencePack échouée, story affichée sans preuve",
+                        exc_info=True,
+                        extra={
+                            "component": "dashboard.server",
+                            "operation": "get_project_story_detail",
+                            "evidence_path": str(cand),
+                            "error": str(e),
+                        },
+                    )
 
     return {
         "project": target_project,
@@ -934,7 +1162,9 @@ def get_project_story_detail(project_name: str, story_id: str) -> Dict[str, Any]
         "layer": meta.get("layer", "vertical-slice"),
         "jira_key": meta.get("jira_key", ""),
         "epic_key": meta.get("epic_key", ""),
-        "file_path": found_file.relative_to(REPO_ROOT).as_posix() if found_file.is_relative_to(REPO_ROOT) else found_file.name,
+        "file_path": found_file.relative_to(REPO_ROOT).as_posix()
+        if found_file.is_relative_to(REPO_ROOT)
+        else found_file.name,
         "scenarios": scenarios,
         "business_rules": business_rules,
         "has_evidence": evidence_data is not None,
@@ -949,6 +1179,7 @@ def get_rho_rules(project: Optional[str] = None) -> Dict[str, Any]:
     Retourne l'inventaire des règles d'auto-amélioration et d'exclusion sémantiques RHO (ST-104).
     """
     import yaml
+
     target_project = _resolve_project_canonical_name(project)
     p_root = _get_project_root(target_project)
 
@@ -1013,7 +1244,12 @@ def get_stories(project: Optional[str] = None, module: Optional[str] = None) -> 
             projects_dir = REPO_ROOT / "Projects"
             if projects_dir.exists():
                 for p in projects_dir.iterdir():
-                    if p.is_dir() and not p.name.startswith(".") and not p.name.startswith("_") and p.name.lower() not in {"default", "cacheproj", "timeoutproj"}:
+                    if (
+                        p.is_dir()
+                        and not p.name.startswith(".")
+                        and not p.name.startswith("_")
+                        and p.name.lower() not in {"default", "cacheproj", "timeoutproj"}
+                    ):
                         pb = p / "backlog"
                         if pb.exists() and pb not in backlog_roots:
                             backlog_roots.append(pb)
@@ -1025,7 +1261,9 @@ def get_stories(project: Optional[str] = None, module: Optional[str] = None) -> 
         if sb_file.exists():
             try:
                 sb_text = sb_file.read_text(encoding="utf-8", errors="ignore")
-                for row in re.finditer(r"\|\s*([A-Za-z0-9_\-]+)\s*\|\s*([^|]+)\|\s*([^|]+)\|\s*([^|]*)\|", sb_text):
+                for row in re.finditer(
+                    r"\|\s*([A-Za-z0-9_\-]+)\s*\|\s*([^|]+)\|\s*([^|]+)\|\s*([^|]*)\|", sb_text
+                ):
                     s_id = row.group(1).strip()
                     s_title = row.group(2).strip()
                     s_status = row.group(3).strip().upper()
@@ -1036,8 +1274,17 @@ def get_stories(project: Optional[str] = None, module: Optional[str] = None) -> 
                             "status": s_status,
                             "jira_key": s_jira,
                         }
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(
+                    "Lecture de sprint_backlog.md échouée, table de métadonnées indisponible",
+                    exc_info=True,
+                    extra={
+                        "component": "dashboard.server",
+                        "operation": "get_stories",
+                        "sprint_backlog": str(sb_file),
+                        "error": str(e),
+                    },
+                )
 
     # 2. Indexer tous les EvidencePacks existants (recherche récursive)
     evidence_index: Dict[str, Path] = {}
@@ -1057,7 +1304,10 @@ def get_stories(project: Optional[str] = None, module: Optional[str] = None) -> 
         # Scan récursif pour découvrir toutes les sous-catégories (01-reception, etc.)
         for md_file in b_root.rglob("*.md"):
             rel_parts = [p.lower() for p in md_file.relative_to(b_root).parts]
-            if any(x in rel_parts for x in ("reviews", "gates", "archive", "templates", "tmp", "handoff")):
+            if any(
+                x in rel_parts
+                for x in ("reviews", "gates", "archive", "templates", "tmp", "handoff")
+            ):
                 continue
             if md_file.name.lower() in ("sprint_backlog.md", "readme.md", "wayfinder_map.md"):
                 continue
@@ -1121,7 +1371,9 @@ def get_stories(project: Optional[str] = None, module: Optional[str] = None) -> 
                 seen_ids.add(story_id)
 
                 # Vérifier présence de l'EvidencePack via l'index récursif
-                ev_candidate = evidence_index.get(story_id.lower()) or evidence_index.get(md_file.stem.lower())
+                ev_candidate = evidence_index.get(story_id.lower()) or evidence_index.get(
+                    md_file.stem.lower()
+                )
                 has_evidence = ev_candidate is not None
                 evidence_info = {}
 
@@ -1130,32 +1382,58 @@ def get_stories(project: Optional[str] = None, module: Optional[str] = None) -> 
                         ev_data = json.loads(ev_candidate.read_text(encoding="utf-8"))
                         evidence_info = {
                             "risk_level": ev_data.get("highest_risk", "LOW"),
-                            "total_items": len(ev_data.get("items", [])) or len(ev_data.get("facts_verified", [])),
+                            "total_items": len(ev_data.get("items", []))
+                            or len(ev_data.get("facts_verified", [])),
                             "confidence_score": ev_data.get("root_score", 1.0),
                             "file_name": ev_candidate.name,
                         }
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.debug(
+                            "Lecture de l'EvidencePack échouée, métadonnées de preuve ignorées",
+                            exc_info=True,
+                            extra={
+                                "component": "dashboard.server",
+                                "operation": "get_stories",
+                                "evidence_path": str(ev_candidate),
+                                "error": str(e),
+                            },
+                        )
 
                 scenario_count = len(re.findall(r"(?im)^\s*(?:Scénario|Scenario)\s*:", content))
 
-                rel_path = md_file.relative_to(p_root).as_posix() if p_root != REPO_ROOT else md_file.relative_to(REPO_ROOT).as_posix()
+                rel_path = (
+                    md_file.relative_to(p_root).as_posix()
+                    if p_root != REPO_ROOT
+                    else md_file.relative_to(REPO_ROOT).as_posix()
+                )
 
-                stories.append({
-                    "id": story_id,
-                    "title": title,
-                    "status": status,
-                    "type": stype,
-                    "layer": layer,
-                    "module": story_mod,
-                    "jira_key": jira_key,
-                    "epic_key": epic_key,
-                    "file_path": rel_path,
-                    "has_evidence": has_evidence,
-                    "evidence_info": evidence_info,
-                    "scenario_count": scenario_count,
-                })
-            except Exception:
+                stories.append(
+                    {
+                        "id": story_id,
+                        "title": title,
+                        "status": status,
+                        "type": stype,
+                        "layer": layer,
+                        "module": story_mod,
+                        "jira_key": jira_key,
+                        "epic_key": epic_key,
+                        "file_path": rel_path,
+                        "has_evidence": has_evidence,
+                        "evidence_info": evidence_info,
+                        "scenario_count": scenario_count,
+                    }
+                )
+            except Exception as e:
+                logger.debug(
+                    "Parsing d'un fichier story échoué, récit ignoré dans le scan du backlog",
+                    exc_info=True,
+                    extra={
+                        "component": "dashboard.server",
+                        "operation": "get_stories",
+                        "story_file": str(md_file),
+                        "error": str(e),
+                    },
+                )
                 continue
 
     status_order = {
@@ -1221,8 +1499,17 @@ def get_graph_stats(project: Optional[str] = None) -> Dict[str, Any]:
                     edges.extend(data["edges"])
                 if nodes:
                     break
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Lecture d'un fichier de graphe échouée, candidat suivant essayé",
+                    exc_info=True,
+                    extra={
+                        "component": "dashboard.server",
+                        "operation": "get_graph_stats",
+                        "graph_path": str(gc),
+                        "error": str(e),
+                    },
+                )
 
     unique_nodes = {}
     for n in nodes:
@@ -1255,13 +1542,17 @@ def get_cycle_state(project: Optional[str] = None) -> Dict[str, Any]:
     p_root = _get_project_root(target_project)
 
     # 1. SOW : Présence de documents ingérés ou cadrage
-    has_ingested = (p_root / "docs" / "00-ingested").exists() and any((p_root / "docs" / "00-ingested").iterdir())
+    has_ingested = (p_root / "docs" / "00-ingested").exists() and any(
+        (p_root / "docs" / "00-ingested").iterdir()
+    )
     has_sow = has_ingested or (p_root / "docs" / "00-sow.md").exists()
 
     # 2. SPEC : Stories dans le backlog
     backlog_dir = p_root / "backlog"
     stories_list = list(backlog_dir.rglob("*.md")) if backlog_dir.exists() else []
-    stories_count = len([s for s in stories_list if s.name.lower() not in ("sprint_backlog.md", "readme.md")])
+    stories_count = len(
+        [s for s in stories_list if s.name.lower() not in ("sprint_backlog.md", "readme.md")]
+    )
 
     # 3. PLAN : Récits prêts au dev ou architecture définie
     has_arch = (p_root / "docs" / "01-architecture").exists()
@@ -1276,7 +1567,9 @@ def get_cycle_state(project: Optional[str] = None) -> Dict[str, Any]:
             "key": "sow",
             "name": "1. SOW & Cadrage",
             "status": "COMPLETED" if has_sow else "PENDING",
-            "details": f"{len(list((p_root / 'docs' / '00-ingested').glob('*.md')))} document(s) SSOT ingéré(s)" if has_ingested else "",
+            "details": f"{len(list((p_root / 'docs' / '00-ingested').glob('*.md')))} document(s) SSOT ingéré(s)"
+            if has_ingested
+            else "",
         },
         {
             "key": "spec",
@@ -1287,7 +1580,9 @@ def get_cycle_state(project: Optional[str] = None) -> Dict[str, Any]:
         {
             "key": "plan",
             "name": "3. Architecture & Contrats",
-            "status": "COMPLETED" if (has_arch and has_ready_stories) else ("IN_PROGRESS" if has_ready_stories else "NOT_STARTED"),
+            "status": "COMPLETED"
+            if (has_arch and has_ready_stories)
+            else ("IN_PROGRESS" if has_ready_stories else "NOT_STARTED"),
             "details": "Récits cadrés et validés en Sprint Backlog" if has_ready_stories else "",
         },
         {
@@ -1300,7 +1595,9 @@ def get_cycle_state(project: Optional[str] = None) -> Dict[str, Any]:
             "key": "validate",
             "name": "5. Validation & EvidencePack",
             "status": "COMPLETED" if has_validate else "PENDING",
-            "details": f"{len(list(evidence_dir.rglob('*.json')))} EvidencePack(s) certifié(s)" if has_validate else "",
+            "details": f"{len(list(evidence_dir.rglob('*.json')))} EvidencePack(s) certifié(s)"
+            if has_validate
+            else "",
         },
         {
             "key": "ship",
@@ -1318,6 +1615,7 @@ def get_cycle_state(project: Optional[str] = None) -> Dict[str, Any]:
 
 
 # ── MONTER LE FRONTEND WEB ─────────────────────────────────────────────────────
+
 
 @app.get("/", response_class=HTMLResponse)
 def get_index():

@@ -5,6 +5,7 @@ Antigravity IDE Hook Bridge for mLoop (ADR-0364).
 Pont de communication bidirectionnel entre le moteur de hooks d'Antigravity IDE
 (.agents/hooks.json) et le moteur de pré-compaction et de points de contrôle mLoop.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -20,6 +21,12 @@ if str(REPO_ROOT) not in sys.path:
 
 from src.engine.hooks.compaction import PreCompactionHandler, CompactionRecoveryManager
 from src.engine.hooks.path_resolver import PathAliasResolver
+from src.utils.logger import get_logger
+
+# NOTE : les appels print(json.dumps(...)) de ce module constituent le contrat de sortie
+# stdout du protocole de hooks Antigravity et NE doivent PAS être convertis en logs.
+# Seuls les handlers d'exception silencieux sont instrumentés (vers stderr via le logger).
+logger = get_logger("bridges.antigravity_hook")
 
 
 def parse_stdin_json() -> dict:
@@ -43,6 +50,7 @@ def parse_stdin_json() -> dict:
                         return data
         else:
             import select
+
             r, _, _ = select.select([sys.stdin], [], [], 0.0)
             if r:
                 raw_input = sys.stdin.read()
@@ -50,8 +58,17 @@ def parse_stdin_json() -> dict:
                     data = json.loads(raw_input)
                     if isinstance(data, dict):
                         return data
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(
+            "Lecture non bloquante du JSON stdin Antigravity échouée (payload vide utilisé)",
+            exc_info=True,
+            extra={
+                "component": "bridges.antigravity_hook",
+                "operation": "parse_stdin_json",
+                "platform": sys.platform,
+                "error": str(e),
+            },
+        )
     return {}
 
 
@@ -71,8 +88,17 @@ def resolve_project_name(payload: dict, cli_project: str | None = None) -> str:
             data = json.loads(active_json.read_text(encoding="utf-8"))
             if data.get("active_project"):
                 return data["active_project"]
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Lecture de active_project.json échouée lors de la résolution projet",
+                exc_info=True,
+                extra={
+                    "component": "bridges.antigravity_hook",
+                    "operation": "resolve_project_name",
+                    "active_json": str(active_json),
+                    "error": str(e),
+                },
+            )
 
     # Détection via workspacePaths
     workspace_paths = payload.get("workspacePaths", [])
@@ -88,7 +114,14 @@ def main():
     parser = argparse.ArgumentParser(description="mLoop Antigravity Hook Bridge")
     parser.add_argument(
         "--event",
-        choices=["pre_tool_use", "post_tool_use", "pre_invocation", "post_invocation", "stop", "pre_compact"],
+        choices=[
+            "pre_tool_use",
+            "post_tool_use",
+            "pre_invocation",
+            "post_invocation",
+            "stop",
+            "pre_compact",
+        ],
         default="post_tool_use",
         help="Type d'événement Antigravity intercepté",
     )
@@ -109,8 +142,17 @@ def main():
                     project_name=project_name,
                     base_dir=REPO_ROOT,
                 )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Création du checkpoint sur PostToolUse échouée",
+                exc_info=True,
+                extra={
+                    "component": "bridges.antigravity_hook",
+                    "operation": "main.post_tool_use",
+                    "project": project_name,
+                    "error": str(e),
+                },
+            )
         # Antigravity PostToolUse attend un objet JSON vide sur stdout
         print(json.dumps({}))
         sys.exit(0)
@@ -127,8 +169,17 @@ def main():
             if checkpoint and checkpoint.resume_instructions:
                 # Injection optionnelle si désiré
                 pass
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Récupération du checkpoint sur PreInvocation échouée",
+                exc_info=True,
+                extra={
+                    "component": "bridges.antigravity_hook",
+                    "operation": "main.pre_invocation",
+                    "project": project_name,
+                    "error": str(e),
+                },
+            )
         print(json.dumps(response))
         sys.exit(0)
 
@@ -139,8 +190,17 @@ def main():
                 project_name=project_name,
                 base_dir=REPO_ROOT,
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Création du checkpoint sur l'événement Stop échouée",
+                exc_info=True,
+                extra={
+                    "component": "bridges.antigravity_hook",
+                    "operation": "main.stop",
+                    "project": project_name,
+                    "error": str(e),
+                },
+            )
         print(json.dumps({"decision": "allow"}))
         sys.exit(0)
 

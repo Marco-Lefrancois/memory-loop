@@ -124,8 +124,16 @@ class ReplaySimulator:
                         if line:
                             try:
                                 traces.append(json.loads(line))
-                            except json.JSONDecodeError:
-                                pass
+                            except json.JSONDecodeError as e:
+                                logger.debug(
+                                    "Événement JSON illisible dans events.jsonl ignoré",
+                                    exc_info=True,
+                                    extra={
+                                        "component": "pipelines.dream_rsi.simulator",
+                                        "operation": "load_events",
+                                        "error": str(e),
+                                    },
+                                )
             except Exception as e:
                 logger.debug(
                     "Échec de lecture de events.jsonl",

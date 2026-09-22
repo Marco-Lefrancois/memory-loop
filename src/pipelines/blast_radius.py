@@ -11,6 +11,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Dict, List, Set, Any, Optional
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.blast_radius")
 
 
 class BlastRadiusEngine:
@@ -31,8 +34,16 @@ class BlastRadiusEngine:
             if p.exists():
                 try:
                     return json.loads(p.read_text(encoding="utf-8"))
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "Lecture d'un candidat graph.json échouée, essai du suivant",
+                        exc_info=True,
+                        extra={
+                            "component": "pipelines.blast_radius",
+                            "operation": "load_graph",
+                            "error": str(e),
+                        },
+                    )
         return {"nodes": [], "edges": [], "links": []}
 
     def compute_blast_radius(self, target: str, max_depth: int = 2) -> Dict[str, Any]:

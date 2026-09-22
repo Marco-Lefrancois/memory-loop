@@ -5,9 +5,14 @@ import sys
 import uuid
 from pathlib import Path
 from typing import Any
+
+# Activer l'import depuis la racine du projet (bridges lancés en script direct)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 from src.bridges.mcp_resources import handle_resources_list, handle_resources_read
 from src.bridges.mcp_tools import handle_tools_list, handle_tools_call
 from src.bridges.mcp_event_bus import get_event_bus
+from src.bridges._mcp_prompts import handle_prompts_get, handle_prompts_list
 
 logger = logging.getLogger(__name__)
 
@@ -154,46 +159,6 @@ def handle_server_discover(req_id: Any, params: dict = None) -> dict:
     }
 
 
-PROMPTS = [
-    {"name": "mloop_grill_me", "description": "Session d'interrogatoire Grill-with-Docs."},
-    {"name": "mloop_triage", "description": "Triage du backlog et découpage en récits."},
-    {"name": "mloop_vibe_check", "description": "Audit de santé pré-vol mLoop."},
-    {"name": "mloop_handoff", "description": "Génération de l'artefact de passage de relais."},
-]
-
-
-def handle_prompts_list(req_id: Any) -> dict:
-    return {"jsonrpc": "2.0", "result": {"prompts": PROMPTS}, "id": req_id}
-
-
-def handle_prompts_get(req_id: Any, params: dict) -> dict:
-    name = params.get("name")
-    args = params.get("arguments", {})
-    if name == "mloop_grill_me":
-        text = f"Clarification interactive Grill-with-Docs sur: {args.get('topic', 'le sujet')}."
-    elif name == "mloop_triage":
-        text = f"Triage du fichier {args.get('input_file', 'exigences')} vers story_template.md."
-    elif name == "mloop_vibe_check":
-        proj = args.get("project", _SESSION_PROJECT or "mLoop")
-        text = f"Audit pré-vol vibe-check pour {proj}."
-    elif name == "mloop_handoff":
-        text = f"Rédige memory/handoff.md avec le résumé: {args.get('summary', 'Fin de session')}."
-    else:
-        return {
-            "jsonrpc": "2.0",
-            "error": {"code": -32602, "message": f"Prompt '{name}' inconnu."},
-            "id": req_id,
-        }
-    return {
-        "jsonrpc": "2.0",
-        "result": {
-            "description": f"Prompt {name}",
-            "messages": [{"role": "user", "content": {"type": "text", "text": text}}],
-        },
-        "id": req_id,
-    }
-
-
 def process_message(line: str) -> str | None:
     global _SESSION_PROJECT
     try:
@@ -228,7 +193,7 @@ def process_message(line: str) -> str | None:
     elif method == "prompts/list":
         res = handle_prompts_list(req_id)
     elif method == "prompts/get":
-        res = handle_prompts_get(req_id, params)
+        res = handle_prompts_get(req_id, params, session_project=_SESSION_PROJECT)
     else:
         if req_id is not None:
             res = {
@@ -250,8 +215,16 @@ def _maybe_emit_tool_notifications(bus: Any, params: dict, session_project: str 
         try:
             loop = asyncio.get_running_loop()
             loop.create_task(bus.notify_tools_list_changed(session_id=session_project))
-        except RuntimeError:
-            pass
+        except RuntimeError as e:
+            logger.debug(
+                "Boucle asyncio non disponible, notification SSE set_phase omise",
+                exc_info=True,
+                extra={
+                    "component": "bridges.mcp_loop_mem",
+                    "operation": "notify_set_phase",
+                    "error": str(e),
+                },
+            )
 
     if tool_name in ("loop_mem_search", "loop_mem_code_rag", "loop_mem_timeline"):
         try:
@@ -262,8 +235,17 @@ def _maybe_emit_tool_notifications(bus: Any, params: dict, session_project: str 
                     session_id=session_project,
                 )
             )
-        except RuntimeError:
-            pass
+        except RuntimeError as e:
+            logger.debug(
+                "Boucle asyncio non disponible, notification SSE observation omise",
+                exc_info=True,
+                extra={
+                    "component": "bridges.mcp_loop_mem",
+                    "operation": "notify_observation_updated",
+                    "tool": tool_name,
+                    "error": str(e),
+                },
+            )
 
 
 def main() -> None:

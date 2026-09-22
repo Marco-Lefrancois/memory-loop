@@ -14,6 +14,9 @@ from typing import Optional, List, Dict, Tuple
 from collections import Counter
 
 from src.converters.svg_ocr_bridge import ocr_vectorized_svg
+from src.utils.logger import get_logger
+
+logger = get_logger("converters.svg_to_md")
 
 
 @dataclass
@@ -211,9 +214,7 @@ class SvgSpatialParser:
                     self.view_box = (parts[0], parts[1], parts[2], parts[3])
             else:
                 w = float(re.sub(r"[^\d.]", "", root.attrib.get("width", "390")) or 390)
-                h = float(
-                    re.sub(r"[^\d.]", "", root.attrib.get("height", "844")) or 844
-                )
+                h = float(re.sub(r"[^\d.]", "", root.attrib.get("height", "844")) or 844)
                 self.view_box = (0.0, 0.0, w, h)
 
             containers = []
@@ -234,16 +235,23 @@ class SvgSpatialParser:
             self.elements.sort(key=lambda e: (round(e.y / 20.0) * 20.0, e.x))
             return self.elements
 
-        except Exception:
+        except Exception as e:
+            logger.warning(
+                "Échec du parse XML du SVG, repli sur le parseur regex de secours",
+                exc_info=True,
+                extra={
+                    "component": "converters.svg_to_md",
+                    "operation": "_parse_svg",
+                    "error": str(e),
+                },
+            )
             return self._fallback_regex_parse()
 
     def _parse_transform(self, transform_str: str) -> Tuple[float, float]:
         if not transform_str:
             return 0.0, 0.0
         tx, ty = 0.0, 0.0
-        m_trans = re.search(
-            r"translate\(\s*([\d\.\-]+)[\s,]+([\d\.\-]+)?\s*\)", transform_str
-        )
+        m_trans = re.search(r"translate\(\s*([\d\.\-]+)[\s,]+([\d\.\-]+)?\s*\)", transform_str)
         if m_trans:
             tx = float(m_trans.group(1))
             ty = float(m_trans.group(2)) if m_trans.group(2) else 0.0
@@ -302,8 +310,18 @@ class SvgSpatialParser:
                                 "stroke": stroke,
                             }
                         )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Attributs de rect SVG invalides, élément ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "converters.svg_to_md",
+                        "operation": "_traverse_node",
+                        "node_tag": "rect",
+                        "node_id": node_id,
+                        "error": str(e),
+                    },
+                )
 
         # Cercles
         elif tag == "circle":
@@ -325,17 +343,25 @@ class SvgSpatialParser:
                             "stroke": node.attrib.get("stroke", ""),
                         }
                     )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Attributs de circle SVG invalides, élément ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "converters.svg_to_md",
+                        "operation": "_traverse_node",
+                        "node_tag": "circle",
+                        "node_id": node_id,
+                        "error": str(e),
+                    },
+                )
 
         # Textes explicites
         elif tag == "text":
             try:
                 x = float(node.attrib.get("x", 0.0)) + accum_x
                 y = float(node.attrib.get("y", 0.0)) + accum_y
-                font_size = float(
-                    re.sub(r"[^\d.]", "", node.attrib.get("font-size", "14")) or 14
-                )
+                font_size = float(re.sub(r"[^\d.]", "", node.attrib.get("font-size", "14")) or 14)
                 font_weight = node.attrib.get("font-weight", "").lower()
 
                 txt_parts = []
@@ -357,8 +383,18 @@ class SvgSpatialParser:
                             "font_weight": font_weight,
                         }
                     )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Attributs de text SVG invalides, élément ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "converters.svg_to_md",
+                        "operation": "_traverse_node",
+                        "node_tag": "text",
+                        "node_id": node_id,
+                        "error": str(e),
+                    },
+                )
 
         # Chemins vectoriels (Paths)
         elif tag == "path":
@@ -389,8 +425,18 @@ class SvgSpatialParser:
                                     "stroke": stroke,
                                 }
                             )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "BBox de path SVG non calculable, élément ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "converters.svg_to_md",
+                        "operation": "_traverse_node",
+                        "node_tag": "path",
+                        "node_id": node_id,
+                        "error": str(e),
+                    },
+                )
 
         for child in node:
             self._traverse_node(child, accum_x, accum_y, containers, texts, paths_boxes)
@@ -448,10 +494,7 @@ class SvgSpatialParser:
             else:
                 elem_type = (
                     "heading"
-                    if (
-                        font_size >= 17
-                        or t.get("font_weight") in ["bold", "700", "800"]
-                    )
+                    if (font_size >= 17 or t.get("font_weight") in ["bold", "700", "800"])
                     else "text"
                 )
                 self.elements.append(
@@ -475,12 +518,7 @@ class SvgSpatialParser:
         if not all_boxes:
             return
 
-        clean_title = (
-            self.filename.replace(".svg", "")
-            .replace("_", " ")
-            .replace("-", " ")
-            .title()
-        )
+        clean_title = self.filename.replace(".svg", "").replace("_", " ").replace("-", " ").title()
 
         seen = set()
         dedup_boxes = []
@@ -548,15 +586,8 @@ class SvgSpatialParser:
             elif (30 <= h <= 65 and 80 <= w <= 360) and (
                 fill not in ["none", "#ffffff", "#e1e3e5", "white", ""] or stroke
             ):
-                btn_name = (
-                    "Action Principale"
-                    if y >= self.view_box[3] * 0.7
-                    else "Bouton d'Action"
-                )
-                if (
-                    "valider" in self.filename.lower()
-                    or "confirm" in self.filename.lower()
-                ):
+                btn_name = "Action Principale" if y >= self.view_box[3] * 0.7 else "Bouton d'Action"
+                if "valider" in self.filename.lower() or "confirm" in self.filename.lower():
                     btn_name = "Bouton Confirmer / Valider"
                 elif "logout" in self.filename.lower():
                     btn_name = "Bouton Déconnexion"
@@ -577,9 +608,7 @@ class SvgSpatialParser:
                     )
                 )
             # 4. Champs de saisie / Formulaire
-            elif (30 <= h <= 60 and w >= 200) and (
-                fill in ["#ffffff", "white", "none"] or stroke
-            ):
+            elif (30 <= h <= 60 and w >= 200) and (fill in ["#ffffff", "white", "none"] or stroke):
                 self.elements.append(
                     UIElement(
                         id=b_id or f"input_{len(self.elements)}",
@@ -690,14 +719,10 @@ def generate_ascii_wireframe(elements: List[UIElement], width_chars: int = 62) -
         for e in body_elems:
             if e.elem_type == "card":
                 card_title = f"┌─ {e.text} "
-                card_header = (
-                    card_title + "─" * max(0, (inner_w - len(card_title) - 2)) + "┐"
-                )
+                card_header = card_title + "─" * max(0, (inner_w - len(card_title) - 2)) + "┐"
                 lines.append(f"│ {card_header.ljust(inner_w)} │")
                 lines.append(f"│ {'│ (Contenu de section)'.ljust(inner_w - 1)}│ │")
-                lines.append(
-                    f"│ {'└' + '─' * (len(card_header) - 2) + '┘'.ljust(inner_w)} │"
-                )
+                lines.append(f"│ {'└' + '─' * (len(card_header) - 2) + '┘'.ljust(inner_w)} │")
             elif e.elem_type == "button":
                 btn_str = f"  [ Bouton : {e.text} ]"
                 lines.append(f"│ {btn_str.ljust(inner_w)} │")
@@ -752,7 +777,9 @@ def parse_svg_to_md_text(
     if asset_rel_path:
         source_note = f"> **Source :** `{filename}` (Actif visuel versionné sous [`{asset_rel_path}`]({asset_rel_path}))\n\n![Maquette]({asset_rel_path})\n"
     else:
-        source_note = f"> **Source :** `{filename}` (Converti automatiquement sous `docs/00-ingested/`)\n"
+        source_note = (
+            f"> **Source :** `{filename}` (Converti automatiquement sous `docs/00-ingested/`)\n"
+        )
 
     counts = Counter([e.elem_type for e in elements])
     w, h = parser.view_box[2], parser.view_box[3]
@@ -761,9 +788,7 @@ def parse_svg_to_md_text(
 
     # ── Pont OCR (Phase 1) : uniquement si Mode 2 vectorisé détecté ──────────
     ocr_text: Optional[str] = None
-    ocr_status = (
-        "N_A"  # SVG Mode 1 (<text> natif) : OCR non requis, texte déjà lisible.
-    )
+    ocr_status = "N_A"  # SVG Mode 1 (<text> natif) : OCR non requis, texte déjà lisible.
     if parser.is_vectorized:
         ocr_text = ocr_vectorized_svg(svg_path) if svg_path is not None else None
         ocr_status = "DONE" if ocr_text else "UNAVAILABLE"
@@ -848,9 +873,7 @@ def parse_svg_to_md_text(
             )
         md_lines.append("")
 
-    interactive = [
-        e for e in elements if e.elem_type in ["button", "input", "badge", "nav"]
-    ]
+    interactive = [e for e in elements if e.elem_type in ["button", "input", "badge", "nav"]]
     if interactive:
         md_lines.extend(
             [
@@ -888,9 +911,7 @@ def generate_maquettes_index(maquettes_dir: Path) -> Path:
     Génère un tableau de bord et index récapitulatif de toutes les maquettes sous docs/00-ingested/maquettes/00-index-maquettes.md.
     """
     index_file = maquettes_dir / "00-index-maquettes.md"
-    md_files = sorted(
-        [f for f in maquettes_dir.glob("*.md") if f.name != "00-index-maquettes.md"]
-    )
+    md_files = sorted([f for f in maquettes_dir.glob("*.md") if f.name != "00-index-maquettes.md"])
 
     lines = [
         "---",

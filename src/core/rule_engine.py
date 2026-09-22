@@ -8,6 +8,9 @@ import re
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
+from src.utils.logger import get_logger
+
+logger = get_logger("core.rule_engine")
 
 @dataclass
 class ValidationRule:
@@ -49,8 +52,16 @@ class RuleEngine:
                                 params=r.get("params", {})
                             )
                             count += 1
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.debug(
+                            "Règle de validation illisible, ignorée lors du chargement",
+                            exc_info=True,
+                            extra={
+                                "component": "core.rule_engine",
+                                "operation": "load_rules",
+                                "error": str(e),
+                            },
+                        )
         return count
 
     def validate(self, check_id: str, content: str, context: dict = None, target: str = None) -> List[RuleViolation]:

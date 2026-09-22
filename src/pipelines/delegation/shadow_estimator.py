@@ -13,6 +13,9 @@ from typing import Dict, Any, Optional
 
 from src.cli import ZeroFluffConsole
 from src.core.herdr_adapter import herdr
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.delegation.shadow_estimator")
 
 
 def run_shadow_estimator(
@@ -97,8 +100,16 @@ def run_shadow_estimator(
     if out_file.exists():
         try:
             result_data = json.loads(out_file.read_text(encoding="utf-8"))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Résultat de contre-estimation illisible, sortie vide utilisée",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.delegation.shadow_estimator",
+                    "operation": "read_shadow_result",
+                    "error": str(e),
+                },
+            )
 
     ZeroFluffConsole.success(f"Contre-estimation complétée : {result_data.get('shadow_estimate_days', 'N/A')} j (vs {result_data.get('baseline_estimate_days', 'N/A')} j).")
     herdr.show_notification(

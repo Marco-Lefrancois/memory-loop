@@ -9,6 +9,10 @@ import os
 from pathlib import Path
 from typing import Dict, List
 
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.arch_analyzer")
+
 HTML_REPORT_TEMPLATE = """<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -45,6 +49,7 @@ CARD_TEMPLATE = """
 </div>
 """
 
+
 class ArchAnalyzerEngine:
     def __init__(self, project_path: Path):
         self.project_path = project_path
@@ -57,6 +62,7 @@ class ArchAnalyzerEngine:
             return results
 
         import json
+
         cache_dir = self.project_path / "memory" / "cache"
         cache_dir.mkdir(parents=True, exist_ok=True)
         cache_file = cache_dir / "arch_analyzer_cache.json"
@@ -65,8 +71,18 @@ class ArchAnalyzerEngine:
         if cache_file.exists():
             try:
                 cache_data = json.loads(cache_file.read_text(encoding="utf-8"))
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Lecture du cache arch_analyzer échouée, démarrage avec cache vide",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.arch_analyzer",
+                        "operation": "cache_read",
+                        "cache_file": str(cache_file),
+                        "error": str(e),
+                    },
+                )
+                cache_data = {}
 
         new_cache_data = {}
         for py_file in src_dir.rglob("*.py"):
@@ -85,41 +101,71 @@ class ArchAnalyzerEngine:
                 content = py_file.read_text(encoding="utf-8")
                 tree = ast.parse(content)
                 loc = len(content.splitlines())
-                
+
                 # Compter les définitions de fonctions et classes
-                funcs = [node for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
+                funcs = [
+                    node
+                    for node in ast.walk(tree)
+                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                ]
                 public_funcs = [f for f in funcs if not f.name.startswith("_")]
-                
+
                 interface_size = max(1, len(public_funcs))
                 ratio = loc / interface_size
-                
+
                 is_shallow = ratio < 15 and loc > 30
-                verdict = "Module superficiel : Fusionner ou concentrer la complexité derrière une interface plus simple." if is_shallow else "Module profond et bien encapsulé."
-                
+                verdict = (
+                    "Module superficiel : Fusionner ou concentrer la complexité derrière une interface plus simple."
+                    if is_shallow
+                    else "Module profond et bien encapsulé."
+                )
+
                 metrics = {
                     "file_path": rel_p,
                     "loc": loc,
                     "public_methods_count": len(public_funcs),
                     "ratio": ratio,
                     "is_shallow": is_shallow,
-                    "verdict": verdict
+                    "verdict": verdict,
                 }
                 results.append(metrics)
                 new_cache_data[rel_p] = {"mtime": mtime, "metrics": metrics}
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Analyse AST d'un module échouée, fichier ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.arch_analyzer",
+                        "operation": "ast_parse",
+                        "file": rel_p,
+                        "error": str(e),
+                    },
+                )
                 continue
 
         try:
-            cache_file.write_text(json.dumps(new_cache_data, indent=2, ensure_ascii=False), encoding="utf-8")
-        except Exception:
-            pass
+            cache_file.write_text(
+                json.dumps(new_cache_data, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+        except Exception as e:
+            logger.warning(
+                "Écriture du cache arch_analyzer échouée",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.arch_analyzer",
+                    "operation": "cache_write",
+                    "cache_file": str(cache_file),
+                    "entries": len(new_cache_data),
+                    "error": str(e),
+                },
+            )
 
         return results
 
     def generate_html_report(self) -> Path:
         self.storage_dir.mkdir(parents=True, exist_ok=True)
         candidates = self.analyze_repository()
-        
+
         cards_html = ""
         for c in candidates:
             badge_class = "badge-shallow" if c["is_shallow"] else "badge-deep"
@@ -131,9 +177,9 @@ class ArchAnalyzerEngine:
                 public_methods_count=c["public_methods_count"],
                 loc=c["loc"],
                 ratio=c["ratio"],
-                deletion_test_verdict=c["verdict"]
+                deletion_test_verdict=c["verdict"],
             )
-            
+
         report_path = self.storage_dir / "architecture_depth.html"
         full_html = HTML_REPORT_TEMPLATE.format(cards_html=cards_html)
         report_path.write_text(full_html, encoding="utf-8")

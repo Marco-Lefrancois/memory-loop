@@ -10,6 +10,9 @@ import sys
 import subprocess
 from pathlib import Path
 from typing import List, Optional, Dict, Any, Tuple
+from src.utils.logger import get_logger
+
+logger = get_logger("engine.sandbox.runner")
 
 
 class SandboxMode:
@@ -49,8 +52,16 @@ class SandboxRunner:
             try:
                 resolved.relative_to(root)
                 return True
-            except ValueError:
-                continue
+            except ValueError as e:
+                logger.debug(
+                    "Chemin hors racines autorisées, racine suivante testée",
+                    exc_info=True,
+                    extra={
+                        "component": "engine.sandbox.runner",
+                        "operation": "is_writable_path",
+                        "error": str(e),
+                    },
+                )
         return False
 
     def build_command(self, cmd: List[str]) -> Tuple[List[str], Dict[str, str]]:

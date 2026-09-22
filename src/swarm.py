@@ -89,8 +89,16 @@ def resolve_project_name(raw_name: str, create_if_missing: bool = False) -> str:
             data = json.loads(active_project_json.read_text(encoding="utf-8"))
             if "active_project" in data:
                 known_graph_names.add(data["active_project"])
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "active_project.json illisible, ensemble de graphes connus non enrichi",
+                exc_info=True,
+                extra={
+                    "component": "cli.swarm",
+                    "operation": "resolve_project_name",
+                    "error": str(e),
+                },
+            )
 
     if clean_name in existing_projects.values():
         return clean_name

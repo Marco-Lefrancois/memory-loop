@@ -7,6 +7,9 @@ encapsuler les erreurs d'état et empêcher les crashs brutaux de subprocess sou
 import sys
 import io
 import traceback
+from src.utils.logger import get_logger
+
+logger = get_logger("core.safe_exec")
 
 def setup_utf8_environment():
     """
@@ -16,8 +19,16 @@ def setup_utf8_environment():
     try:
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Rewrap UTF-8 des flux console impossible, encodage système conservé",
+            exc_info=True,
+            extra={
+                "component": "core.safe_exec",
+                "operation": "setup_utf8_environment",
+                "error": str(e),
+            },
+        )
 
 def safe_run_entrypoint(main_func):
     """

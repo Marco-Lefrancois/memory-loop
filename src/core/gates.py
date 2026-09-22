@@ -19,6 +19,9 @@ from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
+from src.utils.logger import get_logger
+
+logger = get_logger("core.gates")
 
 # Constantes de Configuration
 DEFAULT_TIMEOUT_SEC = 120
@@ -574,8 +577,16 @@ def claim_lease(scope: str, leaf_id: str, owns_globs: List[str], base_dir: Path)
                 for exist_g in existing_globs:
                     if patterns_overlap(new_g, exist_g):
                         return False, f"Collision OWNS: '{new_g}' chevauche '{exist_g}' possédé par '{existing_leaf}'."
-        except Exception:
-            continue
+        except Exception as e:
+            logger.debug(
+                "Collision OWNS : comparaison de globs échouée, itération suivante",
+                exc_info=True,
+                extra={
+                    "component": "core.gates",
+                    "operation": "check_ownership_globs",
+                    "error": str(e),
+                },
+            )
 
     # Création du verrou atomique
     lock_target = locks_dir / f"{scope}_{leaf_id}.lock.json"
@@ -596,8 +607,16 @@ def release_lease(scope: str, leaf_id: str, base_dir: Path) -> None:
     if lock_target.exists():
         try:
             lock_target.unlink()
-        except OSError:
-            pass
+        except OSError as e:
+            logger.warning(
+                "Libération du verrou OWNS impossible, fichier verrou laissé en place",
+                exc_info=True,
+                extra={
+                    "component": "core.gates",
+                    "operation": "release_lease",
+                    "error": str(e),
+                },
+            )
 
 
 def patterns_overlap(pat1: str, pat2: str) -> bool:

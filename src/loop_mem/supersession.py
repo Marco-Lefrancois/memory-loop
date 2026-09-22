@@ -16,13 +16,18 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Set
 
+from src.utils.logger import get_logger
+
+logger = get_logger("loop_mem.supersession")
+
 
 @dataclass
 class SupersessionRecord:
     """Enregistrement d'une règle ou d'une décision rendue obsolète."""
-    target_id: str             # ex: "ADR-001" ou "RM-04"
-    superseded_by: str         # ex: "ADR-0324"
-    reason: str                # Raison de la caducité
+
+    target_id: str  # ex: "ADR-001" ou "RM-04"
+    superseded_by: str  # ex: "ADR-0324"
+    reason: str  # Raison de la caducité
     effective_date: str
     target_file: str
     status: str = "SUPERSEDED"  # "SUPERSEDED", "DEPRECATED", "ACTIVE"
@@ -45,7 +50,9 @@ class MemorySupersessionEngine:
         self.project_path = Path(project_path)
         self.ledger_file = self.project_path / "memory" / "supersession_ledger.json"
 
-    def scan_adrs_for_supersessions(self, adr_dir: Optional[Path | str] = None) -> List[SupersessionRecord]:
+    def scan_adrs_for_supersessions(
+        self, adr_dir: Optional[Path | str] = None
+    ) -> List[SupersessionRecord]:
         """Scanne les ADRs pour identifier les clauses de remplacement."""
         target_dir = Path(adr_dir) if adr_dir else (self.project_path / "docs" / "01-architecture")
         if not target_dir.exists():
@@ -64,15 +71,21 @@ class MemorySupersessionEngine:
             current_adr_id = self._extract_adr_id(adr_file.name, content)
 
             # Recherche de mentions : "Remplace : ADR-XXX" ou "Supersedes : ADR-XXX"
-            supersede_matches = re.findall(r"(?:Remplace|Supersedes|Remplac[ée]e? par)\s*:\s*\[?(ADR-\w+)\]?", content, re.IGNORECASE)
+            supersede_matches = re.findall(
+                r"(?:Remplace|Supersedes|Remplac[ée]e? par)\s*:\s*\[?(ADR-\w+)\]?",
+                content,
+                re.IGNORECASE,
+            )
             for old_id in supersede_matches:
-                records.append(SupersessionRecord(
-                    target_id=old_id.upper(),
-                    superseded_by=current_adr_id,
-                    reason=f"Remplacé par la décision {current_adr_id}",
-                    effective_date=now_str,
-                    target_file=str(adr_file.name),
-                ))
+                records.append(
+                    SupersessionRecord(
+                        target_id=old_id.upper(),
+                        superseded_by=current_adr_id,
+                        reason=f"Remplacé par la décision {current_adr_id}",
+                        effective_date=now_str,
+                        target_file=str(adr_file.name),
+                    )
+                )
 
         return records
 
@@ -82,14 +95,16 @@ class MemorySupersessionEngine:
             records = self.scan_adrs_for_supersessions()
 
         self.ledger_file.parent.mkdir(parents=True, exist_ok=True)
-        
+
         ledger_data = {
             "last_synced_at": datetime.now().isoformat(),
             "total_superseded": len(records),
             "superseded_items": {r.target_id: r.to_dict() for r in records},
         }
 
-        self.ledger_file.write_text(json.dumps(ledger_data, indent=2, ensure_ascii=False), encoding="utf-8")
+        self.ledger_file.write_text(
+            json.dumps(ledger_data, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
         return ledger_data
 
     def is_superseded(self, item_id: str) -> Optional[SupersessionRecord]:
@@ -103,8 +118,18 @@ class MemorySupersessionEngine:
             if item_id.upper() in items:
                 d = items[item_id.upper()]
                 return SupersessionRecord(**d)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Lecture du ledger de supersession échouée, retour None",
+                exc_info=True,
+                extra={
+                    "component": "loop_mem.supersession",
+                    "operation": "is_superseded",
+                    "item_id": item_id,
+                    "ledger_file": str(self.ledger_file),
+                    "error": str(e),
+                },
+            )
         return None
 
     def _extract_adr_id(self, filename: str, content: str) -> str:

@@ -254,8 +254,16 @@ def write_worker_signal(
         dot_mloop_file = project_path / ".mloop" / "status"
         dot_mloop_file.parent.mkdir(parents=True, exist_ok=True)
         dot_mloop_file.write_text(target_file.read_text(encoding="utf-8"), encoding="utf-8")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(
+            "Copie du statut worker vers .mloop/status échouée",
+            exc_info=True,
+            extra={
+                "component": "core.worker_signal",
+                "operation": "write_worker_signal",
+                "error": str(e),
+            },
+        )
 
     return target_file
 

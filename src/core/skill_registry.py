@@ -11,6 +11,9 @@ from __future__ import annotations
 
 import re
 from typing import Any, Callable, Dict, Optional
+from src.utils.logger import get_logger
+
+logger = get_logger("core.skill_registry")
 
 # ─── Format d'URI accepté ────────────────────────────────────────────────────
 _SKILL_URI_PATTERN = re.compile(r"^skill://(?P<name>[a-zA-Z0-9_\-]+)$")
@@ -76,8 +79,16 @@ def resolve_skill(uri: str) -> Callable[..., Any]:
     try:
         from src.core.confinement_shield import ConfinementShield
         ConfinementShield.verify_skill_access(name)
-    except ImportError:
-        pass
+    except ImportError as e:
+        logger.warning(
+            "ConfinementShield indisponible (ImportError), bouclier de compétence non appliqué",
+            exc_info=True,
+            extra={
+                "component": "core.skill_registry",
+                "operation": "verify_skill_access",
+                "error": str(e),
+            },
+        )
 
     if name not in _skill_registry:
         available = ", ".join(sorted(_skill_registry)) or "(registre vide)"

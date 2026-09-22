@@ -10,6 +10,9 @@ from src.cli import ZeroFluffConsole
 
 from src.pipelines.graphify.extractor import Extractor
 from src.pipelines.graphify.builder import GraphBuilder
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.graphify.agent")
 
 
 class GraphifyAgent:
@@ -25,9 +28,7 @@ class GraphifyAgent:
         self.builder = GraphBuilder()
 
     def execute(self, state: LoopState) -> LoopState:
-        ZeroFluffConsole.step_s1(
-            self.name, "Extraction et modelisation du graphe semantique..."
-        )
+        ZeroFluffConsole.step_s1(self.name, "Extraction et modelisation du graphe semantique...")
         project_path = Path("Projects") / state.project_name
         cache_file = project_path / "memory" / "ingest_cache.json"
         graph_file = project_path / "memory" / "knowledge_graph.json"
@@ -75,8 +76,17 @@ class GraphifyAgent:
             try:
                 with open(cache_file, "r", encoding="utf-8") as f:
                     old_cache = json.load(f)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Cache d'ingestion Graphify illisible, recalcul complet des hachages",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.graphify.agent",
+                        "operation": "execute",
+                        "cache_file": str(cache_file),
+                        "error": str(e),
+                    },
+                )
 
         file_hashes = {}
         for path in source_paths:
@@ -99,8 +109,16 @@ class GraphifyAgent:
 
                 if h:
                     file_hashes[key_path] = {"hash": h, "mtime": mtime}
-            except (OSError, FileNotFoundError, PermissionError):
-                continue
+            except (OSError, FileNotFoundError, PermissionError) as e:
+                logger.debug(
+                    "Fichier source inaccessible, hash non calculé",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.graphify.agent",
+                        "operation": "collect_file_hashes",
+                        "error": str(e),
+                    },
+                )
 
         cache_hit = False
         changed_details = []
@@ -113,8 +131,17 @@ class GraphifyAgent:
                     old_g = json.load(f)
                     old_nodes_count = len(old_g.get("nodes", []))
                     old_edges_count = len(old_g.get("edges", []))
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Lecture du graphe existant échouée (comptage de diff ignoré)",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.graphify.agent",
+                        "operation": "execute",
+                        "graph_file": str(graph_file),
+                        "error": str(e),
+                    },
+                )
 
         if cache_file.exists() and graph_file.exists():
             try:
@@ -124,8 +151,7 @@ class GraphifyAgent:
                     changed = [
                         Path(f).name
                         for f, data in file_hashes.items()
-                        if old_cache.get(f, {}).get("hash") != data["hash"]
-                        and f in old_cache
+                        if old_cache.get(f, {}).get("hash") != data["hash"] and f in old_cache
                     ]
                     added = [Path(f).name for f in file_hashes if f not in old_cache]
                     removed = [Path(f).name for f in old_cache if f not in file_hashes]
@@ -135,13 +161,23 @@ class GraphifyAgent:
                         changed_details.append(f"Ajoutés: {', '.join(added)}")
                     if removed:
                         changed_details.append(f"Supprimés: {', '.join(removed)}")
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Calcul du diff de cache Graphify échoué (détails de changement partiels)",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.graphify.agent",
+                        "operation": "execute",
+                        "error": str(e),
+                    },
+                )
         else:
             changed_details.append("Initialisation complète du graphe.")
 
         if cache_hit and graphify_out_dir.exists():
-            ZeroFluffConsole.success("[Graphify] Aucun changement détecté (Cache Hit SHA256) — skipping graphify update.")
+            ZeroFluffConsole.success(
+                "[Graphify] Aucun changement détecté (Cache Hit SHA256) — skipping graphify update."
+            )
             try:
                 with open(graph_file, "r", encoding="utf-8") as f:
                     g_data = json.load(f)
@@ -149,8 +185,17 @@ class GraphifyAgent:
                         nodes=g_data.get("nodes", []), edges=g_data.get("edges", [])
                     )
                 return state
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(
+                    "Rechargement du graphe en cache-hit échoué, reconstruction complète forcée",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.graphify.agent",
+                        "operation": "execute",
+                        "graph_file": str(graph_file),
+                        "error": str(e),
+                    },
+                )
 
         # --- 2. Délégué au paquet officiel graphify (Uniquement si cache miss ou out manquant) ---
         ZeroFluffConsole.info(
@@ -176,9 +221,7 @@ class GraphifyAgent:
                 "exports visuels différés. L'enrichissement mLoop natif se poursuit."
             )
         except Exception as e:
-            ZeroFluffConsole.warning(
-                f"[Graphify] Erreur lors de l'exécution de graphify: {e}"
-            )
+            ZeroFluffConsole.warning(f"[Graphify] Erreur lors de l'exécution de graphify: {e}")
 
         # --- 3. Enrichissement mLoop Custom ---
         self.builder.enrich_lexicon(global_docs_cache_dir)
@@ -233,14 +276,32 @@ class GraphifyAgent:
                                     "properties": {},
                                 }
                             )
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "Extraction des nœuds Feature/Epic depuis le backlog échouée",
+                        exc_info=True,
+                        extra={
+                            "component": "pipelines.graphify.agent",
+                            "operation": "execute.backlog_nodes",
+                            "path": str(path),
+                            "error": str(e),
+                        },
+                    )
 
             if any(p in path.parts for p in ["reference", "docs_cache", "crawler"]):
                 try:
                     text_sources.append(path.read_text(encoding="utf-8"))
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "Lecture d'une source textuelle Graphify ignorée",
+                        exc_info=True,
+                        extra={
+                            "component": "pipelines.graphify.agent",
+                            "operation": "execute.text_sources",
+                            "path": str(path),
+                            "error": str(e),
+                        },
+                    )
 
             if "src" in path.parts:
                 file_rel_path = str(path.relative_to(project_path))
@@ -258,9 +319,7 @@ class GraphifyAgent:
 
                 try:
                     content = path.read_text(encoding="utf-8")
-                    self.extractor.extract_stories(
-                        content, file_node_id, physical_edges
-                    )
+                    self.extractor.extract_stories(content, file_node_id, physical_edges)
 
                     if path.suffix == ".py":
                         self.extractor.parse_python_ast(
@@ -292,8 +351,18 @@ class GraphifyAgent:
                             source_paths,
                             path,
                         )
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning(
+                        "Parsing AST d'un fichier source échoué (nœud partiellement indexé)",
+                        exc_info=True,
+                        extra={
+                            "component": "pipelines.graphify.agent",
+                            "operation": "execute.ast_parse",
+                            "path": str(path),
+                            "suffix": path.suffix,
+                            "error": str(e),
+                        },
+                    )
 
         self.builder.add_text_nodes(text_sources)
 
@@ -319,9 +388,7 @@ class GraphifyAgent:
                 )
                 if obs["file_scope"]:
                     files = [
-                        f.strip()
-                        for f in obs["file_scope"].replace(",", " ").split()
-                        if f.strip()
+                        f.strip() for f in obs["file_scope"].replace(",", " ").split() if f.strip()
                     ]
                     for file_path_str in files:
                         physical_edges.append(
@@ -332,8 +399,17 @@ class GraphifyAgent:
                                 "properties": {},
                             }
                         )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                "Ingestion des observations loop-mem dans le graphe échouée",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.graphify.agent",
+                    "operation": "execute.loop_mem",
+                    "project": state.project_name,
+                    "error": str(e),
+                },
+            )
 
         # ContextJournal
         if journal_path.exists():
@@ -345,20 +421,25 @@ class GraphifyAgent:
                     description="Mémoire vive",
                     text_chunk=journal_text[:800],
                 )
-                self.builder.g.add_edge(
-                    "ContextJournal", "State Machine", type="informs"
-                )
+                self.builder.g.add_edge("ContextJournal", "State Machine", type="informs")
                 for node_id in list(self.builder.g.nodes):
                     if (
                         node_id != "ContextJournal"
                         and len(node_id) > 3
                         and node_id.lower() in journal_text.lower()
                     ):
-                        self.builder.g.add_edge(
-                            "ContextJournal", node_id, type="references"
-                        )
-            except Exception:
-                pass
+                        self.builder.g.add_edge("ContextJournal", node_id, type="references")
+            except Exception as e:
+                logger.debug(
+                    "Intégration du ContextJournal au graphe échouée",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.graphify.agent",
+                        "operation": "execute.context_journal",
+                        "journal": str(journal_path),
+                        "error": str(e),
+                    },
+                )
 
         # --- 4. Sérialisation ---
         nodes_list, edges_list = self.builder.merge_and_serialize(
@@ -382,11 +463,7 @@ class GraphifyAgent:
         edges_diff = len(edges_list) - old_edges_count
 
         diff_str = f"[{'+' if nodes_diff >= 0 else ''}{nodes_diff} nœuds, {'+' if edges_diff >= 0 else ''}{edges_diff} relations]"
-        base_msg = (
-            " | ".join(changed_details)
-            if changed_details
-            else "Recalcul complet du graphe."
-        )
+        base_msg = " | ".join(changed_details) if changed_details else "Recalcul complet du graphe."
         details_msg = f"{base_msg}\nÉvolution du graphe : {len(nodes_list)} nœuds et {len(edges_list)} relations {diff_str}."
 
         entry = JournalEntry(

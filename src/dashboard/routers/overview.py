@@ -99,8 +99,16 @@ class ContextGaugeEngine:
                     try:
                         entry = json.loads(line)
                         tokens_acc += entry.get("prompt_tokens_est", 0) + entry.get("completion_tokens_est", 0)
-                    except json.JSONDecodeError:
-                        continue
+                    except json.JSONDecodeError as e:
+                        logger.debug(
+                            "Ligne malformée du ledger tokens ignorée",
+                            exc_info=True,
+                            extra={
+                                "component": "dashboard.routers.overview",
+                                "operation": "context_gauge_ledger",
+                                "error": str(e),
+                            },
+                        )
                 if tokens_acc > 0:
                     return min(tokens_acc, 128000)
             except Exception as e:
@@ -120,8 +128,16 @@ class ContextGaugeEngine:
                             tokens_acc += usage.get("prompt_tokens", 0) + usage.get("completion_tokens", 0)
                         elif "tokens" in entry:
                             tokens_acc += entry.get("tokens", 0)
-                    except json.JSONDecodeError:
-                        continue
+                    except json.JSONDecodeError as e:
+                        logger.debug(
+                            "Ligne malformée du fichier events ignorée",
+                            exc_info=True,
+                            extra={
+                                "component": "dashboard.routers.overview",
+                                "operation": "context_gauge_events",
+                                "error": str(e),
+                            },
+                        )
                 if tokens_acc > 0:
                     return min(tokens_acc, 128000)
             except Exception as e:

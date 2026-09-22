@@ -43,9 +43,7 @@ ADR_TEMPLATE = """# 🏛️ ADR-{adr_id:03d} : {title}
 class GrillEngine:
     def __init__(self, project_path: Path):
         self.project_path = project_path
-        self.docs_dir = (
-            project_path / ProjectLayout.DOCS / ProjectLayout.DOCS_ARCHITECTURE
-        )
+        self.docs_dir = project_path / ProjectLayout.DOCS / ProjectLayout.DOCS_ARCHITECTURE
         self.backlog_dir = project_path / ProjectLayout.BACKLOG
         self.stories_dir = self.backlog_dir / "stories"
         self.oq_file = (
@@ -91,7 +89,17 @@ class GrillEngine:
                 continue
             try:
                 text = f.read_text(encoding="utf-8", errors="ignore")
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Lecture d'un fichier de code source échouée, fichier ignoré",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.grill_engine",
+                        "operation": "code_source_read",
+                        "file": str(f),
+                        "error": str(e),
+                    },
+                )
                 continue
             lower_text = text.lower()
             if any(tok in lower_text for tok in query_tokens):
@@ -182,10 +190,8 @@ class GrillEngine:
             date=date_str,
             context=context or "Session d'interrogatoire Grill-with-Docs.",
             decision=decision or "Arbitrage d'architecture validé.",
-            positives=positives
-            or "Clarification des exigences métier et réduction du flou.",
-            negatives=negatives
-            or "Contraintes et engagements d'architecture appliqués.",
+            positives=positives or "Clarification des exigences métier et réduction du flou.",
+            negatives=negatives or "Contraintes et engagements d'architecture appliqués.",
         )
         adr_path.write_text(content, encoding="utf-8")
         return adr_path
@@ -214,7 +220,17 @@ class GrillEngine:
                 for candidate in self.stories_dir.rglob("*.md"):
                     try:
                         head = candidate.read_text(encoding="utf-8")
-                    except Exception:
+                    except Exception as e:
+                        logger.debug(
+                            "Lecture d'un récit candidate échouée, fichier ignoré",
+                            exc_info=True,
+                            extra={
+                                "component": "pipelines.grill_engine",
+                                "operation": "story_candidate_read",
+                                "file": str(candidate),
+                                "error": str(e),
+                            },
+                        )
                         continue
                     if not head.startswith("---"):
                         continue
@@ -223,7 +239,17 @@ class GrillEngine:
                         continue
                     try:
                         fm_data = _yaml.safe_load(fm_parts[1])
-                    except Exception:
+                    except Exception as e:
+                        logger.debug(
+                            "Parse YAML du frontmatter échouée, récit ignoré",
+                            exc_info=True,
+                            extra={
+                                "component": "pipelines.grill_engine",
+                                "operation": "frontmatter_yaml_parse",
+                                "file": str(candidate),
+                                "error": str(e),
+                            },
+                        )
                         continue
                     if isinstance(fm_data, dict) and story_id in (
                         str(fm_data.get("id", "")),
@@ -242,17 +268,11 @@ class GrillEngine:
 
                     data = yaml.safe_load(parts[1])
                     if isinstance(data, dict):
-                        current_status = StoryStatus.from_raw(
-                            data.get("status", "OPEN")
-                        )
-                        engine.validate_transition(
-                            current_status, StoryStatus.READY_FOR_GROOMING
-                        )
+                        current_status = StoryStatus.from_raw(data.get("status", "OPEN"))
+                        engine.validate_transition(current_status, StoryStatus.READY_FOR_GROOMING)
 
                         data["status"] = StoryStatus.READY_FOR_GROOMING.value
-                        new_yaml = yaml.dump(
-                            data, sort_keys=False, allow_unicode=True
-                        ).strip()
+                        new_yaml = yaml.dump(data, sort_keys=False, allow_unicode=True).strip()
                         new_content = f"---\n{new_yaml}\n---{parts[2]}"
                         story_file.write_text(new_content, encoding="utf-8")
 
@@ -265,9 +285,7 @@ class GrillEngine:
         if sprint_file.exists():
             sprint_content = sprint_file.read_text(encoding="utf-8")
             pattern = rf"(\|.*?{re.escape(story_id)}.*?\|\s*)([A-Z_]+)(\s*\|)"
-            new_sprint_content = re.sub(
-                pattern, rf"\g<1>READY_FOR_GROOMING\g<3>", sprint_content
-            )
+            new_sprint_content = re.sub(pattern, rf"\g<1>READY_FOR_GROOMING\g<3>", sprint_content)
             if new_sprint_content != sprint_content:
                 sprint_file.write_text(new_sprint_content, encoding="utf-8")
                 updated_any = True

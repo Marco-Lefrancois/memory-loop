@@ -115,7 +115,17 @@ class RHOHybridSearch:
                                     },
                                 }
                             )
-                    except (json.JSONDecodeError, TypeError):
+                    except (json.JSONDecodeError, TypeError) as e:
+                        logger.debug(
+                            "Embedding corrompu ou invalide pour une ligne RHO, ligne ignorée",
+                            exc_info=True,
+                            extra={
+                                "component": "loop_mem.rho_hybrid_search",
+                                "operation": "stream_vector_parse_embedding",
+                                "row_id": row["id"],
+                                "error": str(e),
+                            },
+                        )
                         continue
         except Exception as exc:
             logger.warning(
@@ -235,8 +245,17 @@ class RHOHybridSearch:
         try:
             conn.execute("PRAGMA journal_mode=WAL;")
             conn.execute("PRAGMA busy_timeout=20000;")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Configuration des PRAGMA SQLite échouée, connexion retournée avec les défauts",
+                exc_info=True,
+                extra={
+                    "component": "loop_mem.rho_hybrid_search",
+                    "operation": "db_connection_pragma",
+                    "db_path": str(self.db_path),
+                    "error": str(e),
+                },
+            )
         return conn
 
 
@@ -251,46 +270,7 @@ def search_rho_hybrid(
     return searcher.search(query, top_k=top_k)
 
 
-def get_rho_hybrid_stats(project_name: str) -> Dict[str, Any]:
-    """Retourne les statistiques de la mémoire RHO pour un projet."""
-    stats = {
-        "project": project_name,
-        "total_rules": 0,
-        "active_rules": 0,
-        "tombstone_rules": 0,
-        "embedded_rules": 0,
-    }
+# Ré-export API publique (extraction ADR-0202 vers _rho_stats.py)
+from src.loop_mem._rho_stats import get_rho_hybrid_stats  # noqa: E402
 
-    try:
-        db_path = Path("memory/loop_mem.db")
-        if not db_path.exists():
-            return stats
-
-        with sqlite3.connect(str(db_path), timeout=10.0) as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT COUNT(*) as total, "
-                "SUM(CASE WHEN embedding_json != '[]' THEN 1 ELSE 0 END) as embedded "
-                "FROM rho_memory WHERE project_name = ?",
-                (project_name,),
-            )
-            row = cursor.fetchone()
-            if row:
-                stats["total_rules"] = row["total"]
-                stats["embedded_rules"] = row["embedded"]
-
-        rho_file = Path("Projects") / project_name / "memory" / "rho_rules.yaml"
-        if rho_file.exists():
-            import yaml
-
-            with open(rho_file, "r", encoding="utf-8") as f:
-                data = yaml.safe_load(f) or {}
-                rules = data.get("rules", [])
-                stats["active_rules"] = sum(1 for r in rules if r.get("status") == "ACTIVE")
-                stats["tombstone_rules"] = sum(1 for r in rules if r.get("status") == "TOMBSTONE")
-
-    except Exception as exc:
-        logger.debug("Erreur récupération stats RHO", exc_info=True)
-
-    return stats
+__all__ = ["RHOHybridSearch", "search_rho_hybrid", "get_rho_hybrid_stats"]

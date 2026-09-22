@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 
 from src.cli import ZeroFluffConsole
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.evidence_pack")
 
 
 class EvidencePackEngine:
@@ -38,8 +41,17 @@ class EvidencePackEngine:
                     while chunk := f.read(8192):
                         h.update(chunk)
                 return h.hexdigest()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Calcul SHA-256 de la source échoué, empreinte non disponible",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.evidence_pack",
+                        "operation": "_resolve_source_sha256",
+                        "source": src_name,
+                        "error": str(e),
+                    },
+                )
         return None
 
     def _candidate_paths(self, src_name: str) -> List[Path]:
@@ -98,9 +110,7 @@ class EvidencePackEngine:
                     return matches[0]
         return None
 
-    def _classify_source(
-        self, src_name: str, resolved_path: Optional[Path]
-    ) -> Dict[str, Any]:
+    def _classify_source(self, src_name: str, resolved_path: Optional[Path]) -> Dict[str, Any]:
         """
         Classifie une source Fact-Search selon ADR-0320 §G :
         - verification_method: "code_source_verified" | "file_existence_only" | "semantic_match"
@@ -155,7 +165,17 @@ class EvidencePackEngine:
                 continue
             try:
                 mockup_content = resolved.read_text(encoding="utf-8", errors="replace")
-            except Exception:
+            except Exception as e:
+                logger.debug(
+                    "Lecture du fichier maquette échouée, maquette ignorée",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.evidence_pack",
+                        "operation": "_extract_mockup_contracts",
+                        "mockup_path": str(resolved),
+                        "error": str(e),
+                    },
+                )
                 continue
 
             fm_match = re.match(r"^---\s*\n(.*?)\n---", mockup_content, re.DOTALL)
@@ -163,9 +183,7 @@ class EvidencePackEngine:
                 continue
             fm_text = fm_match.group(1)
 
-            is_ui_spec = re.search(
-                r'^document_type:\s*"ui_specification"', fm_text, re.MULTILINE
-            )
+            is_ui_spec = re.search(r'^document_type:\s*"ui_specification"', fm_text, re.MULTILINE)
             if not is_ui_spec:
                 continue
 
@@ -188,17 +206,24 @@ class EvidencePackEngine:
             return cand1
         try:
             content = story_file.read_text(encoding="utf-8", errors="replace")
-            dossier_links = re.findall(
-                r"\[(?:[^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content
-            )
+            dossier_links = re.findall(r"\[(?:[^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content)
             for target in dossier_links:
                 if target.startswith(("http://", "https://")):
                     continue
                 cand = (story_file.parent / target).resolve()
                 if cand.exists():
                     return cand
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Analyse des liens fact_dossier du récit échouée, recherche récursive de secours",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.evidence_pack",
+                    "operation": "_find_fact_dossier",
+                    "story_file": str(story_file),
+                    "error": str(e),
+                },
+            )
         memory_dir = self.project_path / "memory"
         if memory_dir.exists():
             matches = list(memory_dir.rglob(f"*{sid}*fact_dossier.md"))
@@ -311,9 +336,7 @@ class EvidencePackEngine:
                 )
 
         result["has_mermaid"] = "```mermaid" in content
-        result["has_dbml"] = (
-            "Table " in content or "table " in content or "```dbml" in content
-        )
+        result["has_dbml"] = "Table " in content or "table " in content or "```dbml" in content
         result["verbatims_count"] = len(
             re.findall(r"(?i)(?:verbatim|extrait\s*\d+|«[^»]{15,}»)", content)
         )
@@ -343,13 +366,13 @@ class EvidencePackEngine:
 
         # 2. Extraction des Alertes GitHub Markdown ([!NOTE], [!CAUTION], etc.)
         alerts = []
-        alert_pattern = r"(?m)^>\s*\[\!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n((?:^>[^\n]*\n?)+)"
+        alert_pattern = (
+            r"(?m)^>\s*\[\!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n((?:^>[^\n]*\n?)+)"
+        )
         for match in re.finditer(alert_pattern, content):
             alert_type = match.group(1)
             raw_lines = match.group(2).splitlines()
-            clean_text = "\n".join(
-                [line.lstrip("> ").strip() for line in raw_lines]
-            ).strip()
+            clean_text = "\n".join([line.lstrip("> ").strip() for line in raw_lines]).strip()
             alerts.append({"type": alert_type, "text": clean_text})
 
         # 3. Extraction des Questions Ouvertes liées (Q-XXX et QD-XXX)
@@ -357,6 +380,7 @@ class EvidencePackEngine:
 
         # 4. Extraction des Sources de Vérité (scans, SOW, directives ET code source .cs, .plist, .csproj)
         import urllib.parse
+
         decoded_content = urllib.parse.unquote(content)
         sources = set()
         for s_match in re.finditer(
@@ -404,7 +428,7 @@ class EvidencePackEngine:
                     if clean_f and not clean_f.startswith("["):
                         facts_verified.append(
                             {
-                                "fact_id": f"F-{len(facts_verified)+1:02d}",
+                                "fact_id": f"F-{len(facts_verified) + 1:02d}",
                                 "source_ref": "Story Markdown",
                                 "rule_summary": clean_f[:160],
                                 "status": "VERIFIED",
@@ -424,9 +448,7 @@ class EvidencePackEngine:
                 source_hashes[dossier_path.name] = dossier_sha
                 sources.add(dossier_path.name)
 
-            for raw_src, declared_sha in dossier_data.get(
-                "sources_hashes", {}
-            ).items():
+            for raw_src, declared_sha in dossier_data.get("sources_hashes", {}).items():
                 src_filename = raw_src if "." in raw_src else f"{raw_src}.md"
                 sources.add(src_filename)
                 resolved_s = self._resolve_source_path(src_filename)
@@ -447,9 +469,14 @@ class EvidencePackEngine:
                 or any(src in k for k in dossier_data.get("sources_hashes", {}).keys())
                 or (dossier_path and src == dossier_path.name)
             )
-            if is_in_dossier and dossier_data.get("dossier_status") in (
-                "CURRENT",
-                "VALIDATED",
+            if (
+                is_in_dossier
+                and dossier_path
+                and dossier_data.get("dossier_status")
+                in (
+                    "CURRENT",
+                    "VALIDATED",
+                )
             ):
                 classification["verification_method"] = "ssot_dossier_grounded"
                 classification["confidence"] = "HIGH"
@@ -460,27 +487,24 @@ class EvidencePackEngine:
                 code_verified_count += 1
                 matched_fact = f"Comportement technique confirmé par inspection directe du code source physique : {src}"
             elif resolved_path is not None:
-                matched_fact = f"Référence documentaire trouvée sur disque (existence vérifiée) : {src}"
-            else:
                 matched_fact = (
-                    f"Source citée mais introuvable physiquement sur disque : {src}"
+                    f"Référence documentaire trouvée sur disque (existence vérifiée) : {src}"
                 )
+            else:
+                matched_fact = f"Source citée mais introuvable physiquement sur disque : {src}"
 
             fact_proofs.append(
                 {
                     "query": f"Fact-Search {src}",
                     "source_file": src,
-                    "sha256": sha
-                    or source_hashes.get(src, "NOT_CALCULATED_LOCAL_ONLY"),
+                    "sha256": sha or source_hashes.get(src, "NOT_CALCULATED_LOCAL_ONLY"),
                     "section": "SSOT Reference",
                     "matched_fact": matched_fact,
                     "verification_method": classification["verification_method"],
                     "source_type": classification["source_type"],
                     "confidence": classification["confidence"],
                     "confidence_score": classification["confidence_score"],
-                    "timestamp": datetime.datetime.now(
-                        datetime.timezone.utc
-                    ).isoformat(),
+                    "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 }
             )
 
@@ -551,18 +575,12 @@ class EvidencePackEngine:
 
         if existing_pack_path.exists():
             try:
-                existing_data = json.loads(
-                    existing_pack_path.read_text(encoding="utf-8")
-                )
+                existing_data = json.loads(existing_pack_path.read_text(encoding="utf-8"))
                 if existing_data.get("socle_factuel_validated_by_human") is True:
                     preserved_socle_validated = True
-                    preserved_socle_validated_at = existing_data.get(
-                        "socle_factuel_validated_at"
-                    )
+                    preserved_socle_validated_at = existing_data.get("socle_factuel_validated_at")
                 if "fact_check_certificate" in existing_data:
-                    preserved_fact_check_cert = existing_data[
-                        "fact_check_certificate"
-                    ]
+                    preserved_fact_check_cert = existing_data["fact_check_certificate"]
                 existing_ts = existing_data.get("timestamp")
                 story_mtime = datetime.datetime.fromtimestamp(
                     story_file.stat().st_mtime, tz=datetime.timezone.utc
@@ -571,20 +589,27 @@ class EvidencePackEngine:
                     existing_dt = datetime.datetime.fromisoformat(
                         existing_ts.replace("Z", "+00:00")
                     )
-                    if (
-                        story_mtime > existing_dt
-                        and not (dossier_data and dossier_data.get("dossier_status") in ("CURRENT", "VALIDATED"))
+                    if story_mtime > existing_dt and not (
+                        dossier_data
+                        and dossier_data.get("dossier_status") in ("CURRENT", "VALIDATED")
                     ):
                         status = "STALE_PENDING_REGENERATION"
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Comparaison de fraîcheur EvidencePack échouée, statut conservé",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.evidence_pack",
+                        "operation": "generate",
+                        "story_id": sid,
+                        "error": str(e),
+                    },
+                )
 
         evidence_pack = {
             "story_id": sid,
             "jira_key": jira_key,
-            "file_path": str(story_file.relative_to(self.project_path)).replace(
-                "\\", "/"
-            ),
+            "file_path": str(story_file.relative_to(self.project_path)).replace("\\", "/"),
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "fact_search_status": "VERIFIED",
             "fact_search_proofs": fact_proofs,

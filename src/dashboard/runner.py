@@ -13,6 +13,9 @@ from typing import Optional
 
 import uvicorn
 from src.cli import ZeroFluffConsole
+from src.utils.logger import get_logger
+
+logger = get_logger("dashboard.runner")
 
 
 def serve_dashboard(
@@ -37,11 +40,21 @@ def serve_dashboard(
     ZeroFluffConsole.info("Pressez Ctrl+C pour arrêter le serveur.")
 
     if open_browser:
+
         def _open():
             try:
                 webbrowser.open(url)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(
+                    "Ouverture automatique du navigateur échouée, serveur toujours actif",
+                    exc_info=True,
+                    extra={
+                        "component": "dashboard.runner",
+                        "operation": "serve_dashboard",
+                        "url": url,
+                        "error": str(e),
+                    },
+                )
 
         # Ouvrir le navigateur après 1.2 seconde
         threading.Timer(1.2, _open).start()

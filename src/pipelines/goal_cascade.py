@@ -16,6 +16,9 @@ import re
 import yaml
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.goal_cascade")
 
 
 class GoalCascadeEngine:
@@ -72,8 +75,16 @@ class GoalCascadeEngine:
                 if len(parts) >= 3:
                     data = yaml.safe_load(parts[1])
                     return data if isinstance(data, dict) else {}
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Frontmatter YAML illisible, dict vide retourné",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.goal_cascade",
+                    "operation": "extract_frontmatter",
+                    "error": str(e),
+                },
+            )
         return {}
 
     def _write_alignment_report(self, report: Dict[str, Any]) -> None:

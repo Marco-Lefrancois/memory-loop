@@ -11,6 +11,9 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from typing import Dict, List, Set, Tuple
+from src.utils.logger import get_logger
+
+logger = get_logger("pipelines.llm_wiki")
 
 
 class LLMWikiEngine:
@@ -82,8 +85,16 @@ class LLMWikiEngine:
                             clean_title = re.sub(r"[^\w\s-]", "", title).strip()
                             if clean_title and clean_title not in concepts:
                                 concepts[clean_title] = str(md_file.relative_to(self.project_root))
-            except Exception:
-                continue
+            except Exception as e:
+                logger.debug(
+                    "Page wiki illisible lors de l'indexation des concepts, ignorée",
+                    exc_info=True,
+                    extra={
+                        "component": "pipelines.llm_wiki",
+                        "operation": "build_concept_index",
+                        "error": str(e),
+                    },
+                )
 
         return concepts
 

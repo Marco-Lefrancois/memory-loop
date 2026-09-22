@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Dict, Any
 
 from src.cli import ZeroFluffConsole
+from src.utils.logger import get_logger
+
+logger = get_logger("handler.memo_search")
 
 if TYPE_CHECKING:
     import argparse
@@ -70,8 +73,16 @@ def handle_memo_search(args: argparse.Namespace, state: LoopState, project_path:
             data = json.loads(f.read_text(encoding="utf-8"))
             if data not in profiles:
                 profiles.append(data)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(
+                "Profil ALMA illisible, ignoré",
+                exc_info=True,
+                extra={
+                    "component": "commands.handlers.memo_search",
+                    "operation": "search_memo_profiles",
+                    "error": str(e),
+                },
+            )
 
     ZeroFluffConsole.info(f"Trouvé {len(profiles)} profil(s) de stratégie mémoire dans l'archive ALMA.")
 
