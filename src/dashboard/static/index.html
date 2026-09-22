@@ -174,6 +174,9 @@
             <button onclick="switchTab('graph')" id="tab-btn-graph" class="py-2.5 px-1 text-gray-400 hover:text-gray-200 transition flex items-center gap-1.5 whitespace-nowrap">
                 <span>🕸️</span> GRAPH & DATABASE
             </button>
+            <button onclick="switchTab('archify')" id="tab-btn-archify" class="py-2.5 px-1 text-gray-400 hover:text-cyan-300 transition flex items-center gap-1.5 whitespace-nowrap">
+                <span>📐</span> ARCHIFY
+            </button>
         </nav>
     </div>
 
@@ -798,6 +801,87 @@
             </div>
         </section>
 
+        <!-- ════════ VUE 8 : ARCHIFY DIAGRAMS (MLOOP-151-FE) ══════════════ -->
+        <section id="tab-archify" class="hidden space-y-4">
+            <!-- EN-TÊTE -->
+            <div class="flex items-center justify-between border-b border-cyberborder pb-3 flex-wrap gap-2">
+                <div>
+                    <h2 class="text-sm font-bold text-white font-tech uppercase flex items-center gap-2">
+                        <span>📐</span> Archify — Diagrammes d'Architecture
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5 font-tech">Navigation et projection des diagrammes interactifs locaux. Zéro appel réseau externe.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="archify-artifact-count" class="text-xs font-tech px-2.5 py-1 rounded bg-cyan-950 text-cybercyan border border-cyan-500/30">
+                        INVENTAIRE : —
+                    </span>
+                    <button onclick="openArchifyFullscreen()" id="archify-fullscreen-btn"
+                        class="px-2.5 py-1 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cybercyan text-xs font-tech transition flex items-center gap-1 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                        disabled title="Ouvrir le diagramme actif dans un nouvel onglet navigateur">
+                        ⤢ <span class="hidden sm:inline">PLEIN ÉCRAN</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- LAYOUT SPLIT : RAIL LATÉRAL + IFRAME CENTRALE -->
+            <div class="flex gap-4" style="min-height: 560px;">
+
+                <!-- ── RAIL LATÉRAL (LISTE DES ARTEFACTS) ── -->
+                <div class="flex-shrink-0 w-60 flex flex-col gap-2">
+                    <!-- Bouton Rafraîchir -->
+                    <button onclick="loadArchifyList()" id="archify-refresh-btn"
+                        class="w-full px-2.5 py-1.5 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/30 text-cybercyan text-xs font-tech transition flex items-center justify-center gap-1.5">
+                        🔄 <span>RAFRAÎCHIR</span>
+                    </button>
+
+                    <!-- Liste des artefacts -->
+                    <div id="archify-artifact-list"
+                        class="glass-cyber rounded-xl flex-1 overflow-y-auto p-2 space-y-1.5 font-tech text-xs">
+                        <div class="text-gray-500 py-6 text-center">Chargement de l'inventaire...</div>
+                    </div>
+                </div>
+
+                <!-- ── ZONE CENTRALE (IFRAME + ÉTATS) ── -->
+                <div class="flex-1 glass-cyber rounded-xl flex flex-col overflow-hidden relative">
+
+                    <!-- État initial / vide -->
+                    <div id="archify-empty-state" class="flex flex-col items-center justify-center h-full gap-3 p-6 text-center">
+                        <span class="text-5xl opacity-30">📐</span>
+                        <p id="archify-empty-msg" class="text-sm text-gray-400 font-tech">Sélectionnez un diagramme dans la liste</p>
+                        <code id="archify-empty-hint" class="hidden text-[11px] text-cyan-400/70 bg-cyan-950/40 border border-cyan-500/20 rounded px-3 py-1.5 font-tech">
+                            python src/swarm.py archify --file &lt;spec.json&gt;
+                        </code>
+                    </div>
+
+                    <!-- Indicateur de chargement -->
+                    <div id="archify-loading-state" class="hidden absolute inset-0 flex items-center justify-center bg-cybercard/80 z-10 rounded-xl">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span class="text-xs text-gray-400 font-tech">Chargement du diagramme...</span>
+                        </div>
+                    </div>
+
+                    <!-- Iframe centrale -->
+                    <iframe id="archify-iframe" src="about:blank"
+                        class="hidden w-full h-full border-0 rounded-xl flex-1"
+                        style="min-height: 520px;"
+                        title="Diagramme Archify"
+                        sandbox="allow-scripts allow-same-origin">
+                    </iframe>
+
+                    <!-- Message d'erreur iframe (404/403) -->
+                    <div id="archify-iframe-error" class="hidden flex flex-col items-center justify-center gap-3 p-6 text-center h-full">
+                        <span class="text-3xl opacity-60">⚠️</span>
+                        <p id="archify-iframe-error-msg" class="text-sm text-red-400 font-tech">Artefact introuvable (404)</p>
+                        <button onclick="loadArchifyList()"
+                            class="px-3 py-1.5 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/30 text-cybercyan text-xs font-tech transition">
+                            🔄 Rafraîchir l'inventaire
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- ── COMPOSANT TIROIR RÉFRACTABLE (BACKLOG DRAWER - ST-114) ───── -->
@@ -964,8 +1048,8 @@
         let allProjectModules = {};
         let autoRefreshTimer = null;
 
-        // ── NAVIGATION ONGLETS (7 ONGLETS SOUVERAINS) ─────────────
-        const APP_TABS = ['overview', 'events', 'backlog', 'traces', 'resilience', 'ledger', 'graph'];
+        // ── NAVIGATION ONGLETS (8 ONGLETS SOUVERAINS) ─────────────
+        const APP_TABS = ['overview', 'events', 'backlog', 'traces', 'resilience', 'ledger', 'graph', 'archify'];
 
         function switchTab(tabName) {
             if (!APP_TABS.includes(tabName)) tabName = 'overview';
@@ -1003,6 +1087,7 @@
             else if (currentTab === 'resilience') loadResilience();
             else if (currentTab === 'ledger') loadLedger();
             else if (currentTab === 'graph') loadGraphTab();
+            else if (currentTab === 'archify') loadArchifyList();
         }
 
         function toggleAutoRefresh() {
@@ -2887,6 +2972,248 @@
                     `<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full" style="background:${getForceColor(t)}"></span>${t}</span>`
                 ).join('');
             }
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // ── ONGLET ARCHIFY (MLOOP-151-FE) ───────────────────────────────
+        // ════════════════════════════════════════════════════════════════
+
+        const ARCHIFY_LS_KEY = 'mloop_archify_last_artifact';
+        let archifyLoading = false;          // Anti-rebond global
+        let archifyCurrentFile = null;       // Artefact actuellement affiché
+
+        // ── Helpers visuels ──────────────────────────────────────────────
+
+        function _archifyShowLoading(on) {
+            const el = document.getElementById('archify-loading-state');
+            if (el) el.classList.toggle('hidden', !on);
+        }
+
+        function _archifyShowEmpty(msg, showHint) {
+            const emptyEl  = document.getElementById('archify-empty-state');
+            const iframeEl = document.getElementById('archify-iframe');
+            const errorEl  = document.getElementById('archify-iframe-error');
+            const msgEl    = document.getElementById('archify-empty-msg');
+            const hintEl   = document.getElementById('archify-empty-hint');
+            if (emptyEl)  emptyEl.classList.remove('hidden');
+            if (iframeEl) iframeEl.classList.add('hidden');
+            if (errorEl)  errorEl.classList.add('hidden');
+            if (msgEl && msg) msgEl.textContent = msg;
+            if (hintEl) hintEl.classList.toggle('hidden', !showHint);
+        }
+
+        function _archifyShowIframe() {
+            const emptyEl  = document.getElementById('archify-empty-state');
+            const iframeEl = document.getElementById('archify-iframe');
+            const errorEl  = document.getElementById('archify-iframe-error');
+            if (emptyEl)  emptyEl.classList.add('hidden');
+            if (errorEl)  errorEl.classList.add('hidden');
+            if (iframeEl) iframeEl.classList.remove('hidden');
+        }
+
+        function _archifyShowError(msg) {
+            const emptyEl  = document.getElementById('archify-empty-state');
+            const iframeEl = document.getElementById('archify-iframe');
+            const errorEl  = document.getElementById('archify-iframe-error');
+            const msgEl    = document.getElementById('archify-iframe-error-msg');
+            if (emptyEl)  emptyEl.classList.add('hidden');
+            if (iframeEl) iframeEl.classList.add('hidden');
+            if (errorEl)  errorEl.classList.remove('hidden');
+            if (msgEl && msg) msgEl.textContent = msg;
+        }
+
+        function _archifySetListLoading(on) {
+            const listEl = document.getElementById('archify-artifact-list');
+            const btnEl  = document.getElementById('archify-refresh-btn');
+            if (listEl) listEl.style.opacity = on ? '0.45' : '1';
+            if (btnEl)  btnEl.disabled = on;
+        }
+
+        function _archifyFormatSize(bytes) {
+            if (!bytes || bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'Ko', 'Mo', 'Go'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function _archifyBadgeClass(type) {
+            // architecture → cyan  |  lifecycle → violet  |  autre → gray
+            if (!type) return 'bg-gray-800 text-gray-400 border-gray-700';
+            const t = type.toLowerCase();
+            if (t === 'architecture') return 'bg-cyan-950 text-cybercyan border-cyan-500/40';
+            if (t === 'lifecycle')    return 'bg-violet-950 text-cyberviolet border-violet-500/40';
+            return 'bg-gray-800 text-gray-400 border-gray-700';
+        }
+
+        // ── Chargement de la liste des artefacts ────────────────────────
+
+        async function loadArchifyList() {
+            if (archifyLoading) return;          // Anti-rebond
+            archifyLoading = true;
+            _archifySetListLoading(true);
+
+            const countEl = document.getElementById('archify-artifact-count');
+            if (countEl) countEl.textContent = 'INVENTAIRE : …';
+
+            try {
+                const url = `/api/archify/list?project=${encodeURIComponent(activeProject)}`;
+                const resp = await fetch(url, { signal: AbortSignal.timeout(15000) });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+
+                const artifacts = Array.isArray(data.artifacts) ? data.artifacts : [];
+                if (countEl) countEl.textContent = `INVENTAIRE : ${data.total_artifacts ?? artifacts.length}`;
+
+                renderArchifyList(artifacts);
+
+                // Auto-load dernier artefact mémorisé (OQ-151-02)
+                const saved = _archifyLoadSaved();
+                if (saved && saved.file && artifacts.some(a => a.name === saved.file)) {
+                    await selectArchifyArtifact(saved.file);
+                } else if (artifacts.length === 0) {
+                    _archifyShowEmpty('Aucun diagramme compilé', true);
+                }
+
+            } catch (err) {
+                // État dégradé (Pilier 3) — les autres onglets restent opérationnels
+                const listEl = document.getElementById('archify-artifact-list');
+                if (listEl) {
+                    listEl.innerHTML = `
+                        <div class="flex flex-col items-center gap-2 py-6 text-center">
+                            <span class="text-2xl opacity-60">⚠️</span>
+                            <p class="text-red-400 text-[11px] font-tech leading-relaxed">
+                                Endpoint indisponible<br>
+                                <span class="text-gray-500">${err.message || 'Erreur réseau'}</span>
+                            </p>
+                            <button onclick="loadArchifyList()"
+                                class="mt-1 px-2.5 py-1 rounded bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/30 text-cybercyan text-xs font-tech transition">
+                                🔄 Réessayer
+                            </button>
+                        </div>`;
+                }
+                if (countEl) countEl.textContent = 'INVENTAIRE : ERREUR';
+            } finally {
+                archifyLoading = false;
+                _archifySetListLoading(false);
+            }
+        }
+
+        // ── Rendu du rail latéral ────────────────────────────────────────
+
+        function renderArchifyList(artifacts) {
+            const listEl = document.getElementById('archify-artifact-list');
+            if (!listEl) return;
+
+            if (!artifacts || artifacts.length === 0) {
+                listEl.innerHTML = `
+                    <div class="py-6 text-center text-gray-500 text-[11px] font-tech leading-relaxed">
+                        Aucun diagramme compilé.<br>
+                        <span class="text-cyan-500/60">Exécutez :</span>
+                        <code class="block mt-1.5 text-[10px] text-cyan-400/70 bg-cyan-950/40 border border-cyan-500/20 rounded px-2 py-1">
+                            python src/swarm.py archify<br>--file &lt;spec.json&gt;
+                        </code>
+                    </div>`;
+                _archifyShowEmpty('Aucun diagramme compilé', true);
+                return;
+            }
+
+            listEl.innerHTML = artifacts.map(a => {
+                const badgeClass = _archifyBadgeClass(a.type);
+                const sizeLabel  = _archifyFormatSize(a.size_bytes);
+                const isActive   = archifyCurrentFile && archifyCurrentFile === a.name;
+                const activeClass = isActive
+                    ? 'bg-cyan-950/60 border-cyan-500/50 text-white'
+                    : 'bg-transparent border-cyberborder/30 text-gray-300 hover:bg-cyan-950/20 hover:border-cyan-500/30 hover:text-white';
+                return `
+                    <button onclick="selectArchifyArtifact(${JSON.stringify(a.name)})"
+                        class="w-full text-left p-2 rounded-lg border transition-all ${activeClass}"
+                        title="${a.relative_path || a.name}">
+                        <div class="flex items-start justify-between gap-1 mb-1">
+                            <span class="truncate text-[11px] font-tech leading-tight flex-1">${a.name}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="px-1.5 py-0.5 rounded border text-[9px] font-bold uppercase ${badgeClass}">${a.type || 'diagram'}</span>
+                            <span class="text-[10px] text-gray-500 font-tech">${sizeLabel}</span>
+                        </div>
+                    </button>`;
+            }).join('');
+        }
+
+        // ── Sélection d'un artefact ──────────────────────────────────────
+
+        async function selectArchifyArtifact(file) {
+            if (archifyLoading) return;          // Anti-rebond (Pilier 3)
+            if (!file) return;
+            archifyLoading = true;
+
+            const iframeEl = document.getElementById('archify-iframe');
+            const fsBtn    = document.getElementById('archify-fullscreen-btn');
+
+            _archifyShowLoading(true);
+
+            try {
+                // Mise à jour de l'état courant
+                archifyCurrentFile = file;
+                _archifySaveLast(file);
+
+                // Mise en évidence de l'item sélectionné dans le rail
+                const listEl = document.getElementById('archify-artifact-list');
+                if (listEl) {
+                    listEl.querySelectorAll('button').forEach(btn => {
+                        const isThis = btn.textContent.trim().startsWith(file.slice(0, 20));
+                        btn.classList.toggle('bg-cyan-950/60', isThis);
+                        btn.classList.toggle('border-cyan-500/50', isThis);
+                        btn.classList.toggle('text-white', isThis);
+                    });
+                }
+
+                // Chargement dans l'iframe
+                const url = `/api/archify/html?file=${encodeURIComponent(file)}&project=${encodeURIComponent(activeProject)}`;
+                if (iframeEl) {
+                    // Détection d'erreur HTTP via fetch préalable (Pilier 2)
+                    const probe = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(10000) });
+                    if (!probe.ok) {
+                        _archifyShowLoading(false);
+                        _archifyShowError(`Artefact introuvable (${probe.status})`);
+                        if (fsBtn) fsBtn.disabled = true;
+                        return;
+                    }
+                    iframeEl.src = url;
+                    _archifyShowIframe();
+                    if (fsBtn) fsBtn.disabled = false;
+                }
+            } catch (err) {
+                _archifyShowError(`Erreur de chargement : ${err.message || 'inconnu'}`);
+                if (fsBtn) fsBtn.disabled = true;
+            } finally {
+                archifyLoading = false;
+                _archifyShowLoading(false);
+            }
+        }
+
+        // ── Projection plein écran (OQ-151-04) ──────────────────────────
+
+        function openArchifyFullscreen(file) {
+            const target = file || archifyCurrentFile;
+            if (!target) return;
+            const url = `/api/archify/html?file=${encodeURIComponent(target)}&project=${encodeURIComponent(activeProject)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // ── Persistance localStorage (OQ-151-02) ─────────────────────────
+
+        function _archifySaveLast(file) {
+            try {
+                localStorage.setItem(ARCHIFY_LS_KEY, JSON.stringify({ file, project: activeProject }));
+            } catch (_) { /* stockage indisponible — mode dégradé silencieux */ }
+        }
+
+        function _archifyLoadSaved() {
+            try {
+                const raw = localStorage.getItem(ARCHIFY_LS_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (_) { return null; }
         }
 
         // ── INITIALISATION DÉTERMINISTE AU CHARGEMENT (DOM READY) ───

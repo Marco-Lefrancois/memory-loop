@@ -262,9 +262,12 @@ class TestPilier3Resilience:
 
         call_count = {"n": 0}
         compile_event = threading.Event()
+        results: list = []
+        in_slow_run = threading.Event()
 
         def slow_run(*args: Any, **kwargs: Any) -> MagicMock:
             call_count["n"] += 1
+            in_slow_run.set()
             # Simule une compilation qui prend du temps
             compile_event.wait(timeout=2.0)
             # Crée le HTML à la fin
@@ -274,29 +277,32 @@ class TestPilier3Resilience:
             result.stderr = ""
             return result
 
-        results: list = []
-
         def make_request() -> None:
-            with patch(
+            r = client.get(f"/api/archify/html?file={html_name}&project=mLoop")
+            results.append(r.status_code)
+
+        # Patches appliqués UNE SEULE FOI hors threads (patch concurrent non thread-safe)
+        with (
+            patch(
                 "src.dashboard.routers.archify._get_allowed_roots",
                 return_value=[tmp_path],
-            ):
-                with patch(
-                    "src.dashboard.routers.archify.subprocess.run",
-                    side_effect=slow_run,
-                ):
-                    r = client.get(f"/api/archify/html?file={html_name}&project=mLoop")
-                    results.append(r.status_code)
-
-        # Lance 2 requêtes simultanées
-        t1 = threading.Thread(target=make_request)
-        t2 = threading.Thread(target=make_request)
-        t1.start()
-        time.sleep(0.05)  # t2 arrive légèrement après t1 (verrou déjà pris)
-        t2.start()
-        compile_event.set()
-        t1.join(timeout=10)
-        t2.join(timeout=10)
+            ),
+            patch(
+                "src.dashboard.routers.archify.subprocess.run",
+                side_effect=slow_run,
+            ),
+        ):
+            # Lance t1 et attend qu'il détienne le verrou (dans slow_run)
+            t1 = threading.Thread(target=make_request)
+            t1.start()
+            assert in_slow_run.wait(timeout=5), "t1 n'a jamais atteint slow_run"
+            # t2 arrive avec le verrou déjà pris
+            t2 = threading.Thread(target=make_request)
+            t2.start()
+            time.sleep(0.05)  # laisse t2 bloquer sur le verrou
+            compile_event.set()
+            t1.join(timeout=10)
+            t2.join(timeout=10)
 
         # Le subprocess ne doit pas avoir été appelé plus d'une fois
         # (le 2e thread attend le verrou et trouve le HTML déjà présent)
