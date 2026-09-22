@@ -31,7 +31,10 @@ Le Grilling opère obligatoirement à deux échelles distinctes pour éviter le 
 
 ## Déroulé Opérationnel en 4 Étapes
 
-### Étape 0 : « Search-Before-Ask », CONTEXT.md & Fact-Search FTS5
+### Étape 0 : « Search-Before-Ask », Localisation SSOT, CONTEXT.md & Fact-Search FTS5
+0. **Localiser la Source de Vérité Canonique AVANT toute recherche (ADR-0384)** : lire d'abord `Projects/<projet>/directives/tech.md` et `directives/business.md` s'ils existent, identifier la source de vérité canonique déclarée (hiérarchie à 3 niveaux : Canonique `docs/03-models/` > Amont `docs/00-ingested/` > Staging `reference/`), puis la charte projet `AGENTS.md`, puis `docs/01-architecture/`. **Ordre de recherche imposé : directives en tête.**
+   - **Interdiction de brief non sourcé** : ne jamais transmettre à un sous-agent (`task`, `worker-spawn`) un brief référençant un chemin de modèle de données non confirmé comme canonique.
+   - Citer la hiérarchie SSOT retenue dans le Dossier de Preuves.
 1. Interroger l'index SQLite FTS5 (`.fact_search_index.db`) et `CONTEXT.md` pour identifier les maquettes SVG validées (`docs/05-assets/`), règles métier (`RM-XXX`), schémas DBML et vocabulaire ubique.
 2. Arbitrer **Faits vs Décisions** : si un fait est consigné dans la documentation ou le code existant, **interdiction absolue de poser la question à l'humain**.
 3. Rédiger le Dossier de Preuves selon le gabarit normatif [`standards/blueprints/dossier_de_preuves_template.md`](../../standards/blueprints/dossier_de_preuves_template.md).

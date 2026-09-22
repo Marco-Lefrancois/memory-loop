@@ -142,6 +142,7 @@ Charger les directives opérationnelles via `view_file` uniquement lors de l'ent
 
 #### 📐 Récits, Spécifications & Contrat Visuel
 - **Boot Sequence Systématique** : Toujours exécuter `resume` ➔ `vibe-check` ➔ `focus` en tout début de session.
+- **Chargement des Directives Projet & SSOT Canonique (ADR-0384)** : En Phase ≥ 2 (PLAN & ANALYSE), avant tout cadrage, audit ou délégation à un sous-agent, lire `Projects/<projet>/directives/tech.md` et `directives/business.md` s'ils existent, et identifier la **source de vérité canonique** déclarée (hiérarchie à 3 niveaux : Canonique `docs/03-models/` > Amont `docs/00-ingested/` > Staging `reference/`). Interdiction formelle de transmettre à un sous-agent un brief référençant un chemin de modèle de données non confirmé comme canonique. Protocole SSOT : [`standards/protocols/PROJECT_DIRECTIVES_SSOT_PROTOCOL.md`](file:///c:/Memory%20Loop/standards/protocols/PROJECT_DIRECTIVES_SSOT_PROTOCOL.md).
 - **Respect du Gabarit Unique (`standards/blueprints/story_template.md`)** :
   - Frontmatter YAML complet (`id`, `jira_key`, `epic_key`, `type`, `title`, `layer`, `status`).
   - Sections obligatoires séparées par des séparateurs `---`.

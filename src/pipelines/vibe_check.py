@@ -688,7 +688,14 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
                 "Bouclier ConfinementShield inactif (canary non intercepté)"
             )
         except PermissionDeniedError:
-            pass  # Interception réussie
+            # Interception réussie du canary : comportement nominal attendu.
+            logger.debug(
+                "ConfinementShield a correctement intercepté le canary 'forbidden-skill-canary'.",
+                extra={
+                    "check_name": "standards_graph_integrity",
+                    "violation_type": "canary_intercepted_ok",
+                },
+            )
 
     except Exception as exc:
         standards_graph_ok = False
@@ -709,7 +716,126 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
     )
     checks.append({"check": standards_msg, "status": "PASS" if standards_graph_ok else "FAIL"})
 
+    # Check 20 (ADR-0384 — Intégrité des Directives Projet & SSOT Canonique) :
+    # Contrôle CONDITIONNEL et NON BLOQUANT. Si le projet ne déclare pas de
+    # répertoire `directives/`, le contrôle réussit immédiatement (zéro
+    # régression pour les projets sans ce standard). S'il en déclare un, il
+    # vérifie que tech.md et business.md existent, sont non vides, que CONTEXT.md
+    # est présent, et qu'au moins une mention de SSOT canonique (docs/03-models/)
+    # ou de hiérarchie est déclarée. Toute non-conformité produit un WARNING.
+    directives_status = "PASS"
+    directives_msg = "Intégrité Directives Projet & SSOT Canonique (non applicable)"
+    if project_dir.exists():
+        directives_dir = project_dir / "directives"
+        if directives_dir.exists():
+            directives_violations = []
+            tech_file = directives_dir / "tech.md"
+            business_file = directives_dir / "business.md"
+            context_file = project_dir / "CONTEXT.md"
+
+            ssot_declared = False
+            for df in (tech_file, business_file):
+                if not df.exists():
+                    directives_violations.append(f"{df.name} manquant")
+                    continue
+                try:
+                    dtext = df.read_text(encoding="utf-8", errors="replace")
+                except Exception as exc:
+                    logger.error(
+                        f"Erreur de lecture de la directive '{df}' (Check 20 SSOT).",
+                        exc_info=True,
+                        extra={
+                            "check_name": "directives_ssot_integrity",
+                            "violation_type": "directive_read_error",
+                            "file_path": str(df),
+                        },
+                    )
+                    directives_violations.append(f"{df.name} illisible")
+                    continue
+                if not dtext.strip():
+                    directives_violations.append(f"{df.name} vide")
+                if (
+                    "docs/03-models" in dtext
+                    or "SSOT" in dtext
+                    or "source de vérité canonique" in dtext.lower()
+                ):
+                    ssot_declared = True
+
+            if not context_file.exists():
+                directives_violations.append("CONTEXT.md manquant")
+            if not ssot_declared:
+                directives_violations.append("aucune source de vérité canonique déclarée")
+
+            if directives_violations:
+                directives_status = "WARNING"
+                directives_msg = (
+                    "Intégrité Directives Projet & SSOT Canonique "
+                    f"(Avertissements : {', '.join(directives_violations)})"
+                )
+            else:
+                directives_msg = "Intégrité Directives Projet & SSOT Canonique (conforme)"
+    checks.append({"check": directives_msg, "status": directives_status})
+
+    # Check 21 (ADR-0384 — Ancrage Visuel des Récits Frontend / Contrat Visuel
+    # Premier) : matérialise le principe universel « Maquettes = SSOT ». Pour
+    # tout récit `layer: frontend`/`fullstack` en Phase ≥ 2, WARNING si aucune
+    # référence de maquette n'est détectée. Les récits backend sont exclus.
+    visual_anchor_status = "PASS"
+    unanchored_stories = []
+    if project_dir.exists() and lifecycle_mode == "RUN":
+        stories_dir = project_dir / "backlog" / "stories"
+        if stories_dir.exists():
+            for sf in stories_dir.glob("**/*.md"):
+                if sf.name.lower() == "readme.md":
+                    continue
+                try:
+                    stext = sf.read_text(encoding="utf-8", errors="replace")
+                except Exception as exc:
+                    logger.error(
+                        f"Erreur de lecture du récit '{sf}' (Check 21 ancrage visuel).",
+                        exc_info=True,
+                        extra={
+                            "check_name": "visual_anchor",
+                            "violation_type": "story_read_error",
+                            "file_path": str(sf),
+                        },
+                    )
+                    continue
+                if not stext.startswith("---"):
+                    continue
+                fm_parts = stext.split("---", 2)
+                if len(fm_parts) < 3:
+                    continue
+                fm_text = fm_parts[1]
+                is_frontend = "layer: frontend" in fm_text or "layer: fullstack" in fm_text
+                if not is_frontend:
+                    continue
+                body = fm_parts[2]
+                has_anchor = (
+                    "docs/05-assets" in body
+                    or "figma.com" in body.lower()
+                    or "Maquettes SSOT" in body
+                    or "Maquette Validée" in body
+                )
+                if not has_anchor:
+                    unanchored_stories.append(sf.stem)
+    if unanchored_stories:
+        visual_anchor_status = "WARNING"
+        visual_anchor_msg = (
+            "Ancrage Visuel des Récits Frontend "
+            f"(Récits sans maquette : {', '.join(unanchored_stories[:5])}"
+            f"{'...' if len(unanchored_stories) > 5 else ''})"
+        )
+    else:
+        visual_anchor_msg = "Ancrage Visuel des Récits Frontend (Contrat Visuel Premier)"
+    checks.append({"check": visual_anchor_msg, "status": visual_anchor_status})
+
+    # Sémantique tri-état du verdict (ADR-0384) : PASS / WARNING (non bloquant) /
+    # FAIL (bloquant). Les avertissements ne font pas basculer le verdict global
+    # en échec ; seul un FAIL invalide le pré-vol.
     passed_count = sum(1 for c in checks if c["status"] == "PASS")
+    warning_count = sum(1 for c in checks if c["status"] == "WARNING")
+    fail_count = sum(1 for c in checks if c["status"] == "FAIL")
     total_count = len(checks)
 
     for c in checks:
@@ -720,16 +846,24 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
         else:
             ZeroFluffConsole.error(f"{c['check']} : FAIL")
 
-    is_valid = passed_count == total_count
-    ZeroFluffConsole.info(f"Résultat Vibe-Check : {passed_count}/{total_count} contrôles validés.")
+    # Sémantique tri-état (ADR-0384) : le verdict reste valide tant qu'aucun
+    # contrôle n'est en FAIL. Les WARNING sont signalés mais non bloquants.
+    is_valid = fail_count == 0
+    ZeroFluffConsole.info(
+        f"Résultat Vibe-Check : {passed_count} PASS / {warning_count} WARNING / "
+        f"{fail_count} FAIL (sur {total_count} contrôles)."
+    )
 
     duration_ms = round((time.perf_counter() - t0) * 1000, 2)
     logger.info(
-        f"[VIBE-CHECK] Fin du guardrail pré-vol pour '{project_name}' : {passed_count}/{total_count}.",
+        f"[VIBE-CHECK] Fin du guardrail pré-vol pour '{project_name}' : "
+        f"{passed_count}P/{warning_count}W/{fail_count}F.",
         extra={
             "phase": stage_label,
             "project": project_name,
             "score": f"{passed_count}/{total_count}",
+            "warning_count": warning_count,
+            "fail_count": fail_count,
             "duration_ms": duration_ms,
         },
     )
@@ -738,6 +872,9 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
         "status": "PASS" if is_valid else "FAIL",
         "checks": checks,
         "score": f"{passed_count}/{total_count}",
+        "passed_count": passed_count,
+        "warning_count": warning_count,
+        "fail_count": fail_count,
         "lifecycle_mode": lifecycle_mode,
         "stage": stage_label,
     }

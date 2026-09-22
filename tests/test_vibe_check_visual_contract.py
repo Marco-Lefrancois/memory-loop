@@ -37,7 +37,7 @@ def test_vibe_check_flags_unread_vectorized_mockup():
         )
 
         result = run_vibe_check("TestVisualContractProj")
-        visual_checks = [c for c in result["checks"] if "Contrat Visuel" in c["check"]]
+        visual_checks = [c for c in result["checks"] if "Contrat Visuel Lisible" in c["check"]]
         assert len(visual_checks) == 1
         assert visual_checks[0]["status"] == "FAIL"
     finally:
@@ -55,7 +55,7 @@ def test_vibe_check_passes_when_vectorized_mockup_was_ocr_read():
         )
 
         result = run_vibe_check("TestVisualContractProj2")
-        visual_checks = [c for c in result["checks"] if "Contrat Visuel" in c["check"]]
+        visual_checks = [c for c in result["checks"] if "Contrat Visuel Lisible" in c["check"]]
         assert len(visual_checks) == 1
         assert visual_checks[0]["status"] == "PASS"
     finally:
@@ -68,7 +68,7 @@ def test_vibe_check_passes_when_no_mockups_ingested():
 
     try:
         result = run_vibe_check("TestVisualContractProj3")
-        visual_checks = [c for c in result["checks"] if "Contrat Visuel" in c["check"]]
+        visual_checks = [c for c in result["checks"] if "Contrat Visuel Lisible" in c["check"]]
         assert len(visual_checks) == 1
         assert visual_checks[0]["status"] == "PASS"
     finally:

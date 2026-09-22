@@ -118,6 +118,7 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0381](0381-standard-harnais-phase-3-linter-ast-tournoi-tdd-red-green.md)** : Standard du Harnais Déterministe de Phase 3 : Linter Statique AST, Tournoi TDD Multi-Candidats & Traçabilité Red-Green
 *   **[ADR-0382](0382-moteur-natif-specification-continue-et-gestionnaire-changes-sdd-souverain.md)** : Moteur Natif de Spécification Continue et Gestionnaire de Changes SDD Souverain
 *   **[ADR-0383](0383-deterministic-phase-4-qa-certification-harness.md)** : Harnais Déterministe de Certification QA Phase 4 (Pytest, AST, CEL, NLI, Leakage, Sentinel)
+*   **[ADR-0384](0384-project-directives-ssot-boot-enforcement.md)** : Application du Chargement des Directives Projet & Ancrage SSOT Canonique (Hiérarchie 3 niveaux, Check conditionnel WARNING, Sémantique tri-état)
 
 ---
 *Dernière consolidation constitutionnelle : 21 septembre 2026 — 98 ADRs Unifiées (Zéro Conflit)*
@@ -132,5 +133,6 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 | 0381 | [Standard du Harnais Déterministe de Phase 3 : Linter Statique AST, Tournoi TDD Multi-Candidats & Traçabilité Red-Green](0381-standard-harnais-phase-3-linter-ast-tournoi-tdd-red-green.md) | Approuvé |
 | 0382 | [Moteur Natif de Spécification Continue et Gestionnaire de Changes SDD Souverain](0382-moteur-natif-specification-continue-et-gestionnaire-changes-sdd-souverain.md) | Approuvé |
 | 0383 | [Harnais Déterministe de Certification QA Phase 4](0383-deterministic-phase-4-qa-certification-harness.md) | Approuvé |
+| 0384 | [Application du Chargement des Directives Projet & Ancrage SSOT Canonique](0384-project-directives-ssot-boot-enforcement.md) | Approuvé |
 
 
