@@ -2,6 +2,7 @@
 Tests unitaires pour le GrillEngine et la conformité ADR-0320 (Frontier Design Tree).
 """
 
+import logging
 import pytest
 import tempfile
 import shutil
@@ -63,9 +64,7 @@ def test_grill_engine_mark_story_grilled(temp_project):
     assert success is True
 
     # Vérification fichier story
-    story_file = (
-        temp_project / ProjectLayout.BACKLOG / "stories" / "US-01_initialisation_ui.md"
-    )
+    story_file = temp_project / ProjectLayout.BACKLOG / "stories" / "US-01_initialisation_ui.md"
     content = story_file.read_text(encoding="utf-8")
     assert "status: READY_FOR_GROOMING" in content
     assert "content_hash:" in content  # Hash anti-tampering
@@ -85,9 +84,7 @@ def test_grill_engine_mark_story_grilled_by_internal_id_when_file_named_by_jira_
     doit résoudre le récit via le champ `id:` du frontmatter et promouvoir son statut.
     """
     project_dir = tmp_path / "jira_named_project"
-    (project_dir / ProjectLayout.DOCS / ProjectLayout.DOCS_ARCHITECTURE).mkdir(
-        parents=True
-    )
+    (project_dir / ProjectLayout.DOCS / ProjectLayout.DOCS_ARCHITECTURE).mkdir(parents=True)
     stories_dir = project_dir / ProjectLayout.BACKLOG / "stories" / "OneTrust_FOOD"
     stories_dir.mkdir(parents=True)
     (project_dir / ProjectLayout.BACKLOG / "sprint_backlog.md").write_text(
@@ -106,9 +103,7 @@ def test_grill_engine_mark_story_grilled_by_internal_id_when_file_named_by_jira_
     # On passe l'ID INTERNE (US-05-FOOD), pas la clé Jira ni le nom de fichier
     success = engine.mark_story_grilled("US-05-FOOD")
 
-    assert success is True, (
-        "mark_story_grilled doit résoudre l'ID interne via le frontmatter id:."
-    )
+    assert success is True, "mark_story_grilled doit résoudre l'ID interne via le frontmatter id:."
     content = story_file.read_text(encoding="utf-8")
     assert "status: READY_FOR_GROOMING" in content
 
@@ -183,9 +178,7 @@ def test_grill_skill_conformance():
 
 def test_adr_0320_frontier_exhaustion_sections_present():
     """Vérifie la présence des sections F & G dans l'ADR-0320 (amendement 2026-08-26)."""
-    adr_file = Path(
-        "standards/adr-system/0320-grill-me-frontier-design-tree-alignment.md"
-    )
+    adr_file = Path("standards/adr-system/0320-grill-me-frontier-design-tree-alignment.md")
     assert adr_file.exists()
     content = adr_file.read_text(encoding="utf-8")
 
@@ -311,7 +304,9 @@ def test_check_context_health(temp_project):
 
 def test_adr_0389_and_skill_v2_conformance():
     """Vérifie l'alignement constitutionnel du skill grill et la présence de l'ADR-0389."""
-    adr_file = Path("standards/adr-system/0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md")
+    adr_file = Path(
+        "standards/adr-system/0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md"
+    )
     assert adr_file.exists(), "ADR-0389 doit exister dans standards/adr-system/"
 
     skill_file = Path(".agents/skills/grill/SKILL.md")
@@ -322,10 +317,14 @@ def test_adr_0389_and_skill_v2_conformance():
     assert "Frontier Round" in content
     assert "Ungrillable" in content or "Handoff Pattern" in content
     assert "Dumb Zone" in content
-    assert "Interdiction Absolue de Purge Post-Grill" in content or "Interdiction formelle de reset" in content
+    assert (
+        "Interdiction Absolue de Purge Post-Grill" in content
+        or "Interdiction formelle de reset" in content
+    )
 
 
 # --- TESTS EPIC-28 : ASSAINISSEMENT DU GÉNÉRATEUR D'ADR (ADR-012) ---
+
 
 def test_resolve_adr_template_cascade(temp_project):
     """Vérifie le chargement dynamique du blueprint canonique standards/blueprints/project_adr_template.md."""
@@ -345,7 +344,9 @@ def test_resolve_adr_template_project_override(temp_project):
     custom_dir = temp_project / "docs" / "01-architecture"
     custom_dir.mkdir(parents=True, exist_ok=True)
     custom_file = custom_dir / "template.md"
-    custom_file.write_text("# 🏛️ ADR Custom Projet {{ADR_ID}} : {{TITLE}}\n{{CUSTOM_SECTION}}", encoding="utf-8")
+    custom_file.write_text(
+        "# 🏛️ ADR Custom Projet {{ADR_ID}} : {{TITLE}}\n{{CUSTOM_SECTION}}", encoding="utf-8"
+    )
 
     content = resolve_adr_template(temp_project)
     assert "# 🏛️ ADR Custom Projet {{ADR_ID}}" in content
@@ -398,7 +399,9 @@ def test_render_adr_content_double_moustaches_and_defaults():
     """Vérifie le rendu des balises mLoop {{TAG}} et la substitution des valeurs par défaut."""
     from src.pipelines.grill import render_adr_content
 
-    template = "# ADR-{{ADR_ID}} : {{TITLE}}\n{{CONTEXT}}\n{{DECISION}}\n{{POSITIVES}}\n{{NEGATIVES}}"
+    template = (
+        "# ADR-{{ADR_ID}} : {{TITLE}}\n{{CONTEXT}}\n{{DECISION}}\n{{POSITIVES}}\n{{NEGATIVES}}"
+    )
     rendered = render_adr_content(
         template_str=template,
         adr_id=42,
@@ -470,6 +473,118 @@ def test_package_modularity_ast_limits():
 
     for py_file in grill_pkg.glob("*.py"):
         lines = py_file.read_text(encoding="utf-8").splitlines()
-        assert len(lines) <= 300, f"Fichier {py_file.name} dépasse le plafond modulaire ({len(lines)} > 300 lignes)"
+        assert len(lines) <= 300, (
+            f"Fichier {py_file.name} dépasse le plafond modulaire ({len(lines)} > 300 lignes)"
+        )
 
 
+# --- MLOOP-FIX-C1C2 (C2) : marquage colonne-aware au format backlog réel ---
+
+
+def _write_real_backlog_project(tmp_path: Path, story_id: str, statut_cell: str):
+    """
+    Construit un projet avec sprint_backlog.md au FORMAT RÉEL mLoop :
+    8 colonnes (État | Récit | Taille | Clé Jira | Composant | Titre | Statut |
+    Responsable), statut décoré d'emoji + backticks (`` 🟢 `READY_FOR_DEV` ``)
+    et colonne Taille portant un simple jeton `M`.
+    """
+    project_dir = tmp_path / "real_backlog_project"
+    (project_dir / ProjectLayout.DOCS / ProjectLayout.DOCS_ARCHITECTURE).mkdir(parents=True)
+    stories_dir = project_dir / ProjectLayout.BACKLOG / "stories"
+    stories_dir.mkdir(parents=True)
+    (stories_dir / f"{story_id}.md").write_text(
+        f"---\nid: {story_id}\ntitle: Récit au format réel\nstatus: IN_ANALYZE\n---\n"
+        "## Description\nCorps du récit.\n",
+        encoding="utf-8",
+    )
+    sprint = project_dir / ProjectLayout.BACKLOG / "sprint_backlog.md"
+    sprint.write_text(
+        "## EPIC-21\n\n"
+        "| État | Récit | Taille | Clé Jira | Composant | Titre | Statut | Responsable |\n"
+        "| :---: | :--- | :---: | :---: | :--- | :--- | :--- | :--- |\n"
+        f"| [ ] | **{story_id}** | M | - | Core | Récit au format réel | "
+        f"{statut_cell} | ⚪ À faire |\n",
+        encoding="utf-8",
+    )
+    return project_dir, sprint
+
+
+def test_mark_story_grilled_real_backlog_updates_only_statut_cell(tmp_path):
+    r"""
+    C2 (anti-régression) : au format backlog réel, mark_story_grilled doit
+    réécrire UNIQUEMENT la cellule de la colonne 'Statut' (emoji + backticks
+    préservés) et laisser les colonnes Taille `M`, Clé Jira `-`, Composant et
+    Titre strictement intacts. L'ancien regex `(\|.*?{id}.*?\|\s*)([A-Z_]+)`
+    écrasait le `M` de la colonne Taille et laissait le statut réel inchangé
+    → faux succès puis réversion silencieuse par sync (backlog = SSOT).
+    """
+    project_dir, sprint = _write_real_backlog_project(tmp_path, "US-99", "🟢 `READY_FOR_DEV`")
+
+    engine = GrillEngine(project_dir)
+    assert engine.mark_story_grilled("US-99") is True
+
+    rows = [line for line in sprint.read_text(encoding="utf-8").splitlines() if "**US-99**" in line]
+    assert len(rows) == 1, "La ligne du récit doit rester unique (aucune duplication)."
+    cells = rows[0].split("|")
+
+    # 0='' 1=État 2=Récit 3=Taille 4=Clé Jira 5=Composant 6=Titre 7=Statut 8=Resp.
+    assert cells[7].strip() == "🟢 `READY_FOR_GROOMING`", (
+        f"La colonne Statut doit passer à READY_FOR_GROOMING, obtenu : {cells[7].strip()!r}"
+    )
+    assert "READY_FOR_DEV" not in rows[0], "L'ancien statut ne doit plus subsister."
+    assert cells[3].strip() == "M", (
+        f"La colonne Taille ne doit PAS être corrompue, obtenu : {cells[3].strip()!r}"
+    )
+    assert cells[4].strip() == "-", "La colonne Clé Jira ne doit pas être corrompue."
+    assert cells[5].strip() == "Core", "La colonne Composant ne doit pas être corrompue."
+    assert cells[6].strip() == "Récit au format réel", (
+        "La colonne Titre ne doit pas être corrompue."
+    )
+
+    # Frontmatter aligné sur le backlog (cohérence story↔backlog, anti-réversion sync)
+    story_file = project_dir / ProjectLayout.BACKLOG / "stories" / "US-99.md"
+    assert "status: READY_FOR_GROOMING" in story_file.read_text(encoding="utf-8")
+
+
+def test_mark_story_grilled_absent_row_warns_without_arbitrary_replacement(tmp_path, caplog):
+    """
+    C2 (ligne absente) : si le récit n'a AUCUNE ligne dans sprint_backlog.md,
+    aucune substitution au hasard (les lignes voisines restent octet-identiques)
+    et un WARNING contextuel doit être journalisé.
+
+    Le retour est True : le récit n'étant pas tracké par le backlog,
+    sync_sprint_backlog (backlog = SSOT) ne dispose d'aucun statut divergent
+    pour le révertir → aucune incohérence story↔backlog possible.
+    """
+    project_dir = tmp_path / "absent_row_project"
+    (project_dir / ProjectLayout.DOCS / ProjectLayout.DOCS_ARCHITECTURE).mkdir(parents=True)
+    stories_dir = project_dir / ProjectLayout.BACKLOG / "stories"
+    stories_dir.mkdir(parents=True)
+    (stories_dir / "US-77.md").write_text(
+        "---\nid: US-77\ntitle: Récit absent du backlog\nstatus: IN_ANALYZE\n---\n"
+        "## Description\nCorps.\n",
+        encoding="utf-8",
+    )
+    sprint = project_dir / ProjectLayout.BACKLOG / "sprint_backlog.md"
+    sprint.write_text(
+        "## EPIC-21\n\n"
+        "| État | Récit | Taille | Clé Jira | Composant | Titre | Statut | Responsable |\n"
+        "| :---: | :--- | :---: | :---: | :--- | :--- | :--- | :--- |\n"
+        "| [ ] | **US-88** | S | - | Core | Autre récit | 🟢 `READY_FOR_DEV` | ⚪ À faire |\n",
+        encoding="utf-8",
+    )
+    before = sprint.read_text(encoding="utf-8")
+
+    engine = GrillEngine(project_dir)
+    result = engine.mark_story_grilled("US-77")
+
+    assert sprint.read_text(encoding="utf-8") == before, (
+        "Aucune substitution hasardeuse : le backlog doit rester octet-identique."
+    )
+    assert result is True, (
+        "Récit non tracké par le backlog → aucune réversion possible → retour True honnête."
+    )
+    warn_records = [r for r in caplog.records if r.levelno >= logging.WARNING]
+    assert any("US-77" in r.getMessage() for r in warn_records), (
+        "Un WARNING contextuel doit signaler l'absence de ligne dans le backlog."
+    )

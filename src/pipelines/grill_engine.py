@@ -9,10 +9,13 @@ from src.pipelines.grill import (
     UNGRILLABLE_KEYWORDS,
     check_context_health,
     detect_ungrillable_signals,
+    execute_grill_cli,
     format_frontier_round,
     get_next_adr_id,
+    promote_prototype,
     render_adr_content,
     resolve_adr_template,
+    stage_prototype,
     write_adr_file,
 )
 

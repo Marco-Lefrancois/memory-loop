@@ -227,12 +227,37 @@ class GrillEngine:
 
         sprint_file = self.backlog_dir / ProjectLayout.SPRINT_BACKLOG_FILE
         if sprint_file.exists():
-            sprint_content = sprint_file.read_text(encoding="utf-8")
-            pattern = rf"(\|.*?{re.escape(story_id)}.*?\|\s*)([A-Z_]+)(\s*\|)"
-            new_sprint_content = re.sub(pattern, rf"\g<1>READY_FOR_GROOMING\g<3>", sprint_content)
-            if new_sprint_content != sprint_content:
+            sprint_lines = sprint_file.read_text(encoding="utf-8").splitlines()
+            new_lines = []
+            found_in_sprint = False
+            for line in sprint_lines:
+                if f"**{story_id}**" in line or f"| {story_id} " in line:
+                    found_in_sprint = True
+                    parts = line.split("|")
+                    if len(parts) >= 9:
+                        statut_cell = parts[7]
+                        new_statut = re.sub(r"`?[A-Z_]+`?", "`READY_FOR_GROOMING`", statut_cell)
+                        parts[7] = new_statut
+                        new_lines.append("|".join(parts))
+                        updated_any = True
+                        continue
+                    else:
+                        new_line = re.sub(
+                            rf"(\|.*?{re.escape(story_id)}.*?\|\s*)(?:`?[A-Z_]+`?)(\s*\|)",
+                            r"\g<1>READY_FOR_GROOMING\g<2>",
+                            line,
+                        )
+                        new_lines.append(new_line)
+                        updated_any = True
+                        continue
+                new_lines.append(line)
+
+            if not found_in_sprint:
+                logger.warning("Récit %s introuvable dans sprint_backlog.md", story_id)
+
+            new_sprint_content = "\n".join(new_lines) + ("\n" if sprint_lines else "")
+            if new_sprint_content != sprint_file.read_text(encoding="utf-8"):
                 sprint_file.write_text(new_sprint_content, encoding="utf-8")
-                updated_any = True
 
         return updated_any
 

@@ -12,63 +12,10 @@ if TYPE_CHECKING:
     from src.state import LoopState
 
 def handle_grill(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
-    """Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1)."""
-    from src.pipelines.grill_engine import GrillEngine
-    from src.pipelines.sync import run_sync
+    """Session interactive Grill-with-Docs v2 (ADR-0320 / ADR-0389 / ADR-013)."""
+    from src.pipelines.grill import execute_grill_cli
 
-    ge = GrillEngine(project_path)
-    story_id = getattr(args, "story", None)
-    is_macro = story_id is None
-
-    if is_macro:
-        ZeroFluffConsole.info(
-            f"[GRILL-ME MACRO] Cadrage transverse du projet '{args.project}' (Architecture globale, Loi 25, SSO, exclusions)."
-        )
-    else:
-        ZeroFluffConsole.info(
-            f"[GRILL-ME MICRO 1:1] Entretien contradictoire chirurgical sur le récit '{story_id}'."
-        )
-
-    search_term = (
-        getattr(args, "query", None)
-        or getattr(args, "title", None)
-        or story_id
-    )
-    if search_term and search_term != "Décision d'Architecture":
-        ge.perform_fact_search(str(search_term))
-
-    # BUG-GRILL-02 : ne générer un ADR QUE si un contenu de décision réel est fourni
-    # (--context ou --decision). Un simple marquage de story (--title + --story) ne doit
-    # pas créer d'ADR parasite faisant doublon avec des décisions d'architecture existantes.
-    ctx = getattr(args, "context", None)
-    dec = getattr(args, "decision", None)
-    if ctx or dec:
-        adr_path = ge.record_adr(
-            title=getattr(args, "title", None) or "Décision d'Architecture",
-            context=ctx or "Contexte issu d'une session de grilling interactive.",
-            decision=dec or "Décision arbitrée conjointement.",
-            positives=getattr(args, "positives", None)
-            or "Clarification du domaine et réduction de l'ambiguïté.",
-            negatives=getattr(args, "negatives", None)
-            or "Obligation d'alignement strict.",
-        )
-        ZeroFluffConsole.success(f"ADR généré avec succès : {adr_path}")
-    else:
-        ZeroFluffConsole.info(
-            "Aucun contenu de décision (--context/--decision) fourni : cadrage sans génération d'ADR."
-        )
-
-    if story_id:
-        if ge.mark_story_grilled(story_id):
-            ZeroFluffConsole.success(
-                f"Récit {story_id} qualifié avec succès via Grill-Me Micro 1:1."
-            )
-        else:
-            ZeroFluffConsole.warning(
-                f"Récit {story_id} introuvable dans backlog/stories ou sprint_backlog.md."
-            )
-    run_sync(args.project, state, project_path)
-    return 0
+    return execute_grill_cli(args, state, project_path)
 
 
 def handle_to_tshirt(

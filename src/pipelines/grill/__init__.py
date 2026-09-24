@@ -10,6 +10,7 @@ from src.pipelines.grill._adr_writer import (
     resolve_adr_template,
     write_adr_file,
 )
+from src.pipelines.grill._cli_handler import execute_grill_cli, inspect_session_health
 from src.pipelines.grill._engine import GrillEngine
 from src.pipelines.grill._frontier import (
     UNGRILLABLE_KEYWORDS,
@@ -17,6 +18,7 @@ from src.pipelines.grill._frontier import (
     detect_ungrillable_signals,
     format_frontier_round,
 )
+from src.pipelines.grill._handoff import promote_prototype, stage_prototype
 
 __all__ = [
     "GrillEngine",
@@ -27,6 +29,10 @@ __all__ = [
     "detect_ungrillable_signals",
     "format_frontier_round",
     "check_context_health",
+    "stage_prototype",
+    "promote_prototype",
+    "execute_grill_cli",
+    "inspect_session_health",
     "UNGRILLABLE_KEYWORDS",
     "EMERGENCY_FALLBACK_TEMPLATE",
 ]

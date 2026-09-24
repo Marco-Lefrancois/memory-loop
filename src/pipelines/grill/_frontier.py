@@ -3,7 +3,8 @@ Frontier Rounds, Heuristics & Context Budget - mLoop Grill Package (ADR-0389)
 Gestion des formats de questions, du routage des ungrillables et de la Dumb Zone.
 """
 
-from typing import Any, Dict, List
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 UNGRILLABLE_KEYWORDS = {
     "spatial_layout": [
@@ -110,27 +111,47 @@ def format_frontier_round(
     return "".join(parts)
 
 
-def check_context_health(estimated_tokens: int) -> Dict[str, Any]:
+def check_context_health(
+    estimated_tokens: Optional[int] = None,
+    transcript_path: Optional[Path] = None,
+    token_count: Optional[int] = None,
+) -> Dict[str, Any]:
     """
-    Évalue la santé de la fenêtre de contexte de session (ADR-0389 §C).
+    Évalue la santé de la fenêtre de contexte de session (ADR-0389 §C / MLOOP-290-BE).
     Seuils :
-    - < 80 000 tokens  : SMART_ZONE (nominal)
-    - 80 000 - 120 000 : WARNING_ZONE (point de contrôle in-flight recommandé)
-    - > 120 000 tokens : DUMB_ZONE (attention dégradée, forcer clôture ou partitionnement)
+    - < 80 000 tokens  : SMART_ZONE (nominal / HEALTHY)
+    - 80 000 - 120 000 : WARNING_ZONE (point de contrôle in-flight recommandé / WARNING)
+    - > 120 000 tokens : DUMB_ZONE (attention dégradée / CRITICAL)
     """
-    if estimated_tokens < 80000:
+    tokens = estimated_tokens if estimated_tokens is not None else token_count
+    if tokens is None and transcript_path is not None and transcript_path.exists():
+        try:
+            raw_text = transcript_path.read_text(encoding="utf-8", errors="ignore")
+            tokens = len(raw_text) // 4
+        except OSError:
+            tokens = 0
+    if tokens is None:
+        tokens = 0
+
+    if tokens < 80000:
         return {
             "zone": "SMART_ZONE",
             "status": "HEALTHY",
-            "estimated_tokens": estimated_tokens,
+            "estimated_tokens": tokens,
+            "tokens": tokens,
+            "threshold": 120000,
+            "alert": False,
             "message": "Session dans la zone de haute attention cognitive.",
             "action": "CONTINUE",
         }
-    elif estimated_tokens <= 120000:
+    elif tokens <= 120000:
         return {
             "zone": "WARNING_ZONE",
             "status": "WARNING",
-            "estimated_tokens": estimated_tokens,
+            "estimated_tokens": tokens,
+            "tokens": tokens,
+            "threshold": 120000,
+            "alert": True,
             "message": "Approche du seuil de fatigue cognitive. Point de contrôle recommandé.",
             "action": "TRIGGER_CHECKPOINT",
         }
@@ -138,7 +159,10 @@ def check_context_health(estimated_tokens: int) -> Dict[str, Any]:
         return {
             "zone": "DUMB_ZONE",
             "status": "CRITICAL",
-            "estimated_tokens": estimated_tokens,
-            "message": "Seuil critique d'attention franchi (>120k tokens). Risque d'incohérence.",
+            "estimated_tokens": tokens,
+            "tokens": tokens,
+            "threshold": 120000,
+            "alert": True,
+            "message": "Seuil critique d'attention franchi (>120k tokens). Interdiction de purge de contexte : basculer immédiatement en rédaction.",
             "action": "FREEZE_BRANCHES_OR_SPLIT",
         }

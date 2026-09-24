@@ -28,3 +28,14 @@ Scope: Alignement métier 1:1, résolution de l'arbre Frontier Design Tree, cré
   EXPECT: /Score INVEST|Revue sémantique terminée|READY/i
   EVIDENCE: pending
 
+- [ ] G6: Handoff Ungrillables (IHM/UX) — Toute décision visuelle ou d'interaction est matérialisée par un prototype ou mockup (ADR-0389 / ADR-013)
+  CHECK: python -c "from pathlib import Path; protos = list(Path('scratch/prototypes').glob('*.*')) + list(Path('docs/05-assets/mockups').glob('*.*')); print('HANDOFF_PROTOTYPES_OK' if len(protos) > 0 else 'HANDOFF_SKIPPED_OR_EMPTY')"
+  EXPECT: /HANDOFF_PROTOTYPES_OK|HANDOFF_SKIPPED/
+  EVIDENCE: pending
+
+- [ ] G7: Context Health & Continuité Cognitive — Respect du budget de tokens (< 120k tokens) et interdiction formelle de purge de contexte post-grill (ADR-0389 / ADR-013)
+  CHECK: python src/swarm.py grill --health --project {PROJECT_NAME}
+  EXPECT: /SMART_ZONE|WARNING_ZONE|HEALTHY/
+  EVIDENCE: pending
+
+
