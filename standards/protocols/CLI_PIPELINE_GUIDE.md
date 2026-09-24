@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 121 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 122 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 121 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 122 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -189,6 +189,7 @@ flowchart LR
 | `python src/swarm.py blast` | Calcul du rayon d'impact (Blast Radius) d'un fichier ou composant | [--file <STR>] [--target <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py cache-clear` | Effacer le cache sémantique déterministe LLM | [--model <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py cache-stats` | Afficher les statistiques du cache sémantique déterministe LLM | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py completion-setup` | Afficher la ligne d'activation de l'autocomplétion shell Click selon le shell détecté | *(Aucun)* | Ligne d'activation shell + emplacement `$PROFILE` |
 | `python src/swarm.py context-watch` | Surveiller l'occupation de la fenêtre de contexte et alerter la Dumb-Zone (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py dashboard` | Tableau de bord d'observabilité et supervision souverain mLoop (FastAPI / Zero-Docker) | [--port <INT>] [--no-browser <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py doctor` | Bilan de santé global et diagnostic d'hygiène des compétences et agents mLoop (ADR-0377) | [--skills <STR>] [--agents <STR>] [--threshold <INT>] [--json <STR>] [--no-tombstone <STR>] | Console / Mémoire d'état |

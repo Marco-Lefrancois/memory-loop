@@ -212,6 +212,16 @@ def get_project_context(project_name: str, create_if_missing: bool = False):
 
 
 def main():
+    import os
+
+    # MLOOP-191-BE : bascule moteur CLI — défaut argparse = rollback intégral (A3/OQ-01).
+    if os.environ.get("MLOOP_CLI_ENGINE", "argparse").strip().lower() == "click":
+        # Branche extraite dans src/cli/click_engine/bootstrap.py (RULE-AST-01,
+        # ADR-0202 ≤300L) — contrat d'entrée, codes de sortie et journaux identiques.
+        from src.cli.click_engine.bootstrap import run_click_cli
+
+        run_click_cli()
+
     from src.commands.router import execute_cli
 
     try:

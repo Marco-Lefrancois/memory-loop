@@ -11,7 +11,6 @@ PHASE_MAPPING: Dict[str, str] = {
     "to-sow": "sow",
     "ingest": "sow",
     "research": "sow",
-
     # Phase 1 : SPEC / INGEST (Ingestion & Analyse Documentaire)
     "crawl": "spec",
     "extract": "spec",
@@ -24,7 +23,6 @@ PHASE_MAPPING: Dict[str, str] = {
     "code-init": "spec",
     "code-status": "spec",
     "jira-read": "spec",
-
     # Phase 2 : PLAN / ARCHI (Planification, Architecture, Grill & Découpage)
     "focus": "plan",
     "grill": "plan",
@@ -50,7 +48,6 @@ PHASE_MAPPING: Dict[str, str] = {
     "update-story": "plan",
     "dossier-init": "plan",
     "multi-draft": "plan",
-
     # Phase 3 : BUILD / DEV (Développement & Workers Multi-Agents)
     "self-dev": "build",
     "confidence": "build",
@@ -74,7 +71,6 @@ PHASE_MAPPING: Dict[str, str] = {
     "code-check": "build",
     "code-tournament": "build",
     "tdd-enforce": "build",
-
     # Phase 4 : VALIDATE / QA (Validation Sémantique, Fact-Check & Guardrails)
     "validate-sprint": "validate",
     "wikifix": "validate",
@@ -96,7 +92,6 @@ PHASE_MAPPING: Dict[str, str] = {
     "eval-harvest": "validate",
     "diagnose": "validate",
     "hill-climb": "validate",
-
     # Phase 5 : SHIP & SYNC (Synchronisation, Jira Cloud & Distribution)
     "sync": "ship",
     "sync-antigravity": "ship",
@@ -107,9 +102,9 @@ PHASE_MAPPING: Dict[str, str] = {
     "plugin-export": "ship",
     "guide-export": "ship",
     "install-hooks": "ship",
-
     # Transverse / Observabilité, Mémoire, Tokens & Runtime
     "guide": "transverse",
+    "completion-setup": "transverse",
     "resume": "transverse",
     "vibe-check": "transverse",
     "dashboard": "transverse",
@@ -204,6 +199,7 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "dossier-init": "`memory/evidence/<STORY_ID>_fact_dossier.md`",
     "gate-approve": "`memory/lifecycle_state.json` (Porte validée)",
     "lifecycle-status": "Console / Historique du cycle de vie",
+    "completion-setup": "Ligne d'activation shell + emplacement `$PROFILE`",
     "lifecycle-clean": "Nettoyage stories orphelines",
     "agent-resilience": "Score & Audit de Cyber-Résilience (ADR-0371)",
     "topology": "Cartographie Blast Radius & Surface d'Exposition",

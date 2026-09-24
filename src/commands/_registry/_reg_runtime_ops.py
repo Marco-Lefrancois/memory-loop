@@ -8,6 +8,7 @@ Fact-Check (ADR-0326/0352) : fact-check, fact-search, dossier-init,
 Visual Review & Annotation (ADR-0305/0307) : review, annotate, guide-export.
 Résilience Agentique (ADR-0371) : agent-resilience, topology, rollback.
 Dream RSI (ADR-0372) : dream-rsi.
+Complétion Shell (MLOOP-192-BE / EPIC-19) : completion-setup.
 
 Contraintes : ADR-0202 (≤300L/15Ko), ADR-0369 (zéro import circulaire).
 """
@@ -281,5 +282,12 @@ RUNTIME_OPS_COMMANDS: dict[str, dict] = {
             },
             {"name": "--json", "action": "store_true", "help": "Sortie au format JSON brut"},
         ],
+    },
+    # ── Complétion Shell Native (MLOOP-192-BE / EPIC-19) ─────────────
+    "completion-setup": {
+        "handler": "completion:handle_completion_setup",
+        "help": "Afficher la ligne d'activation de l'autocomplétion shell Click selon le shell détecté",
+        "args": [],
+        "no_project": True,
     },
 }
