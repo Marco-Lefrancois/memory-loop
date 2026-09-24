@@ -9,8 +9,7 @@
 ## 1. Contexte & Problématique
 
 Memory Loop possède une architecture pure-state rigoureuse (Graphify, SQLite FTS5, 64+ ADRs, 58 commandes CLI). Cependant, la restitution synthétique et l'interrogation par grand modèle de langage sans hallucination bénéficient grandement d'un ancrage direct dans Google NotebookLM (Gemini 2.5 RAG).
-Le carnet officiel dédié a été instancié :
-`https://notebook.google.com/notebook/ddf80a44-cf1c-4eb8-86fd-7cebe6156f87`
+Le carnet officiel dédié est configurable via la variable d'environnement `NOTEBOOKLM_NOTEBOOK_URL` (défaut : `https://notebooklm.google.com`).
 
 Jusqu'alors, aucun protocole déterministe ne permettait de compiler la documentation vivante de mLoop en artefacts prêts pour l'import dans ce carnet.
 
@@ -18,8 +17,8 @@ Jusqu'alors, aucun protocole déterministe ne permettait de compiler la document
 
 ## 2. Décisions d'Architecture
 
-1. **Enregistrement Officiel du Carnet mLoop** :
-   Le carnet `https://notebook.google.com/notebook/ddf80a44-cf1c-4eb8-86fd-7cebe6156f87` est identifié comme `memory-loop-ssot` dans la bibliothèque MCP globale.
+1. **Enregistrement Paramétrable du Carnet mLoop** :
+   Le carnet est identifié sous la variable `NOTEBOOKLM_NOTEBOOK_ID` (défaut : `mloop-ssot`) dans la configuration d'environnement.
 
 2. **Pipeline d'Exportation Déterministe (`src/pipelines/notebooklm_export.py`)** :
    Création d'un pipeline générant des artefacts Markdown normalisés sous `storage/notebooklm_export/` :

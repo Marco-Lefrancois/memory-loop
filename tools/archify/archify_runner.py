@@ -45,7 +45,6 @@ def find_archify_bin() -> Path:
     home = Path.home()
     candidates = [
         home / ".agents" / "skills" / "archify" / "bin" / "archify.mjs",
-        Path("C:/Users/mlefrancois/.agents/skills/archify/bin/archify.mjs"),
     ]
     for candidate in candidates:
         if candidate.exists():
@@ -60,7 +59,7 @@ def find_archify_bin() -> Path:
 def run_archify_doctor() -> int:
     """Exécute 'archify doctor' pour valider la santé du moteur et des dépendances Node.js."""
     archify_bin = find_archify_bin()
-    res = subprocess.run(["node", str(archify_bin), "doctor"], text=True)
+    res = subprocess.run(["node", str(archify_bin), "doctor"], text=True, timeout=60)
     return res.returncode
 
 
@@ -84,7 +83,7 @@ def run_archify_command(
 
     args.append("--json")
 
-    res = subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
+    res = subprocess.run(args, capture_output=True, text=True, encoding="utf-8", timeout=120)
     if res.stdout:
         try:
             parsed = json.loads(res.stdout)

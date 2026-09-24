@@ -202,7 +202,8 @@ Installés via `python src/swarm.py install-hooks` :
         for cat_filename, cat_info in adr_categories.items():
             cat_content = f"# 🏛️ {cat_info['title']}\n\n"
             cat_content += f"> **Horodatage d'Export** : {time.strftime('%Y-%m-%d %H:%M:%S')}\n"
-            cat_content += f"> **Carnet Officiel** : https://notebook.google.com/notebook/ddf80a44-cf1c-4eb8-86fd-7cebe6156f87\n\n---\n\n"
+            notebook_url = os.getenv("NOTEBOOKLM_NOTEBOOK_URL", "https://notebooklm.google.com")
+            cat_content += f"> **Carnet Officiel** : {notebook_url}\n\n---\n\n"
 
             matched_adrs = []
             for adr in adr_files:

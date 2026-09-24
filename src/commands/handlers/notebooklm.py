@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     import argparse
     from src.state import LoopState
 
-NOTEBOOK_URL = "https://notebook.google.com/notebook/ddf80a44-cf1c-4eb8-86fd-7cebe6156f87"
-DEFAULT_NOTEBOOK_ID = "memory-loop-ssot"
+NOTEBOOK_URL = os.getenv("NOTEBOOKLM_NOTEBOOK_URL", "https://notebooklm.google.com")
+DEFAULT_NOTEBOOK_ID = os.getenv("NOTEBOOKLM_NOTEBOOK_ID", "mloop-ssot")
 
 def _get_auth_status() -> dict:
     localappdata = Path(os.environ.get("LOCALAPPDATA", ""))
