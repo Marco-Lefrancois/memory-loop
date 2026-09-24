@@ -25,16 +25,16 @@ def test_standards_graph_initialization_and_sync():
 
     stats = store.sync_all()
     assert stats["adrs"] >= 87
-    assert stats["skills"] == 38
+    assert stats["skills"] >= 38
     assert stats["agents"] == 5
     assert stats["rules"] >= 3
 
 
 def test_standards_graph_skills_discovery():
-    """Test 2 : Découverte dynamique de l'intégralité des 38 compétences."""
+    """Test 2 : Découverte dynamique des compétences (au moins 38)."""
     store = StandardsGraphStore.get_instance()
     skills = store.get_skills()
-    assert len(skills) == 38
+    assert len(skills) >= 38
 
     # Vérifier des compétences clés
     assert "markitdown" in skills

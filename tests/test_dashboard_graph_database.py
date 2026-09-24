@@ -48,7 +48,7 @@ def test_graph_html_nominal_if_present(client):
 
 def test_graph_html_missing_returns_404(client):
     """Vérifie le retour 404 propre lorsqu'un projet ne possède pas de graph.html."""
-    resp = client.get("/api/graph/html?project=App_Sante")
+    resp = client.get("/api/graph/html?project=Metro_SHARED")
     assert resp.status_code == 404
     data = resp.json()
     assert "detail" in data

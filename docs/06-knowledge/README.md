@@ -17,6 +17,7 @@ graph TD
     Vault --> D3["03-graph-engineering/ (Dual-Engine Graphify/CodeGraph)"]:::domain
     Vault --> D4["04-model-governance/ (LiteLLM, Pricing, Anti-Sycophancy)"]:::domain
     Vault --> D5["05-software-spec/ (4 Piliers Gherkin, INVEST, No-Code)"]:::domain
+    Vault --> D6["06-tooling-ecosystem/ (OpenCode, Plannotator, Wayfinder)"]:::domain
 ```
 
 ### 1. [01-agentic-patterns/](01-agentic-patterns/)
@@ -35,3 +36,9 @@ graph TD
 
 ### 5. [05-software-spec/](05-software-spec/)
 - `KN-040` : [Standard BDD Gherkin 4 Piliers, INVEST et Pureté Déclarative](05-software-spec/KN-040_gherkin_4_pillars_invest.md)
+
+### 6. [06-tooling-ecosystem/](06-tooling-ecosystem/)
+- `KN-050` : [OpenCode CLI Runtime & Orchestration Multi-Fournisseurs](06-tooling-ecosystem/KN-050_opencode_cli_runtime.md)
+- `KN-051` : [Plannotator — Annotation et Validation Visuelle de Plans](06-tooling-ecosystem/KN-051_plannotator_workflow.md)
+- `KN-052` : [Pattern Wayfinder — Cartographie Décisionnelle et Navigation dans le Brouillard](06-tooling-ecosystem/KN-052_wayfinder_fog_of_war.md)
+

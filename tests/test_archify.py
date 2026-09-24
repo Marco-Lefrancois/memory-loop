@@ -51,7 +51,7 @@ def test_run_archify_doctor(mock_bin, mock_run):
     mock_run.return_value = MagicMock(returncode=0)
     code = run_archify_doctor()
     assert code == 0
-    mock_run.assert_called_once_with(["node", "C:\\fake\\archify.mjs", "doctor"], text=True)
+    mock_run.assert_called_once_with(["node", "C:\\fake\\archify.mjs", "doctor"], text=True, timeout=60)
 
 
 @patch("tools.archify.archify_runner.subprocess.run")
