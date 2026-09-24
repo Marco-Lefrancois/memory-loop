@@ -111,13 +111,26 @@ def _resolve_annotation_target(
             return str(proj_p)
         return file_path
 
-    candidate_plan = (
-        project_path / "memory" / "plan" / f"implementation_plan_{story_key}.md"
-        if story_key
-        else None
-    )
-    if candidate_plan and candidate_plan.exists():
-        return str(candidate_plan)
+    if story_key:
+        plan_dir = project_path / "memory" / "plan"
+        if plan_dir.exists():
+            direct_plan = plan_dir / f"implementation_plan_{story_key}.md"
+            if direct_plan.exists():
+                return str(direct_plan)
+            matches = [f for f in plan_dir.glob("*.md") if story_key.lower() in f.name.lower()]
+            if matches:
+                return str(matches[0])
+
+        plannotator_dir = Path("plannotator")
+        if plannotator_dir.exists():
+            matches = [f for f in plannotator_dir.glob("*.md") if story_key.lower() in f.name.lower()]
+            if matches:
+                return str(matches[0])
+            archive_dir = plannotator_dir / "archive"
+            if archive_dir.exists():
+                matches = [f for f in archive_dir.glob("*.md") if story_key.lower() in f.name.lower()]
+                if matches:
+                    return str(matches[0])
 
     return None
 
@@ -161,6 +174,13 @@ def handle_annotate(args: argparse.Namespace, state: LoopState, project_path: Pa
         res = subprocess.run(cmd, timeout=3600)
         if res.returncode == 0:
             ZeroFluffConsole.success(f"Annotation / Validation terminée avec succès sur {target}")
+            target_p = Path(target)
+            if "plannotator" in target_p.parts and project_path and (project_path / "memory").exists():
+                dest_dir = project_path / "memory" / "plan"
+                dest_dir.mkdir(parents=True, exist_ok=True)
+                dest_file = dest_dir / target_p.name
+                shutil.copy2(target_p, dest_file)
+                ZeroFluffConsole.info(f"Plan archivé automatiquement dans le projet : {dest_file}")
         else:
             ZeroFluffConsole.warning(f"Plannotator s'est terminé avec le code {res.returncode}")
         return res.returncode
