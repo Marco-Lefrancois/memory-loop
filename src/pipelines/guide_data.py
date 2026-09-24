@@ -137,6 +137,10 @@ PHASE_MAPPING: Dict[str, str] = {
     "topology": "plan",
     "rollback": "transverse",
     "dream-rsi": "transverse",
+    "memory": "transverse",
+    "logs": "transverse",
+    "crawler": "transverse",
+    "scratch": "transverse",
 }
 
 PHASE_HEADERS: Dict[str, Dict[str, str]] = {
@@ -214,4 +218,5 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "validate-sprint": "Rapports d'assurance qualité QA (`qa_certification_report.md` et `.json`)",
     "opencode": "Configuration `.opencode/opencode.json` & runtime local",
     "plannotator": "Plan annoté dans `memory/plan/<STORY_ID>_phase_plan.annotated.md`",
+    "memory": "Rapport de santé & défragmentation (`loop_mem.db` compacté)",
 }

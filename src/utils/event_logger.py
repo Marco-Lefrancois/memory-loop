@@ -93,6 +93,9 @@ class EventLogger:
         with self._lock:
             for target_file in (self.global_log_file, self.project_log_file):
                 try:
+                    if target_file.exists() and target_file.stat().st_size >= 5 * 1024 * 1024:
+                        from src.commands.handlers.log_rotation import rotate_single_log
+                        rotate_single_log(target_file, max_bytes=5 * 1024 * 1024)
                     with open(target_file, "a", encoding="utf-8") as f:
                         f.write(json_line)
                 except OSError as e:

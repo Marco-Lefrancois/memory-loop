@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 124 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 128 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 124 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 128 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -193,6 +193,7 @@ flowchart LR
 | `python src/swarm.py cache-stats` | Afficher les statistiques du cache sémantique déterministe LLM | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py completion-setup` | Afficher la ligne d'activation de l'autocomplétion shell Click selon le shell détecté | *(Aucun)* | Ligne d'activation shell + emplacement `$PROFILE` |
 | `python src/swarm.py context-watch` | Surveiller l'occupation de la fenêtre de contexte et alerter la Dumb-Zone (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py crawler` | Gestion du cycle de vie et élagage du cache crawler (prune) | [<ACTION>] [--ttl-days <INT>] [--dry-run <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py dashboard` | Tableau de bord d'observabilité et supervision souverain mLoop (FastAPI / Zero-Docker) | [--port <INT>] [--no-browser <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py doctor` | Bilan de santé global et diagnostic d'hygiène des compétences et agents mLoop (ADR-0377) | [--skills <STR>] [--agents <STR>] [--threshold <INT>] [--json <STR>] [--no-tombstone <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py dream` | Consolidation nocturne et compression mémorielle (Sleep-Wake) | *(Aucun)* | Console / Mémoire d'état |
@@ -200,13 +201,16 @@ flowchart LR
 | `python src/swarm.py graph-run` | Exécution Graph Engineering (DAG Multi-Agents) | [--title <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py guide` | Afficher le guide d'utilisation du pipeline CLI mLoop par phase ou synchroniser le SSOT | [--phase <STR>] [--sync <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py hook` | Déclencher ou tester un hook de cycle de vie ou de pré-compaction (ADR-0364) | [--event <STR>] [--format <STR>] [--story <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py logs` | Rotation et archivage rotatif des journaux (rotate) | [<ACTION>] [--force <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py mcp-serve` | Démarrer le serveur MCP transport réseau SSE (MLOOP-103-BE) | [--host <STR>] [--port <INT>] | Console / Mémoire d'état |
 | `python src/swarm.py memo-search` | Sélectionner la stratégie mémoire ALMA optimale | [--query <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py memory` | Maintenance et défragmentation SQLite (health, vacuum) | [<ACTION>] [--force <STR>] | Rapport de santé & défragmentation (`loop_mem.db` compacté) |
 | `python src/swarm.py memory-hygiene` | Balayage de confiance de la mémoire vive | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py optimize` | Optimisation RHO | --keyword <STR> --msg <STR> [--scope <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py resume` | Restaurer la session anti-amnésie | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py role-list` | Lister les manifestes de rôles agentiques déclaratifs disponibles | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py rollback` | Restauration déterministe point-in-time de l'état et de la mémoire (ADR-0371) | [--step <INT>] [--target <STR>] | Restauration PITR de l'état et mémoire saine |
+| `python src/swarm.py scratch` | Nettoyage des résidus temporaires scratch et checkpoints (prune) | [<ACTION>] [--older-than-hours <INT>] [--all <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py skill-doctor` | Auditer l'hygiène et le coût en jetons des compétences .agents/skills/ (ADR-0348 / Claude Code v2.1.261) | [--threshold <INT>] [--json <STR>] [--no-tombstone <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py skill-invoke` | Invoquer une compétence via son URI skill:// (SEP-2640) | --uri <STR> | Console / Mémoire d'état |
 | `python src/swarm.py skill-list` | Lister les compétences enregistrées dans le registre skill:// (SEP-2640) | *(Aucun)* | Console / Mémoire d'état |

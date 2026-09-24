@@ -44,6 +44,7 @@ from src.pipelines.vibe_check._vc_build import (
 )
 from src.pipelines.vibe_check._vc_frontend import check_21_visual_anchor
 from src.pipelines.vibe_check._vc_extraction import check_22_extraction_protocol
+from src.pipelines.vibe_check._vc_storage import check_24_storage_hygiene
 
 logger = get_logger("pipelines.vibe_check")
 
@@ -228,6 +229,7 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
     checks.append(check_20_directives_ssot(*ctx))  # Check 20 : directives projet ADR-0384
     checks.append(check_21_visual_anchor(*ctx))  # Check 21 : ancrage visuel frontend
     checks.append(check_22_extraction_protocol(*ctx))  # Check 22 : protocole extraction modulaire
+    checks.append(check_24_storage_hygiene(*ctx))  # Check 24 : Hygiène & Plafond Stockage ADR-015
 
     passed_count = sum(1 for c in checks if c["status"] == "PASS")
     warning_count = sum(1 for c in checks if c["status"] == "WARNING")
