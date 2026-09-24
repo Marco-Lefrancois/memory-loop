@@ -212,7 +212,7 @@ flowchart TD
 
 | Catégorie | Fichier / Répertoire dans `C:\Memory Loop\` | Rôle & Responsabilité Déterministe | Fréquence d'Utilisation & Déclencheur |
 | :--- | :--- | :--- | :--- |
-| **Moteur & Pipelines** | [`src/pipelines/sync.py`](file:///C:/Memory%20Loop/src/pipelines/sync.py) | Synchronisation sémantique locale : mise à jour WikiFix + réindexation Hypergraphe. | **Régulière** — Fin de cycle ou de sprint. |
+| **Moteur & Pipelines** | [`src/pipelines/sync/`](file:///C:/Memory%20Loop/src/pipelines/sync/) | Synchronisation sémantique locale : mise à jour WikiFix + réindexation Hypergraphe (entry point `run_sync`). | **Régulière** — Fin de cycle ou de sprint. |
 | | [`src/pipelines/jira/jira_sync.py`](file:///C:/Memory%20Loop/src/pipelines/jira/jira_sync.py) | Moteur de synchronisation bidirectionnelle Jira Cloud (Fail-Closed, dry-run par défaut). | **À chaque déploiement Jira** — Synchronisation contrôlée. |
 | | [`src/pipelines/jira/jira_client.py`](file:///C:/Memory%20Loop/src/pipelines/jira/jira_client.py) | Client HTTP robuste Jira REST API v3 avec gestion des tokens et rate-limits. | **Sur requête Jira** — Couche de transport réseau sécurisée. |
 | | [`src/pipelines/cycle_runner.py`](file:///C:/Memory%20Loop/src/pipelines/cycle_runner.py) | Clôture de cycle et transition d'état globale. | **1x par clôture de sprint** — Scellage de cycle. |

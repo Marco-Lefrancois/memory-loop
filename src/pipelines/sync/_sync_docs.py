@@ -40,6 +40,7 @@ def _get_logger():
 
 # --- Cache disque ---
 
+
 def load_sync_cache(project_path: Path) -> dict:
     """Charge le cache de synchronisation depuis memory/cache/sync_state.json."""
     cache_file = project_path / "memory" / "cache" / "sync_state.json"
@@ -64,6 +65,7 @@ def save_sync_cache(project_path: Path, cache: dict) -> None:
 
 
 # --- Directives projet ---
+
 
 def sync_project_directives(project_name: str, project_path: Path) -> None:
     """Synchronise automatiquement les directives et le journal de memoire a partir des ADRs."""
@@ -108,6 +110,7 @@ def sync_project_directives(project_name: str, project_path: Path) -> None:
 
 
 # --- Questions ouvertes ---
+
 
 def sync_open_questions(project_name: str, project_path: Path) -> None:
     """Synchronise automatiquement l'etat des questions ouvertes vers le wayfinder."""
@@ -214,10 +217,17 @@ def sync_open_questions(project_name: str, project_path: Path) -> None:
 
 # --- Sprint backlog ---
 
+from src.pipelines.sync._sync_backlog_parser import parse_backlog_status_maps
+
+
 def sync_sprint_backlog(project_name: str, project_path: Path) -> None:
     """
     Synchronise sprint_backlog.md (SSOT Master) et les en-tetes YAML des fichiers de recits.
-    Supporte tout decoupage en modules et tout prefixe (REC, INC, US, Jira).
+
+    Algorithme colonne-aware (fix FRAMEWORK-SELFDEV-SYNC-BACKLOG) :
+    - Localise dynamiquement la colonne 'Statut' via parse_backlog_status_maps().
+    - Vocabulaire etendu : DONE_TESTED, DRAFT, TOMBSTONE inclus.
+    - Supporte tout prefixe (REC, INC, US, Jira) et tout schema de tableau.
     """
     stories_dir = project_path / "backlog" / "stories"
     backlog_file = project_path / "backlog" / "sprint_backlog.md"
@@ -225,46 +235,7 @@ def sync_sprint_backlog(project_name: str, project_path: Path) -> None:
     if not stories_dir.exists() or not backlog_file.exists():
         return
 
-    def norm(txt: str) -> str:
-        return unicodedata.normalize("NFKD", txt).encode("ASCII", "ignore").decode("utf-8").upper()
-
-    backlog_content = backlog_file.read_text(encoding="utf-8")
-    status_map: dict[tuple[str, str], str] = {}
-    direct_id_status_map: dict[str, str] = {}
-
-    current_cat: str | None = None
-    for line in backlog_content.splitlines():
-        nline = norm(line)
-        if (
-            "CODEBASE :" in nline
-            or "MODULE :" in nline
-            or nline.startswith("## ")
-            or nline.startswith("### ")
-        ):
-            current_cat = (
-                nline.replace("#", "").replace("MODULE :", "").replace("CODEBASE :", "").strip()
-            )
-        elif (
-            line.strip().startswith("|")
-            and not line.strip().startswith("|---")
-            and not line.strip().startswith("| :---")
-        ):
-            parts = [p.strip() for p in line.split("|") if p.strip()]
-            if len(parts) >= 3:
-                m_ids = re.findall(r"\b([A-Z0-9]+(?:-[A-Z0-9]+)+)\b", line)
-                m_statut = re.search(
-                    r"\b(ACCEPTED|DONE|IN_QA|IN_DEV|READY_FOR_DEV|READY_FOR_GROOMING"
-                    r"|IN_REVIEW|IN-REVIEW|IN_VALIDATE|IN_PLAN|IN_ANALYZE|OPEN"
-                    r"|ON_HOLD|ON-HOLD|CLOSED|BACKLOG)\b",
-                    line,
-                    re.IGNORECASE,
-                )
-                if m_ids and m_statut:
-                    st_val = m_statut.group(1).upper().replace("-", "_")
-                    for s_id in m_ids:
-                        direct_id_status_map[s_id.upper()] = st_val
-                        if current_cat:
-                            status_map[(current_cat, s_id.upper())] = st_val
+    direct_id_status_map, status_map = parse_backlog_status_maps(backlog_file)
 
     updated_files = 0
     for f in stories_dir.rglob("*.md"):

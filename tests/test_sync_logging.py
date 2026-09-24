@@ -1,7 +1,9 @@
 """
-Tests d'instrumentation logging pour src/pipelines/sync.py (MLOOP-141-BE / ADR-0369).
+Tests d'instrumentation logging pour src/pipelines/sync/ (MLOOP-141-BE / ADR-0369).
 Valide que les erreurs des sous-systèmes (wikifix, graphify, fts5, hypergraph, cache,
 struct, audit) sont capturées avec stack trace et contexte métier.
+Le pipeline sync est désormais un package (src/pipelines/sync/) dont le point
+d'entrée est run_sync dans _sync_run.py (migration MLOOP-179-BE).
 """
 
 from __future__ import annotations
@@ -46,11 +48,11 @@ def test_run_sync_wikifix_failure_logs_error_with_subsystem(tmp_path):
     state = LoopState(project_name="TestProj")
 
     with (
-        patch("src.pipelines.sync.sync_live_reference_wikis"),
-        patch("src.pipelines.sync.sync_project_directives"),
-        patch("src.pipelines.sync.sync_sprint_backlog"),
-        patch("src.pipelines.sync.sync_open_questions"),
-        patch("src.pipelines.sync.sync_hypergraph"),
+        patch("src.pipelines.sync._sync_run.sync_live_reference_wikis"),
+        patch("src.pipelines.sync._sync_run.sync_project_directives"),
+        patch("src.pipelines.sync._sync_run.sync_sprint_backlog"),
+        patch("src.pipelines.sync._sync_run.sync_open_questions"),
+        patch("src.pipelines.sync._sync_run.sync_hypergraph"),
         patch(
             "src.pipelines.sync.WikiFixAgent.execute", side_effect=RuntimeError("WikiFix crashed!")
         ),
@@ -77,11 +79,11 @@ def test_run_sync_graphify_failure_logs_error_with_subsystem(tmp_path):
     state = LoopState(project_name="TestProj")
 
     with (
-        patch("src.pipelines.sync.sync_live_reference_wikis"),
-        patch("src.pipelines.sync.sync_project_directives"),
-        patch("src.pipelines.sync.sync_sprint_backlog"),
-        patch("src.pipelines.sync.sync_open_questions"),
-        patch("src.pipelines.sync.sync_hypergraph"),
+        patch("src.pipelines.sync._sync_run.sync_live_reference_wikis"),
+        patch("src.pipelines.sync._sync_run.sync_project_directives"),
+        patch("src.pipelines.sync._sync_run.sync_sprint_backlog"),
+        patch("src.pipelines.sync._sync_run.sync_open_questions"),
+        patch("src.pipelines.sync._sync_run.sync_hypergraph"),
         patch("src.pipelines.sync.WikiFixAgent.execute", return_value=state),
         patch(
             "src.pipelines.sync.GraphifyAgent.execute",

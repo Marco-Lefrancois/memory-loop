@@ -26,15 +26,16 @@ def test_run_sync_fast_mode_skips_graphify(tmp_path):
     proj_dir.mkdir(parents=True)
     state = LoopState(project_name="TestProj")
 
-    with patch("src.pipelines.sync.sync_live_reference_wikis"), \
-         patch("src.pipelines.sync.sync_project_directives"), \
-         patch("src.pipelines.sync.sync_sprint_backlog"), \
-         patch("src.pipelines.sync.sync_open_questions"), \
-         patch("src.pipelines.sync.sync_hypergraph"), \
-         patch("src.pipelines.sync.WikiFixAgent.execute", return_value=state), \
-         patch("src.pipelines.sync.GraphifyAgent.execute") as mock_graphify, \
-         patch("src.state.LoopState.save_to_audit"):
-        
+    with (
+        patch("src.pipelines.sync._sync_run.sync_live_reference_wikis"),
+        patch("src.pipelines.sync._sync_run.sync_project_directives"),
+        patch("src.pipelines.sync._sync_run.sync_sprint_backlog"),
+        patch("src.pipelines.sync._sync_run.sync_open_questions"),
+        patch("src.pipelines.sync._sync_run.sync_hypergraph"),
+        patch("src.pipelines.sync.WikiFixAgent.execute", return_value=state),
+        patch("src.pipelines.sync.GraphifyAgent.execute") as mock_graphify,
+        patch("src.state.LoopState.save_to_audit"),
+    ):
         result_state = run_sync("TestProj", state, proj_dir, fast_mode=True)
         assert result_state == state
         mock_graphify.assert_not_called()
@@ -46,15 +47,21 @@ def test_run_sync_fault_isolation(tmp_path):
     proj_dir.mkdir(parents=True)
     state = LoopState(project_name="TestProj")
 
-    with patch("src.pipelines.sync.sync_live_reference_wikis"), \
-         patch("src.pipelines.sync.sync_project_directives"), \
-         patch("src.pipelines.sync.sync_sprint_backlog"), \
-         patch("src.pipelines.sync.sync_open_questions"), \
-         patch("src.pipelines.sync.sync_hypergraph"), \
-         patch("src.pipelines.sync.WikiFixAgent.execute", side_effect=RuntimeError("WikiFix crashed!")), \
-         patch("src.pipelines.sync.GraphifyAgent.execute", side_effect=RuntimeError("Graphify crashed!")), \
-         patch("src.state.LoopState.save_to_audit") as mock_save:
-        
+    with (
+        patch("src.pipelines.sync._sync_run.sync_live_reference_wikis"),
+        patch("src.pipelines.sync._sync_run.sync_project_directives"),
+        patch("src.pipelines.sync._sync_run.sync_sprint_backlog"),
+        patch("src.pipelines.sync._sync_run.sync_open_questions"),
+        patch("src.pipelines.sync._sync_run.sync_hypergraph"),
+        patch(
+            "src.pipelines.sync.WikiFixAgent.execute", side_effect=RuntimeError("WikiFix crashed!")
+        ),
+        patch(
+            "src.pipelines.sync.GraphifyAgent.execute",
+            side_effect=RuntimeError("Graphify crashed!"),
+        ),
+        patch("src.state.LoopState.save_to_audit") as mock_save,
+    ):
         # Le pipeline ne doit pas lever d'exception non gérée
         result_state = run_sync("TestProj", state, proj_dir, fast_mode=False)
         assert result_state == state
@@ -98,7 +105,10 @@ def test_graphify_timeout_expired_handled_gracefully(tmp_path, monkeypatch):
     state = LoopState(project_name=proj_name)
     agent = GraphifyAgent()
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(cmd=["graphify", "update", "."], timeout=60)):
+    with patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(cmd=["graphify", "update", "."], timeout=60),
+    ):
         # Doit terminer sans lever d'exception TimeoutExpired
         res = agent.execute(state)
         assert res is not None
