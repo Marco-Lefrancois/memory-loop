@@ -15,6 +15,8 @@ from unittest.mock import patch
 
 import pytest
 
+from src.core.herdr_worker import HerdrWorkerMixin
+from src.core.herdr_worker_core import TASK_MODEL_MAP
 from src.core.worker_runtimes import (
     DEFAULT_CLINE_MODEL,
     WORKER_RUNTIMES,
@@ -50,9 +52,11 @@ def test_opencode_one_shot_flags_historical_semantics():
 def test_opencode_extra_args_merge_model():
     """OpenCode : extra_args explicites + modèle absent -> modèle ajouté après."""
     spec = get_worker_runtime("opencode")
-    assert spec.build_flags(
-        model="nmedia_cloud/claude-sonnet-5", extra_args=["--verbose"]
-    ) == ["--verbose", "--model", "nmedia_cloud/claude-sonnet-5"]
+    assert spec.build_flags(model="nmedia_cloud/claude-sonnet-5", extra_args=["--verbose"]) == [
+        "--verbose",
+        "--model",
+        "nmedia_cloud/claude-sonnet-5",
+    ]
     assert spec.build_flags(model="m", extra_args=["-m", "deja-present"]) == [
         "-m",
         "deja-present",
@@ -62,6 +66,26 @@ def test_opencode_extra_args_merge_model():
 def test_opencode_has_no_default_model():
     """OpenCode : pas de modèle par défaut (la sélection reste TASK_MODEL_MAP)."""
     assert get_worker_runtime("opencode").default_model is None
+
+
+def test_task_model_map_build_uses_free_opencode_model():
+    """ADR-0388 : la mission 'build' bascule sur le free tier natif OpenCode
+    pour faciliter le développement et worker-spawn, sans coût LiteLLM.
+    Les portes qualité (deepening/validation/deepsearch/compaction) restent
+    inchangées sur leurs modèles LiteLLM nmedia_cloud.
+    """
+    assert TASK_MODEL_MAP["build"] == "opencode/mimo-v2.6-flash-free"
+    assert TASK_MODEL_MAP["deepening"] == "nmedia_cloud/claude-opus-4.8"
+    assert TASK_MODEL_MAP["validation"] == "nmedia_cloud/gpt-5.6-terra-thinking"
+    assert TASK_MODEL_MAP["deepsearch"] == "nmedia_cloud/claude-sonnet-5"
+    assert TASK_MODEL_MAP["compaction"] == "nmedia_cloud/gemini-3.8-flash"
+
+
+def test_task_model_map_core_mixin_parity():
+    """Le doublon historique HerdrWorkerMixin.TASK_MODEL_MAP doit rester en
+    parité stricte avec le SSOT src.core.herdr_worker_core.TASK_MODEL_MAP.
+    """
+    assert HerdrWorkerMixin.TASK_MODEL_MAP == TASK_MODEL_MAP
 
 
 def test_cline_one_shot_native_auto_approve():
@@ -153,9 +177,7 @@ def test_cline_spec_resolves_binary(tmp_path, monkeypatch):
 
 def test_spec_is_extensible_without_branches():
     """Un nouveau CLI = une entrée de registre (contrat d'extension ADR-0346)."""
-    custom = WorkerRuntimeSpec(
-        kind="futur-cli", one_shot_flags=["--auto"], model_flag="--model"
-    )
+    custom = WorkerRuntimeSpec(kind="futur-cli", one_shot_flags=["--auto"], model_flag="--model")
     assert custom.build_flags(model="x") == ["--auto", "--model", "x"]
 
 

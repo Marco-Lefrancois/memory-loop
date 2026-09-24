@@ -23,7 +23,7 @@
     "build": {
       "description": "Expert Code & Developpement | Ecrit le code physique (TS, Python) et applique le self-healing reactif.",
       "mode": "primary",
-      "model": "nmedia_cloud/claude-sonnet-4.6",
+      "model": "opencode/mimo-v2.6-flash-free",
       "temperature": 0.2,
       "permission": {
         "edit": "allow",

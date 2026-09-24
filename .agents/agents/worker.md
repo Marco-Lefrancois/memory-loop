@@ -2,7 +2,7 @@
 name: worker
 role: Implementation & Compaction Worker
 description: "Agent d'implémentation physique et de compaction mLoop. Opère dans le respect strict des boundaries et des tests unitaires TDD."
-model: claude-sonnet-4.6
+model: mimo-v2.6-flash-free
 model_reasoning_effort: medium
 sandbox_mode: workspace-write
 allowed_write_paths:

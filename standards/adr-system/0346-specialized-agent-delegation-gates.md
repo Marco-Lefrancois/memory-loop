@@ -44,7 +44,7 @@ Cette ADR standardise la suite des **5 Workers Stratégiques Spécialisés** de 
 ```
 
 1. **Simulateur de Handoff "Zero-Ask" (`worker-handoff-test`)** :
-   - *Modèle LiteLLM* : `claude-sonnet-4.6` (`build`).
+   - *Modèle LiteLLM* : `claude-sonnet-4.6` (`build`). **[Amendement ADR-0388, 24 sept. 2026]** : `build` route désormais vers le free tier natif OpenCode `opencode/mimo-v2.6-flash-free` (facilitation développement/worker-spawn, zéro coût LiteLLM) ; les autres task-types de cette section demeurent inchangés.
    - *Protocole* : Test à l'aveugle dans une enclave temporaire ne contenant **que** le fichier `US-XXX.md`. Si l'agent hésite ou invente un contrat ➔ Statut `HANDOFF_REJECTED`. Si autonome ➔ `HANDOFF_APPROVED`.
 2. **Mineur de Logique Métier Legacy (`worker-legacy-mine`)** :
    - *Modèle LiteLLM* : `claude-sonnet-5` (`deepsearch`).

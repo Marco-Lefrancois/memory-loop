@@ -75,3 +75,11 @@ Pour maximiser la qualité sans compromis tout en conservant un coût journalier
 1. **Stabilité du Préfixe de Prompt** : Les fichiers `AGENTS.md`, `GEMINI.md` et les blueprints doivent impérativement être injectés en tête de contexte pour garantir un taux de cache hit > 85%.
 2. **Sessions Continues** : Le cache Anthropic a une durée de rétention de 5 minutes renouvelée à chaque tour. Privilégier les blocs de travail continus.
 3. **Zero-Model-Jumping** : Ne pas changer de modèle arbitrairement au milieu d'une session de cadrage afin de ne pas invalider le cache GPU distant.
+
+---
+
+## 5. Amendement — ADR-0388 (24 septembre 2026)
+
+Le Trio d'Or ci-dessus reste la SSOT normative pour les agents primaires **orchestrator / plan / sentinel** et pour les `task-type` de gouvernance qualité (`deepening`, `validation`, `deepsearch`, `compaction`) de `TASK_MODEL_MAP`.
+
+La mission `build` (développement mLoop et `worker-spawn` sans `--task-type`) a été déportée vers le **free tier natif OpenCode** (`opencode/mimo-v2.6-flash-free`, hors proxy LiteLLM) afin de réduire le coût de développement quotidien, en cohérence avec le précédent `DEFAULT_CLINE_MODEL` déjà en vigueur pour le runtime Cline. Voir [ADR-0388](0388-worker-build-default-free-model.md) pour le détail complet de la décision, du périmètre et des invariants préservés.

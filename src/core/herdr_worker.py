@@ -25,7 +25,9 @@ class HerdrWorkerMixin:
         "deepening": "nmedia_cloud/claude-opus-4.8",
         "validation": "nmedia_cloud/gpt-5.6-terra-thinking",
         "deepsearch": "nmedia_cloud/claude-sonnet-5",
-        "build": "nmedia_cloud/claude-sonnet-4.6",
+        # Free tier natif OpenCode (ADR-0388) : facilite dev/build sans coût LiteLLM.
+        # Portes qualité (deepening/validation/deepsearch/compaction) inchangées.
+        "build": "opencode/mimo-v2.6-flash-free",
         "compaction": "nmedia_cloud/gemini-3.8-flash",
     }
 
