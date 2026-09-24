@@ -32,6 +32,8 @@ def check_21_visual_anchor(
             for sf in stories_dir.glob("**/*.md"):
                 if sf.name.lower() == "readme.md":
                     continue
+                if any(p in ("archive", "_archive", "archive_deprecated", "reference") for p in sf.parts):
+                    continue
                 try:
                     stext = sf.read_text(encoding="utf-8", errors="replace")
                 except Exception:

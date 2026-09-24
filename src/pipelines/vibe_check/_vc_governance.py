@@ -86,6 +86,8 @@ def check_11_rule_engine(
                 rule_engine = RuleEngine()
                 rule_engine.load_from_adr_dir(arch_dir)
                 for sf in stories_dir.glob("**/*.md"):
+                    if any(p in ("archive", "_archive", "archive_deprecated", "reference") for p in sf.parts):
+                        continue
                     try:
                         s_content = sf.read_text(encoding="utf-8", errors="replace")
                     except Exception:

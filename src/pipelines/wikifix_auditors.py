@@ -220,7 +220,7 @@ class WikiFixAuditMixin:
         structural_failures = []
         for fpath in markdown_files:
             if "backlog" in fpath.parts and "stories" in fpath.parts:
-                if "reference" in fpath.parts or "archive_deprecated" in fpath.parts:
+                if any(p in ("reference", "archive_deprecated", "archive", "_archive") for p in fpath.parts):
                     continue
                 if story_filter and story_filter not in fpath.name:
                     continue
@@ -245,6 +245,8 @@ class WikiFixAuditMixin:
                 stories_dir = project_path / ProjectLayout.BACKLOG / "stories"
                 if stories_dir.exists():
                     for sfile in stories_dir.rglob("*.md"):
+                        if any(p in ("reference", "archive_deprecated", "archive", "_archive") for p in sfile.parts):
+                            continue
                         if sfile.stem not in sb_content:
                             structural_failures.append({
                                 "file": str(sfile.relative_to(project_path)),

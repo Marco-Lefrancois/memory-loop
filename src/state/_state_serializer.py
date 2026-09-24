@@ -225,6 +225,8 @@ class StateSerializerMixin:
             return
         discovered_items = []
         for md_file in backlog_dir.rglob("*.md"):
+            if any(p in ("archive", "_archive", "archive_deprecated", "reference") for p in md_file.parts):
+                continue
             try:
                 content = md_file.read_text(encoding="utf-8")
                 match = re.search(r"^---(.*?)---", content, re.DOTALL | re.MULTILINE)
