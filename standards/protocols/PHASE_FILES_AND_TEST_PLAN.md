@@ -155,7 +155,7 @@ flowchart TD
 | | [`src/commands/handlers/code_intelligence.py`](file:///C:/Memory%20Loop/src/commands/handlers/code_intelligence.py) | Commandes `code-explore`, `code-impact` (Blast Radius), `code-affected`. | **Régulière** — Analyse d'impact des modifications de code. |
 | **Standards & Blueprints** | [`standards/blueprints/handoff_tripartite_template.md`](file:///C:/Memory%20Loop/standards/blueprints/handoff_tripartite_template.md) | Modèle de protocole d'alignement Tripartite (Archi, Dev, QA). | **1x par story** — Alignement avant codage. |
 | | [`standards/adr-system/0346-herdr-dual-track-subagent-multiplexing.md`](file:///C:/Memory%20Loop/standards/adr-system/0346-herdr-dual-track-subagent-multiplexing.md) | Doctrine Dual-Track : Skills in-process vs Workers out-of-process. | **Permanent** — Isolation des tâches lourdes. |
-| **Outils** | [`plannotator/`](file:///C:/Memory%20Loop/plannotator/) | Moteur applicatif autonome de revue de code visuelle. | **À chaque revue** — Interface interactive locale. |
+| **Outils** | Binaire `plannotator` (CLI) | Moteur applicatif autonome de revue de code visuelle (`%LOCALAPPDATA%\plannotator\`). | **À chaque revue** — Interface interactive locale. |
 
 #### B. Plan de Test de la Phase 3 (DoD)
 * **Critère Bloquant (Gate 3 - Definition of Done)** :
