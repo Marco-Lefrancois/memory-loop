@@ -1,23 +1,22 @@
 """
-Grill Engine - mLoop (Shim de Rétrocompatibilité ADR-0202)
-Ce module redirige vers le package modulaire src.pipelines.grill (ADR-012).
+mLoop Grill Pipeline Package (ADR-0320 / ADR-0389 / ADR-012)
+Modularisation propre du moteur d'interrogatoire Grill-with-Docs.
 """
 
-from src.pipelines.grill import (
+from src.pipelines.grill._adr_writer import (
     EMERGENCY_FALLBACK_TEMPLATE,
-    GrillEngine,
-    UNGRILLABLE_KEYWORDS,
-    check_context_health,
-    detect_ungrillable_signals,
-    format_frontier_round,
     get_next_adr_id,
     render_adr_content,
     resolve_adr_template,
     write_adr_file,
 )
-
-# Alias de rétrocompatibilité pour ADR_TEMPLATE
-ADR_TEMPLATE = EMERGENCY_FALLBACK_TEMPLATE
+from src.pipelines.grill._engine import GrillEngine
+from src.pipelines.grill._frontier import (
+    UNGRILLABLE_KEYWORDS,
+    check_context_health,
+    detect_ungrillable_signals,
+    format_frontier_round,
+)
 
 __all__ = [
     "GrillEngine",
@@ -30,5 +29,4 @@ __all__ = [
     "check_context_health",
     "UNGRILLABLE_KEYWORDS",
     "EMERGENCY_FALLBACK_TEMPLATE",
-    "ADR_TEMPLATE",
 ]

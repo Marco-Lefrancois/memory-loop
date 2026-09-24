@@ -47,24 +47,39 @@ CONFIDENCE: [ex: ~40% - Faits manquants : volumétrie, politique de retry, forma
 ROAST: [Démontage des faux prérequis, des endpoints supposés et des sur-ingénieries]
 ```
 
-### Étape 2 : Questions 1:1 avec "Guess" Attaché (Pattern Interview-Me)
+### Étape 2 : Format des Questions (Frontier Rounds vs 1:1 Atomique - ADR-0389)
 L'humain réagit 3x plus vite pour corriger une fausse supposition que pour formuler une réponse abstraite :
-- Poser **exactement 1 question par tour** (zéro rafale de questions).
-- Toujours attacher un *Guess* (votre meilleure supposition déduite) et une recommandation motivée.
+- **En Macro (`grill-project`)** : Mode **Frontier Round** par défaut. L'agent regroupe **2 à 4 questions orthogonales (mutuellement indépendantes)** dont les prérequis sont vérifiés. Chaque question comporte son contexte, son `💡 GUESS` et sa `➡️ Recommandation motivée`. L'humain peut valider en bloc (« Validé ») ou amender (« Q1: opt B, Q2: ok »).
+- **En Micro (`grill-me --story <ID>`)** : Mode **1:1 Atomique Strict**. Poser exactement 1 question par tour, car chaque règle d'affaires conditionne la suivante.
+- **Débrayage Utilisateur** : L'humain peut imposer son mode à tout moment via `mode: round` ou `mode: 1:1`.
+
 ```markdown
-❓ **Q : <Question atomique sur la frontière active> ?**
+❓ **Q : <Question sur la frontière active> ?**
 💡 **GUESS** : <Supposition de l'agent basée sur le contexte existant>
 ➡️ **Recommandation mLoop** : <Option A ou B motivée par les standards>
 ```
+
+### Étape 2bis : Traitement des Questions "Ungrillables" (Handoff Pattern - ADR-0389)
+Certaines questions ne peuvent PAS être résolues par le dialogue textuel (disposition d'écrans, densité visuelle, wizard vs drawer, ressenti ergonomique).
+- Dès qu'une question est classée **Ungrillable (Haute-Fidélité IHM / UX)**, appliquer le **Handoff Pattern** (`grill → prototype → grill again`) :
+  1. **Pause** : Suspendre le grilling textuel (*« ⏸️ Question IHM haute fidélité détectée »*).
+  2. **Prototype Jetable** : Générer un composant autonome HTML/Tailwind interactif ou un mockup SVG vectoriel sous `docs/05-assets/mockups/`.
+  3. **Tranchage Visuel** : L'humain visualise, clique et choisit en 5 secondes.
+  4. **Reprise** : Enregistrer le choix dans `CONTEXT.md` / récit et reprendre immédiatement le grill (*« ▶️ Décision enregistrée. Reprise de la frontière. »*).
 
 ### Étape 3 : Traque du « Want vs Should Want »
 Poser la question brise-glace de désencombrement :
 > *« Si vous n'aviez de comptes à rendre à personne et aucune contrainte d'héritage, que voudriez-vous réellement construire ici ? »*
 
-### Étape 4 : Clôture de Frontière & Épuisement (Frontier Exhaustion)
-La session se termine lorsque l'arbre de décision ne contient plus aucune zone d'ombre (épuisement de frontière).
+### Étape 4 : Clôture de Frontière & Épuisement (Frontier Exhaustion) - Budget Contexte & Chaînage (ADR-0389)
+La session se termine lorsque l'arbre de décision ne contient plus aucune zone d'ombre (Épuisement de Frontière / Frontier Exhaustion).
 - En Macro (`grill-project`) : enregistrement de la décision via ADR et passage au découpage `to-tickets`.
 - En Micro (`grill-me --story <ID>`) : dès qu'un récit atteint l'épuisement de frontière, l'agent consigne la décision et avance automatiquement vers le récit suivant ou bascule la story vers `READY_FOR_GROOMING` puis `READY_FOR_DEV` après validation humaine.
+- **Surveillance Context Budget ("Dumb Zone")** : Si la session dépasse **80k tokens**, déclencher un point de contrôle (`checkpoint_in_flight`). Si elle dépasse **120k tokens**, interdiction d'ouvrir de nouvelles branches (clôture ou partitionnement en session fille).
+- **Externalisation Continue** : Consigner les termes dans `CONTEXT.md` et les décisions filtrées dans `docs/01-architecture/ADR-XXX.md` au fil de l'eau (principe stateful).
+- **Interdiction Absolue de Purge Post-Grill** : Ne jamais réinitialiser la conversation après le grill. Enchaîner **directement dans la même session** vers la rédaction du récit au gabarit haute fidélité [`story_template.md`](../../standards/blueprints/story_template.md) avec DoR 6/6 (`READY_FOR_DEV`).
+- **Délégation Isolée en Aval** : Seules les étapes d'implémentation (`build` / tests) sont ensuite confiées à un sous-agent avec contexte nettoyé.
+
 
 ---
 
@@ -73,7 +88,9 @@ La session se termine lorsque l'arbre de décision ne contient plus aucune zone 
 | Excuse de l'Agent (Paresse) | Réalité & Règle Inviolable |
 | :--- | :--- |
 | *"Le besoin est évident, je peux rédiger la story directement sans poser de question."* | Même les besoins simples cachent des hypothèses tacites non vérifiées. Le Dossier de Preuves Documentaires est obligatoire pour chaque récit. |
-| *"Je vais poser 5 questions d'un coup pour faire gagner du temps à l'utilisateur."* | Le batching sature l'attention humaine et produit des réponses incomplètes. La règle d'or est **1 seule question atomique par tour**. |
+| *"Je vais poser 5 questions dépendantes d'un coup en Micro-Grill."* | En Micro-Grill, le batching sature l'attention. La règle d'or sur un récit est **1 seule question atomique par tour** (sauf en Macro-Grill où les rounds de 2-4 questions orthogonales sont autorisés). |
+| *"Je vais débattre pendant 15 tours sur l'ergonomie visuelle du formulaire."* | L'ergonomie ne se discute pas en texte pur. Déclencher immédiatement le **Handoff Pattern** et générer un prototype jetable HTML/SVG. |
+| *"La session de grill est finie, je vais faire un reset de contexte pour rédiger au propre."* | **Interdiction formelle de reset**. Le context window contient la mémoire vive de tous les arbitrages. Enchaîner directement sur la rédaction de la story. |
 | *"Je vais griller chaque story sans faire de cadrage macro global."* | Conduit au syndrome du perroquet et à l'incohérence systémique. Exécuter `grill-project` avant d'entamer le micro-grilling. |
 | *"L'utilisateur m'a dit 'fais au mieux', donc je décide à sa place sans documenter."* | « Au mieux » n'est pas un contrat. Formuler l'hypothèse sous forme de *Guess*, la faire valider en 1 tour, puis consigner la décision dans l'ADR. |
 
@@ -82,5 +99,7 @@ La session se termine lorsque l'arbre de décision ne contient plus aucune zone 
 ## Vérification de Sortie
 - [ ] Dossier de Preuves consigné dans `memory/evidence/<STORY_ID>_fact_dossier.md` (ou terminal).
 - [ ] 100% des citations au format Grounding (`[fichier.md:Lignes X-Y]`).
+- [ ] Questions Ungrillables déroutées vers des prototypes jetables si nécessaire.
 - [ ] Frontière de décision validée vide par l'utilisateur.
-- [ ] Récit enrichi au gabarit `story_template.md` avec DoR 6/6.
+- [ ] Récit enrichi au gabarit `story_template.md` avec DoR 6/6 dans la continuité du fil de session.
+

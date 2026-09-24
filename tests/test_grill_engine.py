@@ -230,3 +230,246 @@ def test_evidence_pack_no_hardcoded_high_confidence_without_code_proof():
         assert pack["status"] in ("VALIDATED", "STALE_PENDING_REGENERATION")
     finally:
         shutil.rmtree(project_dir, ignore_errors=True)
+
+
+def test_detect_ungrillable_signals(temp_project):
+    """Vérifie la détection des questions ungrillables (IHM/UX) selon ADR-0389 §B."""
+    engine = GrillEngine(temp_project)
+
+    # 1. Question Ungrillable (IHM / Wizard vs Monopage)
+    q_ux = "Devons-nous découper ce formulaire sous forme de wizard en 3 étapes ou en monopage accordéon ?"
+    res_ux = engine.detect_ungrillable_signals(q_ux)
+    assert res_ux["is_ungrillable"] is True
+    assert "spatial_layout" in res_ux["categories"]
+    assert res_ux["recommended_action"] == "HANDOFF_PROTOTYPE"
+    assert res_ux["suggested_prototype"] == "html_tailwind"
+
+    # 2. Question Ungrillable (Densité visuelle / Cards vs Tableau)
+    q_density = "Préfère-t-on afficher les commandes sous forme de tableau ou de cartes kanban ?"
+    res_density = engine.detect_ungrillable_signals(q_density)
+    assert res_density["is_ungrillable"] is True
+    assert "density_hierarchy" in res_density["categories"]
+    assert res_density["recommended_action"] == "HANDOFF_PROTOTYPE"
+
+    # 3. Question Grillable classique (Architecture / Contrat API / Base de données)
+    q_backend = "Quelle est la politique de rétention des logs d'audit et le délai de purge SQS ?"
+    res_backend = engine.detect_ungrillable_signals(q_backend)
+    assert res_backend["is_ungrillable"] is False
+    assert res_backend["recommended_action"] == "CONTINUE_GRILL"
+    assert res_backend["suggested_prototype"] is None
+
+
+def test_format_frontier_round(temp_project):
+    """Vérifie le formatage des Frontier Rounds orthogonaux selon ADR-0389 §A."""
+    engine = GrillEngine(temp_project)
+    questions = [
+        {
+            "title": "Choix du provider de SMS",
+            "context": "Directives de conformité locale.",
+            "guess": "Twilio avec fallback AWS SNS.",
+            "recommendation": "Option A (Twilio) pour sa haute délivrabilité.",
+        },
+        {
+            "title": "Politique de rétention des sessions",
+            "context": "Règles d'authentification SSO.",
+            "guess": "Expiration après 8 heures d'inactivité.",
+            "recommendation": "Option B (8h avec refresh token glissant).",
+        },
+    ]
+
+    rendered = engine.format_frontier_round(questions, round_num=2, theme="Socle Transverse")
+    assert "### 🌐 Round de Frontière #2 (Socle Transverse)" in rendered
+    assert "2 questions orthogonales identifiées" in rendered
+    assert "**💡 GUESS** : Twilio avec fallback AWS SNS." in rendered
+    assert "**➡️ Recommandation mLoop** : Option A (Twilio)" in rendered
+    assert "#### ❓ Q2. Politique de rétention des sessions" in rendered
+    assert "👉 Réponse attendue : validation globale" in rendered
+
+
+def test_check_context_health(temp_project):
+    """Vérifie les alertes de budget contexte et Dumb Zone selon ADR-0389 §C."""
+    engine = GrillEngine(temp_project)
+
+    # 1. Smart Zone
+    h1 = engine.check_context_health(45000)
+    assert h1["zone"] == "SMART_ZONE"
+    assert h1["status"] == "HEALTHY"
+    assert h1["action"] == "CONTINUE"
+
+    # 2. Warning Zone
+    h2 = engine.check_context_health(95000)
+    assert h2["zone"] == "WARNING_ZONE"
+    assert h2["status"] == "WARNING"
+    assert h2["action"] == "TRIGGER_CHECKPOINT"
+
+    # 3. Dumb Zone (> 120k tokens)
+    h3 = engine.check_context_health(135000)
+    assert h3["zone"] == "DUMB_ZONE"
+    assert h3["status"] == "CRITICAL"
+    assert h3["action"] == "FREEZE_BRANCHES_OR_SPLIT"
+
+
+def test_adr_0389_and_skill_v2_conformance():
+    """Vérifie l'alignement constitutionnel du skill grill et la présence de l'ADR-0389."""
+    adr_file = Path("standards/adr-system/0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md")
+    assert adr_file.exists(), "ADR-0389 doit exister dans standards/adr-system/"
+
+    skill_file = Path(".agents/skills/grill/SKILL.md")
+    assert skill_file.exists(), "SKILL.md doit exister"
+    content = skill_file.read_text(encoding="utf-8")
+
+    assert "ADR-0389" in content
+    assert "Frontier Round" in content
+    assert "Ungrillable" in content or "Handoff Pattern" in content
+    assert "Dumb Zone" in content
+    assert "Interdiction Absolue de Purge Post-Grill" in content or "Interdiction formelle de reset" in content
+
+
+# --- TESTS EPIC-28 : ASSAINISSEMENT DU GÉNÉRATEUR D'ADR (ADR-012) ---
+
+def test_resolve_adr_template_cascade(temp_project):
+    """Vérifie le chargement dynamique du blueprint canonique standards/blueprints/project_adr_template.md."""
+    from src.pipelines.grill import resolve_adr_template
+
+    # Sans surcharge locale, doit retourner le contenu du blueprint canonique
+    content = resolve_adr_template(temp_project)
+    assert "# 🏛️ ADR-{{ADR_ID}} : {{TITLE}}" in content
+    assert "{{DECISION}}" in content
+    assert "{{POSITIVES}}" in content
+
+
+def test_resolve_adr_template_project_override(temp_project):
+    """Vérifie la prise en compte prioritaire de la surcharge locale projet."""
+    from src.pipelines.grill import resolve_adr_template
+
+    custom_dir = temp_project / "docs" / "01-architecture"
+    custom_dir.mkdir(parents=True, exist_ok=True)
+    custom_file = custom_dir / "template.md"
+    custom_file.write_text("# 🏛️ ADR Custom Projet {{ADR_ID}} : {{TITLE}}\n{{CUSTOM_SECTION}}", encoding="utf-8")
+
+    content = resolve_adr_template(temp_project)
+    assert "# 🏛️ ADR Custom Projet {{ADR_ID}}" in content
+    assert "{{CUSTOM_SECTION}}" in content
+
+
+def test_resolve_adr_template_emergency_fallback(tmp_path):
+    """Vérifie le repli sur le gabarit d'urgence mémoire en cas d'absence complète."""
+    from src.pipelines.grill import resolve_adr_template, EMERGENCY_FALLBACK_TEMPLATE
+    import src.pipelines.grill._adr_writer as writer_mod
+
+    # Simuler l'absence de blueprint framework
+    original_fn = writer_mod.get_framework_root
+    writer_mod.get_framework_root = lambda: tmp_path / "non_existent"
+
+    try:
+        content = resolve_adr_template(None)
+        assert content == EMERGENCY_FALLBACK_TEMPLATE
+    finally:
+        writer_mod.get_framework_root = original_fn
+
+
+def test_get_next_adr_id_robust_anti_collision(tmp_path):
+    """Vérifie le calcul max(ids) + 1 et l'immunité aux trous de numérotation (ADR-012)."""
+    from src.pipelines.grill import get_next_adr_id
+
+    # 1. Dossier vide
+    next_id, max_id = get_next_adr_id(tmp_path)
+    assert next_id == 1
+    assert max_id == 0
+
+    # 2. Présence de trous : ADR-001 et ADR-011 (longueur = 2, mais max = 11)
+    (tmp_path / "ADR-001_init.md").write_text("dummy", encoding="utf-8")
+    (tmp_path / "ADR-011_lock.md").write_text("dummy", encoding="utf-8")
+    (tmp_path / "README.md").write_text("ignore", encoding="utf-8")
+    (tmp_path / "notes.txt").write_text("ignore", encoding="utf-8")
+
+    next_id, max_id = get_next_adr_id(tmp_path)
+    assert max_id == 11
+    assert next_id == 12, "Doit retourner max(ids) + 1 = 12 (et non len + 1 = 3)"
+
+    # 3. Numérotation > 999
+    (tmp_path / "ADR-1005_future.md").write_text("dummy", encoding="utf-8")
+    next_id, max_id = get_next_adr_id(tmp_path)
+    assert max_id == 1005
+    assert next_id == 1006
+
+
+def test_render_adr_content_double_moustaches_and_defaults():
+    """Vérifie le rendu des balises mLoop {{TAG}} et la substitution des valeurs par défaut."""
+    from src.pipelines.grill import render_adr_content
+
+    template = "# ADR-{{ADR_ID}} : {{TITLE}}\n{{CONTEXT}}\n{{DECISION}}\n{{POSITIVES}}\n{{NEGATIVES}}"
+    rendered = render_adr_content(
+        template_str=template,
+        adr_id=42,
+        title="Refonte Modulaire",
+        context="",  # Vide -> doit appliquer le défaut
+        decision="Découpage en sous-package",
+        positives="",
+        negatives="",
+        date_str="2026-09-24",
+    )
+
+    assert "# ADR-042 : Refonte Modulaire" in rendered
+    assert "Session d'interrogatoire Grill-with-Docs." in rendered
+    assert "Découpage en sous-package" in rendered
+    assert "Clarification des exigences métier et réduction du flou." in rendered
+    assert "Contraintes et engagements d'architecture appliqués." in rendered
+    assert "{{" not in rendered, "Aucune balise non résolue ne doit subsister"
+
+
+def test_grill_engine_record_adr_integration(temp_project):
+    """Vérifie l'intégration complète de record_adr via GrillEngine."""
+    from src.pipelines.grill import GrillEngine
+
+    engine = GrillEngine(temp_project)
+    adr_path = engine.record_adr(
+        title="Architecture Propre",
+        context="Audit de modularité AST",
+        decision="Extraction sous-modules",
+        positives="Fichiers de moins de 300 lignes",
+        negatives="Plus de fichiers à maintenir",
+    )
+
+    assert adr_path.exists()
+    assert adr_path.name == "ADR-001_architecture_propre.md"
+    content = adr_path.read_text(encoding="utf-8")
+    assert "# 🏛️ ADR-001 : Architecture Propre" in content
+    assert "Audit de modularité AST" in content
+    assert "Extraction sous-modules" in content
+    assert "Fichiers de moins de 300 lignes" in content
+
+    # Deuxième enregistrement consécutif
+    adr_path_2 = engine.record_adr(
+        title="Second Arbitrage",
+        decision="Validation",
+    )
+    assert adr_path_2.name == "ADR-002_second_arbitrage.md"
+
+
+def test_shim_backward_compatibility(temp_project):
+    """Vérifie que l'ancien chemin d'importation src.pipelines.grill_engine fonctionne sans accroc."""
+    from src.pipelines.grill_engine import GrillEngine as ShimGrillEngine, ADR_TEMPLATE
+
+    assert ShimGrillEngine is not None
+    assert ADR_TEMPLATE is not None
+
+    engine = ShimGrillEngine(temp_project)
+    assert hasattr(engine, "record_adr")
+    assert hasattr(engine, "perform_fact_search")
+    assert hasattr(engine, "mark_story_grilled")
+    assert hasattr(engine, "detect_ungrillable_signals")
+    assert hasattr(engine, "format_frontier_round")
+    assert hasattr(engine, "check_context_health")
+
+
+def test_package_modularity_ast_limits():
+    """Vérifie que chaque fichier sous src/pipelines/grill/ respecte la règle RULE-AST-01 (<= 300L)."""
+    grill_pkg = Path("src/pipelines/grill")
+    assert grill_pkg.is_dir()
+
+    for py_file in grill_pkg.glob("*.py"):
+        lines = py_file.read_text(encoding="utf-8").splitlines()
+        assert len(lines) <= 300, f"Fichier {py_file.name} dépasse le plafond modulaire ({len(lines)} > 300 lignes)"
+
+
