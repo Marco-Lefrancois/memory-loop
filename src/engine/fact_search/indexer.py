@@ -11,9 +11,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import sqlite3
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict
 
 from src.engine.fact_search.chunker import TriFusionChunker, TriFusionChunk
 from src.loop_mem.db import get_observation_db_session
@@ -101,6 +100,11 @@ class FactSearchIndexer:
         Scanne tous les documents Markdown sous docs/ et standards/
         pour les découper via TriFusionChunker et les indexer dans SQLite et FTS5.
         Utilise un cache de hachage MD5 persistant pour ne re-traiter que les fichiers modifiés.
+
+        Découverte à deux foyers (ADR-0390) : docs/<couche>/** (plat) et
+        docs/<domaine>/<couche>/** (niché, profondeur bornée à 2 niveaux), sans
+        chevauchement. Les doc_path restent relatifs à la racine projet (docs/…,
+        reference/…), contrat de résolution des liens file:/// du handler CLI.
         """
         if docs_dir is None:
             docs_dir = Path("Projects") / project_name / "docs"
@@ -126,36 +130,38 @@ class FactSearchIndexer:
 
         raw_files: List[tuple[Path, str, str, str]] = []  # (md_file, rel_path, layer_key, content)
 
-        for folder_name, layer_key in layer_dirs:
-            folder_path = docs_dir / folder_name
-            if folder_path.exists():
-                for md_file in folder_path.rglob("*.md"):
-                    try:
-                        content = cls._read_file_safe(md_file)
-                        rel_path = md_file.relative_to(docs_dir.parent).as_posix()
-                        raw_files.append((md_file, rel_path, layer_key, content))
-                    except Exception as e:
-                        logger.warning(f"Erreur lecture {md_file}: {e}")
+        def _collect_md(root: Path, layer_key: str) -> None:
+            """Ajoute récursivement les .md de root avec doc_path relatif racine projet."""
+            for md_file in root.rglob("*.md"):
+                try:
+                    content = cls._read_file_safe(md_file)
+                    rel = md_file.relative_to(docs_dir.parent).as_posix()
+                    raw_files.append((md_file, rel, layer_key, content))
+                except Exception as e:
+                    logger.warning(f"Erreur lecture {md_file}: {e}")
+
+        layer_names = {f for f, _ in layer_dirs}
+        for folder_name, layer_key in layer_dirs:  # foyer plat : docs/<couche>/**
+            if (folder_path := docs_dir / folder_name).exists():
+                _collect_md(folder_path, layer_key)
+        for folder_name, layer_key in layer_dirs:  # niché ADR-0390 (max 2 niveaux)
+            for nested_path in docs_dir.glob(f"*/{folder_name}"):
+                # Un domaine portant un nom de couche est déjà couvert par le foyer plat.
+                if nested_path.is_dir() and nested_path.parent.name not in layer_names:
+                    _collect_md(nested_path, layer_key)
 
         # Fichiers Markdown racine sous docs/
         for md_file in docs_dir.glob("*.md"):
             try:
                 content = cls._read_file_safe(md_file)
-                rel_path = md_file.relative_to(docs_dir.parent).as_posix()
-                raw_files.append((md_file, rel_path, "01-architecture", content))
+                rel = md_file.relative_to(docs_dir.parent).as_posix()
+                raw_files.append((md_file, rel, "01-architecture", content))
             except Exception as e:
                 logger.warning(f"Erreur lecture racine {md_file}: {e}")
 
         # Dossier reference/ du projet si présent
-        ref_dir = docs_dir.parent / "reference"
-        if ref_dir.exists():
-            for md_file in ref_dir.rglob("*.md"):
-                try:
-                    content = cls._read_file_safe(md_file)
-                    rel_path = md_file.relative_to(docs_dir.parent).as_posix()
-                    raw_files.append((md_file, rel_path, "06-knowledge", content))
-                except Exception as e:
-                    logger.warning(f"Erreur lecture reference {md_file}: {e}")
+        if (ref_dir := docs_dir.parent / "reference").exists():
+            _collect_md(ref_dir, "06-knowledge")
 
         # Standards globaux si mLoop ou global
         if project_name.lower() in ("mloop", "global"):

@@ -146,7 +146,7 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 | 0387 | [Intégration des Standards MCP Modernes 2026-07-28 (Tasks, MCP Apps, Elicitation & Header Routing)](0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md) | Approuvé |
 | 0388 | [Bascule du Modèle par Défaut de la Mission `build` vers le Free Tier Natif OpenCode (MiMo-V2.6-Flash Free)](0388-worker-build-default-free-model.md) | Approuvé |
 | 0389 | [Grill-Me v2 — Frontier Rounds, Handoff Ungrillable & Immunité Context Budget](0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md) | Approuvé |
-| 0390 | [Indexation Fact-Search Multi-Niveaux (`docs/<domaine>/<couche>/`) & Contrat `doc_path` Racine Projet](0390-fact-search-indexation-arbres-niches-docs-domaine-couche.md) | Proposé |
+| 0390 | [Indexation Fact-Search Multi-Niveaux (`docs/<domaine>/<couche>/`) & Contrat `doc_path` Racine Projet](0390-fact-search-indexation-arbres-niches-docs-domaine-couche.md) | Approuvé |
 
 
 

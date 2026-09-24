@@ -1,6 +1,6 @@
 # ADR-0390 : Indexation Fact-Search Multi-Niveaux (`docs/<domaine>/<couche>/`) & Contrat `doc_path` Racine Projet
 
-* **Statut** : PROPOSÉ *(en attente d'approbation du Plan Zéro Blindspot ADR-0376 — aucune écriture de code avant feu vert humain)*
+* **Statut** : ACCEPTÉ *(implémenté le 24 septembre 2026 — PLAN-ADR-0390 approuvé puis exécuté : 34 tests verts, migration Metro_SANTE effectuée, convergence sync prouvée)*
 * **Date** : 24 septembre 2026
 * **Décideurs** : Équipe Architecture mLoop, Agent Orchestrateur, Product Owner
 * **Dépendances / Références** : [ADR-0102](0102-structure-ssot-dossier-docs.md) (Structure SSOT `docs/`), [ADR-0369](0369-standard-robustesse-python-senior.md) (Standards Python Senior), [ADR-0370](0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md) (Anti-Drift CLI), [ADR-0376](0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md) (Audit 360° 7 Couches), [ADR-0385](0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md) (Échelle de Preuve)
