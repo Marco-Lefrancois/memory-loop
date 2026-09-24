@@ -8,7 +8,9 @@ case "$MLOOP_SKIP_HOOKS" in
     1|[Tt][Rr][Uu][Ee]|[Yy][Ee][Ss])
         echo "[mLoop Pre-Commit] Bypass souverain active (MLOOP_SKIP_HOOKS=$MLOOP_SKIP_HOOKS)."
         # Audit du bypass : printf horodate sans appel externe Python (zero dependance)
-        AUDIT_LOG="{{ROOT_DIR}}/Projects/mLoop/memory/evidence/mloop_skip_hooks_audit.log"
+        # Ancre dynamique : fonctionne depuis la racine framework OU un sous-repo projet
+        _TOP=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+        AUDIT_LOG="$_TOP/memory/evidence/mloop_skip_hooks_audit.log"
         AUDIT_DIR=$(dirname "$AUDIT_LOG")
         if [ ! -d "$AUDIT_DIR" ]; then
             mkdir -p "$AUDIT_DIR" 2>/dev/null
@@ -22,7 +24,9 @@ case "$MLOOP_SKIP_HOOKS" in
         ;;
 esac
 
-cd "{{ROOT_DIR}}" || exit 1
+# FIX 2026-09-24 : ne plus cd un chemin relatif fixe (cassait depuis un sous-repo projet)
+TOP=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+cd "$TOP" || exit 1
 
 STAGED=$(git diff --cached --name-only --diff-filter=ACM)
 if [ -z "$STAGED" ]; then
@@ -51,9 +55,13 @@ fi
 
 FAILED=0
 
-# Resolution binaire Python (privilegier le venv projet s'il existe)
+# Resolution binaire Python : venv local ($TOP), sinon venv framework ({{ROOT_DIR}}), sinon PATH
 PYTHON_BIN="python"
-if [ -f "{{ROOT_DIR}}/.venv/Scripts/python.exe" ]; then
+if [ -f "$TOP/.venv/Scripts/python.exe" ]; then
+    PYTHON_BIN="$TOP/.venv/Scripts/python.exe"
+elif [ -f "$TOP/.venv/bin/python" ]; then
+    PYTHON_BIN="$TOP/.venv/bin/python"
+elif [ -f "{{ROOT_DIR}}/.venv/Scripts/python.exe" ]; then
     PYTHON_BIN="{{ROOT_DIR}}/.venv/Scripts/python.exe"
 elif [ -f "{{ROOT_DIR}}/.venv/bin/python" ]; then
     PYTHON_BIN="{{ROOT_DIR}}/.venv/bin/python"
