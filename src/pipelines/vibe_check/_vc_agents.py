@@ -61,8 +61,8 @@ def check_01_agent_parity(
             ZeroFluffConsole.success(
                 "[Vibe-Check Auto-Sync] Parité miroir restaurée pour .clinerules/mloop.md"
             )
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.debug("Échec restauration miroir .clinerules : %s", exc, exc_info=True)
 
     cline_ok = cline_rule_p.exists() and cline_rule_p.stat().st_size >= 50
     results.append(

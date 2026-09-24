@@ -22,19 +22,13 @@ logger = get_logger("state")
 class LoopStateError(Exception):
     """Exception de base pour le moteur d'état mLoop."""
 
-    pass
-
 
 class IntegrityError(LoopStateError):
     """Exception levée en cas de violation d'intégrité de l'état."""
 
-    pass
-
 
 class MaxRevisionsReached(LoopStateError):
     """Exception levée par le circuit breaker lors d'un cycle infini."""
-
-    pass
 
 
 # ─── Enums
@@ -75,14 +69,9 @@ class StoryType(str, Enum):
             return cls.FEATURE
         norm = raw.strip().lower().replace("-", "_").replace(" ", "_")
         mapping = {
-            "feature": cls.FEATURE,
-            "architecture": cls.ARCHITECTURE,
-            "technical_debt": cls.TECHNICAL_DEBT,
-            "tech_debt": cls.TECHNICAL_DEBT,
-            "debt": cls.TECHNICAL_DEBT,
-            "bug": cls.BUG,
-            "hotfix": cls.BUG,
-            "spike": cls.SPIKE,
+            "feature": cls.FEATURE, "architecture": cls.ARCHITECTURE,
+            "technical_debt": cls.TECHNICAL_DEBT, "tech_debt": cls.TECHNICAL_DEBT,
+            "debt": cls.TECHNICAL_DEBT, "bug": cls.BUG, "hotfix": cls.BUG, "spike": cls.SPIKE,
         }
         return mapping.get(norm, cls.FEATURE)
 
@@ -162,18 +151,10 @@ class Clarification(BaseModel):
     answer: Optional[str] = None
 
 
-_GRILLED_STATUSES = frozenset(
-    {
-        "IN_REVIEW",
-        "READY_FOR_GROOMING",
-        "READY_FOR_DEV",
-        "IN_DEV",
-        "IN_QA",
-        "DONE_TESTED",
-        "DONE",
-        "ACCEPTED",
-    }
-)
+_GRILLED_STATUSES = frozenset({
+    "IN_REVIEW", "READY_FOR_GROOMING", "READY_FOR_DEV",
+    "IN_DEV", "IN_QA", "DONE_TESTED", "DONE", "ACCEPTED",
+})
 
 
 class SprintBacklogItem(BaseModel):
@@ -209,16 +190,13 @@ class PlanStep(BaseModel):
     action: str
     expected_output: str
 
-
 class PlanResult(BaseModel):
     steps: List[PlanStep] = Field(default_factory=list)
-
 
 class QAReport(BaseModel):
     is_valid: bool = True
     score: float = 1.0
     revisions_count: int = 0
-
 
 class JournalEntry(BaseModel):
     id: str = Field(default_factory=lambda: f"entry_{int(time.time())}")
