@@ -50,7 +50,7 @@ WORKERS_COMMANDS: dict[str, dict] = {
                 "name": "--model",
                 "type": str,
                 "default": None,
-                "help": "Modèle LiteLLM (ex: nmedia_cloud/claude-opus-4.8)",
+                "help": "Modèle LiteLLM (ex: litellm_proxy/claude-opus-4.8)",
             },
             {
                 "name": "--task-type",
