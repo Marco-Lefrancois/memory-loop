@@ -34,7 +34,6 @@ from src.utils.logger import get_logger
 logger = get_logger("pipelines.struct_checker")
 
 
-
 # ─── Dataclasses ──────────────────────────────────────────────────────────────
 
 
@@ -131,16 +130,12 @@ class StructCheckEngine:
         try:
             content = target_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as e:
-            violation = StructViolation(
-                "C6", "BLOCKING", f"Impossible de lire le fichier : {e}"
-            )
+            violation = StructViolation("C6", "BLOCKING", f"Impossible de lire le fichier : {e}")
             return StructCheckReport(target_file, None, False, [violation])
 
         fm_data = self._parse_frontmatter(content)
         gold_std_path = self._resolve_gold_standard(fm_data, strict)
-        gold_content = (
-            gold_std_path.read_text(encoding="utf-8") if gold_std_path else None
-        )
+        gold_content = gold_std_path.read_text(encoding="utf-8") if gold_std_path else None
 
         violations: list[StructViolation] = []
         violations += self._check_c1_heading_hierarchy(content)
@@ -151,16 +146,13 @@ class StructCheckEngine:
         violations += self._check_c6_frontmatter_completeness(fm_data)
         violations += self._check_c7_h1_format(content)
         violations += self._check_c8_anti_goodhart_scenarios(content)
-        violations += self._check_c9_fact_dossier_presence(
-            target_file, fm_data, content, strict
-        )
+        violations += self._check_c9_fact_dossier_presence(target_file, fm_data, content, strict)
         violations += self._check_c10_anti_ephemeral_rules(content)
         violations += self._check_c11_rule_engine_integration(content)
         violations += self._check_c12_domain_sanity(content)
 
         passed = all(v.severity != "BLOCKING" for v in violations)
         return StructCheckReport(target_file, gold_std_path, passed, violations)
-
 
     # ── Helpers internes ──────────────────────────────────────────────────────
 
@@ -277,11 +269,7 @@ class StructCheckEngine:
         next_section_match = re.search(
             r"(?m)^(?:##\s+|###\s+(?!Interface\s+et\s+UX))", content[search_from:]
         )
-        ux_end = (
-            (search_from + next_section_match.start())
-            if next_section_match
-            else len(content)
-        )
+        ux_end = (search_from + next_section_match.start()) if next_section_match else len(content)
         ux_content = content[ux_start:ux_end]
 
         # Détecter les listes avec '*' ou '+' dans la section UX
@@ -325,14 +313,10 @@ class StructCheckEngine:
                 continue
             paren_content = paren_match.group(1)
             # Extraire les mots significatifs (3+ caractères) du titre et des parenthèses
-            title_words = set(
-                re.findall(r"\b\w{3,}\b", title_text[: paren_match.start()].lower())
-            )
+            title_words = set(re.findall(r"\b\w{3,}\b", title_text[: paren_match.start()].lower()))
             paren_words = set(re.findall(r"\b\w{3,}\b", paren_content.lower()))
             # Chercher des recoupements sémantiques (mots communs ou sous-chaînes)
-            has_overlap = any(
-                pw in tw or tw in pw for pw in paren_words for tw in title_words
-            )
+            has_overlap = any(pw in tw or tw in pw for pw in paren_words for tw in title_words)
             if has_overlap or len(paren_words) > 0:
                 line_num = content[: match.start()].count("\n") + 1
                 violations.append(
@@ -427,7 +411,9 @@ class StructCheckEngine:
                     titles.add(norm)
                 elif h_level == 4:
                     # Ne retenir en H4 que les titres structurels/fixes (non dynamiques/numérotés)
-                    if not re.match(r"^\d+[\.\)]", title.strip()) and not re.match(r"^\[.*\]$", norm):
+                    if not re.match(r"^\d+[\.\)]", title.strip()) and not re.match(
+                        r"^\[.*\]$", norm
+                    ):
                         titles.add(norm)
             return titles
 
@@ -488,9 +474,7 @@ class StructCheckEngine:
 
     # ── Check C6 : Frontmatter YAML ──────────────────────────────────────────
 
-    def _check_c6_frontmatter_completeness(
-        self, fm_data: dict
-    ) -> list[StructViolation]:
+    def _check_c6_frontmatter_completeness(self, fm_data: dict) -> list[StructViolation]:
         """
         C6 : Vérifie que le frontmatter YAML contient tous les champs obligatoires.
         """
@@ -504,9 +488,7 @@ class StructCheckEngine:
                     message=(
                         "Frontmatter YAML absent ou invalide. "
                         "Chaque récit mLoop doit commencer par un bloc '---' YAML "
-                        "avec les champs : "
-                        + ", ".join(sorted(_REQUIRED_FM_FIELDS))
-                        + "."
+                        "avec les champs : " + ", ".join(sorted(_REQUIRED_FM_FIELDS)) + "."
                     ),
                 )
             )
@@ -634,9 +616,7 @@ class StructCheckEngine:
         status = fm_data.get("status", "")
 
         # 1. Vérification des liens de dossier dans le texte
-        dossier_links = re.findall(
-            r"\[([^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content
-        )
+        dossier_links = re.findall(r"\[([^\]]*fact_dossier[^\]]*)\]\(([^)]+)\)", content)
         for link_text, link_target in dossier_links:
             if link_target.startswith("http://") or link_target.startswith("https://"):
                 continue
@@ -708,7 +688,11 @@ class StructCheckEngine:
                     # Vérification statut du dossier
                     st_m = re.search(r"^dossier_status:\s*(.+)$", dossier_content, re.MULTILINE)
                     dossier_status = st_m.group(1).strip() if st_m else "CURRENT"
-                    if dossier_status == "DRAFT" and status in ("READY_FOR_DEV", "READY_FOR_GROOMING", "IN_DEV"):
+                    if dossier_status == "DRAFT" and status in (
+                        "READY_FOR_DEV",
+                        "READY_FOR_GROOMING",
+                        "IN_DEV",
+                    ):
                         violations.append(
                             StructViolation(
                                 check_id="C9",
@@ -741,7 +725,11 @@ class StructCheckEngine:
                         )
 
                     # Vérification Section 3 (Schéma relationnel SSOT)
-                    has_schema = "```mermaid" in dossier_content or "Table " in dossier_content or "table " in dossier_content
+                    has_schema = (
+                        "```mermaid" in dossier_content
+                        or "Table " in dossier_content
+                        or "table " in dossier_content
+                    )
                     if not has_schema:
                         violations.append(
                             StructViolation(
@@ -756,7 +744,17 @@ class StructCheckEngine:
 
                     # Vérification Section 4 (Contrats Déclaratifs Cibles)
                     has_contract = any(
-                        k in dossier_content for k in ("GET ", "POST ", "PUT ", "DELETE ", "Contrats Déclaratifs", "Payload", "Endpoint", "Contrat")
+                        k in dossier_content
+                        for k in (
+                            "GET ",
+                            "POST ",
+                            "PUT ",
+                            "DELETE ",
+                            "Contrats Déclaratifs",
+                            "Payload",
+                            "Endpoint",
+                            "Contrat",
+                        )
                     )
                     if not has_contract:
                         violations.append(
@@ -871,9 +869,7 @@ class StructCheckEngine:
 
             rule_engine = RuleEngine()
             rule_engine.load_from_adr_dir(adr_dir)
-            rule_violations = rule_engine.validate_all(
-                content, target="backlog_stories"
-            )
+            rule_violations = rule_engine.validate_all(content, target="backlog_stories")
             for rv in rule_violations:
                 violations.append(
                     StructViolation(
@@ -886,7 +882,14 @@ class StructCheckEngine:
         except Exception:
             # Dégradation gracieuse : un ADR malformé ne doit jamais faire
             # échouer l'audit structurel complet.
-            pass
+            logger.debug(
+                "Dégradation gracieuse C11 : ADR malformé ignoré durant l'audit structurel",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.struct_checker",
+                    "operation": "_check_c11_adr_rules",
+                },
+            )
         return violations
 
     # ── Check C12 : Domain Sanity — Invariants physiques et temporels ─────────
@@ -913,13 +916,22 @@ class StructCheckEngine:
             report = DomainInvariantChecker.check_story_text(content)
             for inv in report.violations:
                 severity = "BLOCKING" if inv.severity == InvariantSeverity.BLOCKING else "WARNING"
-                violations.append(StructViolation(
-                    check_id="C12",
-                    severity=severity,
-                    message=f"[{inv.code.value}] {inv.message}",
-                    line_hint=None,
-                ))
+                violations.append(
+                    StructViolation(
+                        check_id="C12",
+                        severity=severity,
+                        message=f"[{inv.code.value}] {inv.message}",
+                        line_hint=None,
+                    )
+                )
         except Exception:
             # Dégradation gracieuse : ne jamais bloquer l'audit sur une erreur interne.
-            pass
+            logger.debug(
+                "Dégradation gracieuse C12 : erreur interne DomainInvariantChecker ignorée",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.struct_checker",
+                    "operation": "_check_c12_domain_sanity",
+                },
+            )
         return violations

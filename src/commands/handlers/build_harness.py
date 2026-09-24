@@ -159,6 +159,51 @@ def handle_code_tournament(
         )
         report = engine.run_tournament()
         print(format_tournament_report(report))
+
+        # ── MLOOP-181-BE CA-1/CA-4 : capture arbitrage + citations (eager) ──
+        # La capture enrichit l'EvidencePack sans jamais faire échouer le tournoi
+        # (Pilier 3 — mode dégradé : log WARNING, build poursuit).
+        evidence_file = base_dir / "memory" / "evidence" / f"{story_id}_evidence.json"
+        try:
+            from src.core.decision_recorder import DecisionRecorder
+
+            recorder = DecisionRecorder(project_path=base_dir)
+            loser_list = [
+                (c.candidate_id, c.pareto_score)
+                for c in report.candidates
+                if c.candidate_id != report.winner_id and not c.disqualified
+            ]
+            winner_score = next(
+                (c.pareto_score for c in report.candidates if c.candidate_id == report.winner_id),
+                0.0,
+            )
+            recorder.record_tournament_decision(
+                evidence_path=evidence_file,
+                story_id=story_id,
+                winner_id=report.winner_id or "inconnu",
+                winner_pareto_score=winner_score,
+                losers=loser_list,
+            )
+            recorder.extract_citations_from_diff(
+                story_id=story_id, timeout=30.0, max_files=20, evidence_path=evidence_file
+            )
+            richness = recorder.compute_richness(evidence_file)
+            ZeroFluffConsole.info(
+                f"decisions: {richness['decisions']} | citations: {richness['citations']} "
+                f"| richness: {richness['richness']}"
+            )
+        except Exception as e:
+            ZeroFluffConsole.warning(
+                f"Capture EvidencePack non bloquante échouée (mode dégradé) : {e}"
+            )
+            _log_err(
+                "code-tournament",
+                "Capture décision/citations MLOOP-181-BE échouée, tournoi préservé",
+                args,
+                story_id=story_id,
+                exc_info=True,
+            )
+
         ZeroFluffConsole.info(
             f"Golden Master promu avec succès : {report.winner_id} -> {target_path.as_posix()}"
         )

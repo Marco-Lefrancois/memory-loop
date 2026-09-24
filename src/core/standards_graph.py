@@ -5,6 +5,7 @@ Base SQLite compilée, synchronisation incrémentale SSOT et requêtage ciblé J
 Garantit le zéro hardcoding des directives architecturales, compétences et agents,
 tout en assurant des temps de réponse < 0.2ms via une base SQLite embarquée.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -24,6 +25,7 @@ logger = logging.getLogger("mLoop.StandardsGraph")
 
 
 # ─── Modèles Pydantic v2 Typés ───────────────────────────────────────────────
+
 
 class ValidationRule(BaseModel):
     check_id: str
@@ -90,11 +92,13 @@ class RuleManifest(BaseModel):
 
 # ─── Moteur SQLite Central : StandardsGraphStore ─────────────────────────────
 
+
 class StandardsGraphStore:
     """
     Store SQLite pour le graphe de connaissances architecturales et directives mLoop.
     Maintient la parité absolue avec les fichiers Markdown SSOT avec synchronisation incrémentale.
     """
+
     _instance: Optional[StandardsGraphStore] = None
 
     @classmethod
@@ -117,7 +121,7 @@ class StandardsGraphStore:
     @contextmanager
     def _get_connection(self) -> Iterator[sqlite3.Connection]:
         """Gestionnaire de contexte thread-safe et sécurisé pour les connexions SQLite (ADR-0369)."""
-        conn = sqlite3.connect(str(self.db_path), timeout=15.0)
+        conn = sqlite3.connect(str(self.db_path), timeout=15.0)  # noqa: RULE-AST-02 (géré via @contextmanager _get_connection)
         conn.row_factory = sqlite3.Row
         try:
             conn.execute("PRAGMA journal_mode=WAL;")
@@ -226,7 +230,9 @@ class StandardsGraphStore:
                 cursor = conn.cursor()
                 for key, (path, pattern) in sources.items():
                     current_hash, _ = self._compute_dir_hash(path, pattern)
-                    cursor.execute("SELECT aggregate_hash FROM sync_meta WHERE source_key = ?", (key,))
+                    cursor.execute(
+                        "SELECT aggregate_hash FROM sync_meta WHERE source_key = ?", (key,)
+                    )
                     row = cursor.fetchone()
                     if not row or row["aggregate_hash"] != current_hash:
                         needs_sync = True
@@ -268,7 +274,13 @@ class StandardsGraphStore:
             conn.execute(
                 "INSERT OR REPLACE INTO sync_meta (source_key, directory_path, aggregate_hash, last_sync_timestamp, node_count) "
                 "VALUES (?, ?, ?, ?, ?)",
-                ("skills", str(skills_dir.relative_to(self.root)), skills_hash, time.time(), stats["skills"]),
+                (
+                    "skills",
+                    str(skills_dir.relative_to(self.root)),
+                    skills_hash,
+                    time.time(),
+                    stats["skills"],
+                ),
             )
 
             # 3. Synchroniser les Agents (.agents/agents/*.md)
@@ -281,7 +293,13 @@ class StandardsGraphStore:
             conn.execute(
                 "INSERT OR REPLACE INTO sync_meta (source_key, directory_path, aggregate_hash, last_sync_timestamp, node_count) "
                 "VALUES (?, ?, ?, ?, ?)",
-                ("agents", str(agents_dir.relative_to(self.root)), agents_hash, time.time(), stats["agents"]),
+                (
+                    "agents",
+                    str(agents_dir.relative_to(self.root)),
+                    agents_hash,
+                    time.time(),
+                    stats["agents"],
+                ),
             )
 
             # 4. Synchroniser les Règles (.agents/rules/*.md)
@@ -294,7 +312,13 @@ class StandardsGraphStore:
             conn.execute(
                 "INSERT OR REPLACE INTO sync_meta (source_key, directory_path, aggregate_hash, last_sync_timestamp, node_count) "
                 "VALUES (?, ?, ?, ?, ?)",
-                ("rules", str(rules_dir.relative_to(self.root)), rules_hash, time.time(), stats["rules"]),
+                (
+                    "rules",
+                    str(rules_dir.relative_to(self.root)),
+                    rules_hash,
+                    time.time(),
+                    stats["rules"],
+                ),
             )
 
         logger.info(f"StandardsGraph synchronisé avec succès : {stats}")
@@ -355,7 +379,7 @@ class StandardsGraphStore:
             domain = "lifecycle"
 
         clean_slug = adr_id.upper().replace("ADR-", "")
-        node_id = f"adr:{clean_slug}"
+        node_id = f"adr:{file_path.stem}"
 
         conn.execute(
             """
@@ -506,8 +530,10 @@ class StandardsGraphStore:
         normalized = adr_id.upper().replace("ADR-", "")
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM standards_nodes WHERE type = 'adr' AND (name = ? OR name = ?)",
-                           (adr_id, f"ADR-{normalized}"))
+            cursor.execute(
+                "SELECT * FROM standards_nodes WHERE type = 'adr' AND (name = ? OR name = ?)",
+                (adr_id, f"ADR-{normalized}"),
+            )
             row = cursor.fetchone()
             if not row:
                 return None
@@ -575,7 +601,9 @@ class StandardsGraphStore:
         self.sync_if_stale()
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM standards_nodes WHERE type = 'skill' AND name = ?", (name,))
+            cursor.execute(
+                "SELECT * FROM standards_nodes WHERE type = 'skill' AND name = ?", (name,)
+            )
             row = cursor.fetchone()
             if not row:
                 return None
@@ -651,9 +679,16 @@ class StandardsGraphStore:
                 meta = json.loads(row["metadata_json"])
                 # Filtrer les champs contractuels d'architecture
                 layout_keys = [
-                    "client_layout", "forbidden_in_client", "memory_subdirs",
-                    "docs_subdirs", "required_files_in_docs", "ssot_files",
-                    "mloop_only_dirs", "mloop_layout", "stage_order", "gate_definitions"
+                    "client_layout",
+                    "forbidden_in_client",
+                    "memory_subdirs",
+                    "docs_subdirs",
+                    "required_files_in_docs",
+                    "ssot_files",
+                    "mloop_only_dirs",
+                    "mloop_layout",
+                    "stage_order",
+                    "gate_definitions",
                 ]
                 extracted = {k: meta[k] for k in layout_keys if k in meta}
                 if extracted:
@@ -664,24 +699,40 @@ class StandardsGraphStore:
             contracts["ADR-0100"] = {
                 "client_layout": ["reference", "docs", "backlog", "memory", "graphify-out"],
                 "forbidden_in_client": ["src", "openspec"],
-                "memory_subdirs": ["sessions", "debates", "sync", "reports", "cache", "tmp"]
+                "memory_subdirs": ["sessions", "debates", "sync", "reports", "cache", "tmp"],
             }
         if "ADR-0102" not in contracts:
             contracts["ADR-0102"] = {
-                "docs_subdirs": ["00-ingested", "01-architecture", "02-business-rules",
-                                 "03-models", "04-transverse", "05-assets/maquettes",
-                                 "05-assets/diagrams", "05-assets/images"],
+                "docs_subdirs": [
+                    "00-ingested",
+                    "01-architecture",
+                    "02-business-rules",
+                    "03-models",
+                    "04-transverse",
+                    "05-assets/maquettes",
+                    "05-assets/diagrams",
+                    "05-assets/images",
+                ],
                 "required_files_in_docs": ["index.md"],
                 "ssot_files": {
                     "sprint_backlog": "sprint_backlog.md",
                     "story_mapping": "STORY_MAPPING.md",
-                    "open_questions": "00-questions-ouvertes.md"
-                }
+                    "open_questions": "00-questions-ouvertes.md",
+                },
             }
         if "ADR-0103" not in contracts:
             contracts["ADR-0103"] = {
                 "mloop_only_dirs": ["directives", "journal", "src", "openspec"],
-                "mloop_layout": ["reference", "docs", "backlog", "memory", "graphify-out",
-                                 "directives", "journal", "src", "openspec"]
+                "mloop_layout": [
+                    "reference",
+                    "docs",
+                    "backlog",
+                    "memory",
+                    "graphify-out",
+                    "directives",
+                    "journal",
+                    "src",
+                    "openspec",
+                ],
             }
         return contracts

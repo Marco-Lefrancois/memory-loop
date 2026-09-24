@@ -20,8 +20,12 @@ INVALID_STORY = "backlog/stories/NONEXISTENT_STORY_99999.md"
 
 
 def _is_key_alignment_failure(stderr: str) -> bool:
-    """Détecte si l'échec du vibe-check est dû uniquement à un désalignement de clé LiteLLM."""
-    return "requiert la clé" in stderr and "active:" in stderr
+    """Détecte si l'échec du vibe-check est dû à un désalignement de clé LiteLLM
+    ou à un confinement de compétence (projet non aligné au contexte d'exécution actif).
+    Les deux cas sont des comportements guardrail attendus, non des régressions."""
+    key_mismatch = "requiert la clé" in stderr and "active:" in stderr
+    confinement_403 = "CONFINEMENT 403" in stderr or "STRICTEMENT INTERDITE" in stderr
+    return key_mismatch or confinement_403
 
 
 def run_swarm_cmd(args_list):

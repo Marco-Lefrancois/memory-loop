@@ -1,4 +1,4 @@
-﻿"""
+"""
 mLoop Agent Resilience Façade (ADR-0202 & ADR-0371).
 
 Découpage modulaire conforme aux seuils de complexité ADR-0202 (<300 lignes, <15 Ko).

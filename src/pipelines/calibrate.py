@@ -219,8 +219,8 @@ class EcosystemCalibrator:
         if not bridges_dir.exists() or not opencode_file.exists():
             self.log_step("2/8", "MCP Bridges -> opencode.json", "PASS", "Dossier bridges absent ou opencode.json introuvable.")
             return
-
-        mcp_scripts = list(bridges_dir.glob("mcp_*.py"))
+        internal_helpers = {"mcp_event_bus.py", "mcp_resources.py", "mcp_sse_server.py", "mcp_tools.py"}
+        mcp_scripts = [s for s in bridges_dir.glob("mcp_*.py") if s.name not in internal_helpers]
         try:
             opencode_data = json.loads(opencode_file.read_text(encoding="utf-8"))
             mcp_config = opencode_data.get("mcp", {})

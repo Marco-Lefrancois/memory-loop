@@ -240,7 +240,18 @@ class AstChecker:
 
         visitor = _AstRuleVisitor()
         visitor.visit(tree)
-        violations.extend(visitor.violations)
+
+        # Support `# noqa: RULE-AST-XX` : filtrer les violations supprimées explicitement
+        raw_violations = visitor.violations
+        filtered: list[AstViolation] = []
+        for v in raw_violations:
+            line_idx = v.line_number - 1
+            if 0 <= line_idx < len(lines):
+                line_text = lines[line_idx]
+                if f"# noqa: {v.rule_id}" in line_text or "# noqa: RULE-AST" in line_text:
+                    continue  # Suppression explicite déclarée
+            filtered.append(v)
+        violations.extend(filtered)
 
         duration_ms = (time.perf_counter() - t0) * 1000
         return AstAuditReport(

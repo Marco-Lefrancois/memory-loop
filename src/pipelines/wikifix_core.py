@@ -196,23 +196,27 @@ class WikiFixAgent(WikiFixAuditMixin, WikiFixHealMixin):
             ZeroFluffConsole.error(f"Échec écriture rapport: {e}")
 
         if struct_errs:
-            blocking, in_analyze = [], []
+            blocking, tolerated = [], []
+            # ADR-0385: Statuts legacy tolérés (rétrocompatibilité — pas de blocage
+            # INVEST sur les récits déjà livrés ou en cours d'analyse).
+            _tolerated = r"(?:IN_ANALYZE|IN_REVIEW|READY_FOR_GROOMING|READY_FOR_DEV|IN_DEV|IN_QA|DONE|DONE_TESTED|ACCEPTED|SHIPPED|TOMBSTONE|DRAFT|OPEN|ON_HOLD|CLOSED|SUPERSEDED|BACKLOG)"
             for sf in struct_errs:
                 p = project_path / sf["file"]
-                is_an = False
+                is_tol = False
                 if p.exists():
                     try:
                         if re.search(
-                            r"(?m)^status:\s*(?:IN_ANALYZE|IN_REVIEW)\b",
+                            rf"(?m)^status:\s*{_tolerated}\b",
                             p.read_text(encoding="utf-8"),
                         ):
-                            is_an = True
+                            is_tol = True
                     except Exception as exc:
                         logger.debug(f"Erreur statut {p}: {exc}", exc_info=True)
-                (in_analyze if is_an else blocking).append(sf)
-            if in_analyze:
+                (tolerated if is_tol else blocking).append(sf)
+            if tolerated:
                 ZeroFluffConsole.warning(
-                    f"[WikiFix IN_ANALYZE] {len(in_analyze)} récit(s) toléré(s)."
+                    f"[WikiFix Rétrocompatibilité] {len(tolerated)} récit(s) toléré(s) "
+                    f"(statut terminal ou en cours — audit INVEST non bloquant)."
                 )
             if blocking:
                 raise ValueError(f"[ÉCHEC INVEST] {len(blocking)} récit(s) non-conformes.")

@@ -3,12 +3,75 @@ import re
 import datetime
 import hashlib
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Literal, Optional, TypedDict
 
 from src.cli import ZeroFluffConsole
+from src.pipelines.pack_preserver import load_preserved_fields
 from src.utils.logger import get_logger
 
 logger = get_logger("pipelines.evidence_pack")
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MLOOP-180-BE : Types de parité Phase 2 (ADR-0320 / ADR-0361)
+# ──────────────────────────────────────────────────────────────────────────────
+
+DecisionCategory = Literal[
+    "architecture",
+    "pattern",
+    "refactoring",
+    "performance",
+    "security",
+    "tooling",
+    "testing",
+]
+
+_ALLOWED_DECISION_CATEGORIES = {
+    "architecture",
+    "pattern",
+    "refactoring",
+    "performance",
+    "security",
+    "tooling",
+    "testing",
+}
+
+
+class VerbatimExtract(TypedDict, total=False):
+    """Citation verbatim ancrée avec numéros de ligne (ADR-0320 §G)."""
+
+    source_file: str
+    lines: List[int]  # [start, end] — obligatoire pour VALIDATED
+    quote: str  # texte verbatim non vide
+    established_fact: str  # fait établi dérivé de la citation
+
+
+class ImplementationDecision(TypedDict, total=False):
+    """Décision d'implémentation tracée avec catégorie fermée."""
+
+    decision_id: str
+    category: str  # validé contre _ALLOWED_DECISION_CATEGORIES
+    rationale: str
+    alternatives_considered: List[str]
+    timestamp: str  # ISO-8601 UTC
+
+
+class DeclarativeContract(TypedDict, total=False):
+    """Référence déclarative à une route/CTA réellement utilisée (Zéro Fausse Route)."""
+
+    method: str  # GET | POST | PUT | PATCH | DELETE | N/A
+    path: str  # route ou "[API de soumission à définir]"
+    status: str  # "defined" | "to_define"
+    source: str  # fichier source où la route est déclarée
+
+
+class ConflictResolution(TypedDict, total=False):
+    """Résolution documentée d'une divergence récit vs code/maquette."""
+
+    artifact: str
+    narrative_claim: str
+    code_reality: str
+    resolution: str
+    authority: str  # "code" | "mockup" | "spec"
 
 
 class EvidencePackEngine:
@@ -30,6 +93,57 @@ class EvidencePackEngine:
         self.project_path = Path(project_path)
         self.evidence_dir = self.project_path / "memory" / "evidence"
         self.evidence_dir.mkdir(parents=True, exist_ok=True)
+
+    # ── MLOOP-180-BE : Validation catégorie fermée (CA-3) ────────────────────
+    @staticmethod
+    def _validate_decision_category(category: str) -> None:
+        """
+        Valide qu'une catégorie de décision appartient à la liste fermée (CA-3).
+
+        Raises:
+            ValueError: si la catégorie n'est pas dans _ALLOWED_DECISION_CATEGORIES.
+
+        ADR-0369 : jamais de swallow — l'exception se propage au caller.
+        """
+        if category not in _ALLOWED_DECISION_CATEGORIES:
+            raise ValueError(
+                f"[MLOOP-180-BE] Catégorie de décision hors liste fermée : {category!r}. "
+                f"Autorisées : {sorted(_ALLOWED_DECISION_CATEGORIES)}"
+            )
+
+    # ── MLOOP-180-BE : Validation verbatim (CA-2) ────────────────────────────
+    @staticmethod
+    def _validate_verbatim_extract(extract: "VerbatimExtract") -> None:
+        """
+        Valide qu'un VerbatimExtract porte une quote non vide et un ancrage ligne valide.
+
+        Raises:
+            ValueError: si quote vide ou lines invalides (None, mauvais ordre, non-liste).
+
+        ADR-0369 : jamais de swallow — l'exception se propage au caller.
+        """
+        quote = extract.get("quote", "")
+        if not quote:
+            raise ValueError(
+                "[MLOOP-180-BE] VerbatimExtract : le champ 'quote' ne peut pas être vide "
+                "(ADR-0320 §G — ancrage épistémique obligatoire)."
+            )
+        lines = extract.get("lines")
+        if lines is None:
+            raise ValueError(
+                "[MLOOP-180-BE] VerbatimExtract : ancrage ligne obligatoire (ADR-0320). "
+                "Fournir 'lines': [start, end]."
+            )
+        if not isinstance(lines, (list, tuple)) or len(lines) != 2:
+            raise ValueError(
+                f"[MLOOP-180-BE] VerbatimExtract : 'lines' doit être [start, end], reçu : {lines!r}."
+            )
+        start, end = lines[0], lines[1]
+        if not (isinstance(start, int) and isinstance(end, int)) or start > end:
+            raise ValueError(
+                f"[MLOOP-180-BE] VerbatimExtract : 'lines' invalides [start={start}, end={end}] "
+                "— start doit être ≤ end et les deux doivent être des entiers."
+            )
 
     def _resolve_source_sha256(self, src_name: str) -> Optional[str]:
         """Calcule l'empreinte SHA-256 d'une source trouvée sur disque."""
@@ -390,9 +504,11 @@ class EvidencePackEngine:
             sources.add(s_match.group(1))
 
         # 5. Extraction V-Model Harness : Scénarios de Test Gherkin
+        # FIX: \s* ajouté avant le mot-clé pour consommer l'indentation
+        # quand le groupe facultatif (### ou -) match une chaîne vide.
         scenarios = []
         scen_matches = re.finditer(
-            r"(?m)^(?:\s*###?\s*|\s*-\s*)?(?:Scénario|Scenario)\s*[:\-]\s*(.+)$",
+            r"(?m)^\s*(?:###?\s+|[-*]\s+)?(?:Scénario|Scenario)\s*[:\-]\s*(.+)$",
             content,
         )
         for s_m in scen_matches:
@@ -528,18 +644,60 @@ class EvidencePackEngine:
                 )
 
         # 7. Audit Épistémique (ADR-0335 / ADR-0336)
-        epistemic_audit = {
-            "what_it_actually_proves": [
-                f"Spécification adossée aux sources vérifiées : {', '.join(sorted(list(sources))[:3])}"
-                if sources
-                else "Spécification basée sur modèle déclaratif"
-            ],
-            "what_it_does_not_prove": [
-                f"Comportement sous réserve de validation des questions ouvertes : {', '.join(questions)}"
-                if questions
-                else "Aucune question ouverte non résolue"
-            ],
+        # MLOOP-180-BE : les 5 champs de parité sont INITIALISÉS vides si le pack
+        # n'existe pas (rétrocompat CA-5).
+        # MLOOP-181-BE : ils sont PRÉSERVÉS depuis le pack existant — les captures
+        # du harnais Phase 3 (tournoi, TDD, contrats, citations) survivent à la
+        # régénération de chaque `sync` (CA-1/CA-2/CA-4 + sceau Gate 3 intact).
+        _preserved_fields = load_preserved_fields(self.evidence_dir / f"{sid}_evidence.json")
+        verbatim_extracts: List[VerbatimExtract] = _preserved_fields["verbatim_extracts"]
+        implementation_decisions: List[ImplementationDecision] = _preserved_fields[
+            "implementation_decisions"
+        ]
+        declarative_contracts: List[DeclarativeContract] = _preserved_fields[
+            "declarative_contracts"
+        ]
+        conflict_matrix: List[ConflictResolution] = _preserved_fields["conflict_matrix"]
+
+        # Calcul richesse (Déc.5) — basé sur les 3 champs de contenu.
+        # richness_reference = 10 (borne douce documentée OQ-002).
+        richness = (
+            len(verbatim_extracts) + len(implementation_decisions) + len(declarative_contracts)
+        )
+        _richness_ref: int = 10
+        multiplier: float = round(0.7 + 0.3 * min(1.0, richness / _richness_ref), 4)
+
+        # what_it_actually_proves / what_it_does_not_prove : listes (non chaînes scalaires)
+        # pour permettre l'assertion de non-vacuité sur les packs VALIDATED (CA-4 élargi).
+        what_it_actually_proves: List[str] = [
+            f"Spécification adossée aux sources vérifiées : {', '.join(sorted(list(sources))[:3])}"
+            if sources
+            else "Spécification basée sur modèle déclaratif"
+        ]
+        what_it_does_not_prove: List[str] = [
+            f"Comportement sous réserve de validation des questions ouvertes : {', '.join(questions)}"
+            if questions
+            else "Aucune question ouverte non résolue"
+        ]
+
+        epistemic_audit: Dict[str, Any] = {
+            "what_it_actually_proves": what_it_actually_proves,
+            "what_it_does_not_prove": what_it_does_not_prove,
             "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+            # MLOOP-180-BE — Déc.5 : pénalité de richesse (richness_penalty)
+            "richness_penalty": {
+                "richness": richness,
+                "multiplier": multiplier,
+                # score sera rempli après le calcul root_score ci-dessous
+                "score": 0.0,
+                "reason": (
+                    "no_citations"
+                    if richness == 0
+                    else f"partial_richness ({richness}/{_richness_ref})"
+                    if richness < _richness_ref
+                    else "full_richness"
+                ),
+            },
         }
 
         proj_name = self.project_path.name
@@ -566,6 +724,15 @@ class EvidencePackEngine:
             )
         else:
             root_confidence, root_score = "MEDIUM", 0.75
+
+        # MLOOP-180-BE — Déc.5 : application du multiplicateur de richesse sur root_score.
+        # Effectué APRÈS le calcul root_score existant, AVANT la construction du dict final.
+        root_score = round(root_score * multiplier, 4)
+        if multiplier < 0.85 and root_confidence == "HIGH":
+            root_confidence = "MEDIUM"
+
+        # Mise à jour du score effectif dans richness_penalty (valeur post-multiplicateur).
+        epistemic_audit["richness_penalty"]["score"] = root_score
 
         existing_pack_path = self.evidence_dir / f"{sid}_evidence.json"
         status = "VALIDATED"
@@ -628,10 +795,21 @@ class EvidencePackEngine:
             "confidence": root_confidence,
             "confidence_score": root_score,
             "status": status,
+            # ── MLOOP-180-BE : 5 champs de parité Phase 2 (Optional — CA-5 rétrocompat) ──
+            # Tous initialisés à liste vide par défaut ; peuplement délégué à MLOOP-181-BE.
+            # Les callers legacy lisent via .get("verbatim_extracts", []) — zéro KeyError.
+            "verbatim_extracts": verbatim_extracts,
+            "implementation_decisions": implementation_decisions,
+            "declarative_contracts": declarative_contracts,
+            "conflict_matrix": conflict_matrix,
         }
 
         if preserved_fact_check_cert is not None:
             evidence_pack["fact_check_certificate"] = preserved_fact_check_cert
+
+        # MLOOP-181-BE : le sceau TDD Red/Green (Gate 3) survit à la régénération.
+        if _preserved_fields.get("tdd_cycle"):
+            evidence_pack["tdd_cycle"] = _preserved_fields["tdd_cycle"]
 
         return evidence_pack
 

@@ -28,6 +28,7 @@ Ceci est le **Cerveau** (Backend d'État & Méta-Orchestrateur) du cycle de vie 
 - **Fact-Search Documentaire** : MCP `loop_mem_search` ou `python src/swarm.py fact-search --query "<concept>"`.
 - **Exploration Sémantique & Dépendances Projet** : `python src/swarm.py graph-query --project <nom_projet> --query "<concept>"` (ou MCP `mcp_graphify`).
 - **Exploration AST du Code Source** : MCP `codegraph_explore` ou `python src/swarm.py code-explore`.
+- **Immunité Cognitive aux Heuristiques d'Outils (ADR-0385)** : Les messages de « budget » ou d'usage indicatifs (ex: *Explore budget: 3 calls*) sont des recommandations ergonomiques, jamais des verrous système. Appel d'épreuve obligatoire avant tout constat d'indisponibilité.
 - **Règles d'Exécution Shell** :
   - Ne JAMAIS chaîner les commandes avec `&&` sous PowerShell.
   - Ne JAMAIS exécuter un nom d'outil MCP comme commande shell dans le terminal.
@@ -198,6 +199,7 @@ Charger les directives opérationnelles via `view_file` uniquement lors de l'ent
 - **Revue Sémantique Qualitative** : Délivrer une revue de fond qualitative (Cohérence métier, 4 Piliers Gherkin, Confrontation Fact-Search, Recommandations) lors des audits Sentinel / `rubber-duck` (zéro score de linter mécanique).
 - **Devoir d'Analyse Critique & Déconstruction à Froid (First-Principles Roast & Anti-Sycophancy)** : Interdiction de polir passivement un brouillon existant. Déconstruire le récit à froid, confronter les exigences aux sources réelles (`docs/`, `reference/`), dénoncer les APIs fictives et émettre un avis franc avant tout Grill.
 - **Gouvernance Multi-Modèles LiteLLM** : Sélection dynamique adaptée (`claude-opus-4.8`, `gpt-5.6-terra-thinking`, `claude-sonnet-5`, `claude-sonnet-4.6`, `gemini-3.8-flash`, `gemini-3.7-flash`, `gpt-transcribe`).
+- **Falsification des Frontières d'Architecture & Échelle de Preuve à 3 Niveaux (ADR-0385)** : Pour toute qualification d'architecture, initiative ou composant, obligation d'appliquer la porte de falsification poppérienne (tester activement la rupture de runtime WebView/iframe, la rupture de données et la souveraineté du dépôt). Respecter strictement l'Échelle de Preuve : Niveau 1 (Lexicale/Grep, max `🟡` / $\le 40\%$), Niveau 2 (Structurelle AST/Call-Tree, requis pour DoR `🟢` / $\ge 85\%$), Niveau 3 (Dynamique Runtime, requis pour DoD `✅` / $100\%$). Découpler systématiquement le « symptôme UI » du « levier technique ».
 - **Philosophie Wu Wei** : Auto-apprentissage continu, économie d'actions superflues et synchronisation régulière via `python src/swarm.py sync`.
 
 ---
@@ -249,6 +251,8 @@ Charger les directives opérationnelles via `view_file` uniquement lors de l'ent
 - **Zéro Création de Compétence Jetable (Zero-Bloat Skills - ADR-0362)** : Interdiction d'ajouter des compétences unitaires dans `.agents/skills/` sans audit préalable via `python src/swarm.py doctor --skills`. Bonifier les compétences maîtresses existantes (`calibrate`, `dream_consolidator`, `rho_optimizer`) pour maintenir le budget de boot sous 15 000 jetons.
 
 #### 🧘 Posture & Intégrité Épistémique
+- **Interdiction de l'Auto-Censure sur Heuristiques d'Outils (Anti-Self-Censorship - ADR-0385)** : Interdiction formelle de renoncer à un outil d'inspection (« budget CodeGraph épuisé », « quota atteint », « API indisponible ») ou de basculer en mode dégradé sur la base de messages consultatifs, sans avoir soumis un appel d'épreuve réel soldé par une erreur d'exécution physique (Exit Code ≠ 0 ou exception bloquante du serveur). Tout échec présumé doit être falsifié par l'action.
+- **Interdiction de Sur-Certitude sur Inférence Lexicale (ADR-0385)** : Interdiction formelle de qualifier un composant ou un écran en « natif », « faisable » ou « 🟢 Quick-Win » sur la seule base d'une présence textuelle (Grep / Niveau 1) sans avoir prouvé l'arête d'appel reliant le déclencheur UI au traitement métier (AST / Niveau 2).
 - **Interdiction du Biais d'Acceptation Passive sur Dossier Vide (Anti-Ghost Bias)** : Si un projet résolu échoue au Vibe-Check sur l'intégrité SSOT ou présente un backlog manquant alors que l'intention porte sur un projet existant, obligation formelle de vérifier les projets alternatifs sous `Projects/` ou d'auditer la résolution sémantique avant de conclure à l'absence de backlog.
 - **Zéro Complaisance Synthétique (Anti-Sycophancy)** : Interdiction formelle de valider passivement des spécifications sans les avoir passées au crible des faits vérifiés. Ne jamais masquer une faiblesse de conception ou une sur-ingénierie artificielle pour clore prématurément un tour.
 - **Invariants Fondamentaux Résumés** : Ne jamais créer de documents jetables, ne jamais assumer sans fait vérifié, préserver l'intégrité lexicale sans dérive (Rosetta Canary) et rejeter tout travail non ancré dans la matière première ingérée.

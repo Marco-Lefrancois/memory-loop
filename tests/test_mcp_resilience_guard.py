@@ -6,6 +6,9 @@ from src.bridges.mcp_resilience_guard import (
     MCPResilienceGuard,
     MCPValidationError,
     MCPScopeViolationError,
+    handle_initialize,
+    handle_tools_list,
+    handle_tools_call,
 )
 
 
@@ -119,3 +122,42 @@ def test_compute_workflow_digest_deterministic(guard):
     digest2 = guard.compute_workflow_digest(sorted(steps2, key=lambda s: s["order"]))
     assert digest1 == digest2
     assert len(digest1) == 64
+
+
+def test_mcp_handlers_initialize_and_tools():
+    import json
+    # initialize
+    init_res = handle_initialize(req_id=42)
+    assert init_res["id"] == 42
+    assert init_res["result"]["serverInfo"]["name"] == "mloop-resilience-guard-mcp"
+
+    # tools/list
+    list_res = handle_tools_list(req_id=43)
+    tools = [t["name"] for t in list_res["result"]["tools"]]
+    assert "resilience_status" in tools
+    assert "resilience_validate_arguments" in tools
+    assert "resilience_check_permission" in tools
+    assert "resilience_encapsulate_result" in tools
+    assert "resilience_workflow_digest" in tools
+
+    # tools/call - status
+    call_status = handle_tools_call(req_id=44, params={"name": "resilience_status", "arguments": {}})
+    payload = json.loads(call_status["result"]["content"][0]["text"])
+    assert payload["status"] == "ACTIVE"
+    assert "delete" in payload["destructive_actions"]
+
+    # tools/call - validate arguments nominal
+    call_val = handle_tools_call(
+        req_id=45,
+        params={
+            "name": "resilience_validate_arguments",
+            "arguments": {"tool_name": "test", "arguments": {"a": "ok"}, "schema": {"type": "object", "properties": {"a": {"type": "string"}}}}
+        }
+    )
+    val_payload = json.loads(call_val["result"]["content"][0]["text"])
+    assert val_payload["valid"] is True
+
+    # tools/call - unknown tool
+    call_unk = handle_tools_call(req_id=46, params={"name": "unknown_tool", "arguments": {}})
+    assert "Outil inconnu" in call_unk["result"]["content"][0]["text"]
+

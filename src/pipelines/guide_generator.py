@@ -120,6 +120,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "vibe-check": "transverse",
     "dashboard": "transverse",
     "app-server": "transverse",
+    "mcp-serve": "transverse",
     "token-tracker": "transverse",
     "context-watch": "transverse",
     "cache-stats": "transverse",

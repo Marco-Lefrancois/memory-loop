@@ -13,6 +13,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
 
 from src.cli import ZeroFluffConsole, LoggingConsole
+from src.utils.logger import get_logger
+
+logger = get_logger("commands.build_harness_tdd")
 
 if TYPE_CHECKING:
     from src.state import LoopState
@@ -113,6 +116,51 @@ def handle_tdd_enforce(
                 f"Sceau GREEN validé : exit_code={green.exit_code} | AST=OK | "
                 f"SHA-256={green.source_sha256[:12]}..."
             )
+            # ── MLOOP-181-BE CA-2 : 1 décision `testing` par cycle complet ──
+            # Mode dégradé (Pilier 3) : la capture n'échoue jamais le scellement GREEN.
+            try:
+                import json as _json
+
+                from src.core.decision_recorder import DecisionRecorder
+
+                red_exit = 1
+                try:
+                    with open(evidence_file, "r", encoding="utf-8") as _f:
+                        red_exit = (
+                            _json.load(_f)
+                            .get("tdd_cycle", {})
+                            .get("red", {})
+                            .get("exit_code", 1)
+                        )
+                except Exception:
+                    logger.debug(
+                        "Lecture du sceau RED échouée, exit_code=1 par défaut",
+                        exc_info=True,
+                        extra={
+                            "component": "commands.build_harness_tdd",
+                            "operation": "handle_tdd_enforce.green",
+                            "story_id": story_id,
+                        },
+                    )
+                DecisionRecorder(project_path=base_dir).record_tdd_cycle_decision(
+                    evidence_path=evidence_file,
+                    story_id=story_id,
+                    test_file=str(test_arg),
+                    red_exit_code=red_exit,
+                    green_exit_code=green.exit_code,
+                )
+            except Exception as e:
+                ZeroFluffConsole.warning(
+                    f"Capture décision TDD non bloquante échouée (mode dégradé) : {e}"
+                )
+                _log_err(
+                    "tdd-enforce",
+                    "Capture décision TDD MLOOP-181-BE échouée, sceau GREEN préservé",
+                    args,
+                    story_id=story_id,
+                    phase=phase,
+                    exc_info=True,
+                )
             return 0
 
         elif phase == "verify":

@@ -1,4 +1,5 @@
 """Handlers Plannotator : review, annotate, guide-export (ADR-0305, ADR-0307, ADR-0363)."""
+
 from __future__ import annotations
 
 import argparse
@@ -66,7 +67,7 @@ def handle_review(args: argparse.Namespace, state: LoopState, project_path: Path
 
     ZeroFluffConsole.info(f"Lancement de la revue Plannotator dans {cwd}...")
     try:
-        res = subprocess.run(cmd, cwd=cwd)
+        res = subprocess.run(cmd, cwd=cwd, timeout=3600)
         return res.returncode
     except Exception as e:
         ZeroFluffConsole.error(f"Erreur lors du lancement de Plannotator review : {e}")
@@ -110,7 +111,11 @@ def _resolve_annotation_target(
             return str(proj_p)
         return file_path
 
-    candidate_plan = project_path / "memory" / "plan" / f"implementation_plan_{story_key}.md" if story_key else None
+    candidate_plan = (
+        project_path / "memory" / "plan" / f"implementation_plan_{story_key}.md"
+        if story_key
+        else None
+    )
     if candidate_plan and candidate_plan.exists():
         return str(candidate_plan)
 
@@ -153,7 +158,7 @@ def handle_annotate(args: argparse.Namespace, state: LoopState, project_path: Pa
 
     ZeroFluffConsole.info(f"Ouverture de Plannotator annotate sur : {target}")
     try:
-        res = subprocess.run(cmd)
+        res = subprocess.run(cmd, timeout=3600)
         if res.returncode == 0:
             ZeroFluffConsole.success(f"Annotation / Validation terminée avec succès sur {target}")
         else:
@@ -201,17 +206,24 @@ def handle_guide_export(args: argparse.Namespace, state: LoopState, project_path
                 patch_file.write_text(diff_res.stdout, encoding="utf-8")
                 guide_json = project_path / "memory" / "temp_guide.json"
                 import json
+
                 guide_json.write_text(
-                    json.dumps({
-                        "title": f"Review Livraison {getattr(state, 'focused_story', state.project_name)}",
-                        "intent": "Validation de story mLoop",
-                        "sections": [{"title": "Modifications", "overview": "Diff complet", "diffs": []}]
-                    }),
-                    encoding="utf-8"
+                    json.dumps(
+                        {
+                            "title": f"Review Livraison {getattr(state, 'focused_story', state.project_name)}",
+                            "intent": "Validation de story mLoop",
+                            "sections": [
+                                {"title": "Modifications", "overview": "Diff complet", "diffs": []}
+                            ],
+                        }
+                    ),
+                    encoding="utf-8",
                 )
                 cmd.extend(["--guide", str(guide_json), "--patch", str(patch_file)])
             else:
-                ZeroFluffConsole.warning("Aucun commit récent ou diff disponible pour l'export guide.")
+                ZeroFluffConsole.warning(
+                    "Aucun commit récent ou diff disponible pour l'export guide."
+                )
                 return 1
         except Exception as e:
             ZeroFluffConsole.error(f"Erreur lors de la génération du patch : {e}")

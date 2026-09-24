@@ -14,7 +14,6 @@ import pytest
 
 from src.utils.logger import MLoopFormatter, MLoopLoggerAdapter, get_logger
 from src.loop_mem.db import (
-    _get_observation_conn,
     get_observation_db_session,
     add_rho_rule,
     search_rho_solution,
@@ -175,8 +174,15 @@ class TestPythonSeniorStandards:
     # STANDARD 7 : DÉPRÉCIATION EXPLICITE (STACKLEVEL=2)
     # ═══════════════════════════════════════════════════════════
 
-    def test_get_observation_conn_emits_deprecation_warning(self):
-        """Vérifie que _get_observation_conn émet un DeprecationWarning formel."""
-        with pytest.deprecated_call():
-            conn = _get_observation_conn()
-            conn.close()
+    def test_get_observation_conn_removed_from_shim(self):
+        """MLOOP-178-BE Q5-A : _get_observation_conn supprimé à l'extraction (ADR-0369).
+
+        Le legacy helper (connexion nue) n'a plus aucun caller production ;
+        il doit être totalement absent du package shim src/loop_mem/db/.
+        """
+        import src.loop_mem.db as db_pkg
+
+        assert not hasattr(db_pkg, "_get_observation_conn"), (
+            "_get_observation_conn doit être absent du shim package (ADR-0369 L47)"
+        )
+        assert "_get_observation_conn" not in getattr(db_pkg, "__all__", ())

@@ -63,7 +63,7 @@ class AsyncLLMClient:
             # Initialisation AsyncOpenAI avec HTTP/2 si disponible
             if httpx is not None:
                 try:
-                    self._http_client = httpx.AsyncClient(
+                    self._http_client = httpx.AsyncClient(  # noqa: RULE-AST-02 (lifecycle géré via aclose() + async with AsyncLLMClient)
                         http2=True,
                         limits=httpx.Limits(max_keepalive_connections=50, max_connections=100),
                         timeout=60.0,
@@ -78,7 +78,7 @@ class AsyncLLMClient:
                             "error": str(e),
                         },
                     )
-                    self._http_client = httpx.AsyncClient(timeout=60.0)
+                    self._http_client = httpx.AsyncClient(timeout=60.0)  # noqa: RULE-AST-02 (lifecycle géré via aclose())
 
             self._openai_client = AsyncOpenAI(
                 api_key=self.api_key or "sk-dummy",

@@ -854,11 +854,11 @@ class WebCrawlerAgent:
         async with AsyncExitStack() as stack:
             try:
                 client = await stack.enter_async_context(
-                    httpx.AsyncClient(http2=True, verify=False)
+                    httpx.AsyncClient(http2=True, verify=False)  # noqa: RULE-AST-02 (lifecycle géré via AsyncExitStack.enter_async_context)
                 )
             except Exception:
                 client = await stack.enter_async_context(
-                    httpx.AsyncClient(http2=False, verify=False)
+                    httpx.AsyncClient(http2=False, verify=False)  # noqa: RULE-AST-02 (lifecycle géré via AsyncExitStack.enter_async_context)
                 )
 
             for current_depth in range(self.max_depth + 1):

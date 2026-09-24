@@ -30,14 +30,14 @@ class SemanticCache:
         else:
             self.db_path = Path(db_path)
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
         self._init_db()
 
     from contextlib import contextmanager
 
     @contextmanager
     def _connection(self):
-        conn = sqlite3.connect(str(self.db_path), timeout=15.0)
+        conn = sqlite3.connect(str(self.db_path), timeout=15.0)  # noqa: RULE-AST-02 (géré via @contextmanager _connection)
         conn.row_factory = sqlite3.Row
         try:
             conn.execute("PRAGMA journal_mode=WAL;")
@@ -84,7 +84,7 @@ class SemanticCache:
         user_prompt: str,
         response_schema: Optional[Dict[str, Any]] = None,
         temperature: float = 0.0,
-        extra_context: Optional[str] = None
+        extra_context: Optional[str] = None,
     ) -> str:
         """
         Calcule une clé de hachage SHA-256 canonique pour la requête LLM.
@@ -98,15 +98,15 @@ class SemanticCache:
         hasher.update(b"\x00")
         hasher.update(str(round(temperature, 2)).encode("utf-8"))
         hasher.update(b"\x00")
-        
+
         if response_schema:
             schema_str = json.dumps(response_schema, sort_keys=True)
             hasher.update(schema_str.encode("utf-8"))
         hasher.update(b"\x00")
-        
+
         if extra_context:
             hasher.update(extra_context.strip().encode("utf-8"))
-            
+
         return hasher.hexdigest()
 
     def get(self, cache_key: str) -> Optional[Dict[str, Any]]:
@@ -115,17 +115,16 @@ class SemanticCache:
         """
         with self._connection() as conn:
             row = conn.execute(
-                "SELECT * FROM semantic_cache WHERE cache_key = ?",
-                (cache_key,)
+                "SELECT * FROM semantic_cache WHERE cache_key = ?", (cache_key,)
             ).fetchone()
-            
+
             if row:
                 conn.execute(
                     "UPDATE semantic_cache SET hit_count = hit_count + 1, last_accessed = CURRENT_TIMESTAMP WHERE cache_key = ?",
-                    (cache_key,)
+                    (cache_key,),
                 )
                 conn.commit()
-                
+
                 parsed_json = None
                 if row["response_json"]:
                     try:
@@ -140,7 +139,7 @@ class SemanticCache:
                                 "error": str(e),
                             },
                         )
-                        
+
                 return {
                     "cache_key": row["cache_key"],
                     "model": row["model"],
@@ -149,7 +148,7 @@ class SemanticCache:
                     "prompt_tokens": row["prompt_tokens"],
                     "completion_tokens": row["completion_tokens"],
                     "hit_count": row["hit_count"] + 1,
-                    "created_at": row["created_at"]
+                    "created_at": row["created_at"],
                 }
         return None
 
@@ -162,32 +161,37 @@ class SemanticCache:
         user_prompt: str = "",
         response_json: Optional[Dict[str, Any]] = None,
         prompt_tokens: int = 0,
-        completion_tokens: int = 0
+        completion_tokens: int = 0,
     ) -> None:
         """
         Enregistre une réponse dans le cache SQLite.
         """
-        json_str = json.dumps(response_json, ensure_ascii=False) if response_json is not None else None
+        json_str = (
+            json.dumps(response_json, ensure_ascii=False) if response_json is not None else None
+        )
         sys_preview = system_prompt[:150] if system_prompt else ""
         user_preview = user_prompt[:150] if user_prompt else ""
-        
+
         with self._connection() as conn:
-            conn.execute("""
+            conn.execute(
+                """
                 INSERT OR REPLACE INTO semantic_cache (
                     cache_key, model, system_prompt_preview, user_prompt_preview,
                     response_text, response_json, prompt_tokens, completion_tokens,
                     hit_count, created_at, last_accessed
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-            """, (
-                cache_key,
-                model,
-                sys_preview,
-                user_preview,
-                response_text,
-                json_str,
-                prompt_tokens,
-                completion_tokens
-            ))
+            """,
+                (
+                    cache_key,
+                    model,
+                    sys_preview,
+                    user_preview,
+                    response_text,
+                    json_str,
+                    prompt_tokens,
+                    completion_tokens,
+                ),
+            )
             conn.commit()
 
     def clear(self, model: Optional[str] = None) -> int:
@@ -204,14 +208,19 @@ class SemanticCache:
         """Retourne des métriques d'utilisation du cache."""
         with self._connection() as conn:
             total_entries = conn.execute("SELECT COUNT(*) FROM semantic_cache").fetchone()[0]
-            total_hits = conn.execute("SELECT SUM(hit_count) FROM semantic_cache").fetchone()[0] or 0
-            saved_tokens = conn.execute(
-                "SELECT SUM((prompt_tokens + completion_tokens) * hit_count) FROM semantic_cache"
-            ).fetchone()[0] or 0
-            
+            total_hits = (
+                conn.execute("SELECT SUM(hit_count) FROM semantic_cache").fetchone()[0] or 0
+            )
+            saved_tokens = (
+                conn.execute(
+                    "SELECT SUM((prompt_tokens + completion_tokens) * hit_count) FROM semantic_cache"
+                ).fetchone()[0]
+                or 0
+            )
+
             return {
                 "total_entries": total_entries,
                 "total_hits": total_hits,
                 "saved_tokens_est": saved_tokens,
-                "db_path": str(self.db_path)
+                "db_path": str(self.db_path),
             }

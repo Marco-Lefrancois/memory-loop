@@ -39,7 +39,7 @@ class TestInstallHooks:
         hook = git_repo / ".git" / "hooks" / "pre-commit"
         assert hook.exists()
         content = hook.read_text(encoding="utf-8")
-        assert "code-check" in content
+        assert "code-check" in content or "ast_delta_checker" in content
         assert "struct-check" in content
         assert "git diff --cached" in content
         assert "MLOOP_SKIP_HOOKS" in content

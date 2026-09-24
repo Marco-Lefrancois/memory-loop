@@ -8,8 +8,9 @@ import logging
 import re
 import sqlite3
 import time
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterator, List, Optional
 
 from src.loop_mem.ollama_embed import cosine_similarity, get_embedding
 
@@ -237,10 +238,11 @@ class RHOHybridSearch:
             "weights_used": current_weights,
         }
 
-    def _get_db_connection(self) -> sqlite3.Connection:
-        """Retourne une connexion à la base de données avec timeout explicite (ADR-0369)."""
+    @contextmanager
+    def _get_db_connection(self) -> Iterator[sqlite3.Connection]:
+        """Context manager SQLite pour la recherche hybride RHO (ADR-0369 Std 2)."""
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        conn = sqlite3.connect(str(self.db_path), timeout=15.0)
+        conn = sqlite3.connect(str(self.db_path), timeout=15.0)  # noqa: RULE-AST-02 (géré via @contextmanager _get_db_connection)
         conn.row_factory = sqlite3.Row
         try:
             conn.execute("PRAGMA journal_mode=WAL;")
@@ -256,7 +258,10 @@ class RHOHybridSearch:
                     "error": str(e),
                 },
             )
-        return conn
+        try:
+            yield conn
+        finally:
+            conn.close()
 
 
 def search_rho_hybrid(

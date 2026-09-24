@@ -1,4 +1,5 @@
 import json
+import pytest
 from pathlib import Path
 from src.pipelines.evidence_pack import EvidencePackEngine
 
@@ -200,9 +201,7 @@ status: READY_FOR_GROOMING
     sealed = json.loads(pack_path.read_text(encoding="utf-8"))
     sealed["socle_factuel_validated_by_human"] = True
     sealed["socle_factuel_validated_at"] = "2026-09-10T10:52:00+00:00"
-    pack_path.write_text(
-        json.dumps(sealed, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    pack_path.write_text(json.dumps(sealed, indent=2, ensure_ascii=False), encoding="utf-8")
 
     # 2e passage (régénération WikiFix) : DOIT préserver le scellé humain
     pack2 = engine.extract_evidence(story_file)
@@ -290,8 +289,10 @@ status: READY_FOR_DEV
 
     # Validations du contrat d'architecture
     assert evidence["story_id"] == "INC-003-BE"
-    assert evidence["confidence"] == "HIGH"
-    assert evidence["confidence_score"] == 1.0
+    # MLOOP-180-BE (Déc.5) : richesse=0 (aucun verbatim/décision/contrat) →
+    # multiplier=0.7 → confidence dégradée HIGH→MEDIUM, score=1.0×0.7=0.7
+    assert evidence["confidence"] == "MEDIUM"
+    assert evidence["confidence_score"] == pytest.approx(0.7, abs=1e-4)
     assert evidence["status"] == "VALIDATED"
 
     # Vérification des faits projetés
@@ -320,3 +321,278 @@ status: READY_FOR_DEV
     assert dossier_proofs[0]["confidence"] == "HIGH"
     assert dossier_proofs[0]["confidence_score"] == 1.0
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MLOOP-180-BE — Tests de parité Phase 2 (CA-1 à CA-6 / ADR-0369)
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+def _make_minimal_story(tmp_path: Path, story_id: str, content_extra: str = "") -> tuple:
+    """Fixture helper : projet minimal + fichier story, retourne (engine, story_file)."""
+    project_dir = tmp_path / f"Proj_{story_id}"
+    project_dir.mkdir()
+    stories_dir = project_dir / "backlog" / "stories"
+    stories_dir.mkdir(parents=True)
+    story_file = stories_dir / f"{story_id}.md"
+    story_file.write_text(
+        f"---\nid: {story_id}\nstatus: READY_FOR_DEV\n---\n# {story_id}\n{content_extra}",
+        encoding="utf-8",
+    )
+    engine = EvidencePackEngine(project_dir)
+    return engine, story_file
+
+
+# ── Test 1 : CA-1 — 5 champs présents par défaut ─────────────────────────────
+
+
+def test_extract_evidence_includes_5_parity_fields_by_default(tmp_path):
+    """CA-1 : un pack neuf sans données source doit exposer les 5 clés de parité."""
+    engine, story_file = _make_minimal_story(tmp_path, "MLOOP-180-T1")
+    evidence = engine.extract_evidence(story_file)
+
+    for field in (
+        "verbatim_extracts",
+        "implementation_decisions",
+        "declarative_contracts",
+        "conflict_matrix",
+    ):
+        assert field in evidence, f"Champ manquant : {field!r}"
+        assert isinstance(evidence[field], list), f"{field!r} doit être une liste"
+
+    # richness_penalty dans epistemic_audit
+    assert "richness_penalty" in evidence["epistemic_audit"], (
+        "richness_penalty manquant dans epistemic_audit"
+    )
+
+
+# ── Test 2 : CA-2 — validation VerbatimExtract (parametrize) ─────────────────
+
+
+@pytest.mark.parametrize(
+    "extract, expected_fragment",
+    [
+        # quote vide → rejet
+        (
+            {"source_file": "foo.md", "lines": [1, 5], "quote": "", "established_fact": "fait"},
+            "quote",
+        ),
+        # lines=None → rejet
+        (
+            {"source_file": "foo.md", "lines": None, "quote": "texte", "established_fact": "fait"},
+            "ancrage ligne obligatoire",
+        ),
+        # lines mal ordonnées (start > end) → rejet
+        (
+            {
+                "source_file": "foo.md",
+                "lines": [10, 2],
+                "quote": "texte",
+                "established_fact": "fait",
+            },
+            "start doit être ≤ end",
+        ),
+        # lines non liste → rejet (les crochets sont échappés car match est un pattern regex)
+        (
+            {"source_file": "foo.md", "lines": 5, "quote": "texte", "established_fact": "fait"},
+            r"doit être \[start, end\]",
+        ),
+    ],
+)
+def test_verbatim_extracts_requires_nonempty_quote_and_lines(extract, expected_fragment):
+    """CA-2 : VerbatimExtract invalide → ValueError contextuelle (ADR-0369)."""
+    with pytest.raises(ValueError, match=expected_fragment):
+        EvidencePackEngine._validate_verbatim_extract(extract)  # type: ignore[arg-type]
+
+
+def test_verbatim_extract_valid_does_not_raise():
+    """CA-2 (nominal) : un VerbatimExtract correct ne lève pas d'exception."""
+    EvidencePackEngine._validate_verbatim_extract(
+        {
+            "source_file": "foo.md",
+            "lines": [3, 7],
+            "quote": "un texte valide",
+            "established_fact": "fait établi",
+        }
+    )  # ne doit pas lever
+
+
+# ── Test 3 : CA-3 — liste fermée des catégories de décision (parametrize) ────
+
+
+@pytest.mark.parametrize(
+    "category",
+    ["architecture", "pattern", "refactoring", "performance", "security", "tooling", "testing"],
+)
+def test_implementation_decision_category_valid_does_not_raise(category):
+    """CA-3 : les 7 catégories autorisées ne lèvent pas d'exception."""
+    EvidencePackEngine._validate_decision_category(category)  # ne doit pas lever
+
+
+def test_implementation_decision_category_closed_list_raises_for_invalid():
+    """CA-3 : catégorie hors liste fermée → ValueError contextualisée."""
+    with pytest.raises(ValueError, match="hors liste fermée"):
+        EvidencePackEngine._validate_decision_category("random_choice")
+
+
+@pytest.mark.parametrize("bad_cat", ["ARCHITECTURE", "infra", "ops", ""])
+def test_implementation_decision_category_rejects_variants(bad_cat):
+    """CA-3 : variantes (casse, alias, vide) → ValueError."""
+    with pytest.raises(ValueError):
+        EvidencePackEngine._validate_decision_category(bad_cat)
+
+
+# ── Test 4 : richness_penalty présent dans epistemic_audit ───────────────────
+
+
+def test_epistemic_audit_has_richness_penalty_key(tmp_path):
+    """CA-1 (UX) : richness_penalty exposé dans epistemic_audit avec les clés attendues."""
+    engine, story_file = _make_minimal_story(tmp_path, "MLOOP-180-T4")
+    evidence = engine.extract_evidence(story_file)
+
+    penalty = evidence["epistemic_audit"]["richness_penalty"]
+    for key in ("richness", "multiplier", "score", "reason"):
+        assert key in penalty, f"Clé manquante dans richness_penalty : {key!r}"
+
+    assert isinstance(penalty["richness"], int)
+    assert isinstance(penalty["multiplier"], float)
+    assert isinstance(penalty["score"], float)
+    assert isinstance(penalty["reason"], str)
+
+
+# ── Test 5 : bornes du multiplicateur de richesse (Déc.5) ────────────────────
+
+
+def test_richness_multiplier_bounds(tmp_path):
+    """Déc.5 : richesse=0 → mult=0.7 ; richesse≥10 → mult=1.0 (formule verrouillée)."""
+    engine, story_file = _make_minimal_story(tmp_path, "MLOOP-180-T5")
+    evidence = engine.extract_evidence(story_file)
+
+    penalty = evidence["epistemic_audit"]["richness_penalty"]
+    richness = penalty["richness"]
+    multiplier = penalty["multiplier"]
+
+    if richness == 0:
+        assert multiplier == pytest.approx(0.7), (
+            f"richesse=0 → multiplicateur attendu 0.7, obtenu {multiplier}"
+        )
+    elif richness >= 10:
+        assert multiplier == pytest.approx(1.0), (
+            f"richesse≥10 → multiplicateur attendu 1.0, obtenu {multiplier}"
+        )
+    else:
+        expected = round(0.7 + 0.3 * min(1.0, richness / 10), 4)
+        assert multiplier == pytest.approx(expected, abs=1e-4), (
+            f"richesse={richness} → mult attendu {expected}, obtenu {multiplier}"
+        )
+
+    # La story minimale n'a aucun extract/decision/contract → richesse=0 → mult=0.7
+    assert richness == 0
+    assert multiplier == pytest.approx(0.7)
+
+
+# ── Test 6 : CA-5 — rétrocompatibilité pack legacy sans les 5 champs ─────────
+
+
+def test_legacy_pack_without_5_fields_still_parses(tmp_path):
+    """CA-5 : un pack existant sans les 5 champs est rechargeable sans KeyError."""
+    project_dir = tmp_path / "ProjLegacy"
+    project_dir.mkdir()
+    stories_dir = project_dir / "backlog" / "stories"
+    stories_dir.mkdir(parents=True)
+    evidence_dir = project_dir / "memory" / "evidence"
+    evidence_dir.mkdir(parents=True)
+
+    story_file = stories_dir / "LEGACY-001.md"
+    story_file.write_text(
+        "---\nid: LEGACY-001\nstatus: READY_FOR_DEV\n---\n# Legacy story\n",
+        encoding="utf-8",
+    )
+
+    # Simule un pack legacy sans les 5 champs (71 packs existants avant MLOOP-180-BE)
+    legacy_pack = {
+        "story_id": "LEGACY-001",
+        "jira_key": None,
+        "timestamp": "2026-01-01T00:00:00+00:00",
+        "fact_search_status": "VERIFIED",
+        "fact_search_proofs": [],
+        "source_hashes_sha256": {},
+        "epistemic_audit": {
+            "what_it_actually_proves": ["Spécification basée sur modèle déclaratif"],
+            "what_it_does_not_prove": ["Aucune question ouverte non résolue"],
+            "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+        },
+        "facts_verified": [],
+        "sources_consulted": [],
+        "external_references": [],
+        "alerts": [],
+        "open_questions": [],
+        "visual_contract": [],
+        "socle_factuel_validated_by_human": False,
+        "socle_factuel_validated_at": None,
+        "verification_harness": [],
+        "next_actions": [],
+        "confidence": "MEDIUM",
+        "confidence_score": 0.75,
+        "status": "VALIDATED",
+        # NB : PAS de verbatim_extracts, implementation_decisions,
+        #      declarative_contracts, conflict_matrix — c'est l'état legacy.
+    }
+    pack_path = evidence_dir / "LEGACY-001_evidence.json"
+    pack_path.write_text(json.dumps(legacy_pack, indent=2), encoding="utf-8")
+
+    # Régénération via extract_evidence → ne doit pas lever de KeyError
+    engine = EvidencePackEngine(project_dir)
+    evidence = engine.extract_evidence(story_file)
+
+    # Les 5 champs doivent être présents (initialisés à []) même si le pack legacy ne les avait pas
+    assert "verbatim_extracts" in evidence
+    assert "implementation_decisions" in evidence
+    assert "declarative_contracts" in evidence
+    assert "conflict_matrix" in evidence
+    assert isinstance(evidence["verbatim_extracts"], list)
+    assert isinstance(evidence["implementation_decisions"], list)
+    assert isinstance(evidence["declarative_contracts"], list)
+    assert isinstance(evidence["conflict_matrix"], list)
+
+    # Le socle humain ne doit pas être perdu (merge non-destructif)
+    # legacy n'a pas de socle validé → False par défaut
+    assert evidence["socle_factuel_validated_by_human"] is False
+
+
+# ── Test 7 : conflict_matrix et declarative_contracts — backcompat .get() ─────
+
+
+def test_conflict_matrix_declarative_contracts_optional_backcompat(tmp_path):
+    """CA-5 : accès .get() sur un pack sans les champs ne lève aucune KeyError."""
+    engine, story_file = _make_minimal_story(tmp_path, "MLOOP-180-T7")
+    evidence = engine.extract_evidence(story_file)
+
+    # Simule un appelant legacy lisant le pack avec .get() (Zéro KeyError garanti)
+    conflict_matrix = evidence.get("conflict_matrix", [])
+    declarative_contracts = evidence.get("declarative_contracts", [])
+    verbatim_extracts = evidence.get("verbatim_extracts", [])
+    implementation_decisions = evidence.get("implementation_decisions", [])
+
+    assert isinstance(conflict_matrix, list)
+    assert isinstance(declarative_contracts, list)
+    assert isinstance(verbatim_extracts, list)
+    assert isinstance(implementation_decisions, list)
+
+    # Les listes sont vides (aucune source dans la story minimale)
+    assert conflict_matrix == []
+    assert declarative_contracts == []
+    assert verbatim_extracts == []
+    assert implementation_decisions == []
+
+    # Vérification que le pack sérialisé (JSON round-trip) est stable sans KeyError
+    saved_path = engine.save_evidence_pack(evidence)
+    reloaded = json.loads(saved_path.read_text(encoding="utf-8"))
+
+    for field in (
+        "verbatim_extracts",
+        "implementation_decisions",
+        "declarative_contracts",
+        "conflict_matrix",
+    ):
+        assert field in reloaded, f"Champ {field!r} absent après sérialisation JSON"
+        assert isinstance(reloaded[field], list)

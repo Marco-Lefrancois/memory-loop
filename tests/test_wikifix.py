@@ -1,6 +1,7 @@
 from pathlib import Path
 import pytest
 from src.pipelines.wikifix import WikiFixAgent, os_relative_path
+from src.state import LoopState
 
 
 def test_wikifix_normalize_callout():
@@ -56,7 +57,9 @@ def test_wikifix_audit_technical_leakage(tmp_path: Path):
     backlog_dir = tmp_path / "backlog" / "stories"
     backlog_dir.mkdir(parents=True, exist_ok=True)
     bad_story = backlog_dir / "STORY-001.md"
-    bad_story.write_text("Installation: `npm install axios` et `import * from 'redux'`", encoding="utf-8")
+    bad_story.write_text(
+        "Installation: `npm install axios` et `import * from 'redux'`", encoding="utf-8"
+    )
 
     leakages = agent._audit_technical_leakage(tmp_path, [bad_story])
     assert len(leakages) >= 2
@@ -77,3 +80,34 @@ def test_wikifix_detect_orphans(tmp_path: Path):
     orphans = agent._detect_orphans(tmp_path, [f1, f2], referenced)
     assert len(orphans) == 1
     assert "page2.md" in orphans[0]
+
+
+@pytest.mark.parametrize(
+    "status,expect_blocking",
+    [
+        ("ON_HOLD", False),
+        ("CLOSED", False),
+        ("SUPERSEDED", False),
+        ("BACKLOG", False),
+        ("READY_FOR_DEV", False),
+        ("UNKNOWN_STATUS_XYZ", True),
+    ],
+)
+def test_write_report_invest_status_gating(tmp_path: Path, status: str, expect_blocking: bool):
+    """ADR-0385 : les statuts non-actifs (ON_HOLD/CLOSED/SUPERSEDED) ne bloquent
+    pas l'audit INVEST structurel ; un statut inconnu doit lever ÉCHEC INVEST."""
+    agent = WikiFixAgent()
+    story = tmp_path / "backlog" / "stories" / "S-1.md"
+    story.parent.mkdir(parents=True, exist_ok=True)
+    story.write_text(
+        f"---\nid: S-1\nstatus: {status}\n---\n\n# Récit\n",
+        encoding="utf-8",
+    )
+    state = LoopState(project_name="TestProj")
+    struct_errs = [{"file": "backlog/stories/S-1.md", "issue": "défaut test"}]
+
+    if expect_blocking:
+        with pytest.raises(ValueError, match=r"\[ÉCHEC INVEST\]"):
+            agent._write_report_and_assert(tmp_path, state, [], [], [], [], [], [], struct_errs)
+    else:
+        agent._write_report_and_assert(tmp_path, state, [], [], [], [], [], [], struct_errs)

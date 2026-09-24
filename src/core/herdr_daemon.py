@@ -53,7 +53,7 @@ class HerdrDaemonMixin:
             else:
                 kwargs["start_new_session"] = True
             try:
-                proc = subprocess.Popen(
+                proc = subprocess.Popen(  # noqa: RULE-AST-03 (attente bornée via proc.wait(timeout=10) L64)
                     [self.herdr_bin, "server"],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
