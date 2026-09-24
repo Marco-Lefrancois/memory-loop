@@ -81,6 +81,7 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0340](0340-hallmark-anti-slop-ui-macrostructures.md)** : Intégration du Standard Hallmark (Anti-AI-Slop, 21 Macrostructures UI & Matrice 8 États)
 *   **[ADR-0341](0341-runnable-gates-depth-tree-orchestration.md)** : Runnable Gates, Depth Tree Orchestration & Empreintes Déterministes
 *   **[ADR-0342](0342-declarative-yaml-extraction-blueprints.md)** : Blueprints d'Extraction Déclarative YAML & Distillation de Connaissances Typées
+*   **[ADR-0342](0342-modular-project-architecture-and-subdomain-isolation.md)** : Architecture de Projet Modulaire par Sous-Domaines & Isolation des Baux OWNS: *(Doublon de numéro — renumérotation différée, dette tracée MLOOP-205-BE)*
 *   **[ADR-0343](0343-hypergraph-knowledge-abstracts-ssot.md)** : Hypergraph Knowledge Abstracts & Relations N-aires SSOT
 *   **[ADR-0344](0344-story-status-in-review-rework-lifecycle.md)** : Statut IN_REVIEW, Protocole de Révision Post-Validation & Re-Grill de Portée
 *   **[ADR-0345](0345-herdr-runtime-deep-integration-plugin-architecture.md)** : Intégration Approfondie de Herdr Runtime v0.8.2, Matrice Zero-Blindspot & Architecture Plugin Officiel mLoop
@@ -121,9 +122,10 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0384](0384-project-directives-ssot-boot-enforcement.md)** : Application du Chargement des Directives Projet & Ancrage SSOT Canonique (Hiérarchie 3 niveaux, Check conditionnel WARNING, Sémantique tri-état)
 *   **[ADR-0385](0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md)** : Protocole de Falsification des Frontières d'Architecture, Étalonnage de Confiance & Immunité Cognitive aux Heuristiques d'Outils
 *   **[ADR-0386](0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md)** : Gouvernance GitHub Rulesets, Flux de Pull Requests Obligatoire & Protocole de Livraison Phase 5 (SHIP)
+*   **[ADR-0387](0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md)** : Intégration des Standards MCP Modernes 2026-07-28 (Tasks, MCP Apps, Elicitation & Header Routing)
 
 ---
-*Dernière consolidation constitutionnelle : 24 septembre 2026 — 102 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 24 septembre 2026 — 103 ADRs Unifiées (Zéro Conflit)*
 | 0373 | [Génération Multi-Branches (Multi-Draft Challenge) & Auto-Évaluation Déterministe Locale](0373-generation-multi-draft-et-tournoi-auto-evaluatif-local.md) | Approuvé |
 | 0374 | [Standard MCP de Cyber-Résilience Agentique & Workflows Déterministes](0374-standard-mcp-cyber-resilience-et-workflows-deterministes.md) | Approuvé |
 | 0375 | [Réalignement du Cycle de Vie en 5 Phases, Typologie d'Analyses & Règle des 2 Gabarits](0375-project-lifecycle-5-phases-and-analysis-types.md) | Approuvé |
@@ -138,5 +140,6 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 | 0384 | [Application du Chargement des Directives Projet & Ancrage SSOT Canonique](0384-project-directives-ssot-boot-enforcement.md) | Approuvé |
 | 0385 | [Protocole de Falsification des Frontières d'Architecture, Étalonnage de Confiance & Immunité Cognitive](0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md) | Approuvé |
 | 0386 | [Gouvernance GitHub Rulesets, Flux de Pull Requests Obligatoire & Protocole de Livraison Phase 5 (SHIP)](0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md) | Approuvé |
+| 0387 | [Intégration des Standards MCP Modernes 2026-07-28 (Tasks, MCP Apps, Elicitation & Header Routing)](0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md) | Approuvé |
 
 
