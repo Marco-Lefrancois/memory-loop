@@ -31,7 +31,7 @@ Bienvenue dans le centre de documentation et de connaissance de **Memory Loop (m
 
 ## 🛠️ 4. Outils & Monitoring
 - 🧰 **[Boîte à Outils (tools/README.md)](../tools/README.md)** : Catalogue des utilitaires transverses.
-- 💳 **[Suivi Budget LiteLLM (tools/budget/README.md)](../tools/budget/README.md)** : Monitoring des coûts NMedia Cloud.
+- 💳 **[Suivi Budget LiteLLM (tools/budget/README.md)](../tools/budget/README.md)** : Monitoring des coûts LiteLLM.
 
 ---
 *Dernière consolidation SSOT : Septembre 2026 (v2.32.0)*
