@@ -124,9 +124,11 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0386](0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md)** : Gouvernance GitHub Rulesets, Flux de Pull Requests Obligatoire & Protocole de Livraison Phase 5 (SHIP)
 *   **[ADR-0387](0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md)** : Intégration des Standards MCP Modernes 2026-07-28 (Tasks, MCP Apps, Elicitation & Header Routing)
 *   **[ADR-0388](0388-worker-build-default-free-model.md)** : Bascule du Modèle par Défaut de la Mission `build` vers le Free Tier Natif OpenCode (MiMo-V2.6-Flash Free)
+*   **[ADR-0389](0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md)** : Grill-Me v2 — Frontier Rounds, Handoff Ungrillable & Immunité Context Budget
+*   **[ADR-0390](0390-fact-search-indexation-arbres-niches-docs-domaine-couche.md)** : Indexation Fact-Search Multi-Niveaux (`docs/<domaine>/<couche>/`) & Contrat `doc_path` Racine Projet
 
 ---
-*Dernière consolidation constitutionnelle : 24 septembre 2026 — 104 ADRs Unifiées (Zéro Conflit)*
+*Dernière consolidation constitutionnelle : 24 septembre 2026 — 106 ADRs Unifiées (Zéro Conflit)*
 | 0373 | [Génération Multi-Branches (Multi-Draft Challenge) & Auto-Évaluation Déterministe Locale](0373-generation-multi-draft-et-tournoi-auto-evaluatif-local.md) | Approuvé |
 | 0374 | [Standard MCP de Cyber-Résilience Agentique & Workflows Déterministes](0374-standard-mcp-cyber-resilience-et-workflows-deterministes.md) | Approuvé |
 | 0375 | [Réalignement du Cycle de Vie en 5 Phases, Typologie d'Analyses & Règle des 2 Gabarits](0375-project-lifecycle-5-phases-and-analysis-types.md) | Approuvé |
@@ -143,5 +145,8 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 | 0386 | [Gouvernance GitHub Rulesets, Flux de Pull Requests Obligatoire & Protocole de Livraison Phase 5 (SHIP)](0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md) | Approuvé |
 | 0387 | [Intégration des Standards MCP Modernes 2026-07-28 (Tasks, MCP Apps, Elicitation & Header Routing)](0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md) | Approuvé |
 | 0388 | [Bascule du Modèle par Défaut de la Mission `build` vers le Free Tier Natif OpenCode (MiMo-V2.6-Flash Free)](0388-worker-build-default-free-model.md) | Approuvé |
+| 0389 | [Grill-Me v2 — Frontier Rounds, Handoff Ungrillable & Immunité Context Budget](0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md) | Approuvé |
+| 0390 | [Indexation Fact-Search Multi-Niveaux (`docs/<domaine>/<couche>/`) & Contrat `doc_path` Racine Projet](0390-fact-search-indexation-arbres-niches-docs-domaine-couche.md) | Proposé |
+
 
 
