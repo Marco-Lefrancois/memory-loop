@@ -22,6 +22,10 @@ dependencies = [
     "pypdf>=3.0.0",
     "openpyxl>=3.0.0",
     "python-docx>=1.0.0",
+    "tree-sitter>=0.21.0",
+    "tree-sitter-python>=0.21.0",
+    "tree-sitter-typescript>=0.21.0",
+    "tree-sitter-c-sharp>=0.21.0",
 ]
 
 [project.optional-dependencies]
@@ -46,7 +50,7 @@ packages = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-python_files = ["test_*.py"]
+python_files = ["test_*.py", "*_test.py"]
 filterwarnings = [
     "default::DeprecationWarning",
 ]

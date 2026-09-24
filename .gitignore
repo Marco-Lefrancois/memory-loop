@@ -136,6 +136,7 @@ scratch/
 .obsidian/
 .omp/
 .claude/
+.cline/
 login_notebooklm.mjs
 
 # VS Code

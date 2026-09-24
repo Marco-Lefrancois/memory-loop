@@ -2,8 +2,8 @@
   "$schema": "https://opencode.ai/config.json",
   "shell": "pwsh",
   "subagent_depth": 2,
-  "model": "nmedia_cloud/claude-sonnet-5",
-  "small_model": "nmedia_cloud/gemini-3.8-flash",
+  "model": "litellm_proxy/votre-modele-principal",
+  "small_model": "litellm_proxy/votre-modele-rapide",
   "default_agent": "orchestrator",
   "autoupdate": false,
   "lsp": true,
@@ -47,201 +47,11 @@
     ]
   },
   "provider": {
-    "nmedia_cloud": {
+    "litellm_proxy": {
       "npm": "@ai-sdk/openai-compatible",
       "options": {
-        "baseURL": "https://api-ia.nmedia.ca/v1",
-        "apiKey": "{env:NMEDIA_CLOUD_API_KEY}"
-      },
-      "models": {
-        "claude-opus-4.8": {
-          "name": "claude-opus-4.8"
-        },
-        "claude-opus-4-8": {
-          "name": "claude-opus-4-8"
-        },
-        "claude-sonnet-5": {
-          "name": "claude-sonnet-5"
-        },
-        "claude-sonnet-5-thinking": {
-          "name": "claude-sonnet-5-thinking"
-        },
-        "claude-opus-4.7": {
-          "name": "claude-opus-4.7"
-        },
-        "claude-opus-4-7": {
-          "name": "claude-opus-4-7"
-        },
-        "claude-opus-4.6": {
-          "name": "claude-opus-4.6"
-        },
-        "claude-opus-4-6": {
-          "name": "claude-opus-4-6"
-        },
-        "claude-sonnet-4.6": {
-          "name": "claude-sonnet-4.6"
-        },
-        "claude-sonnet-4-6": {
-          "name": "claude-sonnet-4-6"
-        },
-        "claude-sonnet-4.5": {
-          "name": "claude-sonnet-4.5"
-        },
-        "claude-sonnet-4-5-20250929": {
-          "name": "claude-sonnet-4-5-20250929"
-        },
-        "claude-haiku-4.5": {
-          "name": "claude-haiku-4.5"
-        },
-        "claude-haiku-4-5": {
-          "name": "claude-haiku-4-5"
-        },
-        "claude-haiku-4-5-20251001": {
-          "name": "claude-haiku-4-5-20251001"
-        },
-        "gpt-5.6-terra-thinking": {
-          "name": "gpt-5.6-terra-thinking"
-        },
-        "gpt-5.6-terra": {
-          "name": "gpt-5.6-terra"
-        },
-        "gpt-5.6-luna-thinking": {
-          "name": "gpt-5.6-luna-thinking"
-        },
-        "gpt-5.6-luna": {
-          "name": "gpt-5.6-luna"
-        },
-        "gpt-5.6-sol": {
-          "name": "gpt-5.6-sol"
-        },
-        "gpt-5.5-thinking": {
-          "name": "gpt-5.5-thinking"
-        },
-        "gpt-5.5": {
-          "name": "gpt-5.5"
-        },
-        "gpt-5.4-thinking": {
-          "name": "gpt-5.4-thinking"
-        },
-        "gpt-5.4": {
-          "name": "gpt-5.4"
-        },
-        "gpt-5.4-mini": {
-          "name": "gpt-5.4-mini"
-        },
-        "gpt-5.4-nano": {
-          "name": "gpt-5.4-nano"
-        },
-        "gpt-5.2-thinking": {
-          "name": "gpt-5.2-thinking"
-        },
-        "gpt-5.2": {
-          "name": "gpt-5.2"
-        },
-        "gpt-5.2-azure-canada": {
-          "name": "gpt-5.2-azure-canada"
-        },
-        "gpt-5-mini": {
-          "name": "gpt-5-mini"
-        },
-        "gpt-5-mini-azure-canada": {
-          "name": "gpt-5-mini-azure-canada"
-        },
-        "gpt-5-nano": {
-          "name": "gpt-5-nano"
-        },
-        "gpt-4.1-nano": {
-          "name": "gpt-4.1-nano"
-        },
-        "gpt-4o": {
-          "name": "gpt-4o"
-        },
-        "gemini-3.8-flash": {
-          "name": "gemini-3.8-flash"
-        },
-        "gemini-3.7-flash": {
-          "name": "gemini-3.7-flash"
-        },
-        "gpt-transcribe": {
-          "name": "gpt-transcribe"
-        },
-        "gemini-3.5-flash-lite": {
-          "name": "gemini-3.5-flash-lite"
-        },
-        "gemini-3.1-flash-lite": {
-          "name": "gemini-3.1-flash-lite"
-        },
-        "codestral-2501": {
-          "name": "codestral-2501"
-        },
-        "Automatique": {
-          "name": "Automatique"
-        },
-        "Économique": {
-          "name": "Économique"
-        },
-        "Anthropic": {
-          "name": "Anthropic"
-        },
-        "Canada (Azure)": {
-          "name": "Canada (Azure)"
-        },
-        "Canada (Azure) économique": {
-          "name": "Canada (Azure) économique"
-        },
-        "gemini-3.1-pro-preview-thinking": {
-          "name": "gemini-3.1-pro-preview-thinking"
-        },
-        "gemini-3.1-flash-lite-thinking": {
-          "name": "gemini-3.1-flash-lite-thinking"
-        },
-        "gemini-3.1-pro-preview": {
-          "name": "gemini-3.1-pro-preview"
-        },
-        "gemini-3-flash-preview-thinking": {
-          "name": "gemini-3-flash-preview-thinking"
-        },
-        "gemini-3-flash-preview": {
-          "name": "gemini-3-flash-preview"
-        },
-        "gemini-2.5-pro": {
-          "name": "gemini-2.5-pro"
-        },
-        "gemini-2.5-flash": {
-          "name": "gemini-2.5-flash"
-        }
-      }
-    },
-    "ollama": {
-      "npm": "ollama-ai-provider",
-      "options": {
-        "baseURL": "http://localhost:11434/api"
-      },
-      "models": {
-        "gemma3:4b": {
-          "name": "gemma3:4b"
-        },
-        "mimo:7b": {
-          "name": "alibayram/mimo-7b-rl:latest"
-        },
-        "qwen3-embedding:4b": {
-          "name": "qwen3-embedding:4b"
-        },
-        "deepseek-r1:7b": {
-          "name": "deepseek-r1:7b"
-        },
-        "llama3.1:8b": {
-          "name": "llama3.1:8b-instruct-q5_K_M"
-        },
-        "gemma4:e2b": {
-          "name": "gemma4:e2b"
-        },
-        "qwen2.5-coder:32b": {
-          "name": "qwen2.5-coder:32b"
-        },
-        "qwen2.5-coder:7b": {
-          "name": "qwen2.5-coder:7b"
-        }
+        "baseURL": "{env:LITELLM_BASE_URL}/v1",
+        "apiKey": "{env:LITELLM_API_KEY}"
       }
     }
   },
@@ -249,7 +59,6 @@
     "orchestrator": {
       "description": "Orchestrateur principal | Coordonne les phases du cycle P-A-V et pilote les transitions d'états.",
       "mode": "primary",
-      "model": "nmedia_cloud/claude-opus-4.8",
       "temperature": 0.1,
       "prompt": "Fichier de référence : AGENTS.md\n{file:AGENTS.md}\n\nTu es l'Orchestrateur Principal mLoop.\n\n## 🚨 DELEGATION GATE — CHECKPOINT OBLIGATOIRE AVANT TOUTE ACTION\n\nAVANT d'exécuter toute tâche, tu DOIS évaluer les 4 critères de délégation dans cet ordre :\n\n1. **Volume** : La tâche couvre-t-elle ≥ 3 fichiers à modifier OU ≥ 2 stories simultanées ? → SI OUI : `worker-spawn`\n2. **Durée** : L'exécution dépasse-t-elle ~5 minutes (scan backlog, audit multi-récits, génération de tests) ? → SI OUI : `worker-spawn`\n3. **Type** : S'agit-il de `validation`, `build`, `deepsearch` ou `compaction` sur plusieurs fichiers ? → SI OUI : `worker-spawn`\n4. **Isolation** : Le contexte de la tâche polluerait-il la session principale ? → SI OUI : `worker-spawn`\n\nSI AU MOINS UN CRITÈRE EST OUI → Déléguer OBLIGATOIREMENT via :\n```\npython src/swarm.py worker-spawn --project <P> --story <ID> --task-type <type>\n```\nNE JAMAIS exécuter soi-même une tâche qui répond à l'un de ces critères.\n\nSI AUCUN CRITÈRE N'EST REMPLI → Exécuter directement sur le thread principal.\n\n## Rôle et Séquence d'Amorçage\n\nTon rôle, ta séquence d'amorçage et tes limites (Boundaries) sont définis dans AGENTS.md ci-dessus. Exécute la Boot Sequence mécaniquement à chaque premier tour.",
       "color": "accent",
@@ -258,7 +67,6 @@
     "plan": {
       "description": "Expert Planification & Architecture | Gère l'analyse d'affaires, le Grilling DDD et la structure des ADR / Backlogs.",
       "mode": "primary",
-      "model": "nmedia_cloud/claude-sonnet-5",
       "temperature": 0.1,
       "prompt": "Fichier de référence : AGENTS.md\n{file:AGENTS.md}\n\nTu es l'Expert Planification & Architecture mLoop.\n\n## 🛡️ RÈGLES D'OR DE RÉDACTION (GABARIT UNIQUE SSOT)\n1. **Respect absolu du Gabarit (`standards/blueprints/story_template.md`)** :\n   - Frontmatter YAML complet : `id`, `jira_key`, `epic_key`, `type`, `title`, `status`, `layer`.\n   - Titre H1 : `# <Titre Métier Pur>` (Zéro clé Jira ni ID dans le H1).\n   - Critères d'acceptation : OBLIGATION d'inclure `### Interface et UX` (avec les 4 sous-sections et la Matrice des 4 États Visuels même en mode dégradé/backend) et le tableau `### Liste Call to Actions`.\n   - Contrats d'échange : OBLIGATION du Profil A ou B. ZÉRO tag `OQ-XXX` sur un récit `READY_FOR_DEV` (si aucune API n'est requise, utiliser une simple note déclarative sans tag OQ).\n   - 4 Piliers Gherkin en français : 1. Nominal, 2. Exceptions, 3. Résilience, 4. UX & Observabilité.\n   - Fin stricte : Le fichier se termine IMMÉDIATEMENT après le bloc Gherkin (aucun `---` résiduel).\n2. **Fact-Search & Zéro Fichier Fantôme** : Toute source citée doit exister sous `docs/` ou être formulée de manière fonctionnelle déclarative.\n3. **Interdiction de READY_FOR_DEV sans Grill-with-Docs interactif**.",
       "color": "info",
@@ -272,7 +80,6 @@
     "build": {
       "description": "Expert Code & Développement | Écrit le code physique (TS, Python) et applique le self-healing réactif.",
       "mode": "primary",
-      "model": "nmedia_cloud/claude-sonnet-5",
       "temperature": 0.2,
       "prompt": "Fichier de référence : AGENTS.md\n{file:AGENTS.md}",
       "color": "success",
@@ -286,7 +93,6 @@
     "sentinel": {
       "description": "Expert Validation & Audit | Exécute la revue contradictoire Rubber Duck en Read-Only, audite la conformité du code/récits et calcule le Sint-Score.",
       "mode": "primary",
-      "model": "nmedia_cloud/claude-opus-4.8",
       "temperature": 0.1,
       "prompt": "Fichier de référence : AGENTS.md\n{file:AGENTS.md}",
       "color": "warning",
@@ -301,7 +107,6 @@
     "worker": {
       "description": "Worker isolé (Clean Slate) | Exécute une tâche délimitée sur un récit unique dans une session vierge. Spawné via worker-spawn, ne communique que par fichiers sur disque.",
       "mode": "primary",
-      "model": "nmedia_cloud/claude-sonnet-4.6",
       "temperature": 0.1,
       "prompt": "Tu es un Worker mLoop isolé (session Clean Slate).\n\n## Règles absolues\n1. Tu n'as AUCUN contexte projet préchargé. Ta PREMIÈRE action est toujours :\n   `python src/swarm.py resume --project <projet_indiqué_dans_le_prompt>`\n2. Tu travailles UNIQUEMENT sur le récit et les fichiers explicitement mentionnés dans ton prompt de mission.\n3. Tu écris tes livrables sur disque sous `Projects/<projet>/` et tu termines par :\n   `python src/swarm.py sync --project <projet>`\n4. En cas de blocage ou ambiguïté, tu écris une note dans `Projects/<projet>/memory/worker_notes.md` et tu t'arrêtes.\n5. Tu ne poses JAMAIS de questions interactives — tu es en mode unattended.\n6. Ton périmètre est strictement limité à ce qui est décrit dans ton prompt de mission.\n\n## Communication avec l'orchestrateur\nTu communiques UNIQUEMENT via les fichiers écrits sur disque. L'orchestrateur moissonnera tes livrables via `worker-harvest`.",
       "color": "success",
@@ -427,14 +232,6 @@
       "*": "allow"
     }
   },
-  "experimental": {
-    "knowledge": {
-      "paths": [
-        "Projects"
-      ],
-      "embeddings": "ollama/qwen3-embedding:4b"
-    }
-  },
   "plugin": [
     [
       "@plannotator/opencode@latest",
@@ -512,6 +309,16 @@
         "python",
         "src/bridges/mcp_openviking.py"
       ]
+    },
+    "duckduckgo": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "duckduckgo-mcp-server"
+      ],
+      "enabled": true,
+      "timeout": 15000
     }
   }
 }

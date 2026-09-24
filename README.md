@@ -1,58 +1,94 @@
 # 🌀 Memory Loop — Cognitive Pure State-Graph Multi-Agent Engine (mLoop)
 
-Bienvenue dans l'espace de travail de **Memory Loop (mLoop)**. Cet écosystème implémente une architecture **Kernel-Pipeline** modulaire, orchestrée par un swarm d'agents cognitifs Système 2 et Système 1.
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![uv](https://img.shields.io/badge/package%20manager-uv-blueviolet)](https://github.com/astral-sh/uv)
+[![Architecture](https://img.shields.io/badge/ADRs-101%20Standards-success.svg)](standards/adr-system/README.md)
+[![CLI Pipeline](https://img.shields.io/badge/CLI-122%20Commandes-orange.svg)](standards/protocols/CLI_PIPELINE_GUIDE.md)
+[![Tests](https://img.shields.io/badge/tests-1386%20passed-brightgreen.svg)](tests/)
+
+**Memory Loop (mLoop)** est le **Cerveau & Backend d'État Déterministe** du cycle de vie logiciel. Il pilote la transformation de la matière brute en spécifications fonctionnelles et architectures de haute précision consommables sans ambiguïté par les développeurs et les agents de codage (*Universal Dev Handoff*).
 
 ---
 
-## 🧭 Architecture & Piliers Fondateurs
+## 🧭 Accès Rapide aux Documents Majeurs
 
-mLoop structure le cycle de vie de développement piloté par les spécifications à travers 6 phases souveraines :
-
-1. **Phase 0 — Inception & SOW** : T-Shirt sizing, estimation d'effort et scoping initial.
-2. **Phase 1 — Spec & Ingestion** : Ingestion documentaire MarkItDown, analyse sémantique et extraction de modèles.
-3. **Phase 2 — Plan & Architecture** : Découpage vertical de récits (INVEST), arbitrage contradictoire *Grill-with-Docs* et formalisation d'ADRs.
-4. **Phase 3 — Build & Stories** : Rédaction des récits verticaux selon le Gold Standard (Gherkin 4 Piliers, profilage API, EvidencePacks autonomes).
-5. **Phase 4 — Validate & QA** : Contrôles pré-vol Vibe-Check (9 contrôles déterministes), Sentinel / Rubber-Duck contradictoire, et audit WikiFix.
-6. **Phase 5 — Ship & Sync** : Synchronisation tripartite (Dépôt Git, Jira Cloud, Index Graphify/SQLite FTS5).
-
----
-
-## 🧰 Boîte à Outils & Standards
-
-Les outils et scripts utilitaires transverses mis à disposition des humains et des agents IA sont centralisés et indexés sous :
-
-* 🧰 **[Catalogue de la Boîte à Outils (`tools/README.md`)](tools/README.md)** : Index central de nos utilitaires d'ingénierie (Archify, drawDB, Office, Jira, Git Hooks).
-* 💳 **[Suivi du Budget IA LiteLLM (`tools/budget/README.md`)](tools/budget/README.md)** : Diagnostic et solde en temps réel de votre clé de calcul Nmédia Cloud.
-* 🏛️ **[Système de Décisions d'Architecture (`standards/adr-system/README.md`)](standards/adr-system/README.md)** : Catalogue des 58 décisions d'architecture souveraines mLoop.
-* 📖 **[Guide Exhaustif du Pipeline CLI (`standards/protocols/CLI_PIPELINE_GUIDE.md`)](standards/protocols/CLI_PIPELINE_GUIDE.md)** : Matrice complète des 58 commandes CLI regroupées par phase.
+| Document | Description | Lien |
+| :--- | :--- | :---: |
+| 🛠️ **Guide d'Installation** | Procédure pas-à-pas pour déployer votre environnement de travail local | [**`docs/INSTALL.md`**](docs/INSTALL.md) |
+| 📖 **Guide du Pipeline CLI** | Matrice exhaustive des **122 commandes réelles** réparties en 5 phases | [**`CLI_PIPELINE_GUIDE.md`**](standards/protocols/CLI_PIPELINE_GUIDE.md) |
+| 📜 **Journal des Modifications** | Historique complet des versions, refactorings et jalons livrés | [**`CHANGELOG.md`**](CHANGELOG.md) |
+| 🗄️ **Schémas BD & Graphes** | Structure détaillée des bases SQLite FTS5, de CodeGraph et de Graphify | [**`SCHEMAS_BD_ET_GRAPHES.md`**](docs/01-architecture/SCHEMAS_BD_ET_GRAPHES.md) |
+| 🏛️ **Catalogue des 101 ADRs** | Source Unique de Vérité Constitutionnelle (Normes & Standards d'Architecture) | [**`standards/adr-system/`**](standards/adr-system/README.md) |
+| 🧰 **Boîte à Outils Transverse** | Index des utilitaires (Archify, drawDB, Office, Jira, Hooks Git) | [**`tools/README.md`**](tools/README.md) |
 
 ---
 
-## 🚀 Démarrer le Moteur `src/swarm.py`
+## 🤝 Premier Démarrage : Laissez l'Agent vous Accompagner !
 
-Le moteur `src/swarm.py` pilote le cycle mLoop via des pipelines modulaires.
+> [!TIP]
+> **Philosophie Pédagogique Agentique** : Nous ne recommandons pas l'usage d'un script "boîte noire" aveugle.  
+> Pour vous familiariser avec le fonctionnement d'un framework cognitif, ouvrez votre assistant IA préféré (**Antigravity**, **OpenCode**, **Claude Code**, **Cursor** ou **Cline**) à la racine du dépôt et écrivez-lui simplement :
+> 
+> ```text
+> "Peux-tu m'accompagner pas-à-pas pour installer et initialiser Memory Loop ?"
+> ```
+> 
+> **Votre agent exécutera les étapes avec vous en toute transparence :**
+> 1. ✅ Contrôle des prérequis système (Python 3.12 avec SQLite FTS5, Node.js, `uv`, Git).
+> 2. 📦 Création du `.venv` et synchronisation déterministe via `uv sync --all-extras`.
+> 3. 🔑 Configuration assistée de votre clé dans `~/.secrets/litellm-key` et `.env`.
+> 4. 🕸️ Installation globale des moteurs de graphes (**CodeGraph** & **Graphify**).
+> 5. 🗄️ Initialisation des bases de données locales (`memory/loop_mem.db`, `.codegraph/`).
+> 6. 🛡️ Activation des garde-fous Git pre-commit & post-commit.
+> 7. 🩺 Lancement du diagnostic `doctor`, du `vibe-check` (23 contrôles) et de la suite de tests unitaires (1 386 tests).
 
-```bash
-# 1. Boot Sequence Obligatoire (Anti-amnésie, Vibe-Check, Focus)
-python src/swarm.py resume --project <nom-du-projet>
-python src/swarm.py vibe-check --project <nom-du-projet>
-python src/swarm.py focus --project <nom-du-projet> --story <chemin_ou_id>
+---
 
-# 2. Ingestion & construction initiale du graphe (System 1 Graphify)
-python src/swarm.py ingest --project <nom-du-projet>
+## 🔄 Le Cycle de Vie en 5 Phases Souveraines (ADR-0375)
 
-# 3. Entrevue interactive Drill / Grill (Alignement fonctionnel & DDD)
-python src/swarm.py drill --project <nom-du-projet>
-
-# 4. Synchronisation globale (WikiFix sémantique + mise à jour du graphe Graphify)
-python src/swarm.py sync --project <nom-du-projet>
-
-# 5. Exécuter un audit sémantique WikiFix indépendant
-python src/swarm.py wikifix --project <nom-du-projet>
-
-# 6. Synchroniser le backlog de stories vers Jira Cloud
-python src/swarm.py jira_sync --project <nom-du-projet>
-
-# 7. Optimisation Rétrospective du Harnais (Génération de règles RHO)
-python src/swarm.py optimize --project <nom-du-projet> --keyword "mot-cle" --msg "explication" --scope <project|global>
+```mermaid
+flowchart LR
+    P1["1. INGEST & EXPLORE<br>(Ingestion MarkItDown & AST)"] --> P2["2. PLAN & ANALYSE<br>(Grill-Me 1:1, INVEST, ADRs)"]
+    P2 --> P3["3. BUILD & DEV<br>(Gherkin 4 Piliers & EvidencePacks)"]
+    P3 --> P4["4. VALIDATE & QA<br>(Vibe-Check, Sentinel & WikiFix)"]
+    P4 --> P5["5. SHIP & SYNC<br>(Git, Jira Cloud & NotebookLM)"]
 ```
+
+---
+
+## ⚡ Séquence d'Amorçage Obligatoire (Boot Sequence - ADR-0322)
+
+Au tout premier tour d'une session de travail sur un projet, l'orchestrateur exécute mécaniquement :
+
+```powershell
+# 1. Anti-amnésie : restauration de l'état cognitif et de l'historique
+uv run python src/swarm.py resume --project <nom_du_projet>
+
+# 2. Guardrail pré-vol de sécurité : 23 contrôles déterministes stricts
+uv run python src/swarm.py vibe-check --project <nom_du_projet>
+
+# 3. Verrou d'attention sur le récit actif (Phase >= 2)
+uv run python src/swarm.py focus --project <nom_du_projet> --story <chemin_ou_id>
+# (En Phase 1, remplacer par 'uv run python src/swarm.py lifecycle-status --project <nom_du_projet>')
+```
+
+---
+
+## 💳 Suivi du Budget IA & Modèles
+
+Memory Loop embarque un module de monitoring de consommation en temps réel connecté au proxy LiteLLM :
+
+```powershell
+# Diagnostic de consommation et solde restant
+uv run python tools/budget/check_budget.py
+
+# Détail des dépenses par modèle et par jour
+uv run python tools/budget/check_budget.py --details
+```
+
+---
+
+## 📜 Licence & Gouvernance
+
+Framework souverain sous gouvernance stricte multi-agents — Équipe Architecture & Ingénierie Nmédia.
+Consultez [`AGENTS.md`](AGENTS.md) pour les règles constitutionnelles complètes.
