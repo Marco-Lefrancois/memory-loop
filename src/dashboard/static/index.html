@@ -303,6 +303,24 @@
                     <div class="text-gray-500 py-3 font-tech text-xs">Découverte des modules du projet...</div>
                 </div>
             </div>
+
+            <!-- ÉCOSYSTÈME TOOLING & RUNTIMES DÉVELOPPEUR (MLOOP-223-FE / ADR-014) -->
+            <div class="glass-cyber p-5 rounded-xl space-y-3.5">
+                <div class="flex items-center justify-between border-b border-cyberborder/40 pb-2.5 flex-wrap gap-2">
+                    <div>
+                        <h3 class="text-xs font-bold text-white uppercase font-tech flex items-center gap-1.5">
+                            <span>🛠️</span> Runtimes Développeur & Écosystème Tooling
+                        </h3>
+                        <p class="text-[11px] text-gray-400 font-tech mt-0.5">Disponibilité d'OpenCode, Plannotator, LiteLLM et Graphify.</p>
+                    </div>
+                    <button onclick="loadToolingStatus()" class="px-2.5 py-1 rounded bg-cyan-950 border border-cyan-500/30 text-cybercyan hover:bg-cyan-900 text-xs font-tech transition flex items-center gap-1">
+                        <span>🔄</span> Actualiser
+                    </button>
+                </div>
+                <div id="overview-tooling-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                    <div class="text-gray-500 py-3 font-tech text-xs">Diagnostic de l'outillage...</div>
+                </div>
+            </div>
         </section>
 
         <!-- ════════ VUE 2 : EVENT BUS & STREAMING TEMPS RÉEL ════════════ -->
@@ -1450,8 +1468,58 @@
                         `).join('');
                     }
                 }
+                loadToolingStatus();
             } catch (e) {
                 console.error('Erreur chargement overview', e);
+            }
+        }
+
+        async function loadToolingStatus() {
+            const cont = document.getElementById('overview-tooling-container');
+            if (!cont) return;
+            try {
+                const res = await fetch(`/api/tooling/status?project=${encodeURIComponent(activeProject)}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const tools = data.tools || {};
+                
+                let html = '';
+                for (const [key, t] of Object.entries(tools)) {
+                    const isHealthy = t.status === 'healthy';
+                    const badgeClass = isHealthy 
+                        ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/30'
+                        : 'bg-rose-950/80 text-rose-300 border-rose-500/30';
+                    const badgeText = isHealthy ? 'OPÉRATIONNEL' : (t.status === 'offline' ? 'HORS-LIGNE' : 'ABSENT');
+                    const icon = key === 'opencode' ? '⚡' : key === 'plannotator' ? '📐' : key === 'litellm' ? '🤖' : '🕸️';
+                    
+                    let extra = '';
+                    if (key === 'plannotator') {
+                        extra = `Plans archivés : <span class="text-cyan-400 font-bold">${t.plans_count}</span>`;
+                    } else if (key === 'opencode') {
+                        extra = t.configured ? '<span class="text-emerald-400">Configuré (.opencode/)</span>' : '<span class="text-gray-400">Non initialisé</span>';
+                    } else if (key === 'litellm') {
+                        extra = t.available ? '<span class="text-emerald-400">Proxy port 4000 actif</span>' : '<span class="text-rose-400">Port 4000 inactif</span>';
+                    } else if (key === 'graphify') {
+                        extra = t.has_knowledge_base ? '<span class="text-cyan-400">Base indexée</span>' : '<span class="text-gray-400">Base non indexée</span>';
+                    }
+                    
+                    html += `
+                    <div class="p-3 rounded-lg bg-cyberblack/60 border border-cyberborder/40 flex flex-col justify-between space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-base">${icon}</span>
+                                <span class="text-xs font-bold text-white font-tech">${t.name}</span>
+                            </div>
+                            <span class="text-[10px] font-tech px-2 py-0.5 rounded border ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <div class="text-[11px] text-gray-400 font-tech">
+                            ${extra}
+                        </div>
+                    </div>`;
+                }
+                cont.innerHTML = html;
+            } catch (e) {
+                cont.innerHTML = `<div class="col-span-full text-rose-400 text-xs font-tech py-2">Échec de la télémétrie outillage (${e.message})</div>`;
             }
         }
 

@@ -1,6 +1,6 @@
 ---
 name: visual-mermaid
-description: Génération de diagrammes Mermaid professionnels pour Obsidian avec thème moderne, directives graphiques et moteur anti-erreurs de parsing (ADR-0337).
+description: "Génération de diagrammes Mermaid professionnels pour Obsidian avec thème moderne et règles anti-crash (ADR-0337). Use when creating technical sequence diagrams, flowcharts, class diagrams, or state machines in Markdown."
 disable-model-invocation: true
 ---
 

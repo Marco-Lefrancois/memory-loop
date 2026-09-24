@@ -11,6 +11,7 @@ Interne CLI, aucune route HTTP (ADR-0319). Rollback : flag ``MLOOP_CLI_ENGINE``.
 from __future__ import annotations
 
 import argparse
+import difflib
 from typing import Any, Optional, cast
 
 import click
@@ -31,8 +32,33 @@ logger = get_logger("cli.click_engine.router")
 # sous-classement passe par cette binding pour rester littéralement conforme
 # au récit MLOOP-191-BE tout en satisfaisant l'analyse statique.
 _MULTI_COMMAND_BASE = cast(type, click.MultiCommand)
-# NoSuchCommand : exporté à l'exécution Click 8.5, absent des stubs typés.
-NoSuchCommand = getattr(click.exceptions, "NoSuchCommand")
+
+
+class _NoSuchCommandFallback(click.UsageError):
+    """Fallback si NoSuchCommand absent de click.exceptions (ex: Click < 8.5)."""
+
+    def __init__(
+        self,
+        command_name: str,
+        possibilities: Optional[list[str]] = None,
+        ctx: Optional[click.Context] = None,
+    ) -> None:
+        super().__init__(f"No such command '{command_name}'.", ctx=ctx)
+        self.command_name = command_name
+        self.possibilities = possibilities
+
+    def format_message(self) -> str:
+        if not self.possibilities:
+            return self.message
+        matches = difflib.get_close_matches(self.command_name, self.possibilities, n=3, cutoff=0.5)
+        if not matches:
+            return self.message
+        match_str = ", ".join(sorted(matches))
+        return f"{self.message} Did you mean {match_str}?"
+
+
+# NoSuchCommand : exporté à l'exécution Click 8.5, replié sur fallback robuste
+NoSuchCommand = getattr(click.exceptions, "NoSuchCommand", _NoSuchCommandFallback)
 
 __all__ = ["ArgsShim", "MLoopMultiCommand", "cli"]
 
@@ -48,7 +74,7 @@ def _canonical(cmd_name: str) -> Optional[str]:
 
 
 def _click_params(cmd_def: dict) -> list[click.Parameter]:
-    """Options Click d'une entrée registre + ``--project`` parent (parité argparse)."""
+    """Paramètres Click (options/args) d'une commande + ``--project`` (parité argparse)."""
     params: list[click.Parameter] = [
         click.Option(
             ["--project"],
@@ -58,39 +84,46 @@ def _click_params(cmd_def: dict) -> list[click.Parameter]:
         ),
     ]
     for arg_def in cmd_def.get("args") or ():
-        help_ = arg_def.get("help")
+        name, help_ = arg_def["name"], arg_def.get("help")
+        if not name.startswith("-"):
+            c_type = (
+                click.Choice([str(c) for c in arg_def["choices"]])
+                if arg_def.get("choices")
+                else arg_def.get("type")
+            )
+            d_val = arg_def.get("default")
+            req = (
+                False
+                if (d_val is not None or arg_def.get("nargs") == "?")
+                else bool(arg_def.get("required", True))
+            )
+            params.append(click.Argument([name], type=c_type, default=d_val, required=req))
+            continue
         if arg_def.get("action") == "store_true":
-            option = click.Option(
-                [arg_def["name"]],
+            opt = click.Option(
+                [name],
                 is_flag=True,
                 default=bool(arg_def.get("default", False)),
                 help=help_,
             )
         elif arg_def.get("nargs") == "*":
-            # Ecart E1 : argparse nargs='*' → click multiple (--files a --files b).
-            option = click.Option([arg_def["name"]], multiple=True, default=(), help=help_)
+            opt = click.Option([name], multiple=True, default=(), help=help_)
         else:
-            kwargs: dict[str, Any] = {}
-            if help_ is not None:
-                kwargs["help"] = help_
-            if arg_def.get("name") == "--story":
-                # MLOOP-192-BE CA-3 : récits du projet porté par --project.
+            kwargs: dict[str, Any] = {"help": help_} if help_ is not None else {}
+            if name == "--story":
                 kwargs["shell_complete"] = complete_stories
-            arg_type = arg_def.get("type")
-            if arg_type is int:
-                kwargs["type"] = int
-            elif arg_type is float:
-                kwargs["type"] = float
+            if arg_def.get("type") in (int, float):
+                kwargs["type"] = arg_def["type"]
             if arg_def.get("choices"):
                 kwargs["type"] = click.Choice([str(c) for c in arg_def["choices"]])
             if arg_def.get("default") is not None:
                 kwargs["default"] = arg_def["default"]
             if arg_def.get("required"):
                 kwargs["required"] = True
-            option = click.Option([arg_def["name"]], **kwargs)
+            opt = click.Option([name], **kwargs)
         if arg_def.get("dest"):
-            option.name = arg_def["dest"]  # ex: --global → global_graph (argparse dest)
-        params.append(option)
+            opt.name = arg_def["dest"]
+        params.append(opt)
     return params
 
 
@@ -180,11 +213,12 @@ class MLoopMultiCommand(_MULTI_COMMAND_BASE):  # click.MultiCommand (public 8.5 
     def resolve_command(self, ctx: click.Context, args: list):
         try:
             return super().resolve_command(ctx, args)
-        except NoSuchCommand as exc:  # type: ignore[misc]
+        except (NoSuchCommand, click.UsageError) as exc:  # type: ignore[misc]
+            cmd_name = getattr(exc, "command_name", str(args[0]) if args else "")
             # self.commands est vide (lazy) : re-lever avec la surface ids+alias
             # pour activer difflib « did you mean » (Pilier 2, exit 2).
             raise NoSuchCommand(  # type: ignore[misc]
-                exc.command_name, possibilities=self.list_commands(ctx), ctx=ctx
+                cmd_name, possibilities=self.list_commands(ctx), ctx=ctx
             ) from None
 
     def invoke(self, ctx: click.Context) -> Any:

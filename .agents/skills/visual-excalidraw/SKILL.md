@@ -1,91 +1,55 @@
 ---
 name: visual-excalidraw
-description: Génération de schémas d'architecture et de flux vectoriels éditables au format Obsidian Excalidraw (.excalidraw.md) ou standard (.excalidraw) (ADR-0337).
+description: "Génération de schémas d'architecture et de flux vectoriels éditables au format Obsidian Excalidraw (.excalidraw.md) (ADR-0337). Use when designing conceptual sketches, wireframes, and hand-drawn architecture diagrams in Excalidraw format."
 disable-model-invocation: true
 ---
 
 # ✏️ Visual Excalidraw (Schémas Vectoriels Éditables Obsidian)
 
-**Règle d'or :** Générer des schémas d'architecture, des topologies de systèmes et des parcours utilisateurs au style dessin à main levée (*hand-drawn*), directement intégrés et **100% modifiables au clic dans Obsidian** via le plugin Excalidraw.
+Générer des schémas d'architecture, des topologies de systèmes et des parcours utilisateurs au style dessin à main levée (*hand-drawn*), directement intégrés et **100% modifiables au clic dans Obsidian** via le plugin Excalidraw.
+
+## 1. Ground Truth & Repository Anchoring (SSOT & Evidence)
+
+Tous les schémas produits doivent refléter fidèlement l'état vérifiable du dépôt (SSOT & evidence factuelle) :
+- Architecture système et ADRs : intégrer les schémas sous `docs/01-architecture/`, [standards/blueprints/](standards/blueprints/) et [Projects/](Projects/).
+- Assets et wireframes : sauvegarder sous `docs/05-assets/` au format canonique `.excalidraw.md`.
+- Validation des pipelines visuels : tests et scripts de génération vérifiés dans [tests/](tests/).
 
 ---
 
-## ⚡ Quand l'utiliser (*When to Use*)
-- Schémas d'architecture globale pour les ADRs ou dossiers d'architecture (`docs/01-architecture/`).
-- Wireframes conceptuels d'écrans et flux de navigation UI/UX sous `docs/05-assets/`.
-- Cartographies conceptuelles nécessitant des annotations manuelles par l'utilisateur.
+## 2. Core Execution Protocol
 
-## 🚫 Quand NE PAS l'utiliser (*When NOT to Use*)
-- Diagrammes de séquence API stricts ou machines à états (utiliser `visual-mermaid`).
-- Toiles de Story Mapping 2D avec des dizaines de cartes (utiliser `obsidian-canvas`).
+Suivre rigoureusement les étapes ordonnées :
+
+### Étape 1 : Cartographie conceptuelle & Extraction
+Extraire les composants réels, dépendances et flux d'échange depuis le code source ou la spécification active.
+
+### Étape 2 : Structuration du JSON Excalidraw
+Générer le bloc JSON embarqué sous la section `## Drawing` dans le format standard `.excalidraw.md` :
+- Utiliser la police `fontFamily: 5` (Excalifont) pour l'aspect carnet de croquis professionnel.
+- Appliquer la palette mLoop : Fond sombre `#0f172a` / `#1e293b`, bordures Cyan `#38bdf8`, Émeraude `#10b981`, Ambre `#f59e0b`.
+
+### Étape 3 : Liaisons des conteneurs et connecteurs
+Relier les blocs fonctionnels avec des flèches directionnelles explicites :
+- Utiliser `containerId` sur les éléments texte pour garantir un centrage automatique et dynamique dans les conteneurs parents.
+
+### Étape 4 : Validation de syntaxe et rendu
+Vérifier l'intégrité du JSON généré et s'assurer que le fichier est lisible à la fois en texte brut et en mode visuel Obsidian.
 
 ---
 
-## 📋 Modes de Sortie & Formats
+## 3. Prescriptive Rules & Garde-fous
 
-### 1. Mode Obsidian Markdown (Recommandé : `.excalidraw.md`)
-Ce format permet à Obsidian d'ouvrir directement le dessin avec le plugin Excalidraw tout en conservant une sauvegarde texte :
+### Rules & Garde-fous (DO NOT / NEVER)
+- **Règle 1** : DO NOT modifier les fichiers `.excalidraw.md` sans préserver la structure des balises `%%` et des en-têtes Obsidian.
+- **Règle 2** : DO NOT injecter de coordonnées de positionnement négatives ou erratiques dans le bloc d'éléments.
+- **Règle 3** : NEVER écraser un fichier schéma existant sans créer un point de sauvegarde.
+- **Règle 4** : DO NOT utiliser Excalidraw pour des diagrammes de séquence stricts nécessitant un parsing textuel exact (utiliser `visual-mermaid`).
 
-```markdown
 ---
-excalidraw-plugin: parsed
-tags: [excalidraw, architecture]
----
-==⚠ Basculez en EXCALIDRAW VIEW dans le menu More Options de ce document. ⚠==
 
-# Excalidraw Data
+## 4. Gestion des erreurs, résilience et fallback
 
-## Text Elements
-%%
-## Drawing
-```json
-{
-  "type": "excalidraw",
-  "version": 2,
-  "source": "https://excalidraw.com",
-  "elements": [
-    {
-      "id": "rect-1",
-      "type": "rectangle",
-      "x": 100,
-      "y": 100,
-      "width": 240,
-      "height": 100,
-      "backgroundColor": "#1e293b",
-      "strokeColor": "#38bdf8",
-      "strokeWidth": 2,
-      "fillStyle": "solid",
-      "roughness": 1,
-      "roundness": { "type": 3 },
-      "seed": 1001
-    },
-    {
-      "id": "text-1",
-      "type": "text",
-      "x": 120,
-      "y": 135,
-      "width": 200,
-      "height": 30,
-      "text": "Service Principal",
-      "fontSize": 20,
-      "fontFamily": 5,
-      "textAlign": "center",
-      "verticalAlign": "middle",
-      "strokeColor": "#ffffff",
-      "containerId": "rect-1"
-    }
-  ],
-  "appState": {
-    "viewBackgroundColor": "#0f172a",
-    "gridSize": null
-  },
-  "files": {}
-}
-```
-%%
-```
-
-### 2. Règles de Positionnement & Esthétique
-- **Typographie** : `fontFamily: 5` (Excalifont) pour l'aspect carnet de croquis professionnel.
-- **Palette mLoop** : Fond sombre `#0f172a` / `#1e293b`, bordures Cyan `#38bdf8` / Émeraude `#10b981` / Ambre `#f59e0b`.
-- **Liaisons de boîtes** : Utiliser `containerId` sur l'élément texte pour qu'il reste centré automatiquement dans son rectangle parent.
+- **Comportement en cas d'erreur ou d'outil absent** : Si le plugin Obsidian Excalidraw n'est pas installé dans le coffre, le document reste 100% lisible et importable en fallback directement sur le site web `excalidraw.com`.
+- **Dégradation en cas de corruption JSON** : Si le parseur JSON rencontre une erreur de syntaxe, l'agent doit immédiatement restaurer la version précédente et lever une alerte avec diagnostic du bloc corrompu.
+- **Gestion des exceptions d'encodage** : Toute exception liée à l'encodage UTF-8 des caractères spéciaux ou accents doit être résolue nativement sans supprimer les libellés francophones.

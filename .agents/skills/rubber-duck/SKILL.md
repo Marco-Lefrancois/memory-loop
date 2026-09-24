@@ -1,10 +1,10 @@
 ---
 name: rubber-duck
 description: "Revue contradictoire Read-Only (Agent Sentinel) pour auditer les critères d'acceptation et les 4 piliers Gherkin. Use when requesting a read-only sanity check on user stories, specs, or acceptance criteria."
+disable-model-invocation: true
 ---
 
 # Skill Rubber-Duck : Critique Contradictoire Read-Only (Agent Sentinel)
-
 
 Utilisez cette skill pour demander à l'agent **Sentinel** d'exécuter une révision contradictoire **100% Read-Only** sur un récit (`ST-*.md`), une spécification ou un plan d'architecture.
 
@@ -30,6 +30,7 @@ Utilisez cette skill pour demander à l'agent **Sentinel** d'exécuter une révi
      cat Projects/<nom_du_projet>/memory/evidence/<ST-XXX>_evidence.json
      ```
      L'agent doit baser sa validation Fact-Search sur ce fichier JSON, et non plus sur la section "Notes de Traçabilité" du Markdown (qui a été purgée pour des raisons de Zero-Bruit).
+
 2. **Analyse du Rapport Généré** :
    - Lisez le rapport produit sous `Projects/<nom_du_projet>/backlog/reviews/rubber_duck_<ST-XXX>.md`.
    - Si le rapport contient des **🔴 Problèmes de Blocage (Blocking Issues)**, l'agent doit se corriger immédiatement avant de solliciter l'utilisateur.
@@ -42,5 +43,9 @@ Utilisez cette skill pour demander à l'agent **Sentinel** d'exécuter une révi
    - **Anti-Invention** : Signaler comme `BLOCKING` toute route fictive ou placeholder sans confirmation documentaire (ex : `/api/dummy`, `/api/test`, `/api/submit-todo`).
 
 4. **Contrôle Anti-Slop & Macrostructures UI (ADR-0340)** :
-   - **Si `layer: frontend` ou `layer: fullstack`** : Vérifier que le récit déclare une macrostructure valide parmi les 21 formes répertoriées ([`standards/blueprints/ui_macrostructures.md`](file:///c:/Memory%20Loop/standards/blueprints/ui_macrostructures.md)) et explicite le comportement sur les 8 états d'interaction pour les composants interactifs.
+   - **Si `layer: frontend` ou `layer: fullstack`** : Vérifier que le récit déclare une macrostructure valide parmi les 21 formes répertoriées (`standards/blueprints/ui_macrostructures.md`) et explicite le comportement sur les 8 états d'interaction pour les composants interactifs.
    - **Traque AI-Slop** : Signaler comme anomalie majeure toute présence de stéréotypes d'IA (titres en italique, gradients violets/bleus sans ancre OKLCH, 3 cartes répétitives, métriques non prouvées dans `docs/`).
+
+5. **Gestion des Erreurs & Dégradation Gracieuse** :
+   - Si le fichier cible est introuvable, lever une erreur explicite sans modifier les fichiers existants.
+   - Si l'EvidencePack est manquant, émettre un avertissement non bloquant et baser l'analyse sur le texte du récit seul.

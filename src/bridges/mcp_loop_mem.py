@@ -13,153 +13,141 @@ from src.bridges.mcp_resources import handle_resources_list, handle_resources_re
 from src.bridges.mcp_tools import handle_tools_list, handle_tools_call
 from src.bridges.mcp_event_bus import get_event_bus
 from src.bridges._mcp_prompts import handle_prompts_get, handle_prompts_list
+from src.bridges.mcp_recall import (  # noqa: F401 — API publique historique
+    _PRELOAD_CACHE,
+    auto_recall_passive_memory,
+    clear_preloaded_context,
+    log_error,
+    preload_story_context,
+)
+from src.bridges._mcp_protocol import (
+    PROTOCOL_VERSION_LEGACY,
+    VersionDecision,
+    apply_fallback_policy,
+    attach_routing_meta,
+    declared_version,
+    enrich_initialize_result,
+    invalid_version_error,
+    negotiate_version,
+)
 
 logger = logging.getLogger(__name__)
 
 _SESSION_ID: str = str(uuid.uuid4())[:8]
 _SESSION_PROJECT: str | None = None
-_PRELOAD_CACHE: dict = {}
+# Révision protocolaire mémorisée par la session (état de transport uniquement).
+_SESSION_PROTOCOL_VERSION: str | None = None
+
+# Socle de mémoire déporté dans mcp_recall (plafond modulaire ADR-0202) :
+# `_PRELOAD_CACHE`, `auto_recall_passive_memory`, `preload_story_context` et
+# `clear_preloaded_context` restent importables depuis ce module.
+
+__all__ = [
+    "_PRELOAD_CACHE",
+    "auto_recall_passive_memory",
+    "clear_preloaded_context",
+    "handle_initialize",
+    "handle_tools_list",
+    "log_error",
+    "preload_story_context",
+    "process_message",
+]
 
 
-def log_error(msg: str) -> None:
-    sys.stderr.write(f"[MCP LOOP-MEM] {msg}\n")
-    sys.stderr.flush()
-
-
-def auto_recall_passive_memory(
-    story_id: str = None, query: str = None, project: str = None
-) -> list:
+def handle_initialize(
+    req_id: Any,
+    params: dict | None = None,
+    *,
+    transport: str = "stdio",
+    headers: dict | None = None,
+    version_decision: VersionDecision | None = None,
+) -> dict:
     """
-    Axe 1 jcode (ADR-0308) : Auto-Recall Sémantique Passif.
+    Négociation de version à l'initialisation (récit §1, 210-Q1).
+
+    La version souhaitée est confrontée au registre unique partagé avec le
+    routage. Une valeur inconnue est refusée par l'erreur JSON-RPC -32600 sans
+    aucune mutation de session ; une valeur connue est toujours recevable, la
+    révision obsolète armant la politique de repli (appliquée par la couche
+    transport avant appel).
     """
-    from src.loop_mem.db import search_observations, get_active_project
+    global _SESSION_PROTOCOL_VERSION
 
-    proj = project or _SESSION_PROJECT or get_active_project() or "mLoop"
-    recalled_items = []
+    decision = version_decision
+    if decision is None:
+        declared, _source = declared_version(params, headers)
+        decision = negotiate_version(declared)
 
-    if story_id and story_id in _PRELOAD_CACHE:
-        cached_data = _PRELOAD_CACHE[story_id]
-        nodes = cached_data.get("nodes", [])[:3]
-        for n in nodes:
-            name = n.get("name") if isinstance(n, dict) else str(n)
-            recalled_items.append(
-                {
-                    "source": "RAM_Cache",
-                    "type": "engramme_graphe",
-                    "summary": f"Nœud sémantique: {name}",
-                }
-            )
+    if not decision.accepted:
+        return invalid_version_error(req_id, decision.requested)
 
-    search_term = query or story_id or "architecture"
-    try:
-        obs_matches = search_observations(query=search_term, project_name=proj) or []
-        for obs in obs_matches[:3]:
-            recalled_items.append(
-                {
-                    "source": "Memory_SQLite",
-                    "type": obs.get("type", "observation"),
-                    "id": obs.get("id"),
-                    "summary": obs.get("content", "")[:120] + "...",
-                }
-            )
-    except Exception as exc:
-        logger.debug(f"Erreur Auto-Recall sémantique passif: {exc}", exc_info=True)
-        log_error(f"Erreur lors de l'Auto-Recall sémantique passif: {exc}")
+    # État de transport uniquement : aucune persistance applicative.
+    _SESSION_PROTOCOL_VERSION = decision.negotiated
 
-    return recalled_items[:5]
-
-
-def preload_story_context(story_id: str, project: str = None) -> dict:
-    global _PRELOAD_CACHE
-    from src.loop_mem.db import get_active_project
-
-    proj = project or _SESSION_PROJECT or get_active_project() or "mLoop"
-    graph_path = Path("Projects") / proj / "memory" / "knowledge_graph.json"
-
-    nodes_cached = 0
-    if graph_path.exists():
-        try:
-            with open(graph_path, "r", encoding="utf-8") as f:
-                graph_data = json.load(f)
-            nodes = graph_data.get("nodes", [])
-            edges = graph_data.get("edges", [])
-
-            relevant_nodes = [n for n in nodes if story_id.lower() in str(n).lower()]
-            if not relevant_nodes:
-                relevant_nodes = nodes[:10]
-
-            _PRELOAD_CACHE[story_id] = {
-                "story_id": story_id,
-                "project": proj,
-                "nodes": relevant_nodes,
-                "edges": edges,
-                "timestamp": str(uuid.uuid4()),
-            }
-            nodes_cached = len(relevant_nodes)
-        except Exception as exc:
-            logger.debug(f"Erreur lors du préchargement de {story_id}: {exc}", exc_info=True)
-            log_error(f"Erreur lors du préchargement de {story_id}: {exc}")
-
-    passive_engrams = auto_recall_passive_memory(story_id=story_id, project=proj)
-
-    return {
-        "status": "preloaded",
-        "story_id": story_id,
-        "nodes_cached": nodes_cached,
-        "auto_recall_engrams": len(passive_engrams),
-        "memory_used_kb": len(json.dumps(_PRELOAD_CACHE.get(story_id, {}))) // 1024,
-    }
-
-
-def clear_preloaded_context(story_id: str = None) -> dict:
-    global _PRELOAD_CACHE
-    if story_id:
-        _PRELOAD_CACHE.pop(story_id, None)
-    else:
-        _PRELOAD_CACHE.clear()
-    return {"status": "cleared", "remaining_keys": list(_PRELOAD_CACHE.keys())}
-
-
-def handle_initialize(req_id: Any, params: dict = None) -> dict:
     _meta = (params or {}).get("_meta", {})
     traceparent = _meta.get("traceparent", "")
     if traceparent:
         log_error(f"OpenTelemetry Trace Context: {traceparent}")
+
+    base_result = {
+        "capabilities": {
+            "tools": {"listChanged": True},
+            "resources": {"subscribe": True, "listChanged": True},
+        },
+        "serverInfo": {
+            "name": "memory-loop-session-memory-mcp",
+            "version": "2.0.0",
+            "sessionId": _SESSION_ID,
+        },
+    }
+    result = enrich_initialize_result(base_result, decision)
+    if transport != "stdio":
+        logger.debug(
+            "mcp_initialize_negotiated",
+            extra={
+                "event": "mcp_initialize_negotiated",
+                "transport": transport,
+                "status": decision.status,
+                "negotiated": decision.negotiated,
+            },
+        )
+    return {"jsonrpc": "2.0", "result": result, "id": req_id}
+
+
+def handle_server_discover(req_id: Any, params: dict | None = None) -> dict:
+    """Publie le registre unique des versions prises en charge (anti-dérive)."""
+    decision = negotiate_version(_SESSION_PROTOCOL_VERSION)
+    base_result = {
+        "capabilities": {
+            "tools": {"listChanged": True},
+            "resources": {"subscribe": True, "listChanged": True},
+        },
+        "serverInfo": {"name": "memory-loop-session-memory-mcp", "version": "2.0.0"},
+    }
     return {
         "jsonrpc": "2.0",
-        "result": {
-            "protocolVersion": "2024-11-05",
-            "capabilities": {
-                "tools": {"listChanged": True},
-                "resources": {"subscribe": True, "listChanged": True},
-            },
-            "serverInfo": {
-                "name": "memory-loop-session-memory-mcp",
-                "version": "2.0.0",
-                "sessionId": _SESSION_ID,
-            },
-        },
+        "result": enrich_initialize_result(base_result, decision),
         "id": req_id,
     }
 
 
-def handle_server_discover(req_id: Any, params: dict = None) -> dict:
-    return {
-        "jsonrpc": "2.0",
-        "result": {
-            "protocolVersion": "2024-11-05",
-            "supportedVersions": ["2026-07-28", "2025-11-25", "2024-11-05"],
-            "capabilities": {
-                "tools": {"listChanged": True},
-                "resources": {"subscribe": True, "listChanged": True},
-            },
-            "serverInfo": {"name": "memory-loop-session-memory-mcp", "version": "2.0.0"},
-        },
-        "id": req_id,
-    }
+def process_message(
+    line: str,
+    *,
+    transport: str = "stdio",
+    headers: dict | None = None,
+    version_decision: VersionDecision | None = None,
+    apply_fallback: bool = True,
+) -> str | None:
+    """
+    Traite une requête JSON-RPC et y attache `_meta.routing` (récit §Transport
+    stdio) : `{protocolVersion, method, toolName?}` — zéro en-tête HTTP fabriqué.
 
-
-def process_message(line: str) -> str | None:
+    - `version_decision` : décision déjà résolue par la couche transport (le
+      routage par en-têtes HTTP/SSE se fait sans lire le corps) ;
+    - `apply_fallback=False` : la politique de repli a déjà été appliquée par
+      la couche transport — strictement une application par requête.
+    """
     global _SESSION_PROJECT
     try:
         req = json.loads(line)
@@ -171,6 +159,30 @@ def process_message(line: str) -> str | None:
     req_id = req.get("id")
     params = req.get("params", {})
 
+    # ── Résolution de version (message > session) & refus réservé au registre ──
+    decision = version_decision
+    declared_in_message = False
+    if decision is None:
+        declared, source = declared_version(params, headers)
+        declared_in_message = source != "absent"
+        effective = declared or _SESSION_PROTOCOL_VERSION
+        decision = negotiate_version(effective)
+    if not decision.accepted:
+        return json.dumps(invalid_version_error(req_id, decision.requested))
+
+    tool_name = params.get("name") if method == "tools/call" else None
+
+    if apply_fallback:
+        # Politique de repli par requête, dans le même traitement (macro Q1).
+        apply_fallback_policy(
+            decision,
+            transport=transport,
+            method=method,
+            tool_name=tool_name,
+            header_present=None,
+            declared_in_message=declared_in_message,
+        )
+
     _meta = params.get("_meta", {})
     if isinstance(_meta, dict) and _meta.get("stateHandle"):
         _SESSION_PROJECT = str(_meta["stateHandle"]).replace("proj_", "").split("_")[0]
@@ -178,7 +190,13 @@ def process_message(line: str) -> str | None:
     bus = get_event_bus()
 
     if method == "initialize":
-        res = handle_initialize(req_id, params)
+        res = handle_initialize(
+            req_id,
+            params,
+            transport=transport,
+            headers=headers,
+            version_decision=decision,
+        )
     elif method == "server/discover":
         res = handle_server_discover(req_id, params)
     elif method == "tools/list":
@@ -204,6 +222,12 @@ def process_message(line: str) -> str | None:
         else:
             return None
 
+    attach_routing_meta(
+        res,
+        protocol_version=decision.negotiated or PROTOCOL_VERSION_LEGACY,
+        method=method,
+        tool_name=tool_name,
+    )
     return json.dumps(res)
 
 

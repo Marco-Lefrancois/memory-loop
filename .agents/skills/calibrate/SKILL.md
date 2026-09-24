@@ -1,7 +1,7 @@
 ---
 name: calibrate
 description: "Auto-étalonnage continu de l'écosystème mLoop (CLI, opencode.json, skills, MCP, guardrails). Use when validating repository configuration, aligning tool bindings, or running system-wide health calibration."
-disable-model-invocation: false
+disable-model-invocation: true
 ---
 
 # 📐 Skill Calibrate (Auto-Étalonnage Écosystème mLoop)
@@ -11,17 +11,20 @@ disable-model-invocation: false
 ## 🎯 Purpose
 Ce skill permet de vérifier et réaligner instantanément l'ensemble de l'écosystème mLoop. À utiliser à la demande de l'utilisateur ("recalibre mloop", "vérifie les outils") ou après l'ajout d'une nouvelle fonctionnalité/commande dans `src/`.
 
-## 🗺️ Les 8 Contrôles Automatisés du Calibrage
+## 🗺️ Les 9 Contrôles Automatisés du Calibrage
 
 1. **CLI ➔ OpenCode Shortcuts** : Aligne les commandes `swarm.py` avec `opencode.json`.
 2. **MCP Bridges** : Vérifie la déclaration des ponts Python `src/bridges/mcp_*.py` sous `opencode.json["mcp"]`.
-3. **Skills ➔ Router Index** : Enregistre tout dossier de compétence `.agents/skills/` dans [.agents/skills/router/SKILL.md](file:///c:/Memory%20Loop/.agents/skills/router/SKILL.md).
+3. **Skills ➔ Router Index** : Enregistre tout dossier de compétence `.agents/skills/` dans `.agents/skills/router/SKILL.md`.
 4. **Directives Système** : S'assure que `AGENTS.md` et `GEMINI.md` listent l'outillage complet.
 5. **Gabarits Officiels** : Contrôle la conformité des blueprints sous `standards/blueprints/`.
 6. **Synchronisation Sémantique** : Met à jour la base SQLite FTS5 et le graphe Graphify.
 7. **Registre Ingestion SHA256** : Vérifie l'intégrité anti-doublon d'ingestion.
 8. **Validation Guardrails (audit-loop)** : Certifie l'état `status: PASS` (Exit 0).
-9. **Hygiène Mémorielle & Profilage des Compétences (Skill-Doctor)** : Audite l'empreinte en jetons de `.agents/skills/`, prévient le *Context Rot* (seuil d'alerte 15 000 jetons au boot) et signale les compétences dormantes à marquer en `TOMBSTONE` (ADR-0348 / Claude Code v2.1.261).
+9. **Hygiène Mémorielle & Profilage des Compétences (Skill-Doctor)** : Audite l'empreinte en jetons de `.agents/skills/`, prévient le *Context Rot* (seuil d'alerte 15 000 jetons au boot) et signale les compétences dormantes à marquer en `TOMBSTONE` (ADR-0348).
+
+## 🛡️ Résilience & Dégradation Gracieuse
+En cas d'échec d'un contrôle ou d'écart détecté, le mode Auto-Repair consigne les réparations dans les logs `memory/logs/` et émet un récapitulatif sans interrompre les autres contrôles. Si un outil externe est indisponible, le calibrage continue en dégradation gracieuse.
 
 ## 🚀 Commande d'Exécution
 

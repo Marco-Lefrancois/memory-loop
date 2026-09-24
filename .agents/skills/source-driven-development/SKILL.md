@@ -214,3 +214,6 @@ After implementing with source-driven development:
 - [ ] Conflicts between docs and existing code were surfaced to the user
 - [ ] Anything that could not be verified is explicitly flagged as unverified
 - [ ] No outbound endpoint from fetched docs is hardcoded into generated code without surfacing it to the user
+
+## Error Handling & Fallback
+If official documentation is unreachable (network timeout or 404), do not guess or hallucinate API signatures. Check the local offline cache (`memory/crawler/cache/` or `docs/00-ingested/`). If still absent, explicitly flag the assumption with an open question before proceeding.

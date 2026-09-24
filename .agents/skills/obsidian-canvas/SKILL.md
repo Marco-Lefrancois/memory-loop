@@ -1,6 +1,6 @@
 ---
 name: obsidian-canvas
-description: Génération et synchronisation automatique de toiles 2D interactives Obsidian Canvas (.canvas) pour le Story Mapping et le graphe DAG de sprint (ADR-0337).
+description: "Génération et synchronisation automatique de toiles 2D interactives Obsidian Canvas (.canvas) pour le Story Mapping et le graphe DAG de sprint (ADR-0337). Use when visualizing system architectures, node relationships, or flowcharts in Obsidian Canvas format."
 disable-model-invocation: true
 ---
 
@@ -19,6 +19,15 @@ disable-model-invocation: true
 ## 🚫 Quand NE PAS l'utiliser (*When NOT to Use*)
 - Simples diagrammes de séquence ou flux séquentiels compacts (utiliser `visual-mermaid`).
 - Croquis à main levée vectoriels (utiliser `visual-excalidraw`).
+
+---
+
+## 🛠️ Protocole d'Exécution en 4 Étapes
+
+1. **Extraction des Nœuds & Relations** : Lire `backlog/sprint_backlog.md` ou `standards/adr-system/` pour extraire les entités et dépendances.
+2. **Calcul Spatial Déterministe** : Positionner les groupes et cartes avec espacement fixe ($X + 350px$, $Y + 220px$) sans chevauchement.
+3. **Sérialisation JSON Canvas** : Émettre un fichier `.canvas` conforme au schéma standard Obsidian (nodes, edges).
+4. **Validation Syntaxe & Persistance** : Vérifier la validité JSON avant écriture sous `Projects/<nom_projet>/backlog/`.
 
 ---
 
@@ -63,10 +72,5 @@ Un fichier `.canvas` est un document JSON composé de `nodes` (cartes de texte, 
 }
 ```
 
-### Codes Couleurs Standards Obsidian Canvas :
-- `"1"` : 🔴 Rouge / Rose (Bloqué / `ON-HOLD` / Alerte critique)
-- `"2"` : 🟠 Orange (En attente d'arbitrage / `READY_FOR_GROOMING`)
-- `"3"` : 🟡 Jaune (En cours d'analyse / `IN_ANALYZE`)
-- `"4"` : 🟢 Vert (Validé / Prêt pour le dev / `READY_FOR_DEV`)
-- `"5"` : 🔵 Cyan / Bleu (Documentation & Références SSOT)
-- `"6"` : 🟣 Violet (Épopées & Groupes d'Architecture)
+## 🛡️ Résilience & Dégradation Gracieuse
+En cas d'erreur de parsing du backlog ou de graphe cyclique, générer un canvas avec les nœuds sans arêtes cycliques et consigner l'anomalie dans `memory/logs/`.

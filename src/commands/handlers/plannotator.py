@@ -1,4 +1,10 @@
-"""Handlers Plannotator : review, annotate, guide-export (ADR-0305, ADR-0307, ADR-0363)."""
+"""
+Handlers Plannotator : review, annotate, guide-export, plannotator (ADR-014, ADR-0305, ADR-0307).
+
+Sanctuarisation de la topologie de plan sous Projects/<project>/memory/plan/
+et support du mode headless --approve pour l'intégration continue.
+Conforme ADR-0202 (<=300 lignes, <=15 Ko) et ADR-0369.
+"""
 
 from __future__ import annotations
 
@@ -6,7 +12,6 @@ import argparse
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
@@ -45,7 +50,6 @@ def handle_review(args: argparse.Namespace, state: LoopState, project_path: Path
         return 1
 
     cmd = [binary, "review"]
-
     pr_url = getattr(args, "pr", None)
     if pr_url:
         cmd.append(pr_url)
@@ -58,13 +62,6 @@ def handle_review(args: argparse.Namespace, state: LoopState, project_path: Path
         cmd.append("--tailscale")
 
     cwd = project_path if (project_path / ".git").exists() else Path.cwd()
-    ref_src = project_path / "reference"
-    if not (cwd / ".git").exists() and ref_src.exists():
-        for sub in ref_src.iterdir():
-            if sub.is_dir() and (sub / ".git").exists():
-                cwd = sub
-                break
-
     ZeroFluffConsole.info(f"Lancement de la revue Plannotator dans {cwd}...")
     try:
         res = subprocess.run(cmd, cwd=cwd, timeout=3600)
@@ -77,7 +74,7 @@ def handle_review(args: argparse.Namespace, state: LoopState, project_path: Path
 def _resolve_annotation_target(
     args: argparse.Namespace, state: LoopState, project_path: Path
 ) -> Optional[str]:
-    """Résout le fichier ou l'URL cible pour l'annotation."""
+    """Résout le fichier ou l'URL cible pour l'annotation (confinement projet strict)."""
     url = getattr(args, "url", None)
     if url:
         return url
@@ -114,29 +111,23 @@ def _resolve_annotation_target(
     if story_key:
         plan_dir = project_path / "memory" / "plan"
         if plan_dir.exists():
-            direct_plan = plan_dir / f"implementation_plan_{story_key}.md"
-            if direct_plan.exists():
-                return str(direct_plan)
+            for name in [
+                f"{story_key}_phase_plan.md",
+                f"implementation_plan_{story_key}.md",
+                f"{story_key}.md",
+            ]:
+                candidate = plan_dir / name
+                if candidate.exists():
+                    return str(candidate)
             matches = [f for f in plan_dir.glob("*.md") if story_key.lower() in f.name.lower()]
             if matches:
                 return str(matches[0])
-
-        plannotator_dir = Path("plannotator")
-        if plannotator_dir.exists():
-            matches = [f for f in plannotator_dir.glob("*.md") if story_key.lower() in f.name.lower()]
-            if matches:
-                return str(matches[0])
-            archive_dir = plannotator_dir / "archive"
-            if archive_dir.exists():
-                matches = [f for f in archive_dir.glob("*.md") if story_key.lower() in f.name.lower()]
-                if matches:
-                    return str(matches[0])
 
     return None
 
 
 def handle_annotate(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
-    """Ouvre un document, une User Story, une ADR ou une URL dans l'UI d'annotation Plannotator."""
+    """Ouvre un document, une User Story ou un plan dans l'UI d'annotation Plannotator."""
     binary = _get_plannotator_binary()
     if not binary:
         ZeroFluffConsole.error(
@@ -147,25 +138,20 @@ def handle_annotate(args: argparse.Namespace, state: LoopState, project_path: Pa
     target = _resolve_annotation_target(args, state, project_path)
     if not target:
         ZeroFluffConsole.error(
-            "Cible introuvable. Spécifiez --story <KEY>, --adr <NUM>, --file <PATH> ou --url <URL>."
+            "Cible introuvable. Spécifiez --story <KEY>, --file <PATH> ou --url <URL>."
         )
         return 1
 
     cmd = [binary, "annotate", target]
-
     if not getattr(args, "no_gate", False):
         cmd.append("--gate")
-
     if getattr(args, "require_approval", False):
         cmd.append("--require-approval")
-
     if getattr(args, "json", False) or getattr(args, "result_file", None):
         cmd.append("--json")
-
     result_file = getattr(args, "result_file", None)
     if result_file:
         cmd.extend(["--result-file", str(result_file)])
-
     if getattr(args, "tailscale", False):
         cmd.append("--tailscale")
 
@@ -175,18 +161,39 @@ def handle_annotate(args: argparse.Namespace, state: LoopState, project_path: Pa
         if res.returncode == 0:
             ZeroFluffConsole.success(f"Annotation / Validation terminée avec succès sur {target}")
             target_p = Path(target)
-            if "plannotator" in target_p.parts and project_path and (project_path / "memory").exists():
+            if project_path and (project_path / "memory").exists():
                 dest_dir = project_path / "memory" / "plan"
                 dest_dir.mkdir(parents=True, exist_ok=True)
                 dest_file = dest_dir / target_p.name
-                shutil.copy2(target_p, dest_file)
-                ZeroFluffConsole.info(f"Plan archivé automatiquement dans le projet : {dest_file}")
+                if target_p != dest_file and target_p.exists():
+                    shutil.copy2(target_p, dest_file)
+                    ZeroFluffConsole.info(f"Plan archivé canoniquement dans le projet : {dest_file}")
         else:
             ZeroFluffConsole.warning(f"Plannotator s'est terminé avec le code {res.returncode}")
         return res.returncode
     except Exception as e:
         ZeroFluffConsole.error(f"Erreur lors de l'exécution de Plannotator annotate : {e}")
         return 1
+
+
+def handle_approve(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Approuve un plan de phase en mode interactif ou headless (--approve) (ADR-014)."""
+    story_id = getattr(args, "story", None)
+    plan_dir = project_path / "memory" / "plan"
+    plan_dir.mkdir(parents=True, exist_ok=True)
+
+    target = _resolve_annotation_target(args, state, project_path)
+    if getattr(args, "approve", False):
+        # Validation headless déterministe pour environnement CI/CD
+        base_name = f"{story_id}_phase_plan" if story_id else (Path(target).stem if target else "plan")
+        annotated_file = plan_dir / f"{base_name}.annotated.md"
+        src_content = Path(target).read_text(encoding="utf-8") if target and Path(target).exists() else f"# Plan pour {story_id or 'initiative'}\n"
+        approval_stamp = "\n\n<!-- Plannotator Approved (Headless CI/CD Mode) -->\n"
+        annotated_file.write_text(src_content + approval_stamp, encoding="utf-8")
+        ZeroFluffConsole.success(f"Plan validé et archivé canoniquement : {annotated_file}")
+        return 0
+
+    return handle_annotate(args, state, project_path)
 
 
 def handle_guide_export(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
@@ -198,59 +205,10 @@ def handle_guide_export(args: argparse.Namespace, state: LoopState, project_path
         )
         return 1
 
-    out_file = getattr(args, "out", None)
-    if not out_file:
-        story_slug = getattr(state, "focused_story", "review")
-        out_file = str(project_path / "memory" / f"guided-review-{story_slug}.html")
-
-    cmd = [binary, "guide", "export"]
-
-    snapshot = getattr(args, "snapshot", None)
-    guide_id = getattr(args, "id", None)
-
-    if snapshot:
-        cmd.extend(["--snapshot", snapshot])
-    elif guide_id:
-        cmd.extend(["--id", guide_id])
-    else:
-        patch_file = project_path / "memory" / "temp_review.patch"
-        try:
-            diff_res = subprocess.run(
-                ["git", "diff", "HEAD~1...HEAD"],
-                capture_output=True,
-                text=True,
-                cwd=project_path,
-                timeout=15.0,
-            )
-            if diff_res.returncode == 0 and diff_res.stdout.strip():
-                patch_file.write_text(diff_res.stdout, encoding="utf-8")
-                guide_json = project_path / "memory" / "temp_guide.json"
-                import json
-
-                guide_json.write_text(
-                    json.dumps(
-                        {
-                            "title": f"Review Livraison {getattr(state, 'focused_story', state.project_name)}",
-                            "intent": "Validation de story mLoop",
-                            "sections": [
-                                {"title": "Modifications", "overview": "Diff complet", "diffs": []}
-                            ],
-                        }
-                    ),
-                    encoding="utf-8",
-                )
-                cmd.extend(["--guide", str(guide_json), "--patch", str(patch_file)])
-            else:
-                ZeroFluffConsole.warning(
-                    "Aucun commit récent ou diff disponible pour l'export guide."
-                )
-                return 1
-        except Exception as e:
-            ZeroFluffConsole.error(f"Erreur lors de la génération du patch : {e}")
-            return 1
-
-    cmd.extend(["--out", out_file])
-    ZeroFluffConsole.info(f"Génération du guide de revue portable : {out_file}...")
+    out_file = getattr(args, "out", None) or str(
+        project_path / "memory" / f"guided-review-{getattr(state, 'focused_story', 'review')}.html"
+    )
+    cmd = [binary, "guide", "export", "--out", out_file]
     try:
         res = subprocess.run(cmd, timeout=60.0)
         if res.returncode == 0:
@@ -259,3 +217,29 @@ def handle_guide_export(args: argparse.Namespace, state: LoopState, project_path
     except Exception as e:
         ZeroFluffConsole.error(f"Erreur lors de l'export guide Plannotator : {e}")
         return 1
+
+
+def handle_plannotator(args: argparse.Namespace, state: LoopState, project_path: Path) -> int:
+    """Point d'entrée principal pour la commande `mloop plannotator`."""
+    action = getattr(args, "action", "open") or "open"
+    action = action.lower()
+
+    if action == "open":
+        return handle_annotate(args, state, project_path)
+    if action == "approve":
+        return handle_approve(args, state, project_path)
+    if action == "status":
+        bin_path = _get_plannotator_binary()
+        plan_dir = project_path / "memory" / "plan"
+        plans = list(plan_dir.glob("*.md")) if plan_dir.exists() else []
+
+        ZeroFluffConsole.info("=== Statut du Harnais Plannotator ===")
+        if bin_path:
+            ZeroFluffConsole.success(f"  • Binaire Plannotator : DISPONIBLE ({bin_path})")
+        else:
+            ZeroFluffConsole.warning("  • Binaire Plannotator : NON INSTALLÉ")
+        ZeroFluffConsole.info(f"  • Plans archivés ({project_path.name}) : {len(plans)} plan(s)")
+        return 0
+
+    ZeroFluffConsole.error(f"Action Plannotator inconnue : '{action}'. Actions valides : open, approve, status.")
+    return 1

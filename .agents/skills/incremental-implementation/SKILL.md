@@ -244,6 +244,9 @@ After completing all increments for a task:
 - [ ] The feature works end-to-end as specified
 - [ ] No uncommitted changes remain
 
-## See Also
+## Error Handling & Rollback
+If a test or build fails after an increment, immediately revert the uncommitted slice (`git restore .` or `git checkout .`), analyze the failure reason in `memory/logs/`, isolate the failing test, and fix it before introducing any further code.
 
-Per-increment verification is the local check. Before declaring a task done, apply the project-wide Definition of Done as the final gate, the standing bar every increment clears regardless of the task. See `../../references/definition-of-done.md`.
+## See Also
+- Project-wide Definition of Done : `standards/blueprints/story_template.md` & `standards/protocols/`
+- User stories and backlog slices : `Projects/<nom_projet>/backlog/stories/`

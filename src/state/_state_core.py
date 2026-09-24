@@ -18,22 +18,27 @@ logger = get_logger("state")
 
 # ─── Exceptions
 
+
 class LoopStateError(Exception):
     """Exception de base pour le moteur d'état mLoop."""
 
     pass
+
 
 class IntegrityError(LoopStateError):
     """Exception levée en cas de violation d'intégrité de l'état."""
 
     pass
 
+
 class MaxRevisionsReached(LoopStateError):
     """Exception levée par le circuit breaker lors d'un cycle infini."""
 
     pass
 
+
 # ─── Enums
+
 
 class LoopPhase(str, Enum):
     SPEC = "spec"
@@ -43,6 +48,7 @@ class LoopPhase(str, Enum):
     SHIP = "ship"
     ERROR = "error"
 
+
 class ProjectMode(str, Enum):
     """
     Détermine le cycle de vie applicable au LoopState.
@@ -51,6 +57,7 @@ class ProjectMode(str, Enum):
 
     CLIENT = "client"
     MLOOP = "mloop"
+
 
 class StoryType(str, Enum):
     """Types officiels de récits dans mLoop (Frontmatter YAML)."""
@@ -79,11 +86,12 @@ class StoryType(str, Enum):
         }
         return mapping.get(norm, cls.FEATURE)
 
+
 class StoryStatus(str, Enum):
     """
     Statuts officiels du cycle de vie d'un récit mLoop.
     CLIENT : OPEN → IN_ANALYZE → IN_PLAN → IN_VALIDATE → READY_FOR_GROOMING → READY_FOR_DEV → IN_DEV → IN_QA → ACCEPTED
-    MLOOP  : OPEN → IN_ANALYZE → IN_PLAN → IN_BUILD → IN_VALIDATE → SHIPPED
+    MLOOP  : OPEN → IN_ANALYZE → IN_PLAN → IN_BUILD → IN_VALIDATE → DONE_TESTED → SHIPPED
     """
 
     # ─── Commun aux deux modes ─────────────────────────────────────
@@ -105,6 +113,7 @@ class StoryStatus(str, Enum):
     ACCEPTED = "ACCEPTED"
     # ─── Mode MLOOP uniquement ─────────────────────────────────────
     IN_BUILD = "IN_BUILD"
+    DONE_TESTED = "DONE_TESTED"
     SHIPPED = "SHIPPED"
 
     @classmethod
@@ -116,7 +125,9 @@ class StoryStatus(str, Enum):
         except ValueError:
             return cls.OPEN
 
+
 # ─── Modèles Pydantic
+
 
 class TokenBudget(BaseModel):
     """Circuit Breaker Financier — compteur de tokens LLM consommés."""
@@ -135,17 +146,21 @@ class TokenBudget(BaseModel):
         """Incrémente le compteur de tokens consommés."""
         self.tokens_used += tokens
 
+
 class Directives(BaseModel):
     tech: str = ""
     business: str = ""
+
 
 class KnowledgeGraph(BaseModel):
     nodes: List[Dict[str, Any]] = Field(default_factory=list)
     edges: List[Dict[str, Any]] = Field(default_factory=list)
 
+
 class Clarification(BaseModel):
     question: str
     answer: Optional[str] = None
+
 
 _GRILLED_STATUSES = frozenset(
     {
@@ -154,10 +169,12 @@ _GRILLED_STATUSES = frozenset(
         "READY_FOR_DEV",
         "IN_DEV",
         "IN_QA",
+        "DONE_TESTED",
         "DONE",
         "ACCEPTED",
     }
 )
+
 
 class SprintBacklogItem(BaseModel):
     id: str
@@ -180,23 +197,28 @@ class SprintBacklogItem(BaseModel):
         """Règle mLoop : statuts éligibles à la synchronisation Jira Cloud."""
         return self.status.value in _GRILLED_STATUSES
 
+
 class AnalysisResult(BaseModel):
     intent: str = ""
     constraints: List[str] = Field(default_factory=list)
     missing_information: List[str] = Field(default_factory=list)
+
 
 class PlanStep(BaseModel):
     step_id: int
     action: str
     expected_output: str
 
+
 class PlanResult(BaseModel):
     steps: List[PlanStep] = Field(default_factory=list)
+
 
 class QAReport(BaseModel):
     is_valid: bool = True
     score: float = 1.0
     revisions_count: int = 0
+
 
 class JournalEntry(BaseModel):
     id: str = Field(default_factory=lambda: f"entry_{int(time.time())}")
@@ -205,7 +227,9 @@ class JournalEntry(BaseModel):
     details: str
     impacted_nodes: List[str] = Field(default_factory=list)
 
+
 # ─── SavepointManager
+
 
 class SavepointManager:
     """

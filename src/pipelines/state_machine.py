@@ -122,6 +122,7 @@ ALLOWED_TRANSITIONS = {
         StoryStatus.IN_QA,
         StoryStatus.ACCEPTED,
         StoryStatus.DONE,
+        StoryStatus.DONE_TESTED,
         StoryStatus.READY_FOR_DEV,
         StoryStatus.IN_REVIEW,
         StoryStatus.IN_ANALYZE,
@@ -142,6 +143,13 @@ ALLOWED_TRANSITIONS = {
         StoryStatus.IN_DEV,
         StoryStatus.IN_ANALYZE,
         StoryStatus.IN_REVIEW,
+    ],
+    StoryStatus.DONE_TESTED: [
+        StoryStatus.SHIPPED,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_DEV,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
     ],
     StoryStatus.ACCEPTED: [
         StoryStatus.IN_DEV,

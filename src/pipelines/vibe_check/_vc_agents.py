@@ -50,6 +50,27 @@ def check_01_agent_parity(
                 "status": "PASS" if exists and parity_ok else "FAIL",
             }
         )
+
+    # MLOOP-261-BE : Contrôle de Parité Miroir pour .clinerules/mloop.md
+    cline_rule_p = Path(".clinerules") / "mloop.md"
+    if not cline_rule_p.exists() or cline_rule_p.stat().st_size < 50:
+        try:
+            from src.bridges.cline.rules_mirror import ClineRulesMirror
+
+            ClineRulesMirror().sync()
+            ZeroFluffConsole.success(
+                "[Vibe-Check Auto-Sync] Parité miroir restaurée pour .clinerules/mloop.md"
+            )
+        except Exception:
+            pass
+
+    cline_ok = cline_rule_p.exists() and cline_rule_p.stat().st_size >= 50
+    results.append(
+        {
+            "check": "Règles .clinerules (Parité Miroir)",
+            "status": "PASS" if cline_ok else "WARNING",
+        }
+    )
     return results
 
 

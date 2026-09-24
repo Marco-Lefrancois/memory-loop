@@ -21,183 +21,25 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
+# Registre déclaratif extrait (ADR-0202, plafond modulaire) — ré-exporté ici
+# pour préserver l'API publique historique du pont.
+from src.bridges.mcp_proxy_registry import PHASE_TOOL_FILTER, TOOL_REGISTRY
+from src.bridges._mcp_protocol import (
+    PROTOCOL_VERSION_LEGACY,
+    VersionDecision,
+    apply_fallback_policy,
+    attach_routing_meta,
+    declared_version,
+    enrich_initialize_result,
+    invalid_version_error,
+    negotiate_version,
+)
+
 SERVER_NAME = "mloop-proxy-router"
 SERVER_VERSION = "1.0.0"
 
-# ──────────────────────────────────────────────
-# Phase → Allowed Tool Namespaces mapping
-# Controls which sub-server tools are visible per Story phase.
-# ──────────────────────────────────────────────
-PHASE_TOOL_FILTER = {
-    "INIT": ["loop_mem_timeline", "loop_mem_search", "graph_query"],
-    "ANALYZE": ["loop_mem_search", "loop_mem_get_observations", "graph_query", "graph_edge_search", "graph_explain", "graph_blast_radius"],
-    "PLAN": ["loop_mem_search", "graph_query", "graph_edge_search", "graph_explain", "graph_blast_radius", "check_story_compliance"],
-    "QA": ["loop_mem_search", "loop_mem_rho_search", "graph_blast_radius", "check_story_compliance"],
-    "ALL": None,  # None = no filter, expose everything
-}
-
-# Current active phase (can be updated via set_phase tool)
-_active_phase = "ALL"
-
-# ──────────────────────────────────────────────
-# STATIC TOOL REGISTRY
-# Each tool entry declares which sub-server handles it.
-# ──────────────────────────────────────────────
-TOOL_REGISTRY = {
-    # mloop_mem tools
-    "loop_mem_search": {
-        "server": "mloop_mem",
-        "description": "Recherche dans la mémoire persistante de session mLoop (FTS5).",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Terme de recherche."},
-                "project": {"type": "string", "description": "Optionnel. Filtre par projet."},
-                "type": {"type": "string", "enum": ["decision", "bugfix", "feature", "discovery"]}
-            },
-            "required": ["query"]
-        }
-    },
-    "loop_mem_timeline": {
-        "server": "mloop_mem",
-        "description": "Timeline chronologique des observations d'un projet mLoop.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "project": {"type": "string", "description": "Nom du projet cible."}
-            },
-            "required": ["project"]
-        }
-    },
-    "loop_mem_get_observations": {
-        "server": "mloop_mem",
-        "description": "Récupère le contenu détaillé d'observations par leurs IDs.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "ids": {"type": "array", "items": {"type": "integer"}}
-            },
-            "required": ["ids"]
-        }
-    },
-    "loop_mem_code_rag": {
-        "server": "mloop_mem",
-        "description": "RAG sémantique sur le code source via Graphify (few-shot injection).",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Description du composant recherché."}
-            },
-            "required": ["query"]
-        }
-    },
-    "loop_mem_rho_search": {
-        "server": "mloop_mem",
-        "description": "Recherche dans la mémoire RHO (solutions d'erreurs documentées).",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "error_trace": {"type": "string", "description": "La trace d'erreur à analyser."}
-            },
-            "required": ["error_trace"]
-        }
-    },
-    # graphify tools
-    "graph_query": {
-        "server": "graphify",
-        "description": "Interroge le sous-graphe de connaissances autour d'un concept métier (RM-XXX), d'une ADR ou d'un composant.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "query": {"type": "string", "description": "Mot-clé ou concept recherché."},
-                "project": {"type": "string", "description": "Nom optionnel du projet."}
-            },
-            "required": ["query"]
-        }
-    },
-    "graph_edge_search": {
-        "server": "graphify",
-        "description": "Cherche des arêtes (edges) reliant directement deux concepts ou composants d'architecture.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "source": {"type": "string", "description": "Nœud source."},
-                "target": {"type": "string", "description": "Nœud cible."},
-                "project": {"type": "string", "description": "Nom optionnel du projet."}
-            },
-            "required": ["source", "target"]
-        }
-    },
-    "graph_explain": {
-        "server": "graphify",
-        "description": "Génère une explication détaillée d'un nœud d'architecture et de ses voisins dans le graphe.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "concept": {"type": "string", "description": "Identifiant ou titre du nœud."},
-                "project": {"type": "string", "description": "Nom optionnel du projet."}
-            },
-            "required": ["concept"]
-        }
-    },
-    "graph_blast_radius": {
-        "server": "graphify",
-        "description": "Calcule le rayon d'impact (Blast Radius) ascendant et descendant pour un fichier ou concept.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "target": {"type": "string", "description": "Chemin du fichier ou nom du concept cible."},
-                "project": {"type": "string", "description": "Nom optionnel du projet."}
-            },
-            "required": ["target"]
-        }
-    },
-    "check_story_compliance": {
-        "server": "mloop_mem",
-        "description": "Vérifie la conformité Gherkin 4 Piliers (ADR-0301) et l'isolation technique d'un récit.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "content": {"type": "string", "description": "Le contenu Markdown du récit à auditer."}
-            },
-            "required": ["content"]
-        }
-    },
-    # Router meta-tool
-    "set_phase": {
-        "server": "router",
-        "description": (
-            "Définit la phase active de la Story pour filtrer les outils disponibles. "
-            "Phases valides : INIT, ANALYZE, PLAN, QA, ALL."
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "phase": {
-                    "type": "string",
-                    "enum": list(PHASE_TOOL_FILTER.keys()),
-                    "description": "La phase à activer."
-                }
-            },
-            "required": ["phase"]
-        }
-    },
-    # Stateful session meta-tool
-    "loop_mem_set_project": {
-        "server": "mloop_mem",
-        "description": (
-            "Définit le projet actif pour la session MCP (Stateful Session). "
-            "Évite de répéter le nom du projet à chaque appel d'outil."
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "project": {"type": "string", "description": "Nom du projet à activer (ex: 'mLoop')."}
-            },
-            "required": ["project"]
-        }
-    }
-}
+# Révision protocolaire mémorisée par la session (état de transport stdio).
+_SESSION_PROTOCOL_VERSION: str | None = None
 
 
 def log_error(msg: str):
@@ -243,36 +85,64 @@ def _call_sub_server(server_script: str, method: str, params: dict) -> dict:
     try:
         if server_script == "mloop_mem":
             from src.bridges.mcp_loop_mem import handle_tools_call
+
             return handle_tools_call(req_id=1, params=params)
         elif server_script == "open_notebook":
             from src.bridges.mcp_open_notebook import handle_tools_call
+
             return handle_tools_call(req_id=1, params=params)
         elif server_script == "graphify":
             from src.bridges.mcp_graphify import handle_tools_call
+
             return handle_tools_call(req_id=1, params=params)
         else:
             return {
                 "jsonrpc": "2.0",
-                "result": {"isError": True, "content": [{"type": "text", "text": f"Sub-serveur '{server_script}' non trouvé."}]},
-                "id": 1
+                "result": {
+                    "isError": True,
+                    "content": [
+                        {"type": "text", "text": f"Sub-serveur '{server_script}' non trouvé."}
+                    ],
+                },
+                "id": 1,
             }
     except Exception as e:
         return {
             "jsonrpc": "2.0",
-            "result": {"isError": True, "content": [{"type": "text", "text": f"Erreur sous-serveur: {e}"}]},
-            "id": 1
+            "result": {
+                "isError": True,
+                "content": [{"type": "text", "text": f"Erreur sous-serveur: {e}"}],
+            },
+            "id": 1,
         }
 
 
-def handle_initialize(req_id):
+def handle_initialize(req_id, params=None, *, version_decision=None):
+    """
+    Négociation de version à l'initialisation (récit §1, 210-Q1).
+
+    Le registre unique est partagé avec le routage par en-têtes : seule une
+    version absente du registre est refusée (-32600), sans mutation de session.
+    """
+    global _SESSION_PROTOCOL_VERSION
+
+    decision = version_decision
+    if decision is None:
+        declared, _source = declared_version(params, None)
+        decision = negotiate_version(declared)
+
+    if not decision.accepted:
+        return invalid_version_error(req_id, decision.requested)
+
+    _SESSION_PROTOCOL_VERSION = decision.negotiated
+    base_result = {
+        "capabilities": {"tools": {}},
+        "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION},
+    }
     return {
         "jsonrpc": "2.0",
-        "result": {
-            "protocolVersion": "2024-11-05",
-            "capabilities": {"tools": {}},
-            "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION}
-        },
-        "id": req_id
+        "result": enrich_initialize_result(base_result, decision),
+        "id": req_id,
     }
 
 
@@ -280,11 +150,7 @@ def handle_tools_list(req_id):
     global _active_phase
     tools = _get_visible_tools(_active_phase)
     log_error(f"Phase '{_active_phase}' — {len(tools)} outils exposés.")
-    return {
-        "jsonrpc": "2.0",
-        "result": {"tools": tools},
-        "id": req_id
-    }
+    return {"jsonrpc": "2.0", "result": {"tools": tools}, "id": req_id}
 
 
 def handle_tools_call(req_id, params):
@@ -300,12 +166,14 @@ def handle_tools_call(req_id, params):
         return {
             "jsonrpc": "2.0",
             "result": {
-                "content": [{
-                    "type": "text",
-                    "text": f"✅ Phase active : **{new_phase}** — {len(tools)} outils disponibles."
-                }]
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"✅ Phase active : **{new_phase}** — {len(tools)} outils disponibles.",
+                    }
+                ]
             },
-            "id": req_id
+            "id": req_id,
         }
 
     # Route to the right sub-server
@@ -313,8 +181,16 @@ def handle_tools_call(req_id, params):
     if not tool_meta:
         return {
             "jsonrpc": "2.0",
-            "result": {"isError": True, "content": [{"type": "text", "text": f"Outil '{name}' inconnu ou non disponible dans la phase '{_active_phase}'."}]},
-            "id": req_id
+            "result": {
+                "isError": True,
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"Outil '{name}' inconnu ou non disponible dans la phase '{_active_phase}'.",
+                    }
+                ],
+            },
+            "id": req_id,
         }
 
     server = tool_meta["server"]
@@ -335,26 +211,51 @@ def main():
             req = json.loads(line)
             method = req.get("method")
             req_id = req.get("id")
-            params = req.get("params", {})
+            params = req.get("params", {}) or {}
 
-            if method == "initialize":
-                res = handle_initialize(req_id)
+            # Négociation par requête : message déclaré > état de session.
+            declared, source = declared_version(params, None)
+            decision = negotiate_version(declared or _SESSION_PROTOCOL_VERSION)
+            tool_name = params.get("name") if method == "tools/call" else None
+
+            if not decision.accepted:
+                res = invalid_version_error(req_id, decision.requested)
+            elif method == "initialize":
+                res = handle_initialize(req_id, params, version_decision=decision)
             elif method == "tools/list":
                 res = handle_tools_list(req_id)
             elif method == "tools/call":
                 res = handle_tools_call(req_id, params)
             elif method in ("notifications/initialized", "ping"):
-                continue
+                res = None
+            elif req_id is not None:
+                res = {
+                    "jsonrpc": "2.0",
+                    "error": {"code": -32601, "message": f"Méthode '{method}' non supportée."},
+                    "id": req_id,
+                }
             else:
-                if req_id is not None:
-                    res = {
-                        "jsonrpc": "2.0",
-                        "error": {"code": -32601, "message": f"Méthode '{method}' non supportée."},
-                        "id": req_id
-                    }
-                else:
-                    continue
+                res = None
 
+            # Politique de repli : strictement une application par requête.
+            apply_fallback_policy(
+                decision,
+                transport="stdio",
+                method=method,
+                tool_name=tool_name,
+                header_present=None,
+                declared_in_message=source != "absent",
+            )
+
+            if res is None:
+                continue
+
+            attach_routing_meta(
+                res,
+                protocol_version=decision.negotiated or PROTOCOL_VERSION_LEGACY,
+                method=method,
+                tool_name=tool_name,
+            )
             sys.stdout.write(json.dumps(res) + "\n")
             sys.stdout.flush()
 

@@ -90,27 +90,34 @@ class SemanticLexiconResolver:
                 filename_norm = EntityMatcher.normalize_string(f.name)
                 content = f.read_text(encoding="utf-8", errors="ignore")
 
-                frontmatter: dict = {}
-                h1_title = ""
+                story_id = ""
+                jira_key = ""
+                title_text = ""
+                tags: List[str] = []
 
                 fm_match = re.search(r"^---(.*?)---", content, re.DOTALL | re.MULTILINE)
                 if fm_match:
-                    try:
-                        frontmatter = yaml.safe_load(fm_match.group(1)) or {}
-                    except Exception as e:
-                        logger.debug(
-                            "Frontmatter YAML invalide ignoré",
-                            extra={"file": str(f), "error": str(e)},
-                        )
+                    fm_block = fm_match.group(1)
+                    id_m = re.search(r"^id:\s*['\"]?([^'\"\n\r]+)['\"]?", fm_block, re.MULTILINE)
+                    if id_m:
+                        story_id = id_m.group(1).strip()
+                    jira_m = re.search(r"^jira_key:\s*['\"]?([^'\"\n\r]+)['\"]?", fm_block, re.MULTILINE)
+                    if jira_m:
+                        jira_key = jira_m.group(1).strip()
+                    title_m = re.search(r"^title:\s*['\"]?([^'\"\n\r]+)['\"]?", fm_block, re.MULTILINE)
+                    if title_m:
+                        title_text = title_m.group(1).strip()
+                    if "tags:" in fm_block:
+                        tags_block = re.search(r"tags:\s*(?:\[([^\]]*)\]|\n((?:\s*-[^\n\r]+\r?\n?)+))", fm_block)
+                        if tags_block:
+                            if tags_block.group(1):
+                                tags = [t.strip().strip("'\"") for t in tags_block.group(1).split(",") if t.strip()]
+                            elif tags_block.group(2):
+                                tags = [re.sub(r"^\s*-\s*", "", line).strip().strip("'\"") for line in tags_block.group(2).splitlines() if line.strip()]
 
                 h1_match = re.search(r"^#\s*(.*)$", content, re.MULTILINE)
-                if h1_match:
-                    h1_title = h1_match.group(1).strip()
-
-                story_id = str(frontmatter.get("id", ""))
-                jira_key = str(frontmatter.get("jira_key", ""))
-                title_text = str(frontmatter.get("title", "")) or h1_title
-                tags = [str(t) for t in frontmatter.get("tags", [])]
+                if h1_match and not title_text:
+                    title_text = h1_match.group(1).strip()
 
                 score = EntityMatcher.score_story_candidate(
                     query=query,

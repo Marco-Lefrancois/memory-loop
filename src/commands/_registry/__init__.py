@@ -39,6 +39,7 @@ from src.commands._registry._reg_export_skill import EXPORT_SKILL_COMMANDS
 from src.commands._registry._reg_intelligence import INTELLIGENCE_COMMANDS
 from src.commands._registry._reg_workers import WORKERS_COMMANDS, WORKER_KIND_HELP
 from src.commands._registry._reg_runtime_ops import RUNTIME_OPS_COMMANDS
+from src.commands._registry._reg_tooling_ecosystem import TOOLING_ECOSYSTEM_COMMANDS
 
 # Point d'entrée stable du dispatcher — nom COMMANDS conservé (Q2 grill, zéro rename).
 # Fusion ordonnée : les doublons sont résolus par le dernier assigné (comportement dict Python).
@@ -52,6 +53,7 @@ COMMANDS: dict[str, dict] = {
     **INTELLIGENCE_COMMANDS,
     **WORKERS_COMMANDS,
     **RUNTIME_OPS_COMMANDS,
+    **TOOLING_ECOSYSTEM_COMMANDS,
 }
 
 __all__ = ["COMMANDS", "WORKER_KIND_HELP"]

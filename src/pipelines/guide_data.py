@@ -71,6 +71,8 @@ PHASE_MAPPING: Dict[str, str] = {
     "code-check": "build",
     "code-tournament": "build",
     "tdd-enforce": "build",
+    "opencode": "build",
+    "plannotator": "build",
     # Phase 4 : VALIDATE / QA (Validation Sémantique, Fact-Check & Guardrails)
     "validate-sprint": "validate",
     "wikifix": "validate",
@@ -210,4 +212,6 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "code-tournament": "Matrice d'arbitrage Pareto ($S_{\\text{pareto}}$) & Code optimal",
     "tdd-enforce": "Sceau cryptographique TDD (Red / Green / Verify)",
     "validate-sprint": "Rapports d'assurance qualité QA (`qa_certification_report.md` et `.json`)",
+    "opencode": "Configuration `.opencode/opencode.json` & runtime local",
+    "plannotator": "Plan annoté dans `memory/plan/<STORY_ID>_phase_plan.annotated.md`",
 }

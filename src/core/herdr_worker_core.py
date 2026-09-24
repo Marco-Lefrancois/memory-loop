@@ -95,9 +95,44 @@ def spawn_story_worker_impl(
         flags = runtime_spec.build_flags(model=target_model, extra_args=extra_args)
     else:
         flags = list(extra_args) if extra_args else ["--dangerously-skip-permissions"]
-    start_res = self.start_agent(
-        agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
-    )
+
+    # MLOOP-262-BE : Verrouillage strict du mode Plan pour Cline en Phase 2
+    if kind == "cline" and task_type in ("plan", "grill", "analyse"):
+        if "--plan" not in flags and "-p" not in flags:
+            flags.append("--plan")
+
+    # MLOOP-263-BE : Circuit-Breaker déterministe Cline -> OpenCode
+    start_res = None
+    try:
+        start_res = self.start_agent(
+            agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
+        )
+    except Exception as exc:
+        if kind == "cline":
+            logger.warning(
+                "Exception spawn Cline (%s). Déclenchement Circuit-Breaker : fallback vers OpenCode.",
+                exc,
+            )
+            kind = "opencode"
+            from src.core.worker_runtimes import get_worker_runtime
+            flags = get_worker_runtime("opencode").build_flags(model=target_model, extra_args=extra_args)
+            start_res = self.start_agent(
+                agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
+            )
+        else:
+            raise
+
+    if kind == "cline" and isinstance(start_res, dict) and not start_res.get("success"):
+        logger.warning(
+            "Échec start_agent Cline (%s). Déclenchement Circuit-Breaker : fallback vers OpenCode.",
+            start_res.get("error"),
+        )
+        kind = "opencode"
+        from src.core.worker_runtimes import get_worker_runtime
+        flags = get_worker_runtime("opencode").build_flags(model=target_model, extra_args=extra_args)
+        start_res = self.start_agent(
+            agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
+        )
 
     time.sleep(3)
     try:

@@ -199,6 +199,20 @@ def run_sync(
             extra={"subsystem": "audit", "project": project_name},
         )
 
+    # [11] Cline Memory Bank & Rules Mirror Sync (MLOOP-260-BE, MLOOP-261-BE)
+    try:
+        from src.bridges.cline.memory_bank_bridge import MemoryBankBridge
+        from src.bridges.cline.rules_mirror import ClineRulesMirror
+
+        ws_root = project_path.resolve()
+        while ws_root.parent != ws_root and not (ws_root / "Projects").exists() and not (ws_root / "standards").exists():
+            ws_root = ws_root.parent
+
+        MemoryBankBridge(workspace_root=ws_root).sync_all()
+        ClineRulesMirror(workspace_root=ws_root).sync()
+    except Exception as _cline_err:
+        _log.debug("Synchronisation Cline pass-through ignorée : %s", _cline_err)
+
     duration_ms = round((time.perf_counter() - t_total) * 1000, 2)
     _log.info(
         f"[SYNC] Fin de la synchronisation pour '{project_name}'.",

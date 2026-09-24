@@ -49,12 +49,40 @@ def handle_to_tshirt(
 def handle_wayfinder(
     args: argparse.Namespace, state: LoopState, project_path: Path
 ) -> int:
-    """Initialise ou met à jour la carte Wayfinder."""
+    """Initialise, affiche la frontière ou résout un ticket Wayfinder (ADR-014)."""
     from src.pipelines.wayfinder import WayfinderEngine
     from src.pipelines.sync import run_sync
 
     wf = WayfinderEngine(project_path)
-    map_path = wf.init_map(getattr(args, "title", "Initiative Principale"))
+    action = getattr(args, "action", None) or "init-map"
+    action = action.lower()
+
+    if action in ("resolve", "resolve-ticket"):
+        ticket_id = getattr(args, "ticket", None)
+        decision = getattr(args, "decision", None)
+        if not ticket_id or not decision:
+            ZeroFluffConsole.error("Paramètres obligatoires : --ticket <ID> et --decision <TEXT>.")
+            return 1
+        ok = wf.resolve_ticket(ticket_id, decision)
+        if ok:
+            ZeroFluffConsole.success(f"Ticket Wayfinder {ticket_id} résolu : {decision}")
+            run_sync(args.project, state, project_path)
+            return 0
+        ZeroFluffConsole.error(f"Échec de résolution : ticket {ticket_id} introuvable.")
+        return 1
+
+    if action == "frontier":
+        frontier = wf.get_frontier()
+        ZeroFluffConsole.info(f"=== Frontière de Décision Wayfinder ({project_path.name}) ===")
+        if not frontier:
+            ZeroFluffConsole.success("Toutes les décisions de la frontière sont levées.")
+        for t in frontier:
+            ZeroFluffConsole.info(f"  • [{t['id']}] ({t['kind']}) {t['title']} — {t['description']}")
+        return 0
+
+    title = getattr(args, "title", None) or getattr(args, "initiative", "Initiative Principale")
+    goal = getattr(args, "goal", None)
+    map_path = wf.init_map(title, goal=goal)
     ZeroFluffConsole.success(f"Carte Wayfinder initialisée/mise à jour : {map_path}")
     run_sync(args.project, state, project_path)
     return 0

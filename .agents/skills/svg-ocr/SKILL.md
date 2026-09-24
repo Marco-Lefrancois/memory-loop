@@ -97,3 +97,8 @@ $raw = Get-Content -LiteralPath "maquette.svg" -Raw
 - **`Windows.Media.Ocr`** requiert un pack de langue installé pour la langue cible
   (`TryCreateFromUserProfileLanguages()` prend la langue du profil ; fr-CA/fr-FR/en-US OK par défaut).
 - Travail temporaire hors workspace : utiliser `C:\Users\<user>\AppData\Local\Temp\opencode`.
+
+---
+
+## 🛡️ Résilience & Dégradation Gracieuse
+Si Chromium ou Playwright échouent lors du rendu headless (timeout ou binaire absent), consigner l'anomalie dans `memory/logs/` et déléguer l'extraction à un sous-agent multimodal disposant de capacités de vision native via `worker-spawn` sans bloquer le cycle.

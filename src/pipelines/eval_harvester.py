@@ -2,9 +2,10 @@
 """
 Auto Eval Harvester Engine (mLoop Core - ADR-0326).
 
-Inspiré de Latitude / Open-RAG-Eval (Awesome Agents) :
+Standardisé selon le modèle Google Agents CLI Eval & Harness Engineering :
 Moissonne automatiquement les anomalies et rejets de Sentinel (Rubber Duck / WikiFix)
-et les convertit en cas d'évaluation (Evals) réutilisables pour tester la non-régression.
+et les convertit en cas d'évaluation (EvalTestCase) hybrides (déterministes + sémantiques)
+pour tester la non-régression continue.
 """
 
 from __future__ import annotations
@@ -19,7 +20,10 @@ from typing import List, Dict, Any, Optional
 
 @dataclass
 class EvalTestCase:
-    """Cas de test d'évaluation généré automatiquement depuis une anomalie."""
+    """
+    Cas de test d'évaluation unifié (Google Agents CLI Eval + mLoop Sentinel).
+    Supporte les assertions déterministes Système 1 et la notation LLM-as-a-judge Système 2.
+    """
     eval_id: str
     target_file: str
     category: str
@@ -28,12 +32,59 @@ class EvalTestCase:
     severity: str  # "BLOCKING", "WARNING"
     discovered_at: str
     metadata: Dict[str, Any] = field(default_factory=dict)
+    description: str = ""
+    inputs: Dict[str, Any] = field(default_factory=dict)
+    ground_truth_facts: Dict[str, Any] = field(default_factory=dict)
+    deterministic_assertions: Dict[str, Any] = field(default_factory=dict)
+    evaluator_config: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if not self.description:
+            self.description = self.issue_description or f"Audit de {self.target_file}"
+        if not self.inputs:
+            self.inputs = {
+                "story_artifact_path": self.target_file,
+                "context_requirements": [self.issue_description] if self.issue_description else [],
+            }
+        if not self.ground_truth_facts:
+            self.ground_truth_facts = {
+                "official_endpoints": [],
+                "strictly_forbidden_endpoints": ["/api/dummy", "/api/test", "/api/checkout/pay"],
+                "mandatory_business_rules": [],
+            }
+        if not self.deterministic_assertions:
+            self.deterministic_assertions = {
+                "max_file_lines": 300,
+                "frontmatter_required_keys": ["id", "jira_key", "epic_key", "layer", "status", "invest_score"],
+                "gherkin_pillars_present": ["Nominal", "Exceptions", "Résilience", "UX"],
+                "zero_code_snippets": True,
+                "zero_local_hardcoded_paths": True,
+            }
+        if not self.evaluator_config:
+            self.evaluator_config = {
+                "judge_model": "claude-sonnet-4-6",
+                "temperature": 0.0,
+                "pass_threshold_score": 85,
+            }
+
+    @property
+    def test_case_id(self) -> str:
+        return self.eval_id
 
     def to_dict(self) -> Dict[str, Any]:
+        """Sérialisation bivalente (compatible rétro mLoop et Google Agents CLI Eval)."""
         return {
+            # Clés canoniques Google Agents CLI Eval
+            "test_case_id": self.eval_id,
+            "category": self.category,
+            "description": self.description,
+            "inputs": self.inputs,
+            "ground_truth_facts": self.ground_truth_facts,
+            "deterministic_assertions": self.deterministic_assertions,
+            "evaluator_config": self.evaluator_config,
+            # Clés de compatibilité mLoop historique
             "eval_id": self.eval_id,
             "target_file": self.target_file,
-            "category": self.category,
             "issue_description": self.issue_description,
             "expected_rule": self.expected_rule,
             "severity": self.severity,
@@ -54,7 +105,6 @@ class AutoEvalHarvester:
         """Extrait les cas d'évaluation depuis le rapport WikiFix."""
         report_file = Path(wikifix_report_path) if wikifix_report_path else (self.project_path / "memory" / "wikifix_report.md")
         if not report_file.exists():
-            # Chercher à la racine de mLoop si non trouvé dans project_path
             alt = Path("memory") / "wikifix_report.md"
             if alt.exists():
                 report_file = alt
@@ -116,7 +166,6 @@ class AutoEvalHarvester:
             is_warning = "[AVERTISSEMENT]" in stripped or "WARN" in stripped
 
             if is_blocking or is_warning:
-                # Nettoyage de la description
                 clean_desc = re.sub(r"^[-*•\s]*\[(REJET|AVERTISSEMENT|GUARDRAIL[^\]]*)\]\s*", "", stripped).strip()
                 clean_desc = clean_desc.lstrip("-*• :").strip()
 

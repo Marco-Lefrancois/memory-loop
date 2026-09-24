@@ -61,6 +61,7 @@ from src.dashboard.routers.system import (
     select_project,
     set_active_project,
 )
+from src.dashboard.routers.tooling import router as tooling_router
 from src.dashboard.routers.traces import router as traces_router
 from src.utils.logger import get_logger
 
@@ -104,6 +105,7 @@ app.include_router(events_router)
 app.include_router(backlog_router)
 app.include_router(rules_router)
 app.include_router(graph_router)
+app.include_router(tooling_router)
 
 
 # ── MONTER LE FRONTEND WEB ─────────────────────────────────────────────────────

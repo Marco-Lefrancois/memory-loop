@@ -9,12 +9,18 @@ Couvre :
 5. SprintBacklogItem.status et SprintBacklogItem.type correctement typés.
 6. StoryType.from_raw() pour Feature, Architecture, Technical_Debt, Bug, Spike.
 """
+
 import pytest
 from src.state import StoryStatus, StoryType, SprintBacklogItem
-from src.pipelines.state_machine import StateMachineEngine, ALLOWED_TRANSITIONS
+from src.pipelines.state_machine import (
+    ALLOWED_TRANSITIONS,
+    StateMachineEngine,
+    StateTransitionError,
+)
 
 
 # ─── Tests StoryType.from_raw() ───────────────────────────────────────────────
+
 
 def test_story_type_from_raw():
     assert StoryType.from_raw("Feature") == StoryType.FEATURE
@@ -31,6 +37,7 @@ def test_story_type_from_raw():
 
 
 # ─── Tests StoryStatus.from_raw() ─────────────────────────────────────────────
+
 
 def test_from_raw_exact_match():
     assert StoryStatus.from_raw("SHIPPED") == StoryStatus.SHIPPED
@@ -78,6 +85,7 @@ def test_all_statuses_parseable():
 
 # ─── Tests SprintBacklogItem ──────────────────────────────────────────────────
 
+
 def _make_item(status: StoryStatus, story_type: StoryType = StoryType.FEATURE) -> SprintBacklogItem:
     return SprintBacklogItem(
         id="TEST-001",
@@ -94,24 +102,40 @@ def test_sprint_item_default_status_and_type():
     assert item.type == StoryType.FEATURE
 
 
-@pytest.mark.parametrize("status", [
-    StoryStatus.READY_FOR_GROOMING, StoryStatus.READY_FOR_DEV,
-    StoryStatus.IN_DEV, StoryStatus.IN_QA, StoryStatus.DONE, StoryStatus.ACCEPTED
-])
+@pytest.mark.parametrize(
+    "status",
+    [
+        StoryStatus.READY_FOR_GROOMING,
+        StoryStatus.READY_FOR_DEV,
+        StoryStatus.IN_DEV,
+        StoryStatus.IN_QA,
+        StoryStatus.DONE,
+        StoryStatus.ACCEPTED,
+    ],
+)
 def test_grilled_true_for_human_and_downstream_statuses(status):
     """grilled == True pour les statuts validés par mLoop et en cours de livraison."""
     assert _make_item(status).grilled is True
 
 
-@pytest.mark.parametrize("status", [
-    StoryStatus.OPEN, StoryStatus.IN_ANALYZE, StoryStatus.IN_PLAN,
-    StoryStatus.IN_BUILD, StoryStatus.IN_VALIDATE, StoryStatus.SHIPPED, StoryStatus.ERROR,
-])
+@pytest.mark.parametrize(
+    "status",
+    [
+        StoryStatus.OPEN,
+        StoryStatus.IN_ANALYZE,
+        StoryStatus.IN_PLAN,
+        StoryStatus.IN_BUILD,
+        StoryStatus.IN_VALIDATE,
+        StoryStatus.SHIPPED,
+        StoryStatus.ERROR,
+    ],
+)
 def test_grilled_false_for_in_progress_statuses(status):
     assert _make_item(status).grilled is False
 
 
 # ─── Tests Transitions FSM ────────────────────────────────────────────────────
+
 
 def test_full_client_lifecycle_transitions():
     """Vérifie le cycle complet de transitions client."""
@@ -120,3 +144,44 @@ def test_full_client_lifecycle_transitions():
     assert StoryStatus.IN_QA in ALLOWED_TRANSITIONS[StoryStatus.IN_DEV]
     assert StoryStatus.ACCEPTED in ALLOWED_TRANSITIONS[StoryStatus.IN_QA]
 
+
+# ─── MLOOP-FIX-C1C2 (C1) — Statut DONE_TESTED ────────────────────────────────
+# SSOT : standards/protocols/STORY_LIFECYCLE_PROTOCOL.md
+#   L16 (chaîne unifiée), L35 (statut auto-positionnable IA),
+#   L63-70 (§E IN_DEV→DONE_TESTED, §F DONE_TESTED→SHIPPED),
+#   L90-95 (§3.2 rétrogradation via IN_REVIEW, re-progression par IN_DEV).
+
+
+@pytest.mark.parametrize("raw", ["DONE_TESTED", "done_tested", "done tested", "DONE-TESTED"])
+def test_from_raw_done_tested_variants(raw):
+    """DONE_TESTED doit être reconnu par from_raw (toutes variantes normalisées)."""
+    assert StoryStatus.from_raw(raw) == StoryStatus.DONE_TESTED
+
+
+def test_done_tested_allowed_transitions_fsm():
+    """FSM : entrée §E depuis IN_DEV ; sorties §F + §3.2 — aucune autre liste touchée."""
+    assert StoryStatus.DONE_TESTED in ALLOWED_TRANSITIONS[StoryStatus.IN_DEV]
+    assert ALLOWED_TRANSITIONS[StoryStatus.DONE_TESTED] == [
+        StoryStatus.SHIPPED,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_DEV,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ]
+    # Aucun accès direct illicite : DRAFT et IN_REVIEW ne mènent pas à DONE_TESTED.
+    assert StoryStatus.DONE_TESTED not in ALLOWED_TRANSITIONS[StoryStatus.DRAFT]
+    assert StoryStatus.DONE_TESTED not in ALLOWED_TRANSITIONS[StoryStatus.IN_REVIEW]
+
+
+def test_done_tested_illicit_transition_raises():
+    """Une transition DRAFT → DONE_TESTED doit lever StateTransitionError (FSM bloquante)."""
+    engine = StateMachineEngine(".")
+    with pytest.raises(StateTransitionError):
+        engine.validate_transition(StoryStatus.DRAFT, StoryStatus.DONE_TESTED)
+
+
+def test_done_tested_is_grilled_and_jira_sync_eligible():
+    """Un récit DONE_TESTED est considéré grilled ET éligible à la sync Jira."""
+    item = _make_item(StoryStatus.DONE_TESTED)
+    assert item.grilled is True
+    assert item.jira_sync_eligible is True

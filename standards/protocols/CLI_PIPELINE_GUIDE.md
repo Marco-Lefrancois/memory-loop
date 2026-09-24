@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 122 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 124 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 122 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 124 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -85,8 +85,8 @@ flowchart LR
 | `python src/swarm.py graph-impact` | Calculer le rayon d'impact conceptuel et architectural (Blast Radius) | --target <STR> [--global <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py graph-query` | Interroger le graphe de connaissances sur un concept, ADR ou règle (Agentic Retrieval) | --query <STR> [--limit <INT>] [--global <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py graph-status` | Afficher les statistiques et la fraîcheur du graphe de connaissances | [--global <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py grill` | Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--story <STR>] | ADRs dans `standards/adr-system/` & preuves |
-| `python src/swarm.py grill-project` | Cadrage contradictoire macro d'avant-projet (Architecture globale, Loi 25, SSO, exclusions) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] | `standards/adr-system/` & cadrage macro |
+| `python src/swarm.py grill` | Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--story <STR>] [--mode <STR>] [--health <STR>] | ADRs dans `standards/adr-system/` & preuves |
+| `python src/swarm.py grill-project` | Cadrage contradictoire macro d'avant-projet (Architecture globale, Loi 25, SSO, exclusions) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--mode <STR>] [--health <STR>] | `standards/adr-system/` & cadrage macro |
 | `python src/swarm.py hyper-query` | Interroger l'hypergraphe pour une User Story ou inspecter les statistiques (ADR-0343) | [--story <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py multi-draft` | Challenge d'évaluation comparative locale multi-branches (struct-check + Sentinel) — ADR-0373 | --story <STR> [--eval-only <STR>] [--strict <STR>] | Rapport Challenge Multi-Drafts (ADR-0373) |
 | `python src/swarm.py story-clean` | Nettoyer les sections de mémoire temporaires (Suite Mémoire, Notes de Traçabilité) des stories (ADR-0301) | [--verbose <STR>] | Console / Mémoire d'état |
@@ -95,7 +95,7 @@ flowchart LR
 | `python src/swarm.py to-tshirt` | Générer un Dimensionnement Budgétaire d'avant-projet (T-Shirt Size) sous docs/01-architecture/ | [--title <STR>] | `docs/01-architecture/TSHIRT_SIZE_<PROJET>.md` |
 | `python src/swarm.py topology` | Cartographie topologique des agents et calcul du Blast Radius (ADR-0371) | [--agent <STR>] [--json <STR>] | Cartographie Blast Radius & Surface d'Exposition |
 | `python src/swarm.py update-story` | Mettre à jour une section H2 spécifique d'une story de façon AST-déterministe | --story <STR> --section <STR> --content <STR> | Console / Mémoire d'état |
-| `python src/swarm.py wayfinder` | Initialiser ou mettre à jour la carte Wayfinder | [--title <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py wayfinder` | Pipeline décisionnel Wayfinder : initialiser la carte, afficher la frontière ou résoudre un ticket | [<ACTION>] [--title <STR>] [--goal <STR>] [--ticket <STR>] [--decision <STR>] | Console / Mémoire d'état |
 
 ---
 
@@ -114,6 +114,8 @@ flowchart LR
 | `python src/swarm.py confidence` | Évaluer le score de confiance d'un fichier | --file <STR> | Console / Mémoire d'état |
 | `python src/swarm.py csv-anonymize` | Anonymiser déterministement les colonnes PII sensibles et échantillonner | --file <STR> --fields <STR> [--out <STR>] [--sample <INT>] | Console / Mémoire d'état |
 | `python src/swarm.py csv-diff` | Comparer deux instantanés de CSV et identifier les deltas sur clé primaire | --old <STR> --new <STR> --key <STR> | Console / Mémoire d'état |
+| `python src/swarm.py opencode` | Pilotage souverain du runtime OpenCode CLI (init, run, status) | [<ACTION>] [--prompt <STR>] [--headless <STR>] | Configuration `.opencode/opencode.json` & runtime local |
+| `python src/swarm.py plannotator` | Harnais d'orchestration visuelle et d'approbation Plannotator (open, approve, status) | [<ACTION>] [--story <STR>] [--file <STR>] [--approve <STR>] | Plan annoté dans `memory/plan/<STORY_ID>_phase_plan.annotated.md` |
 | `python src/swarm.py review` | Revue de code visuelle interactive via Plannotator (diff Git local ou PR) | [--pr <STR>] [--tailscale <STR>] [--no-local <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py self-dev` | Auto-développement du framework mLoop | *(Aucun)* | Code source sous `src/` |
 | `python src/swarm.py tdd-enforce` | Protocole TDD Red-Green Enforcement et verrou Gate 3 (ADR-0381) | --phase <STR> --story <STR> [--test-file <STR>] [--source-file <STR>] | Sceau cryptographique TDD (Red / Green / Verify) |

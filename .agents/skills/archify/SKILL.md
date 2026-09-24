@@ -63,3 +63,11 @@ Pour tout diagramme de pipeline, de cycle de vie ou de workflow séquentiel :
    - Un score `PASS 100%` du linter géométrique Archify valide uniquement l'absence de collisions SVG. Il ne garantit pas la vérité du flux métier.
    - L'agent a l'obligation formelle de valider la logique causale fonctionnelle avant de livrer.
 
+---
+
+## 🏛️ Ancrage & Normes
+- **Gabarits & Schémas** : `standards/blueprints/`, `docs/01-architecture/`
+- **Artefacts Générés** : `Projects/<nom_projet>/docs/05-assets/`
+
+## 🛡️ Résilience & Dégradation Gracieuse
+Si le fichier JSON IR contient des erreurs de schéma ou de géométrie, le validateur `archify_runner.py` émet un rapport d'erreurs précis pointant les clés ou identifiants invalides sans générer de fichier HTML corrompu.

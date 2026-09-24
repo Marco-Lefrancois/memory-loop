@@ -9,19 +9,26 @@ Ce skill régit la minification et l'optimisation des fichiers graphiques vector
 
 ---
 
-## 🛠️ Utilisation CLI
+## 🛠️ Protocole d'Optimisation en 4 Étapes
 
-```powershell
-# Optimiser tous les fichiers SVG sous docs/05-assets/ d'un projet
-python src/swarm.py svg-optimize --project <nom_projet>
+1. **Analyse Préalable** : Identifier les fichiers SVG cibles sous `docs/05-assets/` et vérifier qu'ils ne sont pas verrouillés.
+2. **Exécution Déterministe** :
+   ```powershell
+   # Optimiser tous les fichiers SVG sous docs/05-assets/ d'un projet
+   python src/swarm.py svg-optimize --project <nom_projet>
 
-# Optimiser un dossier ou un fichier spécifique
-python src/swarm.py svg-optimize --project <nom_projet> --input "docs/05-assets/maquettes"
-```
+   # Optimiser un dossier ou un fichier spécifique
+   python src/swarm.py svg-optimize --project <nom_projet> --input "docs/05-assets/maquettes"
+   ```
+3. **Contrôle d'Intégrité Géométrique** : Vérifier que l'attribut `viewBox` est strictement préservé pour éviter tout décalage d'affichage dans les liseuses.
+4. **Validation du Gain** : Enregistrer le différentiel de taille (octets gagnés) dans les logs.
 
 ---
 
-## 💡 Réductions Obtenues
-- Nettoyage des métadonnées d'éditeurs (Inkscape, Illustrator, Figma, Sketch).
-- Fusion et minification des chemins géométriques (`paths`).
-- Réduction du poids moyen de 30% à 70% sans aucune perte visuelle.
+## 🛡️ Règles & Garde-Fous Stricts
+- **Préservation Visuelle** : Interdiction formelle de tronquer les coordonnées au point d'altérer la lisibilité des textes ou icônes.
+- **Préservation des Identifiants** : Ne pas supprimer les `id` et classes CSS utilisés par les tests d'interaction.
+- **Zéro Mutation Destructive** : Conserver une copie de sauvegarde si le fichier original n'est pas encore versionné dans Git.
+
+## 🛡️ Résilience & Dégradation Gracieuse
+Si l'outil SVGO ou le parser XML rencontre une erreur de syntaxe sur un fichier SVG mal formé, consigner l'erreur dans `memory/logs/` et ignorer ce fichier pour ne pas bloquer le traitement du lot.

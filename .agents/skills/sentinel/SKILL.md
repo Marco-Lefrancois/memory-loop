@@ -1,6 +1,7 @@
 ---
 name: sentinel
 description: Audit QA contradictoire impitoyable (Avocat du Diable / Red Team) et vérification par le doute. Use when reviewing user stories, challenging acceptance criteria, auditing architecture proposals, or performing doubt-driven sanity checks before implementation.
+disable-model-invocation: true
 ---
 
 # 🛡️ Skill : Audit Contradictoire & Avocat du Diable (`/sentinel`)
