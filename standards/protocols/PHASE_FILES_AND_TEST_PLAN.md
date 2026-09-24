@@ -41,7 +41,7 @@ flowchart TD
         P2["Phase 2 : PLAN / ANALYSE<br>(Grill-Me, Découpage INVEST & 4 Piliers)"]
         P3["Phase 3 : BUILD / DEV<br>(Code, Tests & Workers Herdr)"]
         P4["Phase 4 : VALIDATE / QA<br>(Sentinel, Fact-Check NLI & Evals)"]
-        P5["Phase 5 : SHIP & SYNC<br>(Jira Cloud, Git & NotebookLM)"]
+        P5["Phase 5 : SHIP & SYNC<br>(Jira Cloud, Git & Distribution)"]
         
         P2 -->|Gate 2 : Definition of Ready| P3
         P3 -->|Gate 3 : Definition of Done| P4
@@ -206,7 +206,7 @@ flowchart TD
 
 ### 🔴 Phase 5 : SHIP & SYNC (Synchronisation, Jira Cloud & Clôture)
 
-> **Objectif** : Synchronisation tripartite sécurisée (Fail-Closed) vers Jira Cloud, publication Git versionnée, mise à jour du bundle Google NotebookLM officiel et scellage de cycle.
+> **Objectif** : Synchronisation sécurisée (Fail-Closed) vers Jira Cloud, publication Git versionnée, indexation sémantique et scellage de cycle.
 
 #### A. Fichiers Impliqués
 
@@ -215,16 +215,12 @@ flowchart TD
 | **Moteur & Pipelines** | [`src/pipelines/sync.py`](file:///C:/Memory%20Loop/src/pipelines/sync.py) | Synchronisation sémantique locale : mise à jour WikiFix + réindexation Hypergraphe. | **Régulière** — Fin de cycle ou de sprint. |
 | | [`src/pipelines/jira/jira_sync.py`](file:///C:/Memory%20Loop/src/pipelines/jira/jira_sync.py) | Moteur de synchronisation bidirectionnelle Jira Cloud (Fail-Closed, dry-run par défaut). | **À chaque déploiement Jira** — Synchronisation contrôlée. |
 | | [`src/pipelines/jira/jira_client.py`](file:///C:/Memory%20Loop/src/pipelines/jira/jira_client.py) | Client HTTP robuste Jira REST API v3 avec gestion des tokens et rate-limits. | **Sur requête Jira** — Couche de transport réseau sécurisée. |
-| | [`src/pipelines/notebooklm_export.py`](file:///C:/Memory%20Loop/src/pipelines/notebooklm_export.py) | Exportateur du bundle documentaire SSOT vers le carnet Google NotebookLM officiel. | **Périodique** — À chaque jalon documentaire majeur. |
 | | [`src/pipelines/cycle_runner.py`](file:///C:/Memory%20Loop/src/pipelines/cycle_runner.py) | Clôture de cycle et transition d'état globale. | **1x par clôture de sprint** — Scellage de cycle. |
 | **Handlers CLI** | [`src/commands/handlers/project.py`](file:///C:/Memory%20Loop/src/commands/handlers/project.py) | Commandes `jira_sync`, `sync`, `cycle-status`. | **En fin de sprint** — Synchronisations officielles. |
-| | [`src/commands/handlers/notebooklm.py`](file:///C:/Memory%20Loop/src/commands/handlers/notebooklm.py) | Commande `notebooklm` (authentification, export et mise à jour de carnets). | **À la demande** — Mise à jour de l'Oracle documentaire. |
 | | [`src/commands/handlers/tooling.py`](file:///C:/Memory%20Loop/src/commands/handlers/tooling.py) | Commandes `install-hooks`. | **Ponctuelle** — Déploiement des protections Git. |
 | **Standards & Blueprints** | [`standards/blueprints/git_pre_commit_hook.sh`](file:///C:/Memory%20Loop/standards/blueprints/git_pre_commit_hook.sh) | Script shell de protection Git pré-commit (vibe-check automatique). | **À chaque git commit** — Exécution automatique en arrière-plan. |
-| | [`standards/adr-system/0360-google-notebooklm-rag-gemini.md`](file:///C:/Memory%20Loop/standards/adr-system/0360-google-notebooklm-rag-gemini.md) | Standard de RAG Gemini 2.5 sans hallucination via NotebookLM. | **Permanent** — Doctrine de consultation externe. |
 | | [`standards/adr-system/0361-jira-cloud-safe-sync-fail-closed.md`](file:///C:/Memory%20Loop/standards/adr-system/0361-jira-cloud-safe-sync-fail-closed.md) | Protocole de synchronisation Fail-Closed, isolation par portée et dry-run obligatoire. | **Permanent** — Règle bloquante de sécurité d'écriture Jira. |
 | **Outils** | [`tools/jira/`](file:///C:/Memory%20Loop/tools/jira/) | Boîte à outils et scripts de diagnostic de connexion Jira Cloud. | **En maintenance Jira** — Diagnostic des jetons et champs ADF. |
-| | [`tools/notebooklm/login_notebooklm.mjs`](file:///C:/Memory%20Loop/tools/notebooklm/login_notebooklm.mjs) | Script Node/Playwright pour l'authentification interactive SSO Google NotebookLM. | **Périodique (expiration SSO)** — Renouvellement des cookies Google. |
 | **Artefacts Projet** | Dépôt Git versionné | Commits propres avec hook de contrôle au vert. | **À chaque livraison** — Historique Git scellé. |
 | | Tickets Jira Cloud synchronisés | Tickets mis à jour avec critères 4 Piliers et statut résolu/fermé. | **À chaque sync Jira** — Miroir distant officiel. |
 
@@ -294,5 +290,5 @@ flowchart TD
 | **Phase 2 : PLAN / ANALYSE** | `uv run pytest tests/test_grill_engine.py tests/test_archify.py tests/test_canvas_generator.py tests/test_drawdb_bridge.py tests/test_dossier_init.py tests/test_invest_evaluator_and_layout.py tests/test_hypergraph_and_extractor.py` | 16 fichiers | À chaque story rédigée / modifiée | Definition of Ready (DoR) validée, 4 Piliers Gherkin stricts, zéro pseudo-code. |
 | **Phase 3 : BUILD / DEV** | `uv run pytest tests/test_herdr_adapter.py tests/test_specialized_workers.py tests/test_worker_harvest_partial.py tests/test_worker_spawn_lifecycle_gating.py tests/test_plannotator.py tests/test_evidence_pack.py` | 8 fichiers | À chaque exécution de worker Herdr | Isolation stricte des sessions Herdr et zéro modification directe de code client. |
 | **Phase 4 : VALIDATE / QA** | `uv run pytest tests/test_struct_checker.py tests/test_rubber_duck_api_routes.py tests/test_fact_check_engine.py tests/test_fact_search_engine.py tests/test_nli_polarity.py tests/test_verification_leakage_gate.py tests/test_gates_engine.py tests/test_vibe_check_lifecycle.py` | 23 fichiers | À chaque recette / audit de story | Certificat de véracité NLI émis, zéro lien mort WikiFix, 17/17 vibe-check. |
-| **Phase 5 : SHIP & SYNC** | `uv run pytest tests/test_jira_sync_safe.py tests/test_jira_md_cleaner.py tests/test_sync_resilience.py tests/test_in_review_lifecycle.py tests/test_memory_supersession.py` | 7 fichiers | À chaque synchronisation / release | Jira synchronisé en Fail-Closed, Git versionné et carnet NotebookLM à jour. |
+| **Phase 5 : SHIP & SYNC** | `uv run pytest tests/test_jira_sync_safe.py tests/test_jira_md_cleaner.py tests/test_sync_resilience.py tests/test_in_review_lifecycle.py tests/test_memory_supersession.py` | 7 fichiers | À chaque synchronisation / release | Jira synchronisé en Fail-Closed, Git versionné et mémoire scellée. |
 | **Transverse & Runtime** | `uv run pytest tests/test_guide_parity.py tests/test_python_senior_standards.py tests/test_state.py tests/test_lifecycle_persistence.py tests/test_circuit_breaker.py tests/test_agent_resilience.py tests/test_token_ledger.py tests/test_skill_doctor.py tests/test_dashboard_v2.py` | 20+ fichiers | À chaque session / commit / CI | Parité SSOT 100%, standards Senior respectés, intégrité mémoire préservée. |

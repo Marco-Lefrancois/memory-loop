@@ -19,11 +19,11 @@ Elle garantit que la documentation vivante, le gestionnaire de projet Jira, le d
 
 ---
 
-## 2. Actualisation du Bundle NotebookLM SSOT
+## 2. Actualisation de la Documentation Vivante SSOT
 
 - [ ] **Vérification de la Fraîcheur des Sources** :
-  - Les nouveaux ADRs et les modifications de spécifications majeures sont exportés dans le bundle SSOT.
-  - La note de cadrage globale de NotebookLM est synchronisée pour éviter tout drift d'ancrage avec les sessions de RAG.
+  - Les nouveaux ADRs et les modifications de spécifications majeures sont consolidés dans la documentation vivante (`docs/`).
+  - L'indexation sémantique FTS5 et l'hypergraphe Graphify sont rafraîchis pour éviter tout drift d'ancrage avec les sessions de RAG.
 
 ---
 

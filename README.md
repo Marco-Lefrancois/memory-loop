@@ -51,7 +51,7 @@ flowchart LR
     P1["1. INGEST & EXPLORE<br>(Ingestion MarkItDown & AST)"] --> P2["2. PLAN & ANALYSE<br>(Grill-Me 1:1, INVEST, ADRs)"]
     P2 --> P3["3. BUILD & DEV<br>(Gherkin 4 Piliers & EvidencePacks)"]
     P3 --> P4["4. VALIDATE & QA<br>(Vibe-Check, Sentinel & WikiFix)"]
-    P4 --> P5["5. SHIP & SYNC<br>(Git, Jira Cloud & NotebookLM)"]
+    P4 --> P5["5. SHIP & SYNC<br>(Git, Jira Cloud & Distribution)"]
 ```
 
 ---

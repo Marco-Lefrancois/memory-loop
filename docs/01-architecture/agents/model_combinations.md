@@ -7,7 +7,7 @@ Voici 3 propositions d'architectures de modèles pour vos agents, selon vos prio
 | 🔀 **Orchestrator** | `claude-sonnet-4.6-thinking`   | `gemini-3-flash-preview-thinking`      | `gpt-5-mini`                       |
 | 🧠 **Plan**         | `claude-opus-4.7-thinking`     | `gemini-3.1-pro-preview-thinking`      | `claude-haiku-4.5-thinking`        |
 | 💻 **Build**        | `gpt-5.3-codex`                | `claude-sonnet-4.6`                    | `codestral-2501`                   |
-| 🛡️ **Sentinel**    | `gpt-5.5-thinking`             | `deepseek-r1`                          | `claude-haiku-4.5`                 |
+| 🛡️ **Sentinel**    | `gpt-5.5-thinking`             | `claude-opus-4.8`                      | `claude-haiku-4.5`                 |
 | 💸 **Coût Relatif** | 🔴 **Élevé ($$$)**             | 🟡 **Modéré / Optimal ($$)**           | 🟢 **Très Faible ($)**             |
 | ⏱️ **Vitesse**      | Modérée (Raisonnement lourd)   | Rapide                                 | Extrêmement rapide                 |
 
@@ -19,8 +19,8 @@ Voici 3 propositions d'architectures de modèles pour vos agents, selon vos prio
 *   **Idéal pour :** Des architectures ultra-complexes ou des bases de code legacy sensibles où une erreur humaine/IA coûterait plus cher que le prix de l'API.
 
 #### 2. ⚖️ "Sweet Spot" (Recommandé)
-*   **Stratégie :** On alloue l'intelligence coûteuse uniquement là où elle est vitale (Plan & Build). On utilise des modèles asymétriques très efficients pour le reste.
-*   **Consommation de tokens :** Contrôlée. `deepseek-r1` est réputé pour offrir un raisonnement de niveau Opus pour une fraction du prix. `gemini-3-flash` est un des modèles les moins chers du marché tout en étant excellent pour le routage.
+*   **Stratégie :** On alloue l'intelligence de pointe là où elle est vitale (Plan & Build avec Gemini/Claude, Sentinel avec Claude Opus 4.8). On utilise des modèles asymétriques efficients pour le reste.
+*   **Consommation de tokens :** Contrôlée. `claude-opus-4.8` apporte un audit critique sans concession et un raisonnement approfondi pour le rôle Sentinel. `gemini-3-flash` est un des modèles les plus véloces et économiques du marché tout en étant excellent pour l'orchestration.
 *   **Idéal pour :** Le développement quotidien. C'est le meilleur rapport Qualité/Prix.
 
 #### 3. 🚀 "Économique & Rapide"

@@ -1,8 +1,10 @@
 # ADR-0360 : Synchronisation & Export SSOT vers Google NotebookLM
 
-> **Statut :** Accepté  
-> **Date :** 2026-09-08  
-> **Contexte :** Liaison bidirectionnelle entre l'Orchestrateur mLoop et le carnet Google NotebookLM officiel  
+> **Statut :** DÉPRÉCIÉ / RETIRÉ  
+> **Date Initiale :** 2026-09-08  
+> **Date de Retrait :** 2026-09-24  
+> **Contexte :** Ancienne liaison avec Google NotebookLM (Retirée du framework à la demande de l'équipe car non utilisée)  
+> **Décision de Retrait :** Les commandes `notebooklm`, handlers, pipelines d'exportation et scripts d'authentification associés ont été intégralement retirés du projet mLoop.
 
 ---
 
@@ -46,7 +48,7 @@ Jusqu'alors, aucun protocole déterministe ne permettait de compiler la document
 ---
 
 ## 4. Statut & Suivi
-
-- Implémenté dans `src/commands/handlers/notebooklm.py` et `src/pipelines/notebooklm_export.py`.
-- Enregistré dans `src/commands/_registry.py`.
-- Carnet validé et actif sous l'ID `memory-loop-ssot`.
+ 
+- Statut : **RETIRÉ / OBSOLÈTE (2026-09-24)**.
+- Supprimé de `src/commands/_registry/_reg_project.py` et du guide CLI.
+- Code et pipelines supprimés (`src/commands/handlers/notebooklm.py`, `src/pipelines/notebooklm_export.py`, `tools/notebooklm/`).

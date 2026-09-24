@@ -215,4 +215,4 @@ python scripts/fact_search.py search "<sujet_ou_regle_metier>"
 ### 📚 Références d'Architecture SSOT Associées
 - **ADR-0310** : [`standards/adr-system/0310-vibe-code-session-resume.md`](file:///c:/Memory%20Loop/standards/adr-system/0310-vibe-code-session-resume.md) (Vibe Code Common Sense & Session Resume)
 - **ADR-0339** : [`standards/adr-system/0339-project-lifecycle-stages-governance-gates.md`](file:///c:/Memory%20Loop/standards/adr-system/0339-project-lifecycle-stages-governance-gates.md) (Gouvernance des Étapes INIT vs RUN)
-- **Philosophie Harnais** : [`docs/01-architecture/framework/notebooklm/01_mloop_Philosophie_Harness.md`](file:///c:/Memory%20Loop/docs/01-architecture/framework/notebooklm/01_mloop_Philosophie_Harness.md)
+- **Philosophie Harnais** : [`docs/01-architecture/framework/executive_summaries/01_mloop_Philosophie_Harness.md`](file:///c:/Memory%20Loop/docs/01-architecture/framework/executive_summaries/01_mloop_Philosophie_Harness.md)

@@ -3,7 +3,7 @@ Sous-registre déclaratif CLI — Domaine Projet (MLOOP-175-BE).
 
 Commandes : guide, init, resume, focus, vibe-check, gate-approve,
              lifecycle-status, lifecycle-clean, sync-antigravity,
-             install-hooks, hook, notebooklm.
+             install-hooks, hook.
 
 Contraintes : ADR-0202 (≤300L/15Ko), ADR-0369 (zéro import circulaire).
 """
@@ -173,27 +173,5 @@ PROJECT_COMMANDS: dict[str, dict] = {
                 "help": "Identifiant de la story cible (optionnel)",
             },
         ],
-    },
-    "notebooklm": {
-        "handler": "notebooklm:handle_notebooklm",
-        "help": "Gestion, export SSOT et connexion au carnet Google NotebookLM officiel",
-        "args": [
-            {
-                "name": "--bundle",
-                "action": "store_true",
-                "help": "Générer les bundles Markdown prêts pour l'import NotebookLM",
-            },
-            {
-                "name": "--status",
-                "action": "store_true",
-                "help": "Vérifier l'état de l'authentification et les métadonnées",
-            },
-            {
-                "name": "--auth",
-                "action": "store_true",
-                "help": "Lancer l'assistant interactif de connexion Chrome",
-            },
-        ],
-        "no_project": True,
     },
 }

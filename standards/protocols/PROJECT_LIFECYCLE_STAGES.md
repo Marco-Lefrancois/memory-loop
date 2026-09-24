@@ -28,7 +28,7 @@ flowchart LR
 * **Activités** :
   - Ingestion via `python src/swarm.py ingest`, `crawl`, `markitdown_convert`, `extract`, `agentic-extract`, `csv-normalize`.
   - Optimisation des maquettes SVG sous `docs/05-assets/` via `python src/swarm.py svg-optimize` (ADR-0332).
-  - Analyse exploratoire via NotebookLM (`python src/swarm.py notebooklm`) et Fact-Search local.
+  - Analyse exploratoire via Fact-Search local et RAG multi-sources.
 * **Livrables Autorisés** :
   - Documents bruts convertis et normalisés sous `docs/00-ingested/` avec `source_manifest.json` et sidecars LOD `.overview.md` (ADR-0335).
   - Actifs visuels et maquettes vectorielles épurées sous `docs/05-assets/` (ADR-0332).

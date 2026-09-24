@@ -3,7 +3,7 @@
 ## 1. Origine Technologique : DSpark & DeepSpec dans mLoop
 L'évolution de l'architecture mLoop s'inspire des avancées du cadre de décodage spéculatif **DSpark** (développé par DeepSeek) et du cadre d'ingénierie des agents persistants (*Always-On Persistent State Systems*). 
 
-Dans un environnement agentique, l'utilisation aveugle des modèles de langage à fort pouvoir de raisonnement (ex: DeepSeek-R1, OpenAI o1) pour chaque étape intermédiaire crée un gaspillage massif de budget cognitif et augmente la latence. mLoop résout ce défi en introduisant des mécanismes d'exécution asymétrique et de gouvernance temporelle.
+Dans un environnement agentique, l'utilisation aveugle des modèles de langage à fort pouvoir de raisonnement (ex: Claude Opus, OpenAI o1) pour chaque étape intermédiaire crée un gaspillage massif de budget cognitif et augmente la latence. mLoop résout ce défi en introduisant des mécanismes d'exécution asymétrique et de gouvernance temporelle.
 
 ---
 

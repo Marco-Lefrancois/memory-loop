@@ -52,7 +52,7 @@ Le routage sémantique est configuré au niveau de l'IDE via le frontmatter YAML
 | :--- | :--- | :--- | :--- |
 | [orchestrator](file:///c:/Memory%20Loop/.agents/agents/orchestrator.md) | Supervision générale & Workflow | `gemini-3-flash-preview-thinking` | Pilotage des 5 phases, gestion du nœud `ML_ACTIVE_STATE`, execution DAG (`graph-run`). |
 | [plan](file:///c:/Memory%20Loop/.agents/agents/plan.md) | Strategic & Architecture | `gemini-3.1-pro-preview-thinking` | Modélisation DDD, protocoles *Grill with Docs*, création des PRD et des SCC (Stories verticaux). |
-| [sentinel / validate](file:///c:/Memory%20Loop/.agents/agents/sentinel.md) | Validation & Audit QA | `deepseek-r1:7b` (Local / Ollama) | Audit des **4 Piliers Gherkin**, calcul INVEST, EvidencePackEngine (`memory/evidence/`), `wikifix`. |
+| [sentinel / validate](file:///c:/Memory%20Loop/.agents/agents/sentinel.md) | Validation & Audit QA | `claude-opus-4.8` | Audit des **4 Piliers Gherkin**, calcul INVEST, EvidencePackEngine (`memory/evidence/`), `wikifix`. |
 
 ---
 

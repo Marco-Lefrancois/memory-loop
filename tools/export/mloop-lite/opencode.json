@@ -48,9 +48,6 @@
         },
         "opencode/gpt-4o-mini": {
           "name": "GPT-4o Mini (Modèle Gratuit OpenCode)"
-        },
-        "opencode/deepseek-r1": {
-          "name": "DeepSeek R1 Reasoning (Modèle Gratuit OpenCode)"
         }
       }
     }

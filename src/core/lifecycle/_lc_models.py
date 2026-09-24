@@ -106,7 +106,6 @@ COMMAND_MIN_STAGE: Dict[str, ProjectLifecycleStage] = {
     "crawl": ProjectLifecycleStage.STAGE_1_INGEST,
     "extract": ProjectLifecycleStage.STAGE_1_INGEST,
     "agentic-extract": ProjectLifecycleStage.STAGE_1_INGEST,
-    "notebooklm": ProjectLifecycleStage.STAGE_1_INGEST,
     "svg-optimize": ProjectLifecycleStage.STAGE_1_INGEST,
     "svg-ocr": ProjectLifecycleStage.STAGE_1_INGEST,
     "csv-normalize": ProjectLifecycleStage.STAGE_1_INGEST,

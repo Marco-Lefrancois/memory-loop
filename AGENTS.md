@@ -44,11 +44,10 @@ Ceci est le **Cerveau** (Backend d'État & Méta-Orchestrateur) du cycle de vie 
 | 🌐 **1. Dépôt Git Distant** | Synchronisation physique Markdown (Stories, ADRs, EvidencePacks) | `git -C "Projects/<nom_projet>" add .` ➔ `commit` ➔ `push` |
 | 📋 **2. Jira Cloud** | Synchronisation bidirectionnelle tickets, champs & critères INVEST | `python src/swarm.py jira_sync --project <nom_projet>` |
 | 🧠 **3. Base Sémantique & Graphe** | Mise à jour index Graphify et SQLite FTS5 (WikiFix + Sync) | `python src/swarm.py sync --project <nom_projet>` |
-| 📚 **4. Google NotebookLM** | Export et mise à jour du carnet officiel SSOT (RAG Gemini 2.5 - ADR-0360) | `python src/swarm.py notebooklm --bundle` (ou `--status`) |
-| 🩺 **5. Skill Doctor** | Audit jetons et détection du *Context Rot* dans `.agents/skills/` (ADR-0362) | `python src/swarm.py doctor --skills` |
-| 🕸️ **6. Graph Intelligence** | Consultation du graphe sans dumping JSON brut (ADR-0204 & ADR-0363) | `python src/swarm.py graph-query --query "..."` |
-| 🛡️ **7. Protection Anti-Amnésie** | Sauvegarde Système 1 et checkpoint avant compaction LLM (ADR-0364) | `python src/swarm.py hook --event pre_compact` |
-| 🤖 **8. Runtimes Agents Aval** | Sonde des CLI locaux pour Dev Handoff & Herdr (ADR-0377) | `python src/swarm.py doctor --agents` (ou `agent-probe`) |
+| 🩺 **4. Skill Doctor** | Audit jetons et détection du *Context Rot* dans `.agents/skills/` (ADR-0362) | `python src/swarm.py doctor --skills` |
+| 🕸️ **5. Graph Intelligence** | Consultation du graphe sans dumping JSON brut (ADR-0204 & ADR-0363) | `python src/swarm.py graph-query --query "..."` |
+| 🛡️ **6. Protection Anti-Amnésie** | Sauvegarde Système 1 et checkpoint avant compaction LLM (ADR-0364) | `python src/swarm.py hook --event pre_compact` |
+| 🤖 **7. Runtimes Agents Aval** | Sonde des CLI locaux pour Dev Handoff & Herdr (ADR-0377) | `python src/swarm.py doctor --agents` (ou `agent-probe`) |
 
 ### 1.5 Moteurs d'Analyse & Diagrammes Déterministes
 - **Graphify** : Documentation, architecture SSOT et règles métier (`graph-query`, `graph-explain`).

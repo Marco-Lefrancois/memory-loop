@@ -33,7 +33,7 @@ DRAFT → IN_ANALYZE → READY_FOR_GROOMING → READY_FOR_DEV → IN_DEV → DON
 | `READY_FOR_DEV` | **Humain uniquement** | `story_template.md` | **Interdiction formelle à l'IA.** État certifiant que le récit est arbitré, complet, et prêt pour l'implémentation physique. |
 | `IN_DEV` | **IA / Humain** | — | L'implémentation physique est en cours. Les modifications de code sont actives. |
 | `DONE_TESTED` | **IA** | — | L'implémentation est terminée et tous les tests unitaires/passent. La revue de code est terminée. |
-| `SHIPPED` | **IA / Humain** | — | Le récit est livré en production (ou intégré au framework mLoop). Artefacts synchronisés (Git, Jira, NotebookLM). |
+| `SHIPPED` | **IA / Humain** | — | Le récit est livré en production (ou intégré au framework mLoop). Artefacts synchronisés (Git, Jira). |
 
 ---
 
@@ -68,7 +68,7 @@ L'agent bascule le récit vers `READY_FOR_GROOMING` uniquement si les conditions
   3. `python src/swarm.py guide --sync` retourne "parité OK" si des modifications CLI ont été faites.
 
 ### F. De `DONE_TESTED` vers `SHIPPED`
-* Déclenché lors de la synchronisation finale (Git push, Jira sync, NotebookLM export).
+* Déclenché lors de la synchronisation finale (Git push, Jira sync).
 * Critères :
   1. Code committed et pushed.
   2. Jira synchronisé (si applicable).

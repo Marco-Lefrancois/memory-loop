@@ -2,7 +2,7 @@
 name: sentinel
 role: Validation & Audit QA Engine
 description: "Audit de conformité fonctionnelle et calcul du score INVEST."
-model: deepseek-r1:7b
+model: claude-opus-4.8
 model_reasoning_effort: high
 sandbox_mode: read-only
 allowed_write_paths:

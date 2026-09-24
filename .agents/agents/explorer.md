@@ -48,5 +48,5 @@ Ta mission est de convertir la matière première déposée par l'humain dans `P
 # OUTILS AUTORISÉS (PHASE 1 : INGEST & EXPLORE)
 - **Ingestion & Conversion** : `python src/swarm.py ingest`, `markitdown_convert`, `crawl`, `extract`, `agentic-extract`.
 - **Traitement d'Assets** : `python src/swarm.py svg-optimize`, `svg-ocr`, `csv-normalize`, `csv-validate`.
-- **RAG & Recherche** : `python src/swarm.py fact-search`, `notebooklm`, `loop_mem_search`.
+- **RAG & Recherche** : `python src/swarm.py fact-search`, `loop_mem_search`.
 - **Gouvernance & Statut** : `python src/swarm.py lifecycle-status`, `gate-approve --gate 1`.

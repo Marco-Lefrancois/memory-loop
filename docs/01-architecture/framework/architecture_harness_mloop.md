@@ -73,5 +73,5 @@ flowchart TD
 
 Le Rubber-Duck Engine invoqué par l'agent `sentinel` et l'orchestration du Swarm utilisent des configurations de modèles souveraines et isolées :
 - **Orchestrateur & Plan (System 2)** : Modèles de raisonnement stratégique (`gemini-3.8-flash`, `claude-sonnet-5`, `claude-opus-4.8`).
-- **Sentinel & Rubber-Duck (Agent Critique)** : Modèle contradicteur haut débit (`gpt-5.6-terra-thinking`, `deepseek-r1` local via Ollama ou modèle alternatif).
+- **Sentinel & Rubber-Duck (Agent Critique)** : Modèle contradicteur haut débit (`gpt-5.6-terra-thinking`, `claude-opus-4.8` ou modèle d'audit alternatif).
 - **Plugins AP 1.0** : Empaquetage standard de la configuration MCP sous `.agents/mcp.json` et du catalogue de skills sous `.agents/skills/`.

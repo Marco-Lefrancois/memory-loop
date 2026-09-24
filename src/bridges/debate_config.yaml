@@ -8,7 +8,7 @@ strategies:
   # Le casting "Deep Architecture" (Le standard recommandé pour la phase Plan)
   deep_architecture:
     proposer: "gpt-5.5"
-    challenger: "deepseek-r1" 
+    challenger: "claude-opus-4.8" 
     synthesizer: "claude-opus-4.7"
 
   # Le casting "Titan" (100% Qualité / Pas de budget limite)

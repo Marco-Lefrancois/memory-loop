@@ -100,7 +100,6 @@
       "crawl",
       "extract",
       "agentic-extract",
-      "notebooklm",
       "svg-optimize",
       "svg-ocr",
       "csv-normalize",

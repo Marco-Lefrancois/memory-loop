@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 122 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 121 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 122 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 121 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -27,7 +27,7 @@ flowchart LR
     P1 --> P2["2. PLAN / ARCHI<br>(Analyse & Grill)"]
     P2 --> P3["3. BUILD / DEV<br>(Code & Workers)"]
     P3 --> P4["4. VALIDATE / QA<br>(Audit & Fact-Check)"]
-    P4 --> P5["5. SHIP & SYNC<br>(Jira, Git & NotebookLM)"]
+    P4 --> P5["5. SHIP & SYNC<br>(Jira, Git & Distribution)"]
 ```
 
 ---
@@ -161,7 +161,7 @@ flowchart LR
 
 ### 🔴 Phase 5 : SHIP & SYNC (Synchronisation, Jira Cloud & Distribution)
 
-> Synchronisation bidirectionnelle Jira Cloud, synchronisation sémantique locale, export Oracle Google NotebookLM, et packaging Agent Plugins 1.0.
+> Synchronisation bidirectionnelle Jira Cloud, synchronisation sémantique locale, publication Git, et packaging Agent Plugins 1.0.
 
 | Commande CLI | Rôle / Description | Paramètres | Sorties / Artefacts Clés |
 | :--- | :--- | :--- | :--- |
@@ -170,7 +170,6 @@ flowchart LR
 | `python src/swarm.py guide-export` | Exporter un guide de revue autonome HTML portable via Plannotator | [--snapshot <STR>] [--id <STR>] [--out <STR>] | Guide HTML autonome Plannotator |
 | `python src/swarm.py install-hooks` | Installer/désinstaller le hook Git pre-commit déterministe (code-check + struct-check — MLOOP-105-BE) | [--uninstall <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py jira_sync` | Synchronisation ciblée Jira Cloud (Fail-Closed). Requiert --story ou --stories pour cibler des tickets. Le mode dry-run est actif par défaut ; utiliser --apply + --confirm-scope pour écrire. | [--story <STR>] [--stories <STR>] [--apply <STR>] [--confirm-scope <STR>] [--all <STR>] [--confirm-all-project-stories <STR>] [--allow-in-analyze <STR>] [--dry-run <STR>] | Tickets et champs Jira Cloud à jour |
-| `python src/swarm.py notebooklm` | Gestion, export SSOT et connexion au carnet Google NotebookLM officiel | [--bundle <STR>] [--status <STR>] [--auth <STR>] | Export SSOT vers carnet officiel |
 | `python src/swarm.py plugin-export` | Exporter un package Agent Plugin 1.0 portable | [--output <STR>] | Package AP 1.0 redistribuable |
 | `python src/swarm.py plugin-validate` | Valider la conformité Agent Plugin 1.0 | [--plugin-root <STR>] [--strict <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py sync` | WikiFix + Synchronisation d'état et modélisation Hypergraphe | [--verbose <STR>] [--incremental <STR>] [--fast <STR>] [--story <STR>] | Index FTS5 + Graphe sémantique |
