@@ -98,6 +98,7 @@ PHASE_MAPPING: Dict[str, str] = {
     # Phase 5 : SHIP & SYNC (Synchronisation, Jira Cloud & Distribution)
     "sync": "ship",
     "sync-antigravity": "ship",
+    "rollover-archive": "ship",
     "jira_sync": "ship",
     "cycle-status": "ship",
     "calibrate": "ship",
@@ -221,4 +222,5 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "plannotator": "Plan annoté dans `memory/plan/<STORY_ID>_phase_plan.annotated.md`",
     "memory": "Rapport de santé & défragmentation (`loop_mem.db` compacté)",
     "skill-eval": "Rapport d'évaluation des compétences (`skills_eval_summary.md`)",
+    "rollover-archive": "Archive historique dans `backlog/archive/`",
 }

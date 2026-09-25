@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 129 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 130 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 129 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 130 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -114,7 +114,7 @@ flowchart LR
 | `python src/swarm.py confidence` | Évaluer le score de confiance d'un fichier | --file <STR> | Console / Mémoire d'état |
 | `python src/swarm.py csv-anonymize` | Anonymiser déterministement les colonnes PII sensibles et échantillonner | --file <STR> --fields <STR> [--out <STR>] [--sample <INT>] | Console / Mémoire d'état |
 | `python src/swarm.py csv-diff` | Comparer deux instantanés de CSV et identifier les deltas sur clé primaire | --old <STR> --new <STR> --key <STR> | Console / Mémoire d'état |
-| `python src/swarm.py opencode` | Pilotage souverain du runtime OpenCode CLI (init, run, status) | [<ACTION>] [--prompt <STR>] [--headless <STR>] | Configuration `.opencode/opencode.json` & runtime local |
+| `python src/swarm.py opencode` | Pilotage souverain du runtime OpenCode CLI (init, run, status, sync) | [<ACTION>] [--prompt <STR>] [--headless <STR>] [--dry-run <STR>] | Configuration `.opencode/opencode.json` & runtime local |
 | `python src/swarm.py plannotator` | Harnais d'orchestration visuelle et d'approbation Plannotator (open, approve, status) | [<ACTION>] [--story <STR>] [--file <STR>] [--approve <STR>] | Plan annoté dans `memory/plan/<STORY_ID>_phase_plan.annotated.md` |
 | `python src/swarm.py review` | Revue de code visuelle interactive via Plannotator (diff Git local ou PR) | [--pr <STR>] [--tailscale <STR>] [--no-local <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py self-dev` | Auto-développement du framework mLoop | *(Aucun)* | Code source sous `src/` |
@@ -154,6 +154,7 @@ flowchart LR
 | `python src/swarm.py lifecycle-status` | Afficher l'état du cycle de vie projet et l'historique des portes (ADR-0339) | *(Aucun)* | Console / Historique du cycle de vie |
 | `python src/swarm.py nli-audit` | Audit de non-contradiction sémantique NLI et fuites de tests (ADR-0326 / ADR-0354) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py rubber-duck` | Agent Sentinel — revue contradictoire de fond (Avocat du Diable avec discernement & rigueur) | [--file <STR>] [--suggest-patch <STR>] | Rapport sémantique 4 Piliers |
+| `python src/swarm.py skill-eval` | Évaluer l'intégrité et la conformité des compétences agentiques .agents/skills/ (EPIC-24 / ADR-0389) | [--all <STR>] [--skill <STR>] [--fast <STR>] [--flywheel <STR>] [--apply-patch <STR>] [--json <STR>] | Rapport d'évaluation des compétences (`skills_eval_summary.md`) |
 | `python src/swarm.py struct-check` | Gatekeeper structurel Read-Only : hiérarchie titres, format listes, cohérence du gabarit blueprint (pré-Sentinel) | [--file <STR>] [--strict <STR>] [--verbose <STR>] | Rapport violations C1–C7 |
 | `python src/swarm.py tree` | Afficher l'arbre d'exécution Depth Tree et l'état des gates (ADR-0341) | [--file <STR>] [--scope <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py validate-sprint` | Certification déterministe de sprint Phase 4 (tests, linter AST, CEL 4-piliers) (ADR-0383 / MLOOP-090-BE) | [--timeout <FLOAT>] [--test-dir <STR>] | Rapports d'assurance qualité QA (`qa_certification_report.md` et `.json`) |
@@ -174,6 +175,7 @@ flowchart LR
 | `python src/swarm.py jira_sync` | Synchronisation ciblée Jira Cloud (Fail-Closed). Requiert --story ou --stories pour cibler des tickets. Le mode dry-run est actif par défaut ; utiliser --apply + --confirm-scope pour écrire. | [--story <STR>] [--stories <STR>] [--apply <STR>] [--confirm-scope <STR>] [--all <STR>] [--confirm-all-project-stories <STR>] [--allow-in-analyze <STR>] [--dry-run <STR>] | Tickets et champs Jira Cloud à jour |
 | `python src/swarm.py plugin-export` | Exporter un package Agent Plugin 1.0 portable | [--output <STR>] | Package AP 1.0 redistribuable |
 | `python src/swarm.py plugin-validate` | Valider la conformité Agent Plugin 1.0 | [--plugin-root <STR>] [--strict <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py rollover-archive` | Archivage automatique des épopées scellées vers backlog/archive/ (ADR-0391) | [--dry-run <STR>] | Archive historique dans `backlog/archive/` |
 | `python src/swarm.py sync` | WikiFix + Synchronisation d'état et modélisation Hypergraphe | [--verbose <STR>] [--incremental <STR>] [--fast <STR>] [--story <STR>] | Index FTS5 + Graphe sémantique |
 | `python src/swarm.py sync-antigravity` | Synchroniser les tokens et interactions de l'IDE Antigravity vers le Token Ledger | [--conversation-id <STR>] [--all <STR>] | Console / Mémoire d'état |
 
@@ -212,7 +214,6 @@ flowchart LR
 | `python src/swarm.py rollback` | Restauration déterministe point-in-time de l'état et de la mémoire (ADR-0371) | [--step <INT>] [--target <STR>] | Restauration PITR de l'état et mémoire saine |
 | `python src/swarm.py scratch` | Nettoyage des résidus temporaires scratch et checkpoints (prune) | [<ACTION>] [--older-than-hours <INT>] [--all <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py skill-doctor` | Auditer l'hygiène et le coût en jetons des compétences .agents/skills/ (ADR-0348 / Claude Code v2.1.261) | [--threshold <INT>] [--json <STR>] [--no-tombstone <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py skill-eval` | Évaluer l'intégrité et la conformité des compétences agentiques .agents/skills/ (EPIC-24 / ADR-0389) | [--all <STR>] [--skill <STR>] [--fast <STR>] [--flywheel <STR>] [--apply-patch <STR>] [--json <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py skill-invoke` | Invoquer une compétence via son URI skill:// (SEP-2640) | --uri <STR> | Console / Mémoire d'état |
 | `python src/swarm.py skill-list` | Lister les compétences enregistrées dans le registre skill:// (SEP-2640) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py supersession-sync` | Synchroniser le registre de supersession des règles et décisions (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |

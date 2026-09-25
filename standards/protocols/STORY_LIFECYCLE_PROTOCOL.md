@@ -78,9 +78,10 @@ Le cycle de vie d'un récit est régi par une hiérarchie stricte d'autorité et
 
 ### Phase 5 : Distribution & Clôture Définitive
 * **`QA_CERTIFIED` vers `READY_TO_SHIP`** : Préparation des manifestes, synchronisation documentaire.
-* **`READY_TO_SHIP` vers `DONE` (Auto-Clôture Gate 5 & Auto-Commit Git)** :
+* **`READY_TO_SHIP` vers `DONE` (Auto-Clôture Gate 5, Auto-Commit Git & Archivage Immédiat)** :
   - Dès lors que 100% des tests pré-vol, suites pytest, linters AST et contrôles de sécurité sont verts (0 FAIL), la Gate 5 s'auto-clôture de manière 100% autonome (`requires_human: False`, ADR-0391).
   - Le code au statut `DONE` est **automatiquement commité vers Git, poussé/synchronisé et archivé par l'agent ou le pipeline**. Aucune approbation humaine n'est requise si tous les feux sont au vert. L'humain n'intervient que par exception.
+  - **Archivage Automatique Post-Git (Rollover Immédiat)** : Dès que la mise à jour Git (`git commit` + `git push`) est scellée pour une épopée (100% de ses récits à `DONE`/`SHIPPED`), l'archivage vers `backlog/archive/` est déclenché **automatiquement** (déplacement physique des récits vers `backlog/archive/stories/`, de l'épopée vers `backlog/archive/epics/`, et transfert de la section Markdown vers le registre historique). **Il est formellement interdit de laisser des épopées scellées polluer `sprint_backlog.md` en attendant un rituel différé.** Le sprint backlog actif ne conserve strictement que les épopées en cours (`OPEN`).
 
 ---
 

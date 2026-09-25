@@ -54,6 +54,17 @@ ANALYSIS_CORE_COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "rollover-archive": {
+        "handler": "analysis_sync:handle_rollover_archive",
+        "help": "Archivage automatique des épopées scellées vers backlog/archive/ (ADR-0391)",
+        "args": [
+            {
+                "name": "--dry-run",
+                "action": "store_true",
+                "help": "Simulation sans déplacement de fichiers",
+            },
+        ],
+    },
     "export-obsidian": {
         "handler": "analysis:handle_export_obsidian",
         "help": "Exporter l'hypergraphe sous forme de coffre Obsidian avec wikilinks (ADR-0337 / ADR-0343)",

@@ -32,6 +32,7 @@ from src.pipelines.sync._sync_docs import (
     sync_open_questions,
     sync_sprint_backlog,
 )
+from src.pipelines.sync._sync_archive import auto_archive_completed_epics
 
 # Sous-modules graph
 from src.pipelines.sync._sync_graph import (
@@ -55,9 +56,11 @@ __all__ = [
     "sync_project_directives",
     "sync_open_questions",
     "sync_sprint_backlog",
+    "auto_archive_completed_epics",
     # graph
     "sync_live_reference_wikis",
     "sync_hypergraph",
     # orchestrateur
     "run_sync",
 ]
+

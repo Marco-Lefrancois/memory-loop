@@ -35,6 +35,7 @@ from src.pipelines.sync._sync_docs import (
     sync_open_questions,
     sync_sprint_backlog,
 )
+from src.pipelines.sync._sync_archive import auto_archive_completed_epics
 from src.pipelines.sync._sync_graph import (
     sync_live_reference_wikis,
     sync_hypergraph,
@@ -104,6 +105,22 @@ def run_sync(
 
     # [3] Sprint backlog
     sync_sprint_backlog(project_name, project_path)
+
+    # [3b] Archivage automatique des épopées scellées (ADR-0391)
+    try:
+        arch_res = auto_archive_completed_epics(project_path)
+        if arch_res.get("archived_epics", 0) > 0:
+            ZeroFluffConsole.success(
+                f"[Sync] {arch_res['archived_epics']} épopée(s) scellée(s) et "
+                f"{arch_res['archived_stories']} récit(s) archivés vers backlog/archive/."
+            )
+    except Exception as _arch_err:
+        ZeroFluffConsole.warning(f"[Sync] Erreur non-bloquante lors de l'archivage auto : {_arch_err}")
+        _log.error(
+            "Erreur non-bloquante lors de l'archivage automatique du backlog.",
+            exc_info=True,
+            extra={"subsystem": "archive", "project": project_name},
+        )
 
     # [4] Questions ouvertes
     sync_open_questions(project_name, project_path)
