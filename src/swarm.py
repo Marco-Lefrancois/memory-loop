@@ -7,6 +7,20 @@ root_dir = Path(__file__).resolve().parent.parent
 if str(root_dir) not in sys.path:
     sys.path.insert(0, str(root_dir))
 
+
+def _projects_root() -> Path:
+    """Racine des projets clients — contexte dual.
+
+    Priorité au cwd s'il contient déjà un dossier Projects/ (racine framework,
+    tests tmp_path), sinon ancrage sur root_dir (déduit de __file__) pour que
+    la CLI reste fonctionnelle depuis Projects/<sous-depots> (hook pre-commit).
+    """
+    cwd_projects = Path("Projects")
+    if cwd_projects.is_dir():
+        return cwd_projects
+    return root_dir / "Projects"
+
+
 load_dotenv(override=True)
 
 from src.state import LoopState, ProjectLayout
@@ -42,7 +56,7 @@ def resolve_project_name(raw_name: str, create_if_missing: bool = False) -> str:
 
     # 0-pré. Correspondance exacte case-insensitive sur le dossier physique (avant résolution sémantique)
     # Priorité absolue sur les projets non archivés pour éviter les collisions avec _DEPRECATED
-    _direct_projects_dir = Path("Projects")
+    _direct_projects_dir = _projects_root()
     if _direct_projects_dir.exists():
         # Construire un index {nom_lower: nom_réel} en excluant les archives
         _physical_index = {
@@ -74,7 +88,7 @@ def resolve_project_name(raw_name: str, create_if_missing: bool = False) -> str:
 
     target_key = _canonical_key(clean_name)
 
-    projects_dir = Path("Projects")
+    projects_dir = _projects_root()
     existing_projects = {}
 
     if projects_dir.exists():
@@ -82,7 +96,7 @@ def resolve_project_name(raw_name: str, create_if_missing: bool = False) -> str:
             if p.is_dir() and not p.name.startswith("."):
                 existing_projects[_canonical_key(p.name)] = p.name
 
-    active_project_json = Path(ProjectLayout.ACTIVE_PROJECT_FILE)
+    active_project_json = root_dir / ProjectLayout.ACTIVE_PROJECT_FILE
     known_graph_names = set()
     if active_project_json.exists():
         try:
@@ -173,7 +187,7 @@ def get_project_context(project_name: str, create_if_missing: bool = False):
     """Charge l'état du projet et enregistre le projet actif."""
     resolved_name = resolve_project_name(project_name, create_if_missing=create_if_missing)
 
-    active_json = Path(ProjectLayout.ACTIVE_PROJECT_FILE)
+    active_json = root_dir / ProjectLayout.ACTIVE_PROJECT_FILE
     try:
         active_json.parent.mkdir(parents=True, exist_ok=True)
         with open(active_json, "w", encoding="utf-8") as f:
@@ -191,7 +205,7 @@ def get_project_context(project_name: str, create_if_missing: bool = False):
         )
         print(f"Warning: Could not write active_project.json: {e}")
 
-    project_path = Path("Projects") / resolved_name
+    project_path = _projects_root() / resolved_name
     state = LoopState(project_name=resolved_name)
     if project_path.exists():
         try:
