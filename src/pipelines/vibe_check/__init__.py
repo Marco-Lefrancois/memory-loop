@@ -36,6 +36,7 @@ from src.pipelines.vibe_check._vc_governance import (
     check_11_rule_engine,
     check_12_sow_granularity,
     check_13_phase_gate,
+    check_25_story_state_lock,
 )
 from src.pipelines.vibe_check._vc_build import (
     check_03_fts5,
@@ -230,8 +231,11 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
     checks.append(check_20_directives_ssot(*ctx))  # Check 20 : directives projet ADR-0384
     checks.append(check_21_visual_anchor(*ctx))  # Check 21 : ancrage visuel frontend
     checks.append(check_22_extraction_protocol(*ctx))  # Check 22 : protocole extraction modulaire
-    checks.append(check_23_skills_health(*ctx))  # Check 23 : Intégrité & Santé des Compétences ADR-0389
+    checks.append(
+        check_23_skills_health(*ctx)
+    )  # Check 23 : Intégrité & Santé des Compétences ADR-0389
     checks.append(check_24_storage_hygiene(*ctx))  # Check 24 : Hygiène & Plafond Stockage ADR-015
+    checks.append(check_25_story_state_lock(*ctx))  # Check 25 : Verrou anti-promotion MLOOP-270-BE
 
     passed_count = sum(1 for c in checks if c["status"] == "PASS")
     warning_count = sum(1 for c in checks if c["status"] == "WARNING")

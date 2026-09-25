@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Optional
 
 from src.engine.fact_check.domain_invariants import DomainInvariantChecker, InvariantSeverity
+from src.pipelines._struct_c13 import assess_story_state_lock
 from src.utils.logger import get_logger
 
 logger = get_logger("pipelines.struct_checker")
@@ -147,6 +148,7 @@ class StructCheckEngine:
         violations += self._check_c7_h1_format(content)
         violations += self._check_c8_anti_goodhart_scenarios(content)
         violations += self._check_c9_fact_dossier_presence(target_file, fm_data, content, strict)
+        violations += self._check_c13_state_lock(target_file, fm_data, strict)
         violations += self._check_c10_anti_ephemeral_rules(content)
         violations += self._check_c11_rule_engine_integration(content)
         violations += self._check_c12_domain_sanity(content)
@@ -935,3 +937,39 @@ class StructCheckEngine:
                 },
             )
         return violations
+
+    # ── Check C13 : Verrou anti-promotion & journal des transitions ──────────
+
+    def _check_c13_state_lock(
+        self, target_file: Path, fm_data: dict, strict: bool
+    ) -> list[StructViolation]:
+        """
+        C13 — Verrou d'état des récits (MLOOP-270-BE / ADR-011).
+
+        Confronte la ligne d'état du récit au journal append-only
+        `memory/story_transitions.jsonl` et à la preuve d'approbation humaine.
+        Corps des règles (a)-(d) partagé avec le contrôle projet-wide 25 :
+        voir `src/pipelines/_struct_c13.py`.
+        """
+        try:
+            issues = assess_story_state_lock(target_file, fm_data, self.project_path, strict)
+        except Exception:
+            # Dégradation gracieuse : ne jamais bloquer l'audit sur une erreur interne.
+            logger.debug(
+                "Dégradation gracieuse C13 : évaluation du verrou impossible",
+                exc_info=True,
+                extra={
+                    "component": "pipelines.struct_checker",
+                    "operation": "_check_c13_state_lock",
+                },
+            )
+            return []
+        return [
+            StructViolation(
+                check_id=issue["code"],
+                severity=issue["severity"],
+                message=issue["message"],
+                line_hint=None,
+            )
+            for issue in issues
+        ]

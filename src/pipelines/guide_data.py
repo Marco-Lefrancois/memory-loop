@@ -46,6 +46,8 @@ PHASE_MAPPING: Dict[str, str] = {
     "export-obsidian": "plan",
     "story-clean": "plan",
     "update-story": "plan",
+    "story-approve": "plan",
+    "story-backfill": "plan",
     "dossier-init": "plan",
     "multi-draft": "plan",
     # Phase 3 : BUILD / DEV (Développement & Workers Multi-Agents)

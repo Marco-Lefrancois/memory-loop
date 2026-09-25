@@ -7,6 +7,7 @@ Checks inclus :
   - check_11_rule_engine    : Intégrité RuleEngine dynamique (ADR-0328) (Check 11)
   - check_12_sow_granularity: Granularité SOW (ADR-0331) (Check 12)
   - check_13_phase_gate     : Interdiction de saut de phase (ADR-0375 / ADR-0339) (Check 13)
+  - check_25_story_state_lock: Verrou anti-promotion & journal des transitions (Check 25)
 """
 
 from pathlib import Path
@@ -86,7 +87,10 @@ def check_11_rule_engine(
                 rule_engine = RuleEngine()
                 rule_engine.load_from_adr_dir(arch_dir)
                 for sf in stories_dir.glob("**/*.md"):
-                    if any(p in ("archive", "_archive", "archive_deprecated", "reference") for p in sf.parts):
+                    if any(
+                        p in ("archive", "_archive", "archive_deprecated", "reference")
+                        for p in sf.parts
+                    ):
                         continue
                     try:
                         s_content = sf.read_text(encoding="utf-8", errors="replace")
@@ -271,3 +275,22 @@ def _check_phase2plus_gate(project_dir, detailed_stories, violations):
         ok = False
         violations.append("Récits détaillés sans SOW, specs ni sprint_backlog préalable")
     return ok, violations
+
+
+def check_25_story_state_lock(
+    project_dir: Path, project_name: str, lifecycle_mode: str, stage_label: str
+) -> dict:
+    """
+    Check 25 (MLOOP-270-BE / ADR-011 — Verrou Anti-Promotion & Journal des
+    Transitions) : confronte la ligne d'état de chaque récit au journal
+    append-only `memory/story_transitions.jsonl` et à la preuve d'approbation
+    humaine (`validated_by` / `validated_at`).
+
+    FAIL si revendication CA-4 non corroborée par un artefact sur disque, ou si
+    un écart BLOCKING subsiste sur un projet rétro-équipé (`origin: backfill`).
+    Corps des règles partagé avec le struct-check C13 : `_struct_c13.py`.
+    Lecture seule (scan `apply_sanctions=False`) — jamais d'écriture dans `backlog/`.
+    """
+    from src.pipelines._struct_c13 import summarize_project_state_lock
+
+    return summarize_project_state_lock(project_dir)

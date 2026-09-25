@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 130 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 132 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 130 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 132 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -89,6 +89,8 @@ flowchart LR
 | `python src/swarm.py grill-project` | Cadrage contradictoire macro d'avant-projet (Architecture globale, Loi 25, SSO, exclusions) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--mode <STR>] [--health <STR>] | `standards/adr-system/` & cadrage macro |
 | `python src/swarm.py hyper-query` | Interroger l'hypergraphe pour une User Story ou inspecter les statistiques (ADR-0343) | [--story <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py multi-draft` | Challenge d'évaluation comparative locale multi-branches (struct-check + Sentinel) — ADR-0373 | --story <STR> [--eval-only <STR>] [--strict <STR>] | Rapport Challenge Multi-Drafts (ADR-0373) |
+| `python src/swarm.py story-approve` | Approbation humaine d'un récit : stamps validated_by/validated_at + entrée journal atomique (MLOOP-270-BE) | --story <STR> [--approver <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py story-backfill` | Rétro-équiper le journal des transitions (origin: backfill) + stamps récits actifs — CA-5 : sans approbateur = zéro écriture (MLOOP-270-BE) | [--approver <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py story-clean` | Nettoyer les sections de mémoire temporaires (Suite Mémoire, Notes de Traçabilité) des stories (ADR-0301) | [--verbose <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py to-spec` | Générer une spécification technique | [--title <STR>] | `docs/01-architecture/` |
 | `python src/swarm.py to-tickets` | Découpage en tickets verticaux depuis l'architecture | *(Aucun)* | `backlog/stories/` + `sprint_backlog.md` |

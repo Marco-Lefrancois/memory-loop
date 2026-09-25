@@ -203,7 +203,38 @@ ANALYSIS_EXT_COMMANDS: dict[str, dict] = {
             {
                 "name": "--list",
                 "action": "store_true",
-                "help": "Lister les templates d'extraction déclarative disponibles",
+                "help": "Lister les templates d'extraction déclaratifs disponibles",
+            },
+        ],
+    },
+    # ── Verrou Anti-Promotion (MLOOP-270-BE / ADR-011) ─────
+    "story-approve": {
+        "handler": "story_approve:handle_story_approve",
+        "help": "Approbation humaine d'un récit : stamps validated_by/validated_at + entrée journal atomique (MLOOP-270-BE)",
+        "args": [
+            {
+                "name": "--story",
+                "type": str,
+                "required": True,
+                "help": "Identifiant du récit (ex: MLOOP-270-BE)",
+            },
+            {
+                "name": "--approver",
+                "type": str,
+                "default": None,
+                "help": 'Nom de l\'approbateur humain (ex: "Marco") — identifiants machine refusés',
+            },
+        ],
+    },
+    "story-backfill": {
+        "handler": "story_backfill:handle_story_backfill",
+        "help": "Rétro-équiper le journal des transitions (origin: backfill) + stamps récits actifs — CA-5 : sans approbateur = zéro écriture (MLOOP-270-BE)",
+        "args": [
+            {
+                "name": "--approver",
+                "type": str,
+                "default": None,
+                "help": 'Nom de l\'approbateur humain (ex: "Marco") — obligatoire pour toute écriture',
             },
         ],
     },
