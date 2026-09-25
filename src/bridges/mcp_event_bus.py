@@ -124,6 +124,40 @@ class MCPEventBus:
         notification = self.build_tools_list_changed_notification(session_id)
         await self.broadcast("tools/list_changed", notification)
 
+    def build_task_updated_notification(
+        self,
+        task_id: str,
+        status: str,
+        expires_at: str | None = None,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Construit une notification tasks/updated (une seule par transition reelle)."""
+        return {
+            "jsonrpc": "2.0",
+            "method": "notifications/tasks/updated",
+            "params": {
+                "task_id": task_id,
+                "status": status,
+                "expires_at": expires_at,
+                "_meta": {
+                    "sequence": self._sequence,
+                    "timestamp": time.time(),
+                    "sessionId": session_id,
+                },
+            },
+        }
+
+    async def notify_task_updated(
+        self,
+        task_id: str,
+        status: str,
+        expires_at: str | None = None,
+        session_id: str | None = None,
+    ) -> None:
+        """Diffuse une notification notifications/tasks/updated en flux continu."""
+        notification = self.build_task_updated_notification(task_id, status, expires_at, session_id)
+        await self.broadcast("tasks/updated", notification)
+
     async def generate_heartbeat(self, client_id: str) -> str | None:
         """Retourne un heartbeat SSE keepalive ou None si le client est déconnecté."""
         queue = self._subscribers.get(client_id)

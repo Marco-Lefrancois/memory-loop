@@ -8,18 +8,18 @@ Garde-fous implémentés :
   - Token-Burn TTL : compteur de cycles décrémenté à chaque échec, forçant ON_HOLD à 0.
 """
 
+import os
 import hashlib
 import re
 import yaml
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Union
+from src.core.layout import ProjectLayout
 from src.state import StoryStatus
 from src.utils.logger import get_logger
 
 logger = get_logger("pipelines.state_machine")
-
-DEFAULT_TTL_CYCLES = 3
 
 
 def _clean_yaml_str(raw_yaml: str) -> dict:
@@ -119,6 +119,7 @@ ALLOWED_TRANSITIONS = {
         StoryStatus.ON_HOLD,
     ],
     StoryStatus.IN_DEV: [
+        StoryStatus.READY_FOR_QA,
         StoryStatus.IN_QA,
         StoryStatus.ACCEPTED,
         StoryStatus.DONE,
@@ -128,6 +129,25 @@ ALLOWED_TRANSITIONS = {
         StoryStatus.IN_ANALYZE,
         StoryStatus.ON_HOLD,
         StoryStatus.ERROR,
+    ],
+    StoryStatus.READY_FOR_QA: [
+        StoryStatus.QA_CERTIFIED,
+        StoryStatus.IN_DEV,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.ON_HOLD,
+        StoryStatus.ERROR,
+    ],
+    StoryStatus.QA_CERTIFIED: [
+        StoryStatus.READY_TO_SHIP,
+        StoryStatus.DONE,
+        StoryStatus.SHIPPED,
+        StoryStatus.IN_REVIEW,
+        StoryStatus.IN_DEV,
+    ],
+    StoryStatus.READY_TO_SHIP: [
+        StoryStatus.DONE,
+        StoryStatus.SHIPPED,
+        StoryStatus.IN_REVIEW,
     ],
     StoryStatus.IN_QA: [
         StoryStatus.ACCEPTED,
@@ -171,7 +191,7 @@ ALLOWED_TRANSITIONS = {
     ],
 }
 
-DEFAULT_TTL_CYCLES = 5
+DEFAULT_TTL_CYCLES = int(os.getenv("MLOOP_DEFAULT_TTL_CYCLES", "5"))
 
 
 class StateTransitionError(ValueError):
@@ -189,23 +209,31 @@ class ContentTamperingError(ValueError):
 class StateMachineEngine:
     def __init__(self, project_path: str):
         self.project_path = Path(project_path)
-        self.backlog_path = self.project_path / "backlog"
+        self.backlog_path = self.project_path / ProjectLayout.BACKLOG
         self.stories_path = self.backlog_path / "stories"
         self.reviews_path = self.backlog_path / "reviews"
+        self.memory_path = self.project_path / ProjectLayout.MEMORY
+        self.evidence_path = self.memory_path / "evidence"
 
     # ─── 1. Strict FSM Enforcement ─────────────────────────────────────────
 
-    def validate_transition(self, current: StoryStatus, target: StoryStatus) -> bool:
+    def validate_transition(
+        self,
+        current: Union[StoryStatus, str],
+        target: Union[StoryStatus, str],
+    ) -> bool:
         """
         Vérifie qu'une transition d'état est autorisée par le dictionnaire ALLOWED_TRANSITIONS.
         Lève StateTransitionError si la transition est illicite.
         """
-        allowed = ALLOWED_TRANSITIONS.get(current, [])
-        if target not in allowed:
+        curr = StoryStatus.from_raw(current) if isinstance(current, str) else current
+        tgt = StoryStatus.from_raw(target) if isinstance(target, str) else target
+        allowed = ALLOWED_TRANSITIONS.get(curr, [])
+        if tgt not in allowed:
             allowed_str = ", ".join(s.value for s in allowed) if allowed else "AUCUN"
             raise StateTransitionError(
-                f"[FSM BLOQUANT] Transition illicite : {current.value} → {target.value}\n"
-                f"Transitions autorisées depuis {current.value} : [{allowed_str}]\n"
+                f"[FSM BLOQUANT] Transition illicite : {curr.value} → {tgt.value}\n"
+                f"Transitions autorisées depuis {curr.value} : [{allowed_str}]\n"
                 f"➡ Corrigez le statut ou passez par les étapes intermédiaires obligatoires."
             )
         return True
@@ -227,7 +255,7 @@ class StateMachineEngine:
                 parts = text.split("---", 2)
                 if len(parts) >= 3:
                     data = _clean_yaml_str(parts[1])
-                    if isinstance(data, dict) and data.get("status") == "IN_ANALYZE":
+                    if isinstance(data, dict) and data.get("status") == StoryStatus.IN_ANALYZE.value:
                         rel_path = file.relative_to(self.stories_path).as_posix()
                         in_analyze_stories.append(rel_path)
             except Exception as e:
@@ -252,39 +280,48 @@ class StateMachineEngine:
 
         return in_analyze_stories
 
-    def validate_sentinel_approval(self, story_file: Path) -> bool:
+    def _resolve_review_file(self, story_file: Path) -> Optional[Path]:
         """
-        Vérifie qu'un rapport de revue contradictoire Sentinel (Rubber Duck) existe
-        sous backlog/reviews/ (ou ses sous-dossiers) et porte le statut APPROUVÉ.
+        Résout dynamiquement le fichier de revue Rubber Duck d'un récit
+        sans hardcoder de noms de clients ou de catégories.
         """
         story_stem = story_file.stem
-        category = (
-            story_file.parent.name
-            if story_file.parent.name in ["FOOD", "COMMERCE", "SANTE"]
-            else ""
-        )
+        try:
+            rel_parent = story_file.parent.relative_to(self.stories_path)
+            category = rel_parent.as_posix() if rel_parent != Path(".") else ""
+        except ValueError:
+            category = ""
 
         candidates = []
         if category:
             candidates.append(self.reviews_path / category / f"rubber_duck_{story_stem}.md")
         candidates.append(self.reviews_path / f"rubber_duck_{story_stem}.md")
 
-        review_file = None
         for cand in candidates:
             if cand.exists():
-                review_file = cand
-                break
+                return cand
 
-        if not review_file:
-            # Recherche récursive de repli
-            matches = list(self.reviews_path.rglob(f"rubber_duck_{story_stem}.md"))
-            if matches:
-                review_file = matches[0]
+        # Recherche récursive de repli
+        matches = list(self.reviews_path.rglob(f"rubber_duck_{story_stem}.md"))
+        return matches[0] if matches else None
+
+    def validate_sentinel_approval(self, story_file: Path) -> bool:
+        """
+        Vérifie qu'un rapport de revue contradictoire Sentinel (Rubber Duck) existe
+        sous backlog/reviews/ (ou ses sous-dossiers) et porte le statut APPROUVÉ.
+        """
+        review_file = self._resolve_review_file(story_file)
 
         if not review_file or not review_file.exists():
+            story_stem = story_file.stem
+            try:
+                rel_parent = story_file.parent.relative_to(self.stories_path)
+                category = f"{rel_parent.as_posix()}/" if rel_parent != Path(".") else ""
+            except ValueError:
+                category = ""
             raise StateTransitionError(
                 f"[VERROU SENTINEL BLOQUANT] Le récit '{story_file.name}' n'a pas été audité par l'agent Sentinel (Rubber Duck) !\n"
-                f"Rapport manquant : backlog/reviews/{category + '/' if category else ''}rubber_duck_{story_stem}.md\n"
+                f"Rapport manquant : backlog/reviews/{category}rubber_duck_{story_stem}.md\n"
                 f"➡ Action obligatoire : Exécutez 'python src/swarm.py rubber-duck --project {self.project_path.name} --file {story_file.as_posix()}'"
             )
 
@@ -346,10 +383,12 @@ class StateMachineEngine:
 
         status = data.get("status", "")
         gated_statuses = (
-            "READY_FOR_DEV",
-            "READY_FOR_GROOMING",
-            "IN_DEV",
-            "IN_QA",
+            StoryStatus.READY_FOR_DEV.value,
+            StoryStatus.READY_FOR_GROOMING.value,
+            StoryStatus.IN_DEV.value,
+            StoryStatus.READY_FOR_QA.value,
+            StoryStatus.IN_QA.value,
+            StoryStatus.QA_CERTIFIED.value,
         )
         if status not in gated_statuses:
             return True
@@ -366,7 +405,7 @@ class StateMachineEngine:
         )
 
         # 2. Fichier canonique sous memory/evidence/<STORY_ID>_fact_dossier.md
-        evidence_dir = self.project_path / "memory" / "evidence"
+        evidence_dir = self.evidence_path
         dossier_candidates = (
             list(evidence_dir.glob(f"**/{story_id}_fact_dossier.md"))
             if evidence_dir.exists()
@@ -493,7 +532,10 @@ class StateMachineEngine:
         stored_hash = data.get("content_hash")
         status = data.get("status", "")
 
-        if not stored_hash or status not in ("READY_FOR_GROOMING", "READY_FOR_DEV"):
+        if not stored_hash or status not in (
+            StoryStatus.READY_FOR_GROOMING.value,
+            StoryStatus.READY_FOR_DEV.value,
+        ):
             return True
 
         current_hash = self.compute_content_hash(parts[2])

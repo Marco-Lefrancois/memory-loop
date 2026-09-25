@@ -1,4 +1,3 @@
-import asyncio
 import json
 import logging
 import sys
@@ -11,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from src.bridges.mcp_resources import handle_resources_list, handle_resources_read
 from src.bridges.mcp_tools import handle_tools_list, handle_tools_call
+from src.bridges.mcp_ui import note_client_capabilities, ui_server_capabilities
 from src.bridges.mcp_event_bus import get_event_bus
 from src.bridges._mcp_prompts import handle_prompts_get, handle_prompts_list
 from src.bridges.mcp_recall import (  # noqa: F401 — API publique historique
@@ -20,6 +20,10 @@ from src.bridges.mcp_recall import (  # noqa: F401 — API publique historique
     log_error,
     preload_story_context,
 )
+from src.bridges import _mcp_elicitation as elicitation
+from src.bridges import _mcp_tasks
+from src.bridges import mcp_skills
+from src.bridges._mcp_notifications import emit_tool_notifications
 from src.bridges._mcp_protocol import (
     PROTOCOL_VERSION_LEGACY,
     VersionDecision,
@@ -37,10 +41,7 @@ _SESSION_ID: str = str(uuid.uuid4())[:8]
 _SESSION_PROJECT: str | None = None
 # Révision protocolaire mémorisée par la session (état de transport uniquement).
 _SESSION_PROTOCOL_VERSION: str | None = None
-
-# Socle de mémoire déporté dans mcp_recall (plafond modulaire ADR-0202) :
-# `_PRELOAD_CACHE`, `auto_recall_passive_memory`, `preload_story_context` et
-# `clear_preloaded_context` restent importables depuis ce module.
+# Socle mémoire déporté dans mcp_recall (ADR-0202) : symboles réexportés ici.
 
 __all__ = [
     "_PRELOAD_CACHE",
@@ -89,10 +90,22 @@ def handle_initialize(
     if traceparent:
         log_error(f"OpenTelemetry Trace Context: {traceparent}")
 
+    # Négociation de l'extension MCP Apps (MLOOP-212-FE, SEP-1865) : test strict du mime type.
+    note_client_capabilities((params or {}).get("capabilities"))
+    elicitation.note_elicitation_capabilities((params or {}).get("capabilities"))
+    # Négociation de l'extension Skills over MCP (MLOOP-214-BE, SEP-2640) :
+    # absence de déclaration = voie historique du pont à double pile.
+    mcp_skills.note_client_capabilities((params or {}).get("capabilities"))
+
     base_result = {
         "capabilities": {
             "tools": {"listChanged": True},
             "resources": {"subscribe": True, "listChanged": True},
+            "extensions": {
+                **ui_server_capabilities(),
+                **elicitation.elicitation_capabilities(),
+                **mcp_skills.skills_server_capabilities(),
+            },
         },
         "serverInfo": {
             "name": "memory-loop-session-memory-mcp",
@@ -121,6 +134,11 @@ def handle_server_discover(req_id: Any, params: dict | None = None) -> dict:
         "capabilities": {
             "tools": {"listChanged": True},
             "resources": {"subscribe": True, "listChanged": True},
+            "extensions": {
+                **ui_server_capabilities(),
+                **elicitation.elicitation_capabilities(),
+                **mcp_skills.skills_server_capabilities(),
+            },
         },
         "serverInfo": {"name": "memory-loop-session-memory-mcp", "version": "2.0.0"},
     }
@@ -203,15 +221,29 @@ def process_message(
         res = handle_tools_list(req_id, params)
     elif method == "tools/call":
         res, _SESSION_PROJECT = handle_tools_call(req_id, params, _SESSION_PROJECT)
-        _maybe_emit_tool_notifications(bus, params, _SESSION_PROJECT)
+        emit_tool_notifications(bus, params, _SESSION_PROJECT)
     elif method == "resources/list":
         res = handle_resources_list(req_id, _SESSION_PROJECT)
     elif method == "resources/read":
         res = handle_resources_read(req_id, params, _SESSION_PROJECT)
+    elif method in mcp_skills.SKILLS_METHODS:
+        # Extension Skills over MCP (MLOOP-214-BE) : pont à double pile
+        # `skills/list` | `skills/get`, voie moderne ou repli historique.
+        res = mcp_skills.dispatch(method, req_id, params)
+    elif method in _mcp_tasks.TASKS_METHODS:
+        # Extension Tasks (MLOOP-211-BE, ADR-0387) : call-now-fetch-later servi
+        # par l'exchange JSON-RPC local — aucune route reseau nouvelle.
+        res = _mcp_tasks.dispatch(method, req_id, params, session_project=_SESSION_PROJECT)
     elif method == "prompts/list":
         res = handle_prompts_list(req_id)
     elif method == "prompts/get":
         res = handle_prompts_get(req_id, params, session_project=_SESSION_PROJECT)
+    elif method == elicitation.ELICITATION_METHOD or (method is None and req_id is not None):
+        # Élicitation Form Mode (MLOOP-213-BE, ADR-0387) : requête — ou retour
+        # de l'échange, auquel cas aucun écho n'est émis (return None).
+        res = elicitation.handle_elicitation_message(req_id, req, session_project=_SESSION_PROJECT)
+        if res is None:
+            return None
     else:
         if req_id is not None:
             res = {
@@ -228,48 +260,9 @@ def process_message(
         method=method,
         tool_name=tool_name,
     )
+    # Rattrapage des etats Tasks (toujours apres le routage : il l'ecrase).
+    _mcp_tasks.attach_pending_task_updates(res)
     return json.dumps(res)
-
-
-def _maybe_emit_tool_notifications(bus: Any, params: dict, session_project: str | None) -> None:
-    """Émet les notifications SSE pertinentes après un tools/call."""
-    tool_name = params.get("name", "")
-
-    if tool_name == "set_phase":
-        try:
-            loop = asyncio.get_running_loop()
-            loop.create_task(bus.notify_tools_list_changed(session_id=session_project))
-        except RuntimeError as e:
-            logger.debug(
-                "Boucle asyncio non disponible, notification SSE set_phase omise",
-                exc_info=True,
-                extra={
-                    "component": "bridges.mcp_loop_mem",
-                    "operation": "notify_set_phase",
-                    "error": str(e),
-                },
-            )
-
-    if tool_name in ("loop_mem_search", "loop_mem_code_rag", "loop_mem_timeline"):
-        try:
-            loop = asyncio.get_running_loop()
-            loop.create_task(
-                bus.notify_resource_updated(
-                    uri=f"mloop://project/{session_project or 'mLoop'}/observation/latest",
-                    session_id=session_project,
-                )
-            )
-        except RuntimeError as e:
-            logger.debug(
-                "Boucle asyncio non disponible, notification SSE observation omise",
-                exc_info=True,
-                extra={
-                    "component": "bridges.mcp_loop_mem",
-                    "operation": "notify_observation_updated",
-                    "tool": tool_name,
-                    "error": str(e),
-                },
-            )
 
 
 def main() -> None:

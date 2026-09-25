@@ -108,30 +108,62 @@ def test_sprint_item_default_status_and_type():
         StoryStatus.READY_FOR_GROOMING,
         StoryStatus.READY_FOR_DEV,
         StoryStatus.IN_DEV,
+        StoryStatus.READY_FOR_QA,
         StoryStatus.IN_QA,
+        StoryStatus.QA_CERTIFIED,
+        StoryStatus.READY_TO_SHIP,
         StoryStatus.DONE,
         StoryStatus.ACCEPTED,
+        StoryStatus.DONE_TESTED,
+        StoryStatus.SHIPPED,
     ],
 )
 def test_grilled_true_for_human_and_downstream_statuses(status):
     """grilled == True pour les statuts validés par mLoop et en cours de livraison."""
     assert _make_item(status).grilled is True
+    assert _make_item(status).jira_sync_eligible is True
 
 
 @pytest.mark.parametrize(
     "status",
     [
+        StoryStatus.DRAFT,
+        StoryStatus.BACKLOG,
         StoryStatus.OPEN,
         StoryStatus.IN_ANALYZE,
         StoryStatus.IN_PLAN,
         StoryStatus.IN_BUILD,
         StoryStatus.IN_VALIDATE,
-        StoryStatus.SHIPPED,
+        StoryStatus.ON_HOLD,
         StoryStatus.ERROR,
     ],
 )
 def test_grilled_false_for_in_progress_statuses(status):
     assert _make_item(status).grilled is False
+    assert _make_item(status).jira_sync_eligible is False
+
+
+@pytest.mark.parametrize(
+    "raw,expected_status",
+    [
+        ("READY_FOR_QA", "READY_FOR_QA"),
+        ("ready_for_qa", "READY_FOR_QA"),
+        ("ready for qa", "READY_FOR_QA"),
+        ("READY-FOR-QA", "READY_FOR_QA"),
+        ("QA_CERTIFIED", "QA_CERTIFIED"),
+        ("qa_certified", "QA_CERTIFIED"),
+        ("qa certified", "QA_CERTIFIED"),
+        ("QA-CERTIFIED", "QA_CERTIFIED"),
+        ("READY_TO_SHIP", "READY_TO_SHIP"),
+        ("ready_to_ship", "READY_TO_SHIP"),
+        ("ready to ship", "READY_TO_SHIP"),
+        ("READY-TO-SHIP", "READY_TO_SHIP"),
+    ],
+)
+def test_from_raw_new_5_phase_statuses_variants(raw, expected_status):
+    """Les nouveaux statuts du cycle 5 phases doivent être reconnus avec tolérance."""
+    assert StoryStatus.from_raw(raw).value == expected_status
+
 
 
 # ─── Tests Transitions FSM ────────────────────────────────────────────────────

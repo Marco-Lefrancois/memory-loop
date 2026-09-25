@@ -19,6 +19,22 @@ from src.pipelines.grill import (
     write_adr_file,
 )
 
+# Point d'intégration unique du récit MLOOP-213-BE : l'élicitation Form Mode
+# rejoint le module de grill existant, sans création de module parallèle.
+from src.pipelines.grill import (
+    ElicitationError,
+    answer_elicitation,
+    build_standard_question,
+    create_elicitation,
+    expire_due,
+    is_answered,
+    read_decision_records,
+    render_fallback_markdown,
+    set_task_lifecycle,
+    validate_content,
+    validate_requested_schema,
+)
+
 # Alias de rétrocompatibilité pour ADR_TEMPLATE
 ADR_TEMPLATE = EMERGENCY_FALLBACK_TEMPLATE
 
@@ -34,4 +50,15 @@ __all__ = [
     "UNGRILLABLE_KEYWORDS",
     "EMERGENCY_FALLBACK_TEMPLATE",
     "ADR_TEMPLATE",
+    "ElicitationError",
+    "answer_elicitation",
+    "build_standard_question",
+    "create_elicitation",
+    "expire_due",
+    "is_answered",
+    "read_decision_records",
+    "render_fallback_markdown",
+    "set_task_lifecycle",
+    "validate_content",
+    "validate_requested_schema",
 ]

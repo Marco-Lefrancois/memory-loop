@@ -7,6 +7,7 @@ from src.loop_mem.db import (
     search_observations, get_session_timeline, get_observation_by_id,
     get_active_project, search_in_memory, search_rho_solution
 )
+from src.bridges.mcp_ui import attach_ui_meta, notify_ui_project_changed, ui_result
 
 logger = logging.getLogger(__name__)
 
@@ -179,10 +180,22 @@ def get_tools_definitions() -> list[dict]:
                 "required": ["project"],
             },
         },
+        {
+            "name": "show_architecture",
+            "phase": "PLAN",
+            "description": "Affiche le cockpit d'architecture Archify du projet dans un cadre MCP Apps lecture-seule (ressource ui://archify/cockpit).",
+            "inputSchema": {"type": "object", "properties": {"project": {"type": "string", "description": "Nom du projet (defaut : projet actif)."}}, "required": []},
+        },
+        {
+            "name": "show_database_schema",
+            "phase": "PLAN",
+            "description": "Affiche le schema relationnel DrawDB du projet dans un cadre MCP Apps lecture-seule (ressource ui://drawdb/schema).",
+            "inputSchema": {"type": "object", "properties": {"project": {"type": "string", "description": "Nom du projet (defaut : projet actif)."}}, "required": []},
+        },
     ]
 
 
-def handle_tools_list(req_id: Any, params: dict = None) -> dict:
+def handle_tools_list(req_id: Any, params: dict | None = None) -> dict:
     params = params or {}
     _meta = params.get("_meta", {})
     phase_filter = (params.get("phase") or _meta.get("phase") or "").upper()
@@ -199,6 +212,9 @@ def handle_tools_list(req_id: Any, params: dict = None) -> dict:
     for t in tools:
         t.pop("phase", None)
 
+    # Liaison outil -> ressource MCP Apps (SEP-1865, MLOOP-212-FE) : `_meta.ui.resourceUri`.
+    attach_ui_meta(tools)
+
     tools.sort(key=lambda t: t["name"])
     return {"jsonrpc": "2.0", "result": {"tools": tools, "ttlMs": 300000}, "id": req_id}
 
@@ -212,6 +228,15 @@ def handle_tools_call(req_id: Any, params: dict, session_project: str | None) ->
         if name == "loop_mem_set_project":
             updated_proj = args.get("project")
             text = f"✅ Projet actif de session: **{updated_proj}**"
+            notify_ui_project_changed(updated_proj)
+        elif name in ("show_architecture", "show_database_schema"):
+            # Cadre MCP Apps : texte toujours significatif ; `_meta.ui` si capacite negociee (jamais isError).
+            target = args.get("project") or session_project or "mLoop"
+            text, ui_meta = ui_result(name, target)
+            result: dict = {"content": [{"type": "text", "text": text}]}
+            if ui_meta:
+                result["_meta"] = ui_meta
+            return {"jsonrpc": "2.0", "result": result, "id": req_id}, session_project
         elif name == "loop_mem_search":
             text = execute_loop_mem_search(args, session_project)
         elif name == "loop_mem_code_rag":

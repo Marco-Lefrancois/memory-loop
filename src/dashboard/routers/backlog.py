@@ -32,14 +32,25 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 router = APIRouter(tags=["Backlog & Stories"])
 
 STATUS_ORDER = {
-    "READY_FOR_DEV": 1,
-    "IN_BUILD": 2,
-    "IN_QA": 3,
-    "IN_PLAN": 4,
-    "IN_ANALYZE": 5,
-    "OPEN": 6,
-    "DONE": 7,
-    "ACCEPTED": 8,
+    "DRAFT": 1,
+    "OPEN": 2,
+    "BACKLOG": 3,
+    "IN_ANALYZE": 4,
+    "IN_PLAN": 5,
+    "READY_FOR_GROOMING": 6,
+    "READY_FOR_DEV": 7,
+    "IN_DEV": 8,
+    "IN_BUILD": 9,
+    "READY_FOR_QA": 10,
+    "IN_QA": 11,
+    "QA_CERTIFIED": 12,
+    "READY_TO_SHIP": 13,
+    "DONE": 14,
+    "DONE_TESTED": 15,
+    "ACCEPTED": 16,
+    "SHIPPED": 17,
+    "ON_HOLD": 18,
+    "ERROR": 19,
 }
 
 

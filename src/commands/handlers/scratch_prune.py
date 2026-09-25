@@ -152,7 +152,7 @@ def on_story_status_transition(
     Purge automatiquement les artefacts scratch associés lors du passage à DONE_TESTED / SHIPPED.
     """
     status_upper = str(new_status).strip().upper()
-    terminal_statuses = {"DONE_TESTED", "SHIPPED", "DONE", "ACCEPTED"}
+    terminal_statuses = {"DONE_TESTED", "SHIPPED", "DONE", "ACCEPTED", "QA_CERTIFIED", "READY_TO_SHIP"}
 
     if status_upper not in terminal_statuses:
         return {"hook_executed": False, "pruned_count": 0, "reason": "status_not_terminal"}

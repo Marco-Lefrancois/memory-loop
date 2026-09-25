@@ -77,42 +77,41 @@ class StoryType(str, Enum):
 
 
 class StoryStatus(str, Enum):
-    """
-    Statuts officiels du cycle de vie d'un récit mLoop.
-    CLIENT : OPEN → IN_ANALYZE → IN_PLAN → IN_VALIDATE → READY_FOR_GROOMING → READY_FOR_DEV → IN_DEV → IN_QA → ACCEPTED
-    MLOOP  : OPEN → IN_ANALYZE → IN_PLAN → IN_BUILD → IN_VALIDATE → DONE_TESTED → SHIPPED
-    """
+    """Statuts officiels du cycle de vie des récits mLoop (ADR-0375 / ADR-0391)."""
 
-    # ─── Commun aux deux modes ─────────────────────────────────────
     DRAFT = "DRAFT"
     BACKLOG = "BACKLOG"
     OPEN = "OPEN"
     IN_ANALYZE = "IN_ANALYZE"
     IN_PLAN = "IN_PLAN"
     IN_REVIEW = "IN_REVIEW"
-    IN_VALIDATE = "IN_VALIDATE"
-    ON_HOLD = "ON_HOLD"
-    ERROR = "ERROR"
-    # ─── Mode CLIENT ───────────────────────────────────────────────
     READY_FOR_GROOMING = "READY_FOR_GROOMING"
     READY_FOR_DEV = "READY_FOR_DEV"
     IN_DEV = "IN_DEV"
+    IN_BUILD = "IN_BUILD"
+    READY_FOR_QA = "READY_FOR_QA"
     IN_QA = "IN_QA"
+    IN_VALIDATE = "IN_VALIDATE"
+    QA_CERTIFIED = "QA_CERTIFIED"
+    READY_TO_SHIP = "READY_TO_SHIP"
     DONE = "DONE"
     ACCEPTED = "ACCEPTED"
-    # ─── Mode MLOOP uniquement ─────────────────────────────────────
-    IN_BUILD = "IN_BUILD"
     DONE_TESTED = "DONE_TESTED"
     SHIPPED = "SHIPPED"
+    ON_HOLD = "ON_HOLD"
+    ERROR = "ERROR"
 
     @classmethod
     def from_raw(cls, raw: str) -> "StoryStatus":
         """Parse case-insensitive depuis le frontmatter YAML. Retourne OPEN pour valeur inconnue."""
+        if not raw:
+            return cls.OPEN
         normalized = raw.strip().upper().replace(" ", "_").replace("-", "_")
         try:
             return cls(normalized)
         except ValueError:
             return cls.OPEN
+
 
 
 # ─── Modèles Pydantic
@@ -151,9 +150,13 @@ class Clarification(BaseModel):
     answer: Optional[str] = None
 
 
-_GRILLED_STATUSES = frozenset({
-    "IN_REVIEW", "READY_FOR_GROOMING", "READY_FOR_DEV",
-    "IN_DEV", "IN_QA", "DONE_TESTED", "DONE", "ACCEPTED",
+_GRILLED_STATUSES: frozenset[str] = frozenset({
+    StoryStatus.IN_REVIEW.value, StoryStatus.READY_FOR_GROOMING.value,
+    StoryStatus.READY_FOR_DEV.value, StoryStatus.IN_DEV.value,
+    StoryStatus.READY_FOR_QA.value, StoryStatus.IN_QA.value,
+    StoryStatus.QA_CERTIFIED.value, StoryStatus.READY_TO_SHIP.value,
+    StoryStatus.DONE.value, StoryStatus.ACCEPTED.value,
+    StoryStatus.DONE_TESTED.value, StoryStatus.SHIPPED.value,
 })
 
 
@@ -171,12 +174,14 @@ class SprintBacklogItem(BaseModel):
     @property
     def grilled(self) -> bool:
         """Compatibilité ascendante : True si le récit est prêt pour la revue humaine."""
-        return self.status.value in _GRILLED_STATUSES
+        val = self.status.value if isinstance(self.status, StoryStatus) else str(self.status)
+        return val in _GRILLED_STATUSES
 
     @property
     def jira_sync_eligible(self) -> bool:
         """Règle mLoop : statuts éligibles à la synchronisation Jira Cloud."""
-        return self.status.value in _GRILLED_STATUSES
+        val = self.status.value if isinstance(self.status, StoryStatus) else str(self.status)
+        return val in _GRILLED_STATUSES
 
 
 class AnalysisResult(BaseModel):
@@ -229,10 +234,7 @@ class SavepointManager:
 
     @classmethod
     def save_checkpoint(
-        cls,
-        state_dict: Dict[str, Any],
-        project_path: Optional[Path] = None,
-        reason: str = "in_flight",
+        cls, state_dict: Dict[str, Any], project_path: Optional[Path] = None, reason: str = "in_flight"
     ) -> Path:
         target_dir = cls.get_checkpoints_dir(project_path)
         timestamp = int(time.time())
@@ -240,11 +242,9 @@ class SavepointManager:
         target_file = target_dir / filename
         tmp_file = target_dir / f"{filename}.tmp"
         payload = {
-            "checkpoint_version": "1.0",
-            "timestamp": timestamp,
+            "checkpoint_version": "1.0", "timestamp": timestamp,
             "datetime_utc": datetime.now(timezone.utc).isoformat(),
-            "reason": reason,
-            "state": state_dict,
+            "reason": reason, "state": state_dict,
         }
         with open(tmp_file, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2, ensure_ascii=False)

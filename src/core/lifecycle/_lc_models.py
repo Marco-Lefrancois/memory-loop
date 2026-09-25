@@ -93,7 +93,7 @@ GATE_DEFINITIONS: Dict[int, Dict[str, Any]] = {
         "from_stage": ProjectLifecycleStage.STAGE_5_SHIP,
         "to_stage": None,
         "description": "Synchronisation Jira et Git réussie, archivage mémoire scellé.",
-        "requires_human": True,
+        "requires_human": False,
     },
 }
 

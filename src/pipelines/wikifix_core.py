@@ -98,33 +98,14 @@ class WikiFixAgent(WikiFixAuditMixin, WikiFixHealMixin):
                         data = yaml.safe_load(parts[1])
                         if isinstance(data, dict):
                             status = data.get("status", "")
-                            if status in (
-                                "READY_FOR_GROOMING",
-                                "READY_FOR_DEV",
-                                "IN_DEV",
-                                "IN_QA",
-                                "DONE",
-                                "ACCEPTED",
-                            ):
+                            checked_statuses = (
+                                "READY_FOR_GROOMING", "READY_FOR_DEV", "IN_DEV",
+                                "READY_FOR_QA", "IN_QA", "QA_CERTIFIED", "READY_TO_SHIP",
+                                "DONE_TESTED", "DONE", "ACCEPTED", "COMPLETED",
+                            )
+                            if status in checked_statuses:
                                 engine.validate_content_integrity(sf)
-                            if status in (
-                                "READY_FOR_GROOMING",
-                                "READY_FOR_DEV",
-                                "IN_DEV",
-                                "IN_QA",
-                                "DONE",
-                                "ACCEPTED",
-                                "COMPLETED",
-                            ):
                                 engine.validate_sentinel_approval(sf)
-                            if status in (
-                                "READY_FOR_GROOMING",
-                                "READY_FOR_DEV",
-                                "IN_DEV",
-                                "IN_QA",
-                                "DONE",
-                                "ACCEPTED",
-                            ):
                                 engine.validate_fact_dossier_gate(
                                     sf, strict=getattr(state, "strict", False)
                                 )
@@ -199,7 +180,7 @@ class WikiFixAgent(WikiFixAuditMixin, WikiFixHealMixin):
             blocking, tolerated = [], []
             # ADR-0385: Statuts legacy tolérés (rétrocompatibilité — pas de blocage
             # INVEST sur les récits déjà livrés ou en cours d'analyse).
-            _tolerated = r"(?:IN_ANALYZE|IN_REVIEW|READY_FOR_GROOMING|READY_FOR_DEV|IN_DEV|IN_QA|DONE|DONE_TESTED|ACCEPTED|SHIPPED|TOMBSTONE|DRAFT|OPEN|ON_HOLD|CLOSED|SUPERSEDED|BACKLOG)"
+            _tolerated = r"(?:IN_ANALYZE|IN_REVIEW|READY_FOR_GROOMING|READY_FOR_DEV|IN_DEV|READY_FOR_QA|IN_QA|QA_CERTIFIED|READY_TO_SHIP|DONE|DONE_TESTED|ACCEPTED|SHIPPED|TOMBSTONE|DRAFT|OPEN|ON_HOLD|CLOSED|SUPERSEDED|BACKLOG)"
             for sf in struct_errs:
                 p = project_path / sf["file"]
                 is_tol = False

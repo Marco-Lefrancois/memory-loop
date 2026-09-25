@@ -17,11 +17,11 @@ import unicodedata
 from pathlib import Path
 
 # Vocabulaire complet des statuts reconnus dans la colonne Statut du backlog.
-# Ordre : DONE_TESTED avant DONE pour eviter tout matching prefixe incorrect.
+# Ordre : tri dégressif par longueur pour éviter tout matching préfixe incorrect.
 STATUS_VOCAB_RE = re.compile(
-    r"\b(ACCEPTED|DONE_TESTED|DONE|IN_QA|IN_DEV|READY_FOR_DEV|READY_FOR_GROOMING"
-    r"|IN_REVIEW|IN-REVIEW|IN_VALIDATE|IN_PLAN|IN_ANALYZE|OPEN"
-    r"|ON_HOLD|ON-HOLD|CLOSED|BACKLOG|DRAFT|TOMBSTONE)\b",
+    r"\b(READY_FOR_GROOMING|READY_TO_SHIP|READY_FOR_DEV|READY_FOR_QA|QA_CERTIFIED"
+    r"|DONE_TESTED|IN_VALIDATE|IN_ANALYZE|TOMBSTONE|ACCEPTED|IN_REVIEW|IN-REVIEW"
+    r"|IN_BUILD|SHIPPED|IN_PLAN|ON_HOLD|ON-HOLD|BACKLOG|CLOSED|IN_DEV|ERROR|IN_QA|DRAFT|DONE|OPEN)\b",
     re.IGNORECASE,
 )
 

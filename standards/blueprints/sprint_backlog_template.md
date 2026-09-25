@@ -7,12 +7,16 @@
 
 ---
 
-## 💡 Matrice de Responsabilité des Statuts (ADR-0375)
-- `DRAFT`              ➡️ ⚪ **Ébauche de Cadrage** (Issue du T-Shirt Size, SOW ou spec, `Grill-me: PENDING`)
-- `IN_ANALYZE`         ➡️ 🔵 **IA mLoop & PO** (Entrevue contradictoire Grill-Me 1:1 en cours)
-- `READY_FOR_GROOMING` ➡️ 🟡 **PO / Humain** (Analyse fine IA terminée, DoR 6/6, prêt pour revue formelle)
-- `READY_FOR_DEV`      ➡️ 🟢 **Dev Team** (Validé par l'humain, prêt pour l'implémentation physique)
-- `CLOSED`             ➡️ 🔒 **Terminé / Livré**
+## 💡 Matrice de Responsabilité des Statuts (ADR-0375, ADR-0391)
+- `DRAFT`              ➡️ ⚪ **Phase 1 : Ébauche de Cadrage** (Issue du T-Shirt Size, SOW ou spec, `Grill-me: PENDING`)
+- `IN_ANALYZE`         ➡️ 🔵 **Phase 2 : IA mLoop & PO** (Entrevue contradictoire Grill-Me 1:1 en cours, mono-récit strict)
+- `READY_FOR_GROOMING` ➡️ 🟡 **Phase 2 : PO / Humain** (Analyse fine IA terminée, DoR 6/6, prêt pour revue formelle)
+- `READY_FOR_DEV`      ➡️ 🟢 **Phase 2 : Dev Team** (Validé par l'humain uniquement, prêt pour l'implémentation)
+- `IN_DEV`             ➡️ 🔧 **Phase 3 : Dev Team / IA** (Implémentation physique active)
+- `READY_FOR_QA`       ➡️ 🧪 **Phase 4 : QA Team** (Tests unitaires verts, prêt pour qualification sprint)
+- `QA_CERTIFIED`       ➡️ 🟢 **Phase 4 : QA Certifié** (Validation sprint globale 100% au vert)
+- `READY_TO_SHIP`      ➡️ 📦 **Phase 5 : Release** (Prêt pour synchronisation et distribution)
+- `DONE`               ➡️ 🟣 **Phase 5 : Clôture Définitive** (Auto-clôture Gate 5 sans intervention humaine si 0 FAIL)
 - `ON-HOLD`            ➡️ 🔴 **Bloqué / En attente d'arbitrage client**
 
 ---

@@ -66,6 +66,11 @@ FALLBACK_POLICY: dict[str, Any] = {
     "reusable_by": ("tasks", "mcp_apps", "elicitation", "skills"),
 }
 
+# Contrat de rétention des handles de tâches (MLOOP-211-BE / ADR-0387 Pilier 1).
+# Constante unique déposée ici (registre partagé avec le socle protocolaire) :
+# le chantier de rétention (EPIC-23) la relit sans jamais la dupliquer.
+TASK_HANDLE_TTL_DAYS: int = 7
+
 KNOWN_METHODS: set[str] = {
     "initialize",
     "server/discover",
@@ -80,6 +85,12 @@ KNOWN_METHODS: set[str] = {
     "notifications/initialized",
     "notifications/cancelled",
     "notifications/roots/list_changed",
+    # Extension Tasks (MLOOP-211-BE) — 4 primitives + notification de transition.
+    "tasks/create",
+    "tasks/status",
+    "tasks/cancel",
+    "tasks/result",
+    "notifications/tasks/updated",
 }
 
 

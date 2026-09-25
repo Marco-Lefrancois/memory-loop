@@ -1,7 +1,7 @@
 # 🚦 Protocole Normatif : Phases et Portes d'Étape du Cycle de Vie Projet (Project Lifecycle Stages)
 
-**Statut** : SSOT Normatif (ADR-0375)  
-**Date d'effet** : Septembre 2026  
+**Statut** : SSOT Normatif (ADR-0375, ADR-0391)  
+**Date d'effet** : Septembre 2026 (Mis à jour le 25/09/2026 — Auto-clôture Gate 5 & Alignement 5 Phases)  
 **Domaine** : Gouvernance de Projet, Cycle en 5 Phases Universelles, Typologie d'Analyses, Parcours Fast-Track & Dualité Grill-Me  
 
 ---
@@ -89,7 +89,7 @@ flowchart LR
   - Clôture et archivage mémoire dans `memory/supersession_ledger.json`.
 * **Livrables Autorisés** :
   - Release notes, tickets Jira synchronisés, base sémantique mise à jour (`swarm.py sync`).
-* **🚪 Porte 5 (*Exit Criteria*)** : Synchronisation Jira et Git scellée sans erreur.
+* **🚪 Porte 5 (*Gate 5 : Clôture & Synchronisation*)** : Synchronisation Jira et Git scellée sans erreur. Auto-clôture 100% autonome (`requires_human: False`, ADR-0391) dès lors que les tests pré-vol, linters et audits sont au vert (0 FAIL). Intervention humaine par exception uniquement.
 
 ---
 
