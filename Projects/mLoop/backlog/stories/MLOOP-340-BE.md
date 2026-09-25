@@ -12,7 +12,7 @@ tags:
 - graph
 - sqlite
 - backend
-status: READY_FOR_QA
+status: DONE_TESTED
 grill_me: DONE
 invest_score: 6/6
 layer: backend

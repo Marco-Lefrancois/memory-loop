@@ -11,14 +11,17 @@ tags:
 - matrix
 - archify
 - backend
-status: DRAFT
-grill_me: PENDING
+status: DONE_TESTED
+grill_me: DONE
 invest_score: 6/6
 layer: backend
 blocked_by:
 - MLOOP-350-BE
 - MLOOP-351-BE
 created_at: '2026-09-25'
+validated_by: Marco
+validated_at: '2026-09-25T21:29:40Z'
+dossier_ref: memory/evidence/MLOOP-352-BE_fact_dossier.md
 ttl_cycles: 3
 ---
 
@@ -58,7 +61,7 @@ L'étude ReFigBench a mis en lumière l'un des angles morts les plus dangereux d
 ## Critères d'acceptation
 
 ### Opérations Métier & Logique Backend *(backend)*
-#### 1. Audit Matriciel de Conformité Causale (`verify_causal_adjacency_matrices`)
+#### 1. Audit Matriciel de Conformité Causale
 * **Entrée Métier** : Liste des couples de dépendances attendues $(u \to v)$ issues de l'AST ou de la story INVEST, liste des arêtes observées sur le schéma.
 * **Règles d'admissibilité & Validation** : Les deux listes doivent partager le même référentiel d'identifiants de nœuds.
 * **Traitement & Algorithme Métier** :
@@ -75,7 +78,6 @@ L'étude ReFigBench a mis en lumière l'un des angles morts les plus dangereux d
 ### Contrats d'Échange API (Backend / Services)
 - `src.pipelines.causal_flow_linter:verify_causal_adjacency_matrices(...) -> CausalLinterResult`
 
-#### Matrice des Contrats API
 | Méthode | Route / Point d'Entrée | Finalité | Contrat |
 | :--- | :--- | :--- | :--- |
 | `verify_causal_adjacency_matrices` | `src.pipelines.causal_flow_linter:verify_causal_adjacency_matrices` | Vérification matricielle anti-inversion | `(spec_deps: list, diagram_edges: list) -> CausalLinterResult` |
@@ -92,7 +94,7 @@ L'étude ReFigBench a mis en lumière l'un des angles morts les plus dangereux d
 ## Références
 
 ### 1. Preuves Amont & Traçabilité Factuelle
-- 📂 **Dossier de Preuves** : [`memory/evidence/EPIC-35_refigbench_fact_dossier.md`](../../memory/evidence/EPIC-35_refigbench_fact_dossier.md)
+- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-352-BE_fact_dossier.md`](../../memory/evidence/MLOOP-352-BE_fact_dossier.md)
 - 📄 **Publication de Référence** : ReFigBench (*arXiv:2609.18844*, Section 5 : *Editability Can Mask Semantic Failure*, Figure 6, Section I Case Study).
 
 ### 2. Spécifications & Modèles de Données SSOT
@@ -137,3 +139,14 @@ Fonctionnalité: Linter Matriciel d'Inversion Causale par Comparaison d'Adjacenc
     Quand le message d'erreur est restitué
     Alors le log affiche clairement : "Inversion détectée : la flèche pointe de B vers A alors que la dépendance exige A vers B"
 ```
+
+---
+
+## Definition of Ready (DoR) Checklist
+
+- [x] **1. Description & Périmètre** : Clairs, contextualisés par ReFigBench et formulés autour de la comparaison d'adjacence matricielle ($\mathbf{A}_{\text{spec}} \text{ vs } \mathbf{A}_{\text{diag}}$).
+- [x] **2. Critères d'Acceptation** : Spécifications mathématiques déterministes, seuils d'admissibilité et gestion des flux bidirectionnels.
+- [x] **3. Contrats d'Échange API & Données** : Signature `verify_causal_adjacency_matrices` et classe immuable `CausalLinterResult` définies.
+- [x] **4. Dépendances & Impacts** : Dépend de `MLOOP-350-BE` et `MLOOP-351-BE` (opérationnels).
+- [x] **5. Dossier de Preuves Sourcé** : Preuves factuelles établies dans `memory/evidence/MLOOP-352-BE_fact_dossier.md`.
+- [x] **6. Validation Micro-Grill PO** : 3 arbitrages techniques (slugified normalization, missing vs inverted flow, support flag bidirectional) intégrés.
