@@ -63,10 +63,11 @@ Le modèle `StoryStatus` (`src/state/_state_core.py`) et le graphe `ALLOWED_TRAN
 * **Interdiction stricte** : Aucun correctif, ré-ouverture ou rétrogradation d'un récit `DONE` n'est autorisé.
 * **Procédure de non-conformité ultérieure** : Toute régression, anomalie ou évolution découverte post-livraison donne lieu à la création d'un nouveau ticket dédié (`BUG`, `HOTFIX` ou nouvelle `Story`), tracé et qualifié dans son propre cycle de vie.
 
-### C. Auto-Clôture Autonome de la Gate 5 (`Zero Fluff Delivery`)
+### C. Auto-Clôture Autonome de la Gate 5 & Auto-Commit Git (`Zero Fluff Delivery`)
 
 * La définition de Gate 5 dans `src/core/lifecycle/_lc_models.py` est reconfigurée à **`requires_human: False`**.
-* Dès lors que 100% des tests pré-vol, suites pytest, linters et audits de cohérence sont au vert (0 FAIL), l'agent ou le pipeline de release scelle la Gate 5 de manière totalement autonome sans solliciter d'approbation humaine redondante.
+* **Auto-Commit Git & Archivage Immédiat** : Tout code au statut `DONE` doit être commité vers Git et archivé automatiquement par l'agent ou le pipeline dès validation des critères.
+* **Zéro Approbation Humaine Requise** : Dès lors que 100% des tests pré-vol, suites pytest (0 FAIL), linters AST et audits de cohérence sont au vert, l'agent procède directement au commit Git, au push distant (ou création de PR selon la cible) et au scellement de la Gate 5 sans solliciter d'approbation humaine passive. L'intervention humaine s'effectue par exception uniquement en cas d'échec.
 
 ### D. Assainissement Anti-Hardcoding & Topologie SSOT
 
