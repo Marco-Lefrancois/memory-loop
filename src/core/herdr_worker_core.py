@@ -12,6 +12,21 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from src.core._plan_act_guard import (
+    PlanActGuard,
+    resolve_story_path,
+    start_with_circuit_breaker,
+)
+
+# Ré-exports du teardown gate extrait (_worker_reaper.py) — API publique préservée
+# pour src/core/herdr_worker.py qui importe ces symboles depuis herdr_worker_core.
+from src.core._worker_reaper import (  # noqa: F401 — ré-exports rétrocompatibles
+    audit_and_reap_zombies_impl,
+    detect_stalled_agents_impl,
+    extract_agents_list_impl,
+    reap_zombie_workers_impl,
+)
+
 logger = logging.getLogger("mloop.herdr_worker_core")
 
 
@@ -96,43 +111,29 @@ def spawn_story_worker_impl(
     else:
         flags = list(extra_args) if extra_args else ["--dangerously-skip-permissions"]
 
-    # MLOOP-262-BE : Verrouillage strict du mode Plan pour Cline en Phase 2
-    if kind == "cline" and task_type in ("plan", "grill", "analyse"):
-        if "--plan" not in flags and "-p" not in flags:
-            flags.append("--plan")
-
-    # MLOOP-263-BE : Circuit-Breaker déterministe Cline -> OpenCode
-    start_res = None
-    try:
-        start_res = self.start_agent(
-            agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
-        )
-    except Exception as exc:
-        if kind == "cline":
-            logger.warning(
-                "Exception spawn Cline (%s). Déclenchement Circuit-Breaker : fallback vers OpenCode.",
-                exc,
-            )
-            kind = "opencode"
-            from src.core.worker_runtimes import get_worker_runtime
-            flags = get_worker_runtime("opencode").build_flags(model=target_model, extra_args=extra_args)
-            start_res = self.start_agent(
-                agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
-            )
+    # MLOOP-262-BE : Verrouillage strict du mode Plan/Act pour Cline (guard extrait).
+    lifecycle_mode: Optional[str] = None
+    if kind == "cline":
+        if task_type in ("plan", "grill", "analyse"):
+            lifecycle_mode = "plan"
         else:
-            raise
+            _sp = resolve_story_path(project_name, story_id)
+            lifecycle_mode = PlanActGuard.evaluate_mode(str(_sp) if _sp else None)
+        flags = PlanActGuard.enforce_flags(flags, lifecycle_mode)
 
-    if kind == "cline" and isinstance(start_res, dict) and not start_res.get("success"):
-        logger.warning(
-            "Échec start_agent Cline (%s). Déclenchement Circuit-Breaker : fallback vers OpenCode.",
-            start_res.get("error"),
-        )
-        kind = "opencode"
-        from src.core.worker_runtimes import get_worker_runtime
-        flags = get_worker_runtime("opencode").build_flags(model=target_model, extra_args=extra_args)
-        start_res = self.start_agent(
-            agent_name=worker_name, kind=kind, pane_id=str(pane_id), extra_args=flags
-        )
+    # MLOOP-263-BE : Circuit-Breaker déterministe Cline -> OpenCode (helper extrait).
+    cb_result = start_with_circuit_breaker(
+        self,
+        worker_name=worker_name,
+        kind=kind,
+        pane_id=str(pane_id),
+        flags=flags,
+        target_model=target_model,
+        extra_args=extra_args,
+    )
+    start_res = cb_result["start_res"]
+    kind = cb_result["kind"]
+    flags = cb_result["flags"]
 
     time.sleep(3)
     try:
@@ -189,6 +190,7 @@ def spawn_story_worker_impl(
             "agent_kind": kind,
             "task_type": task_type,
             "model": target_model,
+            "lifecycle_mode": lifecycle_mode,
         },
     )
     return {
@@ -296,123 +298,3 @@ def cleanup_worker_impl(self, story_id_or_pane: str) -> Dict[str, Any]:
         extra={"worker_id": story_id_or_pane, "pane_id": pane_id},
     )
     return self.close_pane(pane_id)
-
-
-def extract_agents_list_impl(agents_data: Any) -> List[Dict[str, Any]]:
-    """Extracts agents list from Herdr response (v0.8.x nesting)."""
-    inner = agents_data.get("result", {}) if isinstance(agents_data, dict) else {}
-    agents_list = inner.get("agents", []) if isinstance(inner, dict) else []
-    if not agents_list and isinstance(agents_data, dict):
-        agents_list = agents_data.get("agents", [])
-    return agents_list
-
-
-def audit_and_reap_zombies_impl(self, project_name: Optional[str] = None) -> Dict[str, Any]:
-    """Teardown Gate (Zero Zombie Policy - ADR-0306 / ADR-0345)."""
-    logger.info("Auditing Herdr workers for zombie/idle processes...")
-    list_res = self.list_agents()
-    if not list_res.get("success"):
-        return {"success": False, "reaped_count": 0, "error": list_res.get("error")}
-    reaped = []
-    for ag in extract_agents_list_impl(list_res.get("result", {})):
-        name, pane_id = ag.get("name") or "", ag.get("pane_id")
-        status = ag.get("agent_status") or ag.get("status")
-        if (
-            name.startswith("worker_")
-            and pane_id
-            and (status in ["idle", "done", "unknown"] or not status)
-        ):
-            logger.warning(
-                "Zombie reap",
-                extra={
-                    "worker_id": name,
-                    "pane_id": pane_id,
-                    "status": status,
-                    "age_seconds": ag.get("age_seconds"),
-                },
-            )
-            cr = self.close_pane(pane_id)
-            if not cr.get("success", False):
-                logger.error(
-                    "Échec reap zombie (fermeture volet impossible).",
-                    extra={
-                        "worker_id": name,
-                        "pane_id": pane_id,
-                        "status": status,
-                        "close_error": cr.get("error"),
-                    },
-                )
-            reaped.append(
-                {
-                    "name": name,
-                    "pane_id": pane_id,
-                    "status": status,
-                    "close_success": cr.get("success", False),
-                }
-            )
-    return {"success": True, "reaped_count": len(reaped), "reaped_workers": reaped}
-
-
-def detect_stalled_agents_impl(self, timeout_sec: int = 300) -> List[Dict[str, Any]]:
-    """Detects inactive agents (idle, stopped, blocked or no state)."""
-    stalled: List[Dict[str, Any]] = []
-    agents_res = self.list_agents()
-    if not agents_res.get("success"):
-        return stalled
-    for ag in extract_agents_list_impl(agents_res.get("result", {})):
-        state = (ag.get("agent_status") or ag.get("state") or "").lower()
-        name = ag.get("name") or ag.get("agent", "unknown")
-        pane_id = ag.get("pane_id")
-        if state in (
-            "idle",
-            "stopped",
-            "completed",
-            "done",
-            "failed",
-            "blocked",
-            "unknown",
-            "",
-        ):
-            reason = (
-                f"État terminal ou inactif ({state})"
-                if state not in ("unknown", "")
-                else "Agent sans état actif"
-            )
-            stalled.append({"name": name, "pane_id": pane_id, "state": state, "reason": reason})
-    return stalled
-
-
-def reap_zombie_workers_impl(self, timeout_sec: int = 300, force: bool = False) -> Dict[str, Any]:
-    """Ferme automatiquement les volets/agents orphelins (Zéro Zombie)."""
-    stalled = detect_stalled_agents_impl(self, timeout_sec=timeout_sec)
-    reaped, errors = [], []
-    for ag in stalled:
-        pid = ag.get("pane_id")
-        if not pid:
-            continue
-        cr = self.close_pane(pid)
-        entry = {"name": ag.get("name"), "pane_id": pid, "reason": ag.get("reason")}
-        if cr.get("success"):
-            logger.warning(
-                "Worker orphelin reapé.",
-                extra={"worker_id": ag.get("name"), "pane_id": pid, "reason": ag.get("reason")},
-            )
-            reaped.append(entry)
-        else:
-            logger.error(
-                "Échec fermeture worker orphelin.",
-                extra={
-                    "worker_id": ag.get("name"),
-                    "pane_id": pid,
-                    "reason": ag.get("reason"),
-                    "close_error": cr.get("error"),
-                },
-            )
-            errors.append({**entry, "error": cr.get("error")})
-    return {
-        "success": len(errors) == 0,
-        "total_detected": len(stalled),
-        "reaped_count": len(reaped),
-        "reaped": reaped,
-        "errors": errors,
-    }

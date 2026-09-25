@@ -148,13 +148,13 @@ Le Grilling s'applique à tous les domaines d'ingénierie et de réflexion :
 
 ---
 
-## 🔄 4. Protocole mLoop 1:1 par Story
+## 🔄 4. Protocole mLoop 1:1 par Story (ADR-0320 §F amendé / ADR-0393)
 
-1. **Grill Atomique Récit par Récit (Frontier Exhaustion Rule — ADR-0320 §F)** :
+1. **Grill Atomique Récit par Récit (Frontier Exhaustion Rule)** :
    - Interdiction du batching non maîtrisé. Le grilling traite un récit ou un module à la fois.
-   - Dès que la frontière d'un récit est vide (plus de question de fact-search ou d'arbitrage PO en attente pour ce récit précis), l'agent **arrête immédiatement d'interroger** sur ce récit et **finalise sa rédaction** sans délai.
-   - L'agent **avance automatiquement** au récit suivant de la liste dès la finalisation actée — sans attendre d'avoir traité l'ensemble du lot pour clôturer individuellement chaque récit.
-   - La validation mécanique finale (`rubber-duck`, EvidencePack, statut `READY_FOR_DEV`) peut être différée/batchée via Worker Herdr, ou traitée ponctuellement à la demande explicite du PO (sortie ciblée du Mode Plan), suivie d'un retour automatique au Grill du récit suivant.
+   - Dès que la frontière d'un récit est vide, l'agent **arrête immédiatement d'interroger** sur ce récit.
+   - **Arrêt Formel Post-Round & Menu d'Orientation (ADR-0393)** : Après épuisement de la frontière, l'agent **cesse tout appel d'outil d'écriture** et présente le menu d'orientation fermé obligatoire à 3 choix (DRAFT Palier 1, Micro-Grill 1:1, Clôture). L'agent ne dispose d'aucun mandat d'écriture par défaut. Seul le choix explicite d'un récit par l'humain confère le mandat d'instruire ce seul récit (mono-récit strict).
+   - **Plafond de Promotion Machine** : L'agent ne peut promouvoir qu'au statut `READY_FOR_GROOMING`. `READY_FOR_DEV` requiert l'arbitrage humain exclusif de Gate 2. Toute tentative machine lève `LifecycleAuthorityError`.
    - **Signal de Confiance Non-Fiable (ADR-0320 §G)** : Le champ `confidence_score` des EvidencePacks ne doit jamais servir de critère d'arrêt tant qu'il reste basé sur un simple contrôle d'existence de fichier (`verification_method: file_existence_only`). Seul le jugement de l'agent (fact-search réel, en priorisant le code source physique quand il est disponible) et la confirmation explicite du PO ferment la frontière d'un récit.
 2. **Questions Ouvertes (`OQ-XXX`)** : Toute décision suspendue génère une question ouverte dans `docs/04-transverse/00-questions-ouvertes.md`.
 3. **Règle ADR-Sync** : Si le grilling modifie une structure de répertoire ou une règle ADR (série 01xx), l'agent met à jour `standards/adr-contracts.json` et valide via `python src/swarm.py calibrate`.

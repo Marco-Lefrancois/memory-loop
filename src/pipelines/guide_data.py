@@ -80,6 +80,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "wikifix": "validate",
     "struct-check": "validate",
     "rubber-duck": "validate",
+    "artifact-check": "validate",
     "audit-loop": "validate",
     "aoep": "validate",
     "fact-check": "validate",
@@ -99,6 +100,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "skill-eval": "validate",
     # Phase 5 : SHIP & SYNC (Synchronisation, Jira Cloud & Distribution)
     "sync": "ship",
+    "cline-sync": "ship",
     "sync-antigravity": "ship",
     "rollover-archive": "ship",
     "jira_sync": "ship",
@@ -131,6 +133,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "hook": "transverse",
     "doctor": "transverse",
     "agent-probe": "transverse",
+    "cline-status": "transverse",
     "skill-doctor": "transverse",
     "skill-list": "transverse",
     "skill-invoke": "transverse",
@@ -201,6 +204,7 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "wikifix": "`memory/wikifix_report.md`",
     "struct-check": "Rapport violations C1–C7",
     "rubber-duck": "Rapport sémantique 4 Piliers",
+    "artifact-check": "`memory/reports/artifact_audit_report.json`",
     "fact-check": "Certificat de véracité NLI",
     "sync": "Index FTS5 + Graphe sémantique",
     "jira_sync": "Tickets et champs Jira Cloud à jour",
@@ -225,4 +229,6 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "memory": "Rapport de santé & défragmentation (`loop_mem.db` compacté)",
     "skill-eval": "Rapport d'évaluation des compétences (`skills_eval_summary.md`)",
     "rollover-archive": "Archive historique dans `backlog/archive/`",
+    "cline-sync": "`memory/memory-bank/`, `.clinerules/mloop.md` & `cline_mcp_settings.json`",
+    "cline-status": "Console / État écosystème Cline (READ-ONLY)",
 }

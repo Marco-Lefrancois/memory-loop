@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 132 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 135 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 132 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 135 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -85,8 +85,8 @@ flowchart LR
 | `python src/swarm.py graph-impact` | Calculer le rayon d'impact conceptuel et architectural (Blast Radius) | --target <STR> [--global <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py graph-query` | Interroger le graphe de connaissances sur un concept, ADR ou règle (Agentic Retrieval) | --query <STR> [--limit <INT>] [--global <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py graph-status` | Afficher les statistiques et la fraîcheur du graphe de connaissances | [--global <STR>] | Console / Mémoire d'état |
-| `python src/swarm.py grill` | Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--story <STR>] [--mode <STR>] [--health <STR>] | ADRs dans `standards/adr-system/` & preuves |
-| `python src/swarm.py grill-project` | Cadrage contradictoire macro d'avant-projet (Architecture globale, Loi 25, SSO, exclusions) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--mode <STR>] [--health <STR>] | `standards/adr-system/` & cadrage macro |
+| `python src/swarm.py grill` | Session interactive Grill-with-Docs : Macro (projet transverse) ou Micro (story 1:1) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--story <STR>] [--mode <STR>] [--format <STR>] [--scope <STR>] [--health <STR>] | ADRs dans `standards/adr-system/` & preuves |
+| `python src/swarm.py grill-project` | Cadrage contradictoire macro d'avant-projet (Architecture globale, Loi 25, SSO, exclusions) | [--title <STR>] [--decision <STR>] [--context <STR>] [--positives <STR>] [--negatives <STR>] [--mode <STR>] [--format <STR>] [--scope <STR>] [--health <STR>] | `standards/adr-system/` & cadrage macro |
 | `python src/swarm.py hyper-query` | Interroger l'hypergraphe pour une User Story ou inspecter les statistiques (ADR-0343) | [--story <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py multi-draft` | Challenge d'évaluation comparative locale multi-branches (struct-check + Sentinel) — ADR-0373 | --story <STR> [--eval-only <STR>] [--strict <STR>] | Rapport Challenge Multi-Drafts (ADR-0373) |
 | `python src/swarm.py story-approve` | Approbation humaine d'un récit : stamps validated_by/validated_at + entrée journal atomique (MLOOP-270-BE) | --story <STR> [--approver <STR>] | Console / Mémoire d'état |
@@ -141,6 +141,7 @@ flowchart LR
 | Commande CLI | Rôle / Description | Paramètres | Sorties / Artefacts Clés |
 | :--- | :--- | :--- | :--- |
 | `python src/swarm.py aoep` | Évaluation AOEP (Agent Operational Excellence Protocol) | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py artifact-check` | Audit d'intégrité des artefacts visuels (anti-raster-paste, topologie connecteurs, score découplé) — EPIC-30 | [--file <STR>] [--json <STR>] [--strict <STR>] | `memory/reports/artifact_audit_report.json` |
 | `python src/swarm.py audit-loop` | Audit de boucle complet | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py check-leakage` | Vérifier l'absence de fuites de spécification et assertions tautologiques (ADR-0354) | [--file <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py diagnose` | Harnais de reproduction déterministe | [--symptom <STR>] | Console / Mémoire d'état |
@@ -171,6 +172,7 @@ flowchart LR
 | Commande CLI | Rôle / Description | Paramètres | Sorties / Artefacts Clés |
 | :--- | :--- | :--- | :--- |
 | `python src/swarm.py calibrate` | Auto-étalonnage de l'écosystème mLoop | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py cline-sync` | Synchronise l'écosystème Cline : Memory Bank (6 fichiers), .clinerules/mloop.md et serveurs MCP (MLOOP-264-FULL) | *(Aucun)* | `memory/memory-bank/`, `.clinerules/mloop.md` & `cline_mcp_settings.json` |
 | `python src/swarm.py cycle-status` | Afficher le statut du cycle courant | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py guide-export` | Exporter un guide de revue autonome HTML portable via Plannotator | [--snapshot <STR>] [--id <STR>] [--out <STR>] | Guide HTML autonome Plannotator |
 | `python src/swarm.py install-hooks` | Installer/désinstaller le hook Git pre-commit déterministe (code-check + struct-check — MLOOP-105-BE) | [--uninstall <STR>] | Console / Mémoire d'état |
@@ -195,6 +197,7 @@ flowchart LR
 | `python src/swarm.py blast` | Calcul du rayon d'impact (Blast Radius) d'un fichier ou composant | [--file <STR>] [--target <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py cache-clear` | Effacer le cache sémantique déterministe LLM | [--model <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py cache-stats` | Afficher les statistiques du cache sémantique déterministe LLM | *(Aucun)* | Console / Mémoire d'état |
+| `python src/swarm.py cline-status` | Inspection READ-ONLY de l'écosystème Cline : binaire, Memory Bank, parité règles et MCP (MLOOP-264-FULL) | *(Aucun)* | Console / État écosystème Cline (READ-ONLY) |
 | `python src/swarm.py completion-setup` | Afficher la ligne d'activation de l'autocomplétion shell Click selon le shell détecté | *(Aucun)* | Ligne d'activation shell + emplacement `$PROFILE` |
 | `python src/swarm.py context-watch` | Surveiller l'occupation de la fenêtre de contexte et alerter la Dumb-Zone (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py crawler` | Gestion du cycle de vie et élagage du cache crawler (prune) | [<ACTION>] [--ttl-days <INT>] [--dry-run <STR>] | Console / Mémoire d'état |

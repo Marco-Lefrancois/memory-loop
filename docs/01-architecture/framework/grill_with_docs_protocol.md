@@ -5,37 +5,64 @@ Gouvernance : [ADR-0320](../../../standards/adr-system/0320-grill-me-frontier-de
 
 ---
 
-## 1. Objectif & Dualité Macro / Micro
+## 1. Objectif & Matrice Orthogonale Format × Scope (ADR-0393)
 
 L'objectif est d'éliminer toute ambiguïté fonctionnelle ou technique **avant** de découper et chiffrer les récits utilisateurs du backlog. Plutôt que de coder à la volée, le Grilling aligne systématiquement la compréhension des Faits et des Décisions.
 
-### 1.1 L'Asymétrie des Modes (ADR-013)
-1. **Mode Macro (`--mode round`, par défaut pour `grill-project`)** :
+### 1.1 Matrice 2×2 Déterministe (ADR-013 / ADR-0393)
+
+Le système sépare irrévocablement la **forme de l'interaction** (Format) de son **périmètre d'application** (Scope) :
+
+| | `STORY` (récit unitaire) | `EPIC / PROJECT` (transverse) |
+|---|---|---|
+| **`ATOMIC`** (`--format atomic`) | Micro-Grill 1:1 (`grill-me --story`) | Cadrage séquentiel (`grill-project --format atomic`) |
+| **`ROUND`** (`--format round`) | Frontier Rounds unitaires | Macro-Grill transverse (`grill-project`) |
+
+> **🚨 RÈGLE D'OR** : Choisir `ROUND` ne modifie en rien le périmètre d'analyse et ne constitue EN AUCUN CAS un ordre de rédaction de code ou de story.
+
+1. **Format Round (`--format round`, par défaut pour `grill-project`)** :
    - Traitement par lots de **2 à 4 questions orthogonales indépendantes**.
    - Chaque question contient son *Contexte*, une hypothèse (*Guess*) et la *Recommandation mLoop*.
-   - Permet à l'utilisateur de valider l'ensemble du round en une seule réponse (« Validé ») ou d'amender sélectivement, réduisant de plus de 50% les allers-retours.
-2. **Mode Micro (`--mode atomic`, par défaut pour `grill-me --story`)** :
+   - L'utilisateur peut valider en bloc ou amender sélectivement.
+2. **Format Atomic (`--format atomic`, par défaut pour `grill-me --story`)** :
    - Règle stricte du **1:1** pour les dépendances fines sur un récit spécifique.
-   - Une seule question ciblée avec recommandation et edge case.
+
+### 1.2 Arrêt Formel Post-Round & Mandat Unitaire (ADR-0393)
+
+Dès que la frontière de décision est vide :
+1. **Cessation immédiate** : L'agent cesse tout appel d'outil d'écriture.
+2. **Menu d'orientation fermé obligatoire** : 3 choix (DRAFT Palier 1, Micro-Grill 1:1, Clôture).
+3. **Mandat unitaire strict** : Aucun mandat d'écriture par défaut. Seul le choix explicite d'un récit par l'humain autorise la rédaction de ce seul récit.
+4. **Plafond de promotion** : L'agent ne peut promouvoir qu'au statut `READY_FOR_GROOMING`. `READY_FOR_DEV` = Gate 2 humaine exclusive.
 
 ```mermaid
 flowchart TD
-    Start["Lancement Cadrage Phase 2"] --> Choice{"Niveau de Cadrage"}
-    Choice -->|Macro / Projet Transverse| Round["Frontier Round (2-4 Qs orthogonales)"]
-    Choice -->|Micro / Récit Spécifique| Atomic["1:1 Atomic Grill-Me"]
+    Start["Lancement Cadrage Phase 2"] --> ChoiceScope{"Scope"}
+    ChoiceScope -->|EPIC/PROJECT| ChoiceFmt1{"Format"}
+    ChoiceScope -->|STORY| ChoiceFmt2{"Format"}
 
-    Round --> EvalQ{"Question Ungrillable (IHM/UX) ?"}
+    ChoiceFmt1 -->|ROUND| Round["Frontier Round (2-4 Qs)"]
+    ChoiceFmt1 -->|ATOMIC| AtomicMacro["1:1 Séquentiel Transverse"]
+    ChoiceFmt2 -->|ROUND| RoundStory["Frontier Rounds Unitaires"]
+    ChoiceFmt2 -->|ATOMIC| Atomic["1:1 Atomic Grill-Me"]
+
+    Round --> EvalQ{"Ungrillable ?"}
+    AtomicMacro --> EvalQ
+    RoundStory --> EvalQ
     Atomic --> EvalQ
 
-    EvalQ -->|Non : Choix d'Architecture| TextDec["Arbitrage Textuel & ADR"]
-    EvalQ -->|Oui : Ergonomie / Densité| Handoff["Handoff Pattern : Staging Sandbox (<30s)"]
+    EvalQ -->|Non| TextDec["Arbitrage Textuel & ADR"]
+    EvalQ -->|Oui| Handoff["Handoff Pattern (<30s)"]
 
-    Handoff --> Proto["Visualisation locale file:///"]
+    Handoff --> Proto["Visualisation locale"]
     Proto --> TextDec
 
-    TextDec --> Budget{"Contrôle Santé Contexte"}
-    Budget -->|< 120k Tokens| NextRound["Poursuite Cadrage / Rédaction Stories"]
-    Budget -->|> 120k Tokens (Dumb Zone)| Freeze["Blocage d'expansion & Rédaction immédiate sans Reset"]
+    TextDec --> FrontierCheck{"Frontiere vide ?"}
+    FrontierCheck -->|Non| Budget{"Budget Contexte"}
+    FrontierCheck -->|Oui| Stop["ARRET FORMEL + Menu Orientation"]
+
+    Budget -->|< 120k| Round
+    Budget -->|> 120k Dumb Zone| Stop
 ```
 
 ---

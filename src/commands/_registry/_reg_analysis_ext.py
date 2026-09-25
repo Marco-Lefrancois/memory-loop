@@ -207,6 +207,28 @@ ANALYSIS_EXT_COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    # ── Harnais Multimodal d'Artefacts (MLOOP-304-FULL / EPIC-30) ─────
+    "artifact-check": {
+        "handler": "artifact_check:handle_artifact_check",
+        "help": "Audit d'intégrité des artefacts visuels (anti-raster-paste, topologie connecteurs, score découplé) — EPIC-30",
+        "args": [
+            {
+                "name": "--file",
+                "type": str,
+                "help": "Audit ciblé sur un unique fichier d'artefact (.svg, .html, .json, .canvas)",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie brute formatée JSON pour les pipelines CI/CD",
+            },
+            {
+                "name": "--strict",
+                "action": "store_true",
+                "help": "Seuil topologique maximal (S_topo = 1.0 obligatoire)",
+            },
+        ],
+    },
     # ── Verrou Anti-Promotion (MLOOP-270-BE / ADR-011) ─────
     "story-approve": {
         "handler": "story_approve:handle_story_approve",
@@ -237,5 +259,16 @@ ANALYSIS_EXT_COMMANDS: dict[str, dict] = {
                 "help": 'Nom de l\'approbateur humain (ex: "Marco") — obligatoire pour toute écriture',
             },
         ],
+    },
+    # ── Écosystème Cline (EPIC-26 / MLOOP-264-FULL) ────────
+    "cline-sync": {
+        "handler": "cline_sync:handle_cline_sync",
+        "help": "Synchronise l'écosystème Cline : Memory Bank (6 fichiers), .clinerules/mloop.md et serveurs MCP (MLOOP-264-FULL)",
+        "args": [],
+    },
+    "cline-status": {
+        "handler": "cline_sync:handle_cline_status",
+        "help": "Inspection READ-ONLY de l'écosystème Cline : binaire, Memory Bank, parité règles et MCP (MLOOP-264-FULL)",
+        "args": [],
     },
 }

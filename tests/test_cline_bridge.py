@@ -12,7 +12,11 @@ import json
 from pathlib import Path
 import pytest
 from src.bridges.cline.memory_bank_bridge import MemoryBankBridge, MEMORY_BANK_DIR_NAME
-from src.bridges.cline.rules_mirror import ClineRulesMirror, CLINERULES_DIR_NAME, MLOOP_RULES_FILE_NAME
+from src.bridges.cline.rules_mirror import (
+    ClineRulesMirror,
+    CLINERULES_DIR_NAME,
+    MLOOP_RULES_FILE_NAME,
+)
 
 
 def test_memory_bank_creates_all_six_files_in_project_memory(tmp_path: Path):
@@ -67,7 +71,9 @@ def test_memory_bank_harvest_session_notes_and_evidence_update(tmp_path: Path):
 
     # Création d'un faux EvidencePack initial
     ep_file = evidence_dir / "MLOOP-260-BE_evidence.json"
-    ep_file.write_text(json.dumps({"story_id": "MLOOP-260-BE", "session_notes": []}), encoding="utf-8")
+    ep_file.write_text(
+        json.dumps({"story_id": "MLOOP-260-BE", "session_notes": []}), encoding="utf-8"
+    )
 
     # Simulation : Cline ajoute des notes dans activeContext.md
     active_ctx_file = proj_dir / "memory" / MEMORY_BANK_DIR_NAME / "activeContext.md"
@@ -87,7 +93,10 @@ def test_memory_bank_harvest_session_notes_and_evidence_update(tmp_path: Path):
     # Vérification dans l'EvidencePack
     ep_data = json.loads(ep_file.read_text(encoding="utf-8"))
     assert len(ep_data["session_notes"]) == 2
-    assert "Découverte Cline : Le binaire npm nécessite le shim .cmd sous Windows." in ep_data["session_notes"]
+    assert (
+        "Découverte Cline : Le binaire npm nécessite le shim .cmd sous Windows."
+        in ep_data["session_notes"]
+    )
 
 
 def test_cline_rules_mirror_generation_and_idempotence(tmp_path: Path):
@@ -103,3 +112,61 @@ def test_cline_rules_mirror_generation_and_idempotence(tmp_path: Path):
     assert "ADR-0202" in content
     assert "ADR-0375" in content
     assert "--plan" in content
+
+
+def test_harvest_cline_notes_wrapper_end_to_end(tmp_path: Path):
+    """Vérifie le wrapper composant harvest_cline_notes (extraction + injection EvidencePack)."""
+    proj_dir = tmp_path / "Projects" / "mLoop"
+    evidence_dir = proj_dir / "memory" / "evidence"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+
+    bridge = MemoryBankBridge(workspace_root=tmp_path, project_name="mLoop")
+    bridge.sync_all()
+
+    ep_file = evidence_dir / "MLOOP-260-BE_evidence.json"
+    ep_file.write_text(
+        json.dumps({"story_id": "MLOOP-260-BE", "session_notes": []}), encoding="utf-8"
+    )
+
+    active_ctx_file = proj_dir / "memory" / MEMORY_BANK_DIR_NAME / "activeContext.md"
+    content = active_ctx_file.read_text(encoding="utf-8")
+    content += "\n- Note Cline moissonnée via wrapper composant.\n"
+    active_ctx_file.write_text(content, encoding="utf-8")
+
+    # Wrapper end-to-end : extraction + injection en un seul appel
+    assert bridge.harvest_cline_notes("MLOOP-260-BE") is True
+
+    ep_data = json.loads(ep_file.read_text(encoding="utf-8"))
+    assert "Note Cline moissonnée via wrapper composant." in ep_data["session_notes"]
+
+
+def test_harvest_cline_notes_returns_false_when_no_notes(tmp_path: Path):
+    """Cas de rejet métier : aucune note nouvelle => False, aucune mutation."""
+    proj_dir = tmp_path / "Projects" / "mLoop"
+    proj_dir.mkdir(parents=True, exist_ok=True)
+
+    bridge = MemoryBankBridge(workspace_root=tmp_path, project_name="mLoop")
+    bridge.sync_all()  # activeContext.md généré sans note libre
+
+    assert bridge.harvest_cline_notes("MLOOP-260-BE") is False
+
+
+def test_verify_parity_pass_after_sync(tmp_path: Path):
+    """verify_parity retourne PASS lorsque le miroir est généré et conforme."""
+    mirror = ClineRulesMirror(workspace_root=tmp_path)
+    mirror.sync()
+
+    result = mirror.verify_parity()
+    assert result["status"] == "PASS"
+    assert result["exists"] is True
+    assert result["missing_markers"] == []
+
+
+def test_verify_parity_warning_when_missing(tmp_path: Path):
+    """verify_parity retourne WARNING avec recommandation sync si le fichier est absent."""
+    mirror = ClineRulesMirror(workspace_root=tmp_path)
+
+    result = mirror.verify_parity()
+    assert result["status"] == "WARNING"
+    assert result["exists"] is False
+    assert "sync" in result["message"].lower()

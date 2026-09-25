@@ -5,6 +5,7 @@ Intègre Archify CLI (tt-a1i/archify) pour transformer des spécifications JSON 
 en diagrammes d'architecture interactifs vectoriels (HTML standalone, zoomable, filtres de vues, animations trace).
 Supporte les 5 types natifs Archify : architecture, workflow, sequence, dataflow, lifecycle.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -22,7 +23,9 @@ TYPE_ALIASES = {
 }
 
 
-def normalize_diagram_type(diagram_type: Optional[str] = None, input_path: Optional[str] = None) -> str:
+def normalize_diagram_type(
+    diagram_type: Optional[str] = None, input_path: Optional[str] = None
+) -> str:
     """Normalise le type de diagramme ou le détecte automatiquement depuis l'extension du fichier."""
     if diagram_type:
         dt = diagram_type.strip().lower()
@@ -61,6 +64,53 @@ def run_archify_doctor() -> int:
     archify_bin = find_archify_bin()
     res = subprocess.run(["node", str(archify_bin), "doctor"], text=True, timeout=60)
     return res.returncode
+
+
+def run_connector_integrity_gate(input_path: str) -> int:
+    """
+    Porte topologique pré-vol (MLOOP-301-BE / EPIC-30) : valide l'intégrité des
+    connecteurs du diagramme JSON IR AVANT la validation géométrique Archify.
+
+    Rejette les arêtes orphelines (CONNECTOR_INTEGRITY_FAIL) et l'effondrement
+    relationnel (CONNECTOR_COLLAPSE_DETECTED). Best-effort : si le moteur mLoop
+    n'est pas importable (outil isolé), la porte est neutralisée sans bloquer.
+
+    Returns:
+        int : 0 si topologie fermée valide (ou porte neutralisée), 1 si violation.
+    """
+    repo_root = Path(__file__).resolve().parents[2]
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    try:
+        from src.pipelines.connector_validator import validate_connector_integrity
+    except ImportError:
+        return 0
+
+    spec_file = Path(input_path)
+    if not spec_file.exists():
+        print(f"[connector-gate] Spécification introuvable : {input_path}", file=sys.stderr)
+        return 1
+    try:
+        diagram = json.loads(spec_file.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, ValueError, OSError) as exc:
+        print(f"[connector-gate] JSON IR illisible : {exc}", file=sys.stderr)
+        return 1
+
+    if not isinstance(diagram, dict) or ("nodes" not in diagram and "edges" not in diagram):
+        return 0
+
+    result = validate_connector_integrity(diagram)
+    if result.is_valid:
+        print(
+            f"[connector-gate] Topologie fermée valide "
+            f"({result.node_count} nœuds / {result.edge_count} arêtes, complétude 100 %)."
+        )
+        return 0
+
+    print("[connector-gate] Validation topologique ÉCHOUÉE :", file=sys.stderr)
+    for err in result.errors:
+        print(f"  - {err}", file=sys.stderr)
+    return 1
 
 
 def run_archify_command(
@@ -106,7 +156,9 @@ def main():
     all_choices = SUPPORTED_TYPES + list(TYPE_ALIASES.keys())
 
     # validate
-    p_val = subparsers.add_parser("validate", help="Valider un diagramme JSON IR (9 contrôles géométriques)")
+    p_val = subparsers.add_parser(
+        "validate", help="Valider un diagramme JSON IR (9 contrôles géométriques)"
+    )
     p_val.add_argument("input", type=str, help="Chemin du fichier JSON de spécification")
     p_val.add_argument(
         "--type",
@@ -124,7 +176,9 @@ def main():
     )
 
     # deliver
-    p_del = subparsers.add_parser("deliver", help="Compiler un diagramme JSON IR en HTML standalone")
+    p_del = subparsers.add_parser(
+        "deliver", help="Compiler un diagramme JSON IR en HTML standalone"
+    )
     p_del.add_argument("input", type=str, help="Chemin du fichier JSON de spécification")
     p_del.add_argument("output", type=str, help="Chemin du fichier HTML de sortie")
     p_del.add_argument(
@@ -153,10 +207,16 @@ def main():
         code = run_archify_doctor()
         sys.exit(code)
     elif args.subcommand == "validate":
+        # Porte topologique pré-vol (MLOOP-301-BE) avant la validation géométrique.
+        gate_code = run_connector_integrity_gate(args.input)
+        if gate_code != 0:
+            sys.exit(gate_code)
         code = run_archify_command("validate", args.type, args.input, quality=args.quality)
         sys.exit(code)
     elif args.subcommand == "deliver":
-        code = run_archify_command("deliver", args.type, args.input, output_path=args.output, quality=args.quality)
+        code = run_archify_command(
+            "deliver", args.type, args.input, output_path=args.output, quality=args.quality
+        )
         if code == 0 and args.output:
             out_file = Path(args.output)
             if out_file.exists():

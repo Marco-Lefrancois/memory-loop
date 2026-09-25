@@ -1,6 +1,5 @@
 """
-Grill Engine - mLoop (ADR-0320 / ADR-012)
-Moteur d'interrogatoire interactif (Grill-with-Docs).
+Grill Engine - mLoop (ADR-0320 / ADR-012). Moteur d'interrogatoire interactif (Grill-with-Docs).
 Séparation stricte Faits vs Décisions, Porte de confirmation, Auto-ADR et Marquage de Récits Grilled.
 Support du Fact-Search préalable et journalisation (ADR-0326).
 """
@@ -26,6 +25,7 @@ from src.pipelines.grill._frontier import (
     detect_ungrillable_signals,
     format_frontier_round,
 )
+from src.pipelines.grill._grill_guards import assert_grill_target_allowed
 from src.state import ProjectLayout
 
 logger = logging.getLogger(__name__)
@@ -157,9 +157,12 @@ class GrillEngine:
         )
         return write_adr_file(self.docs_dir, next_id, title, content, max_id=max_id)
 
-    def mark_story_grilled(self, story_id: str) -> bool:
+    def mark_story_grilled(self, story_id: str, *, target_status: Optional[str] = None) -> bool:
         from src.pipelines.state_machine import StateMachineEngine
         from src.state import StoryStatus
+
+        # Bridage strict (ADR-0393) : verrou anti-promotion directe vers READY_FOR_DEV.
+        assert_grill_target_allowed(self.project_path, story_id, target_status)
 
         engine = StateMachineEngine(str(self.project_path))
         frontmatter_updated = False

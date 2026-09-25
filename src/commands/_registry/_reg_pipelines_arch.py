@@ -192,8 +192,22 @@ PIPELINES_ARCH_COMMANDS: dict[str, dict] = {
             {"name": "--positives", "type": str, "help": "Conséquences positives"},
             {"name": "--negatives", "type": str, "help": "Conséquences négatives"},
             {"name": "--story", "type": str, "help": "Identifiant du récit pour analyse micro 1:1"},
-            {"name": "--mode", "type": str, "help": "Mode d'interrogation : round ou atomic"},
-            {"name": "--health", "action": "store_true", "help": "Vérifie la santé de la fenêtre de contexte"},
+            {
+                "name": "--mode",
+                "type": str,
+                "help": "Mode : round/atomic (déprécié : voir --format)",
+            },
+            {
+                "name": "--format",
+                "type": str,
+                "help": "Format : round ou atomic (prime sur --mode)",
+            },
+            {"name": "--scope", "type": str, "help": "Périmètre : story, epic ou project"},
+            {
+                "name": "--health",
+                "action": "store_true",
+                "help": "Vérifie la santé de la fenêtre de contexte",
+            },
         ],
     },
     "grill-project": {
@@ -205,8 +219,22 @@ PIPELINES_ARCH_COMMANDS: dict[str, dict] = {
             {"name": "--context", "type": str, "help": "Contexte macroscopique"},
             {"name": "--positives", "type": str, "help": "Conséquences positives"},
             {"name": "--negatives", "type": str, "help": "Conséquences négatives"},
-            {"name": "--mode", "type": str, "help": "Mode d'interrogation : round (défaut) ou atomic"},
-            {"name": "--health", "action": "store_true", "help": "Vérifie la santé de la fenêtre de contexte"},
+            {
+                "name": "--mode",
+                "type": str,
+                "help": "Mode : round (défaut)/atomic (déprécié : voir --format)",
+            },
+            {
+                "name": "--format",
+                "type": str,
+                "help": "Format : round (défaut) ou atomic (prime sur --mode)",
+            },
+            {"name": "--scope", "type": str, "help": "Périmètre : story, epic ou project"},
+            {
+                "name": "--health",
+                "action": "store_true",
+                "help": "Vérifie la santé de la fenêtre de contexte",
+            },
         ],
     },
     "wayfinder": {

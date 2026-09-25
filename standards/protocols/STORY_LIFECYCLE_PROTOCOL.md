@@ -104,7 +104,40 @@ Lors de l'arrivée de nouvelles informations critiques **avant** le démarrage d
 
 ---
 
-## 5. Sanction de non-conformité
+## 5. Règle d'Arrêt Formel Post-Grill & Mandat Unitaire Strict (ADR-0393)
+
+### 5.1 Orthogonalité Format × Scope (Matrice 2×2 Déterministe)
+
+Le système sépare irrévocablement la **forme de l'interaction** de son **périmètre d'application** :
+
+| | `STORY` (récit unitaire) | `EPIC / PROJECT` (transverse) |
+|---|---|---|
+| **`ATOMIC`** (1 question/tour) | Micro-Grill 1:1 (`grill-me --story`) | Cadrage séquentiel (`grill-project`) |
+| **`ROUND`** (lot de 2-4 questions) | Frontier Rounds unitaires | Macro-Grill transverse |
+
+> **Règle d'or** : Choisir un format `ROUND` ne modifie en rien le périmètre d'analyse et ne constitue **EN AUCUN CAS** un ordre de rédaction de code ou de story.
+
+### 5.2 Cessation d'Écriture & Menu d'Orientation Fermé
+
+Dès que la frontière de décision d'un round est déclarée vide :
+1. **Cessation immédiate** : L'agent a l'interdiction formelle d'enchaîner sur la rédaction de récits.
+2. **Seul livrable autorisé** : Consignation de la décision dans l'ADR (`docs/01-architecture/ADR-XXX.md`).
+3. **Menu d'orientation fermé obligatoire** :
+   > *« Décisions actées et scellées dans l'ADR-XXX. Aucune story n'a été altérée. Quelle est votre instruction ?*
+   > *(1) Découpage en ébauches DRAFT Palier 1 (`to-tickets`)*
+   > *(2) Lancer le Micro-Grill 1:1 sur un récit spécifique*
+   > *(3) Clôturer la session »*
+
+### 5.3 Mandat Unitaire Strict d'Écriture
+
+- Après un round macro, **l'agent ne dispose d'aucun mandat d'écriture par défaut**.
+- Seule la sélection explicite d'un récit par l'humain dans le menu d'orientation confère le mandat d'instruire et rédiger **ce seul récit** (mono-récit strict).
+- Toute story modifiée sans mandat unitaire valide est immédiatement rétrogradée en `DRAFT` avec purge du `content_hash`.
+
+---
+
+## 6. Sanction de non-conformité
 
 - Toute tentative par l'IA de basculer un récit en `READY_FOR_DEV` sans validation humaine explicite constitue une **violation critique du contrat d'autonomie**.
 - Toute tentative de réouverture silencieuse d'un récit `DONE` sans création d'un ticket `BUG`/`HOTFIX` est rejetée par la FSM (`StateTransitionError`).
+- Toute mutation de stories en cascade non sollicitée déclenche la sanction `UNAUTHORIZED_CASCADE_MUTATION` avec rétrogradation déterministe en `DRAFT` et consignation dans `memory/audit_lifecycle_violations.jsonl`.

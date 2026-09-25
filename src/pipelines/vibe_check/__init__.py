@@ -47,6 +47,8 @@ from src.pipelines.vibe_check._vc_build import (
 from src.pipelines.vibe_check._vc_frontend import check_21_visual_anchor
 from src.pipelines.vibe_check._vc_extraction import check_22_extraction_protocol
 from src.pipelines.vibe_check._vc_storage import check_24_storage_hygiene
+from src.pipelines.vibe_check._vc_artifact import check_27_artifact_topology
+from src.pipelines.vibe_check._vc_cascade import check_28_story_cascade_drift
 
 logger = get_logger("pipelines.vibe_check")
 
@@ -236,6 +238,12 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
     )  # Check 23 : Intégrité & Santé des Compétences ADR-0389
     checks.append(check_24_storage_hygiene(*ctx))  # Check 24 : Hygiène & Plafond Stockage ADR-015
     checks.append(check_25_story_state_lock(*ctx))  # Check 25 : Verrou anti-promotion MLOOP-270-BE
+    checks.append(
+        check_27_artifact_topology(project_dir, stage_label)
+    )  # Check 27 : Fidélité topologique & intégrité des artefacts EPIC-30 (MLOOP-304-FULL)
+    checks.append(
+        check_28_story_cascade_drift(project_dir, stage_label)
+    )  # Check 28 : Détection de Cascade (MLOOP-323-BE / EPIC-32)
 
     passed_count = sum(1 for c in checks if c["status"] == "PASS")
     warning_count = sum(1 for c in checks if c["status"] == "WARNING")

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger("mloop.bridges.cline.rules_mirror")
 
@@ -80,3 +80,56 @@ class ClineRulesMirror:
         self.target_file.write_text(content, encoding="utf-8")
         logger.info("[ClineRules] .clinerules/mloop.md synchronisé avec succès.")
         return self.target_file
+
+    def verify_parity(self) -> Dict[str, Any]:
+        """Contrôle déterministe de parité des règles projetées (MLOOP-261-BE §Op.2).
+
+        Vérifie l'existence, la taille (>100 octets) et la présence des marqueurs
+        constitutionnels clés. Utilisé par le pré-vol vibe-check.
+
+        Returns:
+            Dict avec `status` ('PASS' | 'WARNING'), `exists`, `missing_markers`
+            et `message` (recommandation de remédiation si non conforme).
+        """
+        required_markers = ["ADR-0376", "ADR-0202", "ADR-0375", "--plan"]
+        if not self.target_file.exists():
+            return {
+                "status": "WARNING",
+                "exists": False,
+                "missing_markers": list(required_markers),
+                "message": (
+                    "Fichier .clinerules/mloop.md manquant. "
+                    "Exécuter 'python src/swarm.py sync --project mLoop' pour régénérer."
+                ),
+            }
+        try:
+            content = self.target_file.read_text(encoding="utf-8")
+        except OSError as exc:
+            logger.debug(
+                "[ClineRules] Lecture du miroir impossible.",
+                exc_info=True,
+                extra={"target_file": str(self.target_file), "error": str(exc)},
+            )
+            return {
+                "status": "WARNING",
+                "exists": True,
+                "missing_markers": list(required_markers),
+                "message": "Fichier .clinerules/mloop.md illisible. Relancer 'sync'.",
+            }
+        missing = [m for m in required_markers if m not in content]
+        if len(content.encode("utf-8")) <= 100 or missing:
+            return {
+                "status": "WARNING",
+                "exists": True,
+                "missing_markers": missing,
+                "message": (
+                    "Règles .clinerules/mloop.md incomplètes ou corrompues. "
+                    "Exécuter 'python src/swarm.py sync --project mLoop' pour restaurer."
+                ),
+            }
+        return {
+            "status": "PASS",
+            "exists": True,
+            "missing_markers": [],
+            "message": "Règles .clinerules (Parité Miroir) conformes.",
+        }

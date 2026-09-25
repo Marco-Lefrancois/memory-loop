@@ -10,22 +10,78 @@ Ce skill régit la discipline d'interrogatoire sans concession (*Relentless Inte
 
 ---
 
-## 🧭 La Dualité du Grill-Me (Macro vs Micro)
+## 🚀 Protocole d'Ouverture de Session (Session Kickoff — Obligatoire)
 
-Le Grilling opère obligatoirement à deux échelles distinctes pour éviter le syndrome du perroquet :
+Avant la première question, l'agent DOIT émettre un **état des lieux en 3 blocs** pour ancrer la session et éviter la boîte noire :
 
-### 1. Grill-Me Macro : Cadrage Global du Projet (`python src/swarm.py grill-project`)
-- **Moment** : En début de Phase 2 (PLAN & ANALYSE), immédiatement après l'ingestion de la matière brute.
-- **Périmètre** : Le système dans son ensemble.
-- **Questions clés** : Choix d'architecture structurants (Cloud, SSO, hébergement), conformité Loi 25, frontières d'exclusions globales (Out-of-Scope), hypothèses du T-Shirt Size.
-- **Livrables produits** : ADR transverses de cadrage, sections d'hypothèses de `TSHIRT_SIZE.md` / `SOW.md`, glossaire unifié `CONTEXT.md`.
-- **Règle d'or** : Élimine 80% des questions répétitives en fixant le socle commun pour l'ensemble des récits du backlog.
+```markdown
+## 📋 État des Lieux — Session Grill
+### 1. Ce que je sais déjà (Faits établis & Preuves pivots)
+- 📌 **<Fait majeur 1>** : <Énoncé factuel établi>
+  > 🔍 *Preuve pivot :* `[chemin/fichier.md:Lignes X-Y]` — *« Verbatim court pertinent »*
+- 📌 **<Fait majeur 2>** : <Énoncé factuel établi>
+  > 🔍 *Preuve pivot :* `[chemin/fichier.md:Lignes X-Y]`
+- 📁 *Dossier de preuves exhaustif consigné dans :* `memory/evidence/<STORY_ID>_fact_dossier.md`
 
-### 2. Grill-Me Micro : Analyse Fine Récit par Récit (`python src/swarm.py grill-me --story <ID>`)
+### 2. L'unique zone d'ombre à trancher
+> ❓ **Q1 — <Titre de la frontière active>**
+> <Contexte factuel en 1-2 phrases>
+> - **Option A** (Recommandée) : <Description + justification ADR/standard>
+> - **Option B** : <Description + compromis>
+> ➡️ **Recommandation mLoop** : Option A — <motif en 1 ligne appuyé par la preuve pivot>
+
+### 3. Le plan d'action qui sera appliqué dès votre réponse
+- [ ] <Étape 1 concrète>
+- [ ] <Étape 2 concrète>
+- [ ] <Étape 3 concrète>
+```
+
+**Règles d'or du Kickoff :**
+- **Principe Preuve Pivot & Sidecar** : Extraire 1 à 3 faits majeurs avec citations cliquables (`[fichier.md:LX-Y]`) et verbatim court. Ne jamais déverser de *Wall of Evidence* dans le chat ; déporter le dossier exhaustif vers `memory/evidence/<STORY_ID>_fact_dossier.md`.
+- Le bloc 2 ne contient QU'UNE seule zone d'ombre : la plus bloquante pour le plan d'action.
+- Si aucune ambiguïté ne subsiste après le bloc 1, passer directement au bloc 3 (zéro question posée).
+- Ce format remplace tout prologue conversationnel vague (« Commençons par... », « Voici ce que je propose... »).
+
+---
+
+## 🧭 Matrice Orthogonale 2×2 : Format × Scope (ADR-0393)
+
+Le Grilling opère sur **deux axes indépendants** — la forme de l'interaction et son périmètre d'application :
+
+### Axe 1 — Format de Dialogue (`--format`)
+| Format | Description | Usage |
+|--------|-------------|-------|
+| `ATOMIC` | 1 question chirurgicale par tour (séquentielle) | Micro-Grill 1:1 sur un récit |
+| `ROUND` | Lot structuré de 2-4 questions orthogonales (mutuellement indépendantes) | Cadrage Macro ou Frontier Rounds |
+
+### Axe 2 — Périmètre d'Arbitrage (`--scope`)
+| Scope | Description | Commande CLI |
+|-------|-------------|--------------|
+| `STORY` | Centré sur l'écran, le contrat d'API et les RM d'un récit unitaire | `grill-me --story <ID>` |
+| `EPIC / PROJECT` | Architecture transverse, infra, conformité, exclusions globales | `grill-project` |
+
+> **🚨 RÈGLE D'OR INVIOLABLE** : Choisir un format `ROUND` ne modifie en rien le périmètre d'analyse et ne constitue **EN AUCUN CAS** un ordre de rédaction de code ou de story.
+
+### Table de Mapping du Langage Naturel (Expressions Informelles → Matrice)
+| Expression utilisateur | Mapping déterministe | Ce que cela ne fait PAS |
+|----------------------|---------------------|------------------------|
+| *« mode macro »* / *« passe en macro »* | `format: ROUND` sur le scope courant | Ne change PAS le scope, ne déclenche PAS d'écriture |
+| *« mode micro »* / *« question par question »* | `format: ATOMIC` sur le scope courant | Ne change PAS le scope |
+| *« grill le projet »* / *« grill l'épopée »* | `scope: EPIC/PROJECT` avec format courant | Ne déclenche PAS la rédaction de stories |
+| *« grill cette story »* | `scope: STORY` avec format courant | N'autorise PAS la promotion au-delà de `READY_FOR_GROOMING` |
+
+### Dualité des Niveaux de Cadrage
+
+#### 1. Cadrage Transverse (`scope: EPIC/PROJECT` — `grill-project`)
+- **Moment** : En début de Phase 2 (PLAN & ANALYSE), immédiatement après l'ingestion.
+- **Questions clés** : Architecture structurante, conformité, exclusions globales, hypothèses macro.
+- **Livrables** : ADR transverses, `CONTEXT.md`, glossaire unifié.
+- **Règle d'or** : Élimine 80% des questions répétitives en fixant le socle commun.
+
+#### 2. Analyse Fine Unitaire (`scope: STORY` — `grill-me --story <ID>`)
 - **Moment** : Au cours du sprint, lors de la prise en charge d'un récit (`IN_ANALYZE`).
-- **Périmètre** : Strictement l'écran, le contrat d'API et les règles d'affaires spécifiques de CE récit.
-- **Ordre du jour** : Résolution des questions ouvertes listées en **Section 5 de `story_draft_template.md`**.
-- **Livrable produit** : Récit converti au gabarit haute fidélité [`story_template.md`](../../standards/blueprints/story_template.md) avec DoR 6/6 (`READY_FOR_DEV`).
+- **Périmètre** : Strictement l'écran, le contrat d'API et les RM de CE récit (mono-récit strict).
+- **Livrable** : Récit Palier 2 DoR 6/6 au maximum `READY_FOR_GROOMING`. Le passage vers `READY_FOR_DEV` requiert l'arbitrage humain exclusif de Gate 2.
 
 ---
 
@@ -35,7 +91,7 @@ Le Grilling opère obligatoirement à deux échelles distinctes pour éviter le 
 0. **Localiser la Source de Vérité Canonique AVANT toute recherche (ADR-0384)** : lire d'abord `Projects/<projet>/directives/tech.md` et `directives/business.md` s'ils existent, identifier la source de vérité canonique déclarée (hiérarchie à 3 niveaux : Canonique `docs/03-models/` > Amont `docs/00-ingested/` > Staging `reference/`), puis la charte projet `AGENTS.md`, puis `docs/01-architecture/`. **Ordre de recherche imposé : directives en tête.**
    - **Interdiction de brief non sourcé** : ne jamais transmettre à un sous-agent (`task`, `worker-spawn`) un brief référençant un chemin de modèle de données non confirmé comme canonique.
    - Citer la hiérarchie SSOT retenue dans le Dossier de Preuves.
-1. Interroger l'index SQLite FTS5 (`.fact_search_index.db`) et `CONTEXT.md` pour identifier les maquettes SVG validées (`docs/05-assets/`), règles métier (`RM-XXX`), schémas DBML et vocabulaire ubique.
+1. Interroger l'index SQLite FTS5 (`.fact_search_index.db`) et `CONTEXT.md` pour identifier les maquettes SVG validées (`docs/05-assets/`), règles métier (`RM-XXX`), schémas DBML et vocabulaire ubique. En cas d'outil absent, d'erreur ou d'échec de requête SQLite, appliquer un fallback résilient par recherche textuelle locale dans `docs/00-ingested/`.
 2. Arbitrer **Faits vs Décisions** : si un fait est consigné dans la documentation ou le code existant, **interdiction absolue de poser la question à l'humain**.
 3. Rédiger le Dossier de Preuves selon le gabarit normatif [`standards/blueprints/dossier_de_preuves_template.md`](../../standards/blueprints/dossier_de_preuves_template.md).
 
@@ -71,28 +127,49 @@ Certaines questions ne peuvent PAS être résolues par le dialogue textuel (disp
 Poser la question brise-glace de désencombrement :
 > *« Si vous n'aviez de comptes à rendre à personne et aucune contrainte d'héritage, que voudriez-vous réellement construire ici ? »*
 
-### Étape 4 : Clôture de Frontière & Épuisement (Frontier Exhaustion) - Budget Contexte & Chaînage (ADR-0389)
+### Étape 4 : Clôture de Frontière, Arrêt Formel & Menu d'Orientation (ADR-0389 / ADR-0393)
 La session se termine lorsque l'arbre de décision ne contient plus aucune zone d'ombre (Épuisement de Frontière / Frontier Exhaustion).
-- En Macro (`grill-project`) : enregistrement de la décision via ADR et passage au découpage `to-tickets`.
-- En Micro (`grill-me --story <ID>`) : dès qu'un récit atteint l'épuisement de frontière, l'agent consigne la décision et avance automatiquement vers le récit suivant ou bascule la story vers `READY_FOR_GROOMING` puis `READY_FOR_DEV` après validation humaine.
-- **Surveillance Context Budget ("Dumb Zone")** : Si la session dépasse **80k tokens**, déclencher un point de contrôle (`checkpoint_in_flight`). Si elle dépasse **120k tokens**, interdiction d'ouvrir de nouvelles branches (clôture ou partitionnement en session fille).
-- **Externalisation Continue** : Consigner les termes dans `CONTEXT.md` et les décisions filtrées dans `docs/01-architecture/ADR-XXX.md` au fil de l'eau (principe stateful).
-- **Interdiction Absolue de Purge Post-Grill** : Ne jamais réinitialiser la conversation après le grill. Enchaîner **directement dans la même session** vers la rédaction du récit au gabarit haute fidélité [`story_template.md`](../../standards/blueprints/story_template.md) avec DoR 6/6 (`READY_FOR_DEV`).
+
+#### 4A. Arrêt Formel Post-Round (INVIOLABLE — ADR-0393)
+Dès que la frontière de décision d'un round est vide :
+1. **Cessation immédiate d'écriture** : L'agent a l'**interdiction formelle** d'enchaîner sur la rédaction de récits, de modifier des fichiers sous `backlog/stories/`, ou de promouvoir des statuts.
+2. **Seul livrable autorisé** : Consignation des décisions dans l'ADR (`docs/01-architecture/ADR-XXX.md`) et mise à jour de `CONTEXT.md`.
+3. **Menu d'Orientation Fermé Obligatoire** : L'agent clôt impérativement son message par :
+   > *« Décisions actées et scellées dans l'ADR-XXX. Aucune story n'a été altérée. Quelle est votre instruction ?*
+   > *(1) Découpage en ébauches DRAFT Palier 1 (`to-tickets`)*
+   > *(2) Lancer le Micro-Grill 1:1 sur un récit spécifique*
+   > *(3) Clôturer la session »*
+
+#### 4B. Mandat Unitaire Strict d'Écriture
+- **Aucun mandat d'écriture par défaut** après un round macro. Seule la sélection explicite d'un récit par l'humain confère le mandat d'instruire et rédiger **ce seul récit** (mono-récit strict).
+- Toute story modifiée sans mandat unitaire valide est immédiatement rétrogradée en `DRAFT` avec purge du `content_hash` et consignation `UNAUTHORIZED_CASCADE_MUTATION`.
+
+#### 4C. Plafond de Promotion Machine
+- L'agent ne peut promouvoir un récit qu'au statut maximum `READY_FOR_GROOMING`.
+- Toute promotion vers `READY_FOR_DEV` requiert l'arbitrage humain explicite exclusif de Gate 2.
+- Toute tentative machine d'injecter `READY_FOR_DEV` provoque la levée immédiate de `LifecycleAuthorityError`.
+
+#### 4D. Surveillance Context Budget ("Dumb Zone")
+- Si la session dépasse **80k tokens**, déclencher un point de contrôle (`checkpoint_in_flight`).
+- Si elle dépasse **120k tokens**, interdiction d'ouvrir de nouvelles branches (clôture ou partitionnement en session fille).
+- **Externalisation Continue** : Consigner les termes dans `CONTEXT.md` et les décisions filtrées dans l'ADR au fil de l'eau (principe stateful).
 - **Délégation Isolée en Aval** : Seules les étapes d'implémentation (`build` / tests) sont ensuite confiées à un sous-agent avec contexte nettoyé.
 
 
 ---
 
-## Table Anti-Rationalisation (Inviolable)
+## Table Anti-Rationalisation (Inviolable — ADR-0393 enrichie)
 
-| Excuse de l'Agent (Paresse) | Réalité & Règle Inviolable |
-| :--- | :--- |
-| *"Le besoin est évident, je peux rédiger la story directement sans poser de question."* | Même les besoins simples cachent des hypothèses tacites non vérifiées. Le Dossier de Preuves Documentaires est obligatoire pour chaque récit. |
-| *"Je vais poser 5 questions dépendantes d'un coup en Micro-Grill."* | En Micro-Grill, le batching sature l'attention. La règle d'or sur un récit est **1 seule question atomique par tour** (sauf en Macro-Grill où les rounds de 2-4 questions orthogonales sont autorisés). |
-| *"Je vais débattre pendant 15 tours sur l'ergonomie visuelle du formulaire."* | L'ergonomie ne se discute pas en texte pur. Déclencher immédiatement le **Handoff Pattern** et générer un prototype jetable HTML/SVG. |
-| *"La session de grill est finie, je vais faire un reset de contexte pour rédiger au propre."* | **Interdiction formelle de reset**. Le context window contient la mémoire vive de tous les arbitrages. Enchaîner directement sur la rédaction de la story. |
-| *"Je vais griller chaque story sans faire de cadrage macro global."* | Conduit au syndrome du perroquet et à l'incohérence systémique. Exécuter `grill-project` avant d'entamer le micro-grilling. |
-| *"L'utilisateur m'a dit 'fais au mieux', donc je décide à sa place sans documenter."* | « Au mieux » n'est pas un contrat. Formuler l'hypothèse sous forme de *Guess*, la faire valider en 1 tour, puis consigner la décision dans l'ADR. |
+| # | Excuse de l'Agent (Paresse / Dérive) | Réalité & Règle Inviolable |
+| :---: | :--- | :--- |
+| 1 | *"Le besoin est évident, je peux rédiger la story directement sans poser de question."* | Même les besoins simples cachent des hypothèses tacites non vérifiées. Le Dossier de Preuves Documentaires est obligatoire pour chaque récit. |
+| 2 | *"Je vais poser 5 questions dépendantes d'un coup en Micro-Grill."* | En Micro-Grill, le batching sature l'attention. La règle d'or sur un récit est **1 seule question atomique par tour** (sauf en format `ROUND` où les lots de 2-4 questions orthogonales sont autorisés). |
+| 3 | *"Je vais débattre pendant 15 tours sur l'ergonomie visuelle du formulaire."* | L'ergonomie ne se discute pas en texte pur. Déclencher immédiatement le **Handoff Pattern** et générer un prototype jetable HTML/SVG. |
+| 4 | *"La session de grill est finie, je vais faire un reset de contexte pour rédiger au propre."* | **Interdiction formelle de reset**. Le context window contient la mémoire vive de tous les arbitrages. Enchaîner directement sur la rédaction si le mandat unitaire est accordé. |
+| 5 | *"Je vais griller chaque story sans faire de cadrage macro global."* | Conduit au syndrome du perroquet et à l'incohérence systémique. Exécuter `grill-project` avant d'entamer le micro-grilling. |
+| 7 | *"L'utilisateur a demandé le mode macro, donc j'ai mandat de rédiger toutes les stories."* | **Illusion du mandat global (ADR-0393)** : `format: ROUND` ne confère aucun mandat d'écriture. Seul le choix explicite dans le menu d'orientation autorise la rédaction mono-récit. |
+| 8 | *"Le Macro-Grill est terminé, je passe tout en READY_FOR_DEV."* | **Auto-attribution de Gate 2 (ADR-0393)** : Statut machine maximal = `READY_FOR_GROOMING`. `READY_FOR_DEV` est réservé à l'arbitrage humain. |
+| 9 | *"Le PO a validé le cadrage macro, j'enchaîne directement sur les 5 récits."* | **Absence d'arrêt formel (ADR-0393)** : Arrêt post-round et menu d'orientation obligatoires. Enchaînement sans confirmation explicite interdit. |
 
 ---
 

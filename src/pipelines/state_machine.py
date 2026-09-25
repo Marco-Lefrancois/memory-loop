@@ -44,11 +44,12 @@ def _clean_yaml_str(raw_yaml: str) -> dict:
 # ─── Transitions autorisées (SSOT) ────────────────────────────────────────────
 # Chaque clé mappe vers la liste des statuts cibles légaux.
 ALLOWED_TRANSITIONS = {
+    # ADR-0393 / MLOOP-322-BE : READY_FOR_DEV retiré de DRAFT.
+    # Le passage préalable par READY_FOR_GROOMING est un prérequis technique absolu.
     StoryStatus.DRAFT: [
         StoryStatus.OPEN,
         StoryStatus.IN_ANALYZE,
         StoryStatus.READY_FOR_GROOMING,
-        StoryStatus.READY_FOR_DEV,
         StoryStatus.ON_HOLD,
         StoryStatus.ERROR,
     ],
@@ -221,10 +222,20 @@ class StateMachineEngine:
         self,
         current: Union[StoryStatus, str],
         target: Union[StoryStatus, str],
+        *,
+        story_data: Optional[dict] = None,
     ) -> bool:
         """
         Vérifie qu'une transition d'état est autorisée par le dictionnaire ALLOWED_TRANSITIONS.
         Lève StateTransitionError si la transition est illicite.
+
+        Gate 2 (ADR-0393 / MLOOP-322-BE) : lorsque la cible est READY_FOR_DEV et
+        que le frontmatter du récit est fourni via `story_data`, l'autorité
+        nominative humaine (`validated_by` / `validated_at`) est vérifiée et une
+        LifecycleAuthorityError est levée en cas de non-conformité.
+
+        Le paramètre `story_data` est keyword-only et optionnel pour préserver la
+        rétrocompatibilité des appelants existants (validation FSM pure).
         """
         curr = StoryStatus.from_raw(current) if isinstance(current, str) else current
         tgt = StoryStatus.from_raw(target) if isinstance(target, str) else target
@@ -236,6 +247,14 @@ class StateMachineEngine:
                 f"Transitions autorisées depuis {curr.value} : [{allowed_str}]\n"
                 f"➡ Corrigez le statut ou passez par les étapes intermédiaires obligatoires."
             )
+
+        # Gate 2 : verrou d'autorité nominative humaine pour READY_FOR_DEV.
+        if tgt == StoryStatus.READY_FOR_DEV and story_data is not None:
+            from src.pipelines._fsm_authority import validate_gate2_authority
+
+            story_id = str(story_data.get("id") or story_data.get("jira_key") or "?")
+            validate_gate2_authority(story_data, story_id)
+
         return True
 
     def validate_single_in_analyze(self) -> list[str]:
@@ -255,7 +274,10 @@ class StateMachineEngine:
                 parts = text.split("---", 2)
                 if len(parts) >= 3:
                     data = _clean_yaml_str(parts[1])
-                    if isinstance(data, dict) and data.get("status") == StoryStatus.IN_ANALYZE.value:
+                    if (
+                        isinstance(data, dict)
+                        and data.get("status") == StoryStatus.IN_ANALYZE.value
+                    ):
                         rel_path = file.relative_to(self.stories_path).as_posix()
                         in_analyze_stories.append(rel_path)
             except Exception as e:
@@ -640,3 +662,17 @@ class StateMachineEngine:
             )
 
         return True
+
+
+# ─── Ré-export de rétrocompatibilité (ADR-0393 / MLOOP-322-BE) ─────────────────
+# LifecycleAuthorityError vit dans _fsm_authority pour respecter le plafond de
+# 300 lignes (ADR-0202). Ré-export paresseux (PEP 562) pour que les appelants
+# historiques puissent faire `from src.pipelines.state_machine import
+# LifecycleAuthorityError` sans introduire de cycle d'import à la charge du module
+# (_fsm_authority importe StateTransitionError depuis ce module).
+def __getattr__(name: str):
+    if name == "LifecycleAuthorityError":
+        from src.pipelines._fsm_authority import LifecycleAuthorityError as _LAE
+
+        return _LAE
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

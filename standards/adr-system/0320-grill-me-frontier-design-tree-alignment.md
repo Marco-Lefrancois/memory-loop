@@ -52,18 +52,19 @@ Un ADR n'est formalisé que si la décision remplit simultanément les **3 crit�
 - mLoop étend le scope du Grilling au-delà des US logicielles : cadrage d'initiatives, conception de formations/cours, analyse de faisabilité multi-projets.
 - Lorsqu'une question de la frontière dépasse le périmètre de connaissance du PO (dépendance vis-à-vis d'un tiers, d'un client externe ou d'une équipe infrastructure), mLoop déclenche le protocole **`to-questionnaire`** pour générer un artefact de découverte asynchrone ciblé.
 
-### F. Règle d'Épuisement de Frontière par Récit (Per-Story Frontier Exhaustion & Immediate Advance)
+### F. Règle d'Épuisement de Frontière par Récit (Per-Story Frontier Exhaustion)
 
 Lorsque le Grilling porte sur une **liste de plusieurs récits** (ex: refonte d'un backlog vertical), la frontière se calcule **individuellement pour chaque récit**, en plus de la frontière globale de session (§2.A) :
 
 1. **Critère d'Arrêt Unitaire** : Dès que la frontière d'un récit donné est vide (aucune question de fact-search non résolue, aucun arbitrage PO en attente pour CE récit), l'agent **DOIT immédiatement arrêter d'interroger** sur ce récit — il est formellement interdit de poser des questions supplémentaires "par prudence" ou "pour approfondir" une fois la frontière close.
-2. **Finalisation Immédiate, Sans Attendre le Lot** : L'agent finalise sur-le-champ le récit dont la frontière est épuisée (rédaction complète alignée sur les réponses obtenues, mise à jour du frontmatter, citations Jira-Only) — **sans attendre que les autres récits de la liste soient également grillés**. Le traitement séquentiel (US-00 → US-01 → US-02 → ...) n'implique pas un traitement synchrone groupé.
-3. **Séparation Grill vs Validation Mécanique** : La clôture de la frontière (fin du dialogue) est distincte de la validation mécanique finale (`rubber-duck`, EvidencePack, transition `READY_FOR_DEV`). Ces dernières peuvent être :
+2. **Arrêt Formel Post-Round & Menu d'Orientation (ADR-0393)** : L'agent finalise la consignation des décisions dans l'ADR, puis **cesse immédiatement tout appel d'outil d'écriture** et présente le **menu d'orientation fermé obligatoire** (3 choix : ébauches DRAFT, micro-grill 1:1, clôture). **Il est formellement interdit d'enchaîner automatiquement sur la rédaction de récits après un round macro sans instruction explicite du PO.**
+3. **Mandat Unitaire Strict d'Écriture** : L'agent ne dispose d'aucun mandat d'écriture par défaut après un round. Seule la sélection explicite d'un récit par l'humain dans le menu confère le mandat d'instruire et rédiger **ce seul récit** (mono-récit strict). Toute story modifiée sans mandat est rétrogradée en `DRAFT`.
+4. **Séparation Grill vs Validation Mécanique** : La clôture de la frontière (fin du dialogue) est distincte de la validation mécanique finale (`rubber-duck`, EvidencePack, transition `READY_FOR_DEV`). Ces dernières peuvent être :
    - **Batchées en fin de vague** via un Worker Herdr dédié (`worker-spawn` type=`validation`), conformément à la règle de délégation obligatoire (AGENTS.md §3) si le volume dépasse les seuils, **OU**
-   - **Traitées ponctuellement** en sortant du Mode Plan pour ce récit unique, si le PO le demande explicitement (ex: préparation immédiate d'un copier/coller Jira) — l'agent revient alors automatiquement en Mode Plan pour reprendre le Grill du récit suivant de la liste, sans redemander confirmation de reprise.
-4. **Avancement Automatique vers le Récit Suivant** : Une fois un récit finalisé (étape 2 ou 3 ci-dessus complétée), l'agent enchaîne directement sur le premier récit non traité de la liste sans marquer de pause d'attente, sauf si le PO interrompt explicitement la séquence.
+   - **Traitées ponctuellement** pour un récit unique, si le PO le demande explicitement.
 5. **Non-Régression sur les Récits Déjà Clos** : Il est interdit de revenir questionner un récit dont la frontière a déjà été déclarée close, sauf si une nouvelle information contredit une décision actée précédemment (cf. skill `wait-what`).
 6. **Fiabilité du Signal de Confiance (cf. Section G)** : Le critère d'arrêt de frontière repose sur le jugement de l'agent (fact-search réel + confirmation PO explicite), **jamais** sur le champ `confidence_score` des EvidencePacks JSON tant que celui-ci n'est pas corrigé pour refléter une vérification sémantique ou de code source réelle plutôt qu'un simple contrôle d'existence de fichier.
+7. **Plafond de Promotion Machine (ADR-0393)** : L'agent ne peut promouvoir un récit qu'au statut maximum `READY_FOR_GROOMING`. Toute promotion vers `READY_FOR_DEV` requiert l'arbitrage humain explicite exclusif de Gate 2.
 
 ### G. Fiabilisation du Signal de Confiance des EvidencePacks & Intégration du Code Source Réel (Amendement 2026-08-26)
 

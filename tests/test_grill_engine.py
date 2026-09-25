@@ -172,8 +172,10 @@ def test_grill_skill_conformance():
 
     # ADR-0320 §F/§G (amendement 2026-08-26) : Règle d'Épuisement de Frontière
     # par récit et fiabilisation du signal de confiance / priorité au code source.
+    # ADR-0393 (amendement 2026-09-25) : La clause "avance automatiquement" a été
+    # supprimée et remplacée par "Arrêt Formel Post-Round & Menu d'Orientation".
     assert "Frontier Exhaustion" in content or "Épuisement de Frontière" in content
-    assert "avance automatiquement" in content
+    assert "Arrêt Formel" in content or "Menu d'Orientation" in content
 
 
 def test_adr_0320_frontier_exhaustion_sections_present():
@@ -184,7 +186,9 @@ def test_adr_0320_frontier_exhaustion_sections_present():
 
     assert "Règle d'Épuisement de Frontière par Récit" in content
     assert "Critère d'Arrêt Unitaire" in content
-    assert "Avancement Automatique vers le Récit Suivant" in content
+    # ADR-0393 (amendement 2026-09-25) : §F.4 renommé "Avancement Automatique"
+    # → "Arrêt Formel Post-Round & Menu d'Orientation" et clauses permissives supprimées.
+    assert "Arrêt Formel Post-Round" in content or "Mandat Unitaire Strict" in content
     assert "code_source_verified" in content
     assert "file_existence_only" in content
 

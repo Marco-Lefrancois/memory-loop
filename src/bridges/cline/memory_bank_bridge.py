@@ -141,14 +141,16 @@ class MemoryBankBridge:
                     m.group(5).strip(),
                     m.group(6).strip(),
                 )
-                stories.append({
-                    "id": story_id,
-                    "title": title,
-                    "component": comp,
-                    "grill": grill,
-                    "status": status,
-                    "checked": state == "x",
-                })
+                stories.append(
+                    {
+                        "id": story_id,
+                        "title": title,
+                        "component": comp,
+                        "grill": grill,
+                        "status": status,
+                        "checked": state == "x",
+                    }
+                )
         return stories
 
     def build_active_context(self) -> str:
@@ -156,15 +158,18 @@ class MemoryBankBridge:
         stories = self._extract_active_stories()
         # Focus chirurgical : READY_FOR_DEV, IN_PROGRESS, BLOCKED et 3 derniers terminés
         active_stories = [
-            s for s in stories
+            s
+            for s in stories
             if "READY" in s["status"] or "PROGRESS" in s["status"] or "BLOCKED" in s["status"]
         ]
         done_stories = [
-            s for s in stories
-            if s["checked"] or "LIVR" in s["status"] or "DONE" in s["status"]
+            s for s in stories if s["checked"] or "LIVR" in s["status"] or "DONE" in s["status"]
         ][-3:]
 
-        lines = [f"- **{s['id']}** : {s['title']} ({s['component']}) — Statut: `{s['status']}`" for s in active_stories]
+        lines = [
+            f"- **{s['id']}** : {s['title']} ({s['component']}) — Statut: `{s['status']}`"
+            for s in active_stories
+        ]
         if done_stories:
             lines.append("### Récemment Livrés :")
             lines.extend([f"- ~~{s['id']}~~ : {s['title']} (Terminé)" for s in done_stories])
@@ -185,7 +190,9 @@ class MemoryBankBridge:
         """Génère progress.md (Métriques de complétion globales)."""
         stories = self._extract_active_stories()
         total = len(stories)
-        done = sum(1 for s in stories if s["checked"] or "LIVR" in s["status"] or "DONE" in s["status"])
+        done = sum(
+            1 for s in stories if s["checked"] or "LIVR" in s["status"] or "DONE" in s["status"]
+        )
         return (
             f"# Progress — {self.project_name}\n\n"
             "## 1. Sprint Health Overview\n"
@@ -214,6 +221,25 @@ class MemoryBankBridge:
             if s.startswith("- ") and not s.startswith("*(Les notes"):
                 notes.append(s[2:].strip())
         return notes
+
+    def harvest_cline_notes(self, story_id: str) -> bool:
+        """Moissonne les notes de Cline (activeContext.md) vers l'EvidencePack.
+
+        Wrapper composant de bout en bout (MLOOP-260-BE §Op.2) : extrait les notes
+        de session puis les réinjecte dans memory/evidence/<story_id>_evidence.json.
+
+        Returns:
+            True si de nouvelles notes ont été fusionnées dans l'EvidencePack,
+            False si aucune note détectée ou EvidencePack absent (cas de rejet métier).
+        """
+        notes = self.harvest_session_notes()
+        if not notes:
+            logger.debug(
+                "[MemoryBank] Aucune note de session à moissonner.",
+                extra={"story_id": story_id, "bank_dir": str(self.bank_dir)},
+            )
+            return False
+        return self.update_evidence_pack(story_id, notes)
 
     def update_evidence_pack(self, story_id: str, notes: List[str]) -> bool:
         """Réinjecte les notes récoltées dans l'EvidencePack de la story."""
