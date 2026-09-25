@@ -11,13 +11,13 @@ tags:
 - multi-projets
 - external-directory
 - idempotent
-status: DRAFT
+status: READY_FOR_QA
 layer: backend
 invest_score: 6/6
 macrostructure: workbench
-validated_by: ''
-validated_at: ''
-ttl_cycles: 3
+validated_by: Marco
+validated_at: '2026-09-25T19:37:18.000000+00:00'
+ttl_cycles: 2
 ---
 # Migration & Synchronisation Idempotente des Permissions opencode.json Multi-Projets
 
@@ -43,9 +43,12 @@ La story précédente `MLOOP-389-BE` a corrigé le blueprint de référence et l
   - `bash: "allow"`
   - `edit: "allow"`
   - `read: "allow"`
-- Préservation absolue des instructions, MCPs locaux existants et alias de commandes personnalisés définis dans les fichiers cibles sans altération de format.
-- Intégration dans la commande CLI mLoop (`mloop sync-opencode` ou drapeau de synchronisation dans `mloop project sync`).
-- Mode dry-run permettant d'inspecter les modifications prévues avant application sur le disque.
+- Stratégie de fusion non destructive (*Deep Merge*) : préservation absolue des instructions, MCPs locaux existants (`loop_mem`, `graphify`, `codegraph`) et alias de commandes personnalisés définis dans les fichiers cibles sans altération de structure.
+- Périmètre de détection : balayage de tous les sous-dossiers actifs sous `Projects/` par défaut, avec exclusion du dossier `Projects/_archive/` sauf activation du drapeau explicite `--include-archive`.
+- Double point d'entrée CLI mLoop :
+  - Sous-commande dédiée autonome : `python src/swarm.py opencode-sync [--project <nom>] [--all] [--dry-run] [--include-archive]`.
+  - Intégration transparente : exécution automatique comme sous-étape idempotente lors de l'appel à `python src/swarm.py sync --project <nom>`.
+- Mode dry-run permettant d'inspecter les modifications prévues avant application physique sur le disque.
 - Tests unitaires et d'intégration couvrant les cas nominaux, les configurations partiellement migrées et la détection d'idempotence.
 
 ### Out-of-Scope
@@ -65,10 +68,11 @@ La story précédente `MLOOP-389-BE` a corrigé le blueprint de référence et l
   - Tout fichier `opencode.json` valide sur le plan syntaxique JSON est analysé.
   - La présence et la structure du nœud `permission` sont vérifiées contre le schéma normatif mLoop.
   - Si `permission.external_directory` est manquant ou ne contient pas la règle générique `allow`, le projet est marqué comme non-conforme.
+  - Les projets situés dans `Projects/_archive/` sont ignorés par défaut sauf si `--include-archive` est spécifié.
 * **Résultat Métier** : Un rapport d'audit exhaustif liste l'état de chaque projet (Conforme / Non-conforme / Erreur syntaxique).
 * **Cas de Rejet** : Tout fichier JSON corrompu ou illisible lève une alerte explicite sans interrompre le traitement des autres projets.
 
-#### 2. Application Idempotente des Permissions
+#### 2. Application Idempotente des Permissions par Deep Merge
 * **Entrée Métier** : Fichier `opencode.json` nécessitant une mise à niveau, avec option de sauvegarde de sécurité.
 * **Règles d'admissibilité & Validation** :
   - Les nœuds existants (`instructions`, `mcp`, `commands`, `watcher`) doivent être conservés intacts.
@@ -81,17 +85,28 @@ La story précédente `MLOOP-389-BE` a corrigé le blueprint de référence et l
 ## Parcours Interactif & API
 
 ### Contrats d'Échange API (Backend / Services)
-* **Service de Synchronisation** : `OpencodeConfigMigrator.audit_project(project_dir: Path) -> MigrationStatus`
-* **Application des Modifications** : `OpencodeConfigMigrator.migrate_project(project_dir: Path, dry_run: bool = False) -> MigrationResult`
-* **Commande CLI** : `mloop opencode-sync [--all] [--project <nom>] [--dry-run]`
+* **Service de Synchronisation** : `OpencodeMigrator.audit_project(project_dir: Path) -> MigrationStatus`
+* **Application des Modifications** : `OpencodeMigrator.migrate_project(project_dir: Path, dry_run: bool = False) -> MigrationResult`
+* **Synchronisation par Lot** : `OpencodeMigrator.sync_all_projects(projects_root: Path, include_archive: bool = False, dry_run: bool = False) -> List[MigrationResult]`
+* **Commandes CLI** :
+  - `python src/swarm.py opencode-sync [--all] [--project <nom>] [--dry-run] [--include-archive]`
+  - Sous-étape automatique dans `python src/swarm.py sync --project <nom>`
 
----
+### Matrice des Contrats API
+| Méthode | Route / Point d'Entrée | Finalité | Contrat |
+| :--- | :--- | :--- | :--- |
+| `audit_project` | `OpencodeMigrator.audit_project` | Audit des écarts de configuration | `(project_dir: Path) -> MigrationStatus` |
+| `migrate_project` | `OpencodeMigrator.migrate_project` | Migration idempotente des permissions | `(project_dir: Path, dry_run: bool) -> MigrationResult` |
+| `sync_all_projects` | `OpencodeMigrator.sync_all_projects` | Synchronisation par lot | `(projects_root: Path, include_archive: bool, dry_run: bool) -> List[MigrationResult]` |
+
+> OQ-390-1 : Ce récit définit des méthodes Python internes (module `src.pipelines.opencode_migrator`), pas des endpoints HTTP/REST. La "Route / Point d'Entrée" référence le chemin de module Python qualifié (`module:function`), conforme au standard Zéro Fausse Route (ADR-0319) pour les APIs internes. **[API de soumission à définir]** — Aucune route HTTP/REST n'est exposée par ce module.
 
 ## Règles d'affaires
 
 - **Idempotence Stricte** : La commande doit pouvoir être exécutée N fois sans modifier le comportement ou corrompre les métadonnées des projets conformes.
 - **Principe du Moindre Impact** : Aucune configuration spécifique au projet (outils MCP locaux, descriptions de commandes) ne doit être écrasée ou réordonnée inutilement.
 - **Conservation du Format Valide** : Les fichiers mis à jour doivent valider le schéma officiel d'OpenCode sans générer d'avertissement de parsing au démarrage du worker.
+- **Sanctuarisation des Archives** : Le dossier `Projects/_archive/` demeure immuable sauf demande explicite de l'utilisateur.
 
 ---
 
@@ -99,7 +114,7 @@ La story précédente `MLOOP-389-BE` a corrigé le blueprint de référence et l
 
 ### Pilier 1 : Scénario Nominal (Mise à Jour d'un Projet Hérité sans Section Permission)
 * **GIVEN** Un projet existant `Projects/BoireFrere_Segment2` dont le fichier `opencode.json` ne comporte aucune section `permission`.
-* **WHEN** L'opérateur exécute la synchronisation via `OpencodeConfigMigrator.migrate_project`.
+* **WHEN** L'opérateur exécute `python src/swarm.py opencode-sync --project BoireFrere_Segment2`.
 * **THEN** Le fichier `opencode.json` est mis à jour avec le nœud `permission` contenant `external_directory: { "*": "allow" }`.
 * **AND** Les sections `commands` et `mcp` préexistantes restent strictement identiques.
 
@@ -117,7 +132,7 @@ La story précédente `MLOOP-389-BE` a corrigé le blueprint de référence et l
 
 ### Pilier 4 : Scénario UX & Observabilité (Rapport Synthétique CLI & Dry-Run)
 * **GIVEN** Un parc hétérogène de projets comprenant des configurations à jour et des configurations obsolètes.
-* **WHEN** L'utilisateur lance `mloop opencode-sync --all --dry-run`.
+* **WHEN** L'utilisateur lance `python src/swarm.py opencode-sync --all --dry-run`.
 * **THEN** La console affiche un tableau récapitulatif colorisé présentant le nom du projet, l'état actuel et le diff projeté.
 * **AND** Aucun fichier n'est modifié sur le système de fichiers.
 
@@ -129,4 +144,5 @@ La story précédente `MLOOP-389-BE` a corrigé le blueprint de référence et l
 - 🏛️ **ADR Fondateur** : [`standards/adr-system/0389-worker-permissions-zero-blindspot.md`](../../../../standards/adr-system/0389-worker-permissions-zero-blindspot.md)
 - 🏛️ **ADR Modularité** : [`ADR-0202`](../../../../standards/adr-system/0202-modularite-interne-agents.md)
 - 🏛️ **Protocole Rigueur Écosystème** : [`standards/protocols/ECOSYSTEM_RIGOR_PROTOCOL.md`](../../../../standards/protocols/ECOSYSTEM_RIGOR_PROTOCOL.md)
+- 📐 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-390-BE_fact_dossier.md`](../../memory/evidence/MLOOP-390-BE_fact_dossier.md)
 - 📐 **Blueprint Référence** : [`standards/blueprints/project_opencode_template.json`](../../../../standards/blueprints/project_opencode_template.json)

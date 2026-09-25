@@ -12,13 +12,16 @@ tags:
 - svg
 - canvas
 - backend
-status: READY_FOR_GROOMING
-grill_me: COMPLETED
+status: READY_FOR_QA
+grill_me: DONE
 invest_score: 6/6
 layer: backend
 blocked_by: []
 created_at: '2026-09-25'
-ttl_cycles: 3
+validated_by: Marco
+validated_at: '2026-09-25T15:34:34Z'
+dossier_ref: memory/evidence/MLOOP-350-BE_fact_dossier.md
+ttl_cycles: 2
 ---
 
 # Moteur d'Audit Déterministe d'Arbre d'Objets Natifs pour Livrables d'Architecture
@@ -86,6 +89,8 @@ Dans l'étude ReFigBench, l'audit de l'arbre d'objets natifs ($O(P)$) constitue 
 | Méthode | Route / Point d'Entrée | Finalité | Contrat |
 | :--- | :--- | :--- | :--- |
 | `audit_native_object_tree` | `src.pipelines.object_tree_auditor:audit_native_object_tree` | Audit déterministe d'objets natifs | `(file_path: Path) -> NativeObjectTreeSummary` |
+
+> OQ-350-1 : Ce récit définit une fonction Python interne (module `src.pipelines.object_tree_auditor`), pas des endpoints HTTP/REST. La "Route / Point d'Entrée" référence le chemin de module Python qualifié (`module:function`), conforme au standard Zéro Fausse Route (ADR-0319) pour les APIs internes. **[API de soumission à définir]** — Aucune route HTTP/REST n'est exposée par ce module.
 
 #### Spécification de la Structure de Données SSOT
 ```python
