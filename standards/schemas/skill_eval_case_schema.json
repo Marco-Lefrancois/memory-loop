@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SkillEvalCaseSchema",
+  "description": "Schéma de validation des cas de test Golden Dataset pour compétences agentiques mLoop (ADR-0389 / MLOOP-241-BE).",
+  "type": "object",
+  "required": [
+    "skill_name",
+    "version",
+    "cases"
+  ],
+  "properties": {
+    "skill_name": {
+      "type": "string",
+      "minLength": 2
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "behavioral": {
+      "type": "boolean"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "TRIGGER_ONLY",
+        "EXECUTION_FLOW",
+        "META_ORCHESTRATION",
+        "STANDARD"
+      ]
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "description",
+          "input"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^TC-[A-Za-z0-9_-]+$"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "nominal",
+              "limite",
+              "adversarial"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 5
+          },
+          "input": {
+            "type": "string",
+            "minLength": 3
+          },
+          "expect_triggered": {
+            "type": "boolean"
+          },
+          "expect_static": {
+            "type": "object",
+            "properties": {
+              "keywords_present": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "keywords_absent": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
