@@ -94,6 +94,7 @@ PHASE_MAPPING: Dict[str, str] = {
     "eval-harvest": "validate",
     "diagnose": "validate",
     "hill-climb": "validate",
+    "skill-eval": "validate",
     # Phase 5 : SHIP & SYNC (Synchronisation, Jira Cloud & Distribution)
     "sync": "ship",
     "sync-antigravity": "ship",
@@ -219,4 +220,5 @@ ARTEFACTS_MAP: Dict[str, str] = {
     "opencode": "Configuration `.opencode/opencode.json` & runtime local",
     "plannotator": "Plan annoté dans `memory/plan/<STORY_ID>_phase_plan.annotated.md`",
     "memory": "Rapport de santé & défragmentation (`loop_mem.db` compacté)",
+    "skill-eval": "Rapport d'évaluation des compétences (`skills_eval_summary.md`)",
 }
