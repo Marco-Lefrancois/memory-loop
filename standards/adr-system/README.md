@@ -126,6 +126,9 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0388](0388-worker-build-default-free-model.md)** : Bascule du Modèle par Défaut de la Mission `build` vers le Free Tier Natif OpenCode (MiMo-V2.6-Flash Free)
 *   **[ADR-0389](0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md)** : Grill-Me v2 — Frontier Rounds, Handoff Ungrillable & Immunité Context Budget
 *   **[ADR-0390](0390-fact-search-indexation-arbres-niches-docs-domaine-couche.md)** : Indexation Fact-Search Multi-Niveaux (`docs/<domaine>/<couche>/`) & Contrat `doc_path` Racine Projet
+*   **[ADR-0391](0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md)** : Harmonisation Déterministe du Cycle de Vie des Récits (5 Phases, Machine à États SSOT, Éradication du Hardcoding & Auto-Clôture Gate 5)
+*   **[ADR-0392](0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md)** : Harnais de Fidélité Visuelle & Intégrité des Artefacts Topologiques (Anti-Raster Paste & Graphe Fermé Strict)
+*   **[ADR-0393](0393-decouplage-modalite-grill-scope-anti-cascade.md)** : Découplage Déterministe Modalité de Grill (Format) vs Périmètre (Scope), Verrou Anti-Cascade & Gating d'Écriture
 
 ---
 *Dernière consolidation constitutionnelle : 24 septembre 2026 — 106 ADRs Unifiées (Zéro Conflit)*
