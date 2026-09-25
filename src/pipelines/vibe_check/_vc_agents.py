@@ -162,3 +162,46 @@ def check_19_standards_graph(
         else f"Intégrité StandardsGraph & Bouclier SSOT (Violations : {'; '.join(standards_violations)})"
     )
     return {"check": standards_msg, "status": "PASS" if standards_graph_ok else "FAIL"}
+
+
+def check_23_skills_health(
+    project_dir: Path, project_name: str, lifecycle_mode: str, stage_label: str
+) -> dict:
+    """
+    Check 23 : Intégrité & Santé des Compétences Agentiques (EPIC-24 / ADR-0389).
+    Exécute un audit rapide Système 1 des 39 compétences (.agents/skills/*).
+    Seuil WARNING si 1+ skill FAIL ou moyenne < 70, PASS sinon.
+    Verdict tri-état : WARNING non bloquant (ADR-0384).
+    """
+    try:
+        from src.pipelines.skill_eval import SkillEvalEngine
+        engine = SkillEvalEngine(workspace_root=Path.cwd())
+        summary = engine.evaluate_all_skills()
+
+        avg_score = summary.get("average_score", 0.0)
+        failed_count = summary.get("failed", 0)
+        warning_count = summary.get("warning", 0)
+
+        # Règle ADR-0389 : WARNING si 1+ FAIL ou moyenne < 70, PASS sinon
+        if failed_count > 0 or avg_score < 70.0:
+            status = "WARNING"
+            detail = f"Santé compétences dégradée : {failed_count} FAIL, {warning_count} WARN, moyenne {avg_score}/100"
+        else:
+            status = "PASS"
+            detail = f"39 compétences saines : score moyen {avg_score}/100 ({summary.get('passed', 0)} PASS)"
+
+        return {
+            "check": "Intégrité & Santé des Compétences Agentiques (Check 23 / ADR-0389)",
+            "status": status,
+            "detail": detail,
+            "score": f"{avg_score}/100",
+            "failed_count": failed_count,
+        }
+    except Exception as exc:
+        logger.warning(f"Erreur lors du Check 23 Skills Health : {exc}")
+        return {
+            "check": "Intégrité & Santé des Compétences Agentiques (Check 23 / ADR-0389)",
+            "status": "WARNING",
+            "detail": f"Vérification dégradée : {exc}",
+        }
+

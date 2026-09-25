@@ -92,8 +92,14 @@ def evaluate_single_case(
                 if len(clean_w) >= 4:
                     trigger_keywords.add(clean_w)
 
+        common_tokens = {"code", "test", "file", "data", "text", "tool", "mode", "spec", "pour", "avec", "sans"}
+        substantive_tokens = [tok for tok in name_tokens if tok not in common_tokens]
+        if substantive_tokens:
+            name_tokens_hit = any(t in normalized_input for t in substantive_tokens)
+        else:
+            name_tokens_hit = all(t in normalized_input for t in name_tokens)
+
         direct_hit = skill_name.lower() in normalized_input or skill_slug in normalized_input
-        name_tokens_hit = any(t in normalized_input for t in name_tokens)
         trigger_hit = any(tk in normalized_input for tk in trigger_keywords)
 
         is_detected = direct_hit or (name_tokens_hit and trigger_hit)

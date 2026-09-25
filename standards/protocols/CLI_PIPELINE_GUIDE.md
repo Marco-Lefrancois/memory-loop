@@ -2,7 +2,7 @@
 
 **Statut** : SSOT Normatif & Guide de Référence Déterministe (ADR-0370)  
 **Standard** : mLoop Core CLI Pipeline, Agent Plugins 1.0 & Python Senior Standards (ADR-0369)  
-**Commandes Actives** : 128 Commandes Enregistrées dans `src/commands/_registry.py`  
+**Commandes Actives** : 129 Commandes Enregistrées dans `src/commands/_registry.py`  
 **Date de Synchronisation** : 15 septembre 2026  
 
 ---
@@ -19,7 +19,7 @@ Au tout premier tour d'une session, l'orchestrateur exécute mécaniquement et s
 
 ---
 
-## 2. 🗺️ Matrice Complète des 128 Commandes par Phase
+## 2. 🗺️ Matrice Complète des 129 Commandes par Phase
 
 ```mermaid
 flowchart LR
@@ -212,6 +212,7 @@ flowchart LR
 | `python src/swarm.py rollback` | Restauration déterministe point-in-time de l'état et de la mémoire (ADR-0371) | [--step <INT>] [--target <STR>] | Restauration PITR de l'état et mémoire saine |
 | `python src/swarm.py scratch` | Nettoyage des résidus temporaires scratch et checkpoints (prune) | [<ACTION>] [--older-than-hours <INT>] [--all <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py skill-doctor` | Auditer l'hygiène et le coût en jetons des compétences .agents/skills/ (ADR-0348 / Claude Code v2.1.261) | [--threshold <INT>] [--json <STR>] [--no-tombstone <STR>] | Console / Mémoire d'état |
+| `python src/swarm.py skill-eval` | Évaluer l'intégrité et la conformité des compétences agentiques .agents/skills/ (EPIC-24 / ADR-0389) | [--all <STR>] [--skill <STR>] [--fast <STR>] [--flywheel <STR>] [--apply-patch <STR>] [--json <STR>] | Console / Mémoire d'état |
 | `python src/swarm.py skill-invoke` | Invoquer une compétence via son URI skill:// (SEP-2640) | --uri <STR> | Console / Mémoire d'état |
 | `python src/swarm.py skill-list` | Lister les compétences enregistrées dans le registre skill:// (SEP-2640) | *(Aucun)* | Console / Mémoire d'état |
 | `python src/swarm.py supersession-sync` | Synchroniser le registre de supersession des règles et décisions (ADR-0326) | *(Aucun)* | Console / Mémoire d'état |

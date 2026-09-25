@@ -37,7 +37,9 @@ def get_skills_eval_data(workspace_root: Optional[Path] = None) -> Dict[str, Any
     for c in candidates:
         if c.exists():
             try:
-                return json.loads(c.read_text(encoding="utf-8"))
+                data = json.loads(c.read_text(encoding="utf-8"))
+                if isinstance(data, dict) and data.get("total_skills", 0) >= 30:
+                    return data
             except Exception as e:
                 logger.warning(f"Rapport d'évaluation corrompu sur {c} : {e}")
 

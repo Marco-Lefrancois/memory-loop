@@ -18,6 +18,7 @@ from src.pipelines.vibe_check._vc_agents import (
     check_01_agent_parity,
     check_16_agent_probe,
     check_19_standards_graph,
+    check_23_skills_health,
 )
 from src.pipelines.vibe_check._vc_ssot import (
     check_04_ssot_backlog,
@@ -229,6 +230,7 @@ def run_vibe_check(project_name: str, target_file: str = None, stage: str = None
     checks.append(check_20_directives_ssot(*ctx))  # Check 20 : directives projet ADR-0384
     checks.append(check_21_visual_anchor(*ctx))  # Check 21 : ancrage visuel frontend
     checks.append(check_22_extraction_protocol(*ctx))  # Check 22 : protocole extraction modulaire
+    checks.append(check_23_skills_health(*ctx))  # Check 23 : Intégrité & Santé des Compétences ADR-0389
     checks.append(check_24_storage_hygiene(*ctx))  # Check 24 : Hygiène & Plafond Stockage ADR-015
 
     passed_count = sum(1 for c in checks if c["status"] == "PASS")

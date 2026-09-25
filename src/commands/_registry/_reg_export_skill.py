@@ -225,4 +225,42 @@ EXPORT_SKILL_COMMANDS: dict[str, dict] = {
             },
         ],
     },
+    "skill-eval": {
+        "handler": "skill_eval:handle_skill_eval",
+        "no_project": True,
+        "help": "Évaluer l'intégrité et la conformité des compétences agentiques .agents/skills/ (EPIC-24 / ADR-0389)",
+        "args": [
+            {
+                "name": "--all",
+                "action": "store_true",
+                "help": "Évaluer l'ensemble des 39 compétences du référentiel",
+            },
+            {
+                "name": "--skill",
+                "type": str,
+                "help": "Cibler une compétence spécifique par son nom (ex: grill)",
+            },
+            {
+                "name": "--fast",
+                "action": "store_true",
+                "help": "Mode rapide Système 1 sans exécution comportementale",
+            },
+            {
+                "name": "--flywheel",
+                "action": "store_true",
+                "help": "Déclencher la boucle fermée d'optimisation auto-tuner (HITL)",
+            },
+            {
+                "name": "--apply-patch",
+                "type": str,
+                "dest": "apply_patch",
+                "help": "Appliquer formellement un patch HITL en attente (ex: --apply-patch grill)",
+            },
+            {
+                "name": "--json",
+                "action": "store_true",
+                "help": "Sortie structurée en JSON",
+            },
+        ],
+    },
 }
