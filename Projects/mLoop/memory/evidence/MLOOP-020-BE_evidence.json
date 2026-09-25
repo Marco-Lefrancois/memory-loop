@@ -1,0 +1,73 @@
+{
+  "story_id": "MLOOP-020-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-020-BE.md",
+  "timestamp": "2026-09-22T14:36:44.095604+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search graph.json",
+      "source_file": "graph.json",
+      "sha256": "62d01c814bbc33cf7162f659da9d3165d60be90a2e8a51f41378aad5a9284fb6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : graph.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:36:44.095604+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "graph.json": "62d01c814bbc33cf7162f659da9d3165d60be90a2e8a51f41378aad5a9284fb6"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : graph.json"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "graph.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Autorisation d'écriture d'un fichier inclus dans le composant du SCC",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet bloquant lors d'une tentative d'écriture hors périmètre SCC",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Mode tolérant lorsque la story ne déclare aucun composant restrictif",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Alerte explicite si aucun récit actif n'est identifié",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-020-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-020-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION"
+}

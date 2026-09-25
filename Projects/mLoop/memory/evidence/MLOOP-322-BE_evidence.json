@@ -1,0 +1,106 @@
+{
+  "story_id": "MLOOP-322-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-322-BE.md",
+  "timestamp": "2026-09-25T08:18:00.000000+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search src/pipelines/state_machine.py",
+      "source_file": "src/pipelines/state_machine.py",
+      "sha256": "8064beaaebc6f6004586dbb58053ef11f8b375b4dafa782b7db5f55e09f5fa45",
+      "section": "ALLOWED_TRANSITIONS",
+      "matched_fact": "ALLOWED_TRANSITIONS autorisait DRAFT vers READY_FOR_DEV à la ligne 51",
+      "verification_method": "file_inspection",
+      "source_type": "source_code",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T08:18:00.000000+00:00"
+    },
+    {
+      "query": "Fact-Search src/pipelines/grill/_engine.py",
+      "source_file": "src/pipelines/grill/_engine.py",
+      "sha256": "b0f7194f1c9dca9bcf469f697bf95a5fbc479e0a0d4c9ad6eeff897aa14d45c",
+      "section": "mark_story_grilled",
+      "matched_fact": "Absence d'assertion bloquante explicite et d'exception LifecycleAuthorityError",
+      "verification_method": "file_inspection",
+      "source_type": "source_code",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T08:18:00.000000+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "src/pipelines/state_machine.py": "8064beaaebc6f6004586dbb58053ef11f8b375b4dafa782b7db5f55e09f5fa45",
+    "src/pipelines/grill/_engine.py": "b0f7194f1c9dca9bcf469f697bf95a5fbc479e0a0d4c9ad6eeff897aa14d45c"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources physiques vérifiées : src/pipelines/state_machine.py et src/pipelines/grill/_engine.py"
+    ],
+    "what_it_does_not_prove": [
+      "Arbitrage humain sur la politique de journalisation et de rejet de LifecycleAuthorityError"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint au garde mécanique FSM et au verrouillage dans GrillEngine",
+    "richness_penalty": {
+      "richness": 1,
+      "multiplier": 1.0,
+      "score": 1.0,
+      "reason": "verified_sources_with_verbatim"
+    }
+  },
+  "facts_verified": [
+    "La table ALLOWED_TRANSITIONS contient une brèche DRAFT -> READY_FOR_DEV.",
+    "La classe d'exception LifecycleAuthorityError n'existe pas encore dans state_machine.py.",
+    "GrillEngine ne valide pas l'interdiction d'écriture sur stories en mode transverse."
+  ],
+  "sources_consulted": [
+    "src/pipelines/state_machine.py",
+    "src/pipelines/grill/_engine.py",
+    "src/pipelines/grill/_cli_handler.py",
+    "Projects/mLoop/docs/01-architecture/ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [
+    "Q1: Comportement d'arrêt de LifecycleAuthorityError",
+    "Q2: Validation des métadonnées d'autorité lors de la transition READY_FOR_DEV"
+  ],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-25T08:18:00.000000+00:00",
+  "verification_harness": [],
+  "next_actions": [
+    "Micro-Grill 1:1 Q1 sur MLOOP-322-BE"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "READY_FOR_GRILL",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-25T08:22:31.894626",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-322-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-25T08:22:31.894626",
+    "status": "APPROVED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 100.0,
+      "overall_trust": 100.0
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

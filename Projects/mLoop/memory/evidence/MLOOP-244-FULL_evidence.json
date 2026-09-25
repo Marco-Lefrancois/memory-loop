@@ -1,0 +1,152 @@
+{
+  "story_id": "MLOOP-244-FULL",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-244-FULL.md",
+  "timestamp": "2026-09-25T02:01:35.008791+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0202-modularite-interne-agents.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.697351+00:00"
+    },
+    {
+      "query": "Fact-Search CLI_PIPELINE_GUIDE.md",
+      "source_file": "CLI_PIPELINE_GUIDE.md",
+      "sha256": "bd41e52d8415fcb780a3c808248ef3adfb3600025d0e247e26bc915578f4dd84",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : CLI_PIPELINE_GUIDE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.760161+00:00"
+    },
+    {
+      "query": "Fact-Search _patch.md",
+      "source_file": "_patch.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _patch.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:34.802743+00:00"
+    },
+    {
+      "query": "Fact-Search epic_skills_eval_harness.md",
+      "source_file": "epic_skills_eval_harness.md",
+      "sha256": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_skills_eval_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.847024+00:00"
+    },
+    {
+      "query": "Fact-Search skills_eval_summary.json",
+      "source_file": "skills_eval_summary.json",
+      "sha256": "f42bf2c9e4c2489ae9aee3042e5188bf767af443d54354ea619932edb344a1da",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : skills_eval_summary.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.872693+00:00"
+    },
+    {
+      "query": "Fact-Search skills_eval_summary.md",
+      "source_file": "skills_eval_summary.md",
+      "sha256": "1a37a125e737bb654ac4db66ef77dea723f41c5121a5deb9208892e6ef9fbe12",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : skills_eval_summary.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.893071+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "CLI_PIPELINE_GUIDE.md": "bd41e52d8415fcb780a3c808248ef3adfb3600025d0e247e26bc915578f4dd84",
+    "epic_skills_eval_harness.md": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+    "skills_eval_summary.json": "f42bf2c9e4c2489ae9aee3042e5188bf767af443d54354ea619932edb344a1da",
+    "skills_eval_summary.md": "1a37a125e737bb654ac4db66ef77dea723f41c5121a5deb9208892e6ef9fbe12"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, CLI_PIPELINE_GUIDE.md, _patch.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.525,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "CLI_PIPELINE_GUIDE.md",
+    "_patch.md",
+    "epic_skills_eval_harness.md",
+    "skills_eval_summary.json",
+    "skills_eval_summary.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Pilier 1 - Nominal (Happy path) : Exécution nominale --all avec toutes skills PASS",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Pilier 2 - Exceptions (Cas d'erreur) : Compétence inconnue ou patch inexistant",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Pilier 3 - Résilience (Mode dégradé & Timeout) : Check 23 Vibe-Check WARNING non bloquant",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Pilier 4 - UX (Accessibilité & État vide) : Sortie ZeroFluff et confirmation HITL",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-244-FULL",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-244-FULL.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.525,
+  "status": "STALE_PENDING_REGENERATION",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

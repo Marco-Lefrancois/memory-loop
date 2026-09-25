@@ -1,0 +1,55 @@
+{
+  "project_name": "mLoop",
+  "focused_story_id": "MLOOP-215-FULL",
+  "stage": "BUILD",
+  "timestamp": "2026-09-24T13:25:02.456930",
+  "story_context": null,
+  "active_acceptance_criteria": [],
+  "file_reservations": [
+    {
+      "path": "backlog/sprint_backlog.md",
+      "status": "M",
+      "sha256": "232fb6b14f07"
+    },
+    {
+      "path": "backlog/stories/MLOOP-171-BE.md",
+      "status": "M",
+      "sha256": "2fa8613c18d1"
+    },
+    {
+      "path": "backlog/stories/MLOOP-172-BE.md",
+      "status": "M",
+      "sha256": "5bc6d44be052"
+    },
+    {
+      "path": "backlog/stories/MLOOP-210-BE.md",
+      "status": "M",
+      "sha256": "32f16f884d56"
+    },
+    {
+      "path": "backlog/stories/MLOOP-211-BE.md",
+      "status": "M",
+      "sha256": "53f8207a8202"
+    },
+    {
+      "path": "backlog/stories/MLOOP-212-FE.md",
+      "status": "M",
+      "sha256": "9a18b081fc7a"
+    },
+    {
+      "path": "backlog/stories/MLOOP-213-BE.md",
+      "status": "M",
+      "sha256": "ea95db915bee"
+    },
+    {
+      "path": "backlog/stories/MLOOP-214-BE.md",
+      "status": "M",
+      "sha256": "25be133235aa"
+    }
+  ],
+  "tool_outcomes": [],
+  "primary_artifact_uri": "evidence://MLOOP-215-FULL_fact_dossier.md",
+  "visual_contract_uri": null,
+  "resume_instructions": "## 🛡️ mLoop Checkpoint Invariant [@root: Projects/mLoop]\n- **Étape** : `BUILD` | Story : `story://MLOOP-215-FULL`\n- **Vérité SSOT #1** : `evidence://MLOOP-215-FULL_fact_dossier.md` (Consultation obligatoire via view_file en cas de doute)\n- **Fichiers sous Contrat** : `[M] backlog/sprint_backlog.md`, `[M] backlog/stories/MLOOP-171-BE.md`, `[M] backlog/stories/MLOOP-172-BE.md`, `[M] backlog/stories/MLOOP-210-BE.md` (+4 autres)\n- **Consignes de Reprise Non Négociables** :\n  1. INTERDICTION formelle d'explorer le disque (`ls -R`, `find`).\n  2. Poursuivre directement l'action en cours sans régression.",
+  "checkpoint_hash": "e5999e3aa72d2d322c852fb8176b96cd3e07350570c5e124eb53b4f14188e3e6"
+}

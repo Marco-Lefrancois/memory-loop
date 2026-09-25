@@ -1,0 +1,319 @@
+{
+  "project": "mLoop",
+  "generated_at": "2026-08-18T07:14:14.931741",
+  "total_evals": 26,
+  "evals": [
+    {
+      "eval_id": "EVAL-20260818-001",
+      "target_file": "backlog\\stories\\REC-001_initialisation_du_module_principal.md",
+      "category": "technical_leak",
+      "issue_description": "Parenthèse de renvoi interne interdite (Règle #9",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-002",
+      "target_file": "backlog\\stories\\REC-001_initialisation_du_module_principal.md",
+      "category": "technical_leak",
+      "issue_description": "Parenthèse de renvoi interne interdite (Règle #9",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-003",
+      "target_file": "backlog\\stories\\MLOOP-001-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (3/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-004",
+      "target_file": "backlog\\stories\\MLOOP-002-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (3/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-005",
+      "target_file": "backlog\\stories\\MLOOP-003-BE.md",
+      "category": "blueprint_drift",
+      "issue_description": "Section Maquettes (liens Figma ou visuels UI",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-006",
+      "target_file": "backlog\\stories\\MLOOP-010-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-007",
+      "target_file": "backlog\\stories\\MLOOP-011-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-008",
+      "target_file": "backlog\\stories\\MLOOP-012-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-009",
+      "target_file": "backlog\\stories\\MLOOP-013-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (2/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-010",
+      "target_file": "backlog\\stories\\MLOOP-020-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-011",
+      "target_file": "backlog\\stories\\MLOOP-021-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-012",
+      "target_file": "backlog\\stories\\MLOOP-022-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-013",
+      "target_file": "backlog\\stories\\MLOOP-023-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-014",
+      "target_file": "backlog\\stories\\MLOOP-024-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (2/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-015",
+      "target_file": "backlog\\stories\\MLOOP-025-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (2/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-016",
+      "target_file": "backlog\\stories\\MLOOP-026-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-017",
+      "target_file": "backlog\\stories\\MLOOP-030-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-018",
+      "target_file": "backlog\\stories\\MLOOP-031-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-019",
+      "target_file": "backlog\\stories\\MLOOP-032-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-020",
+      "target_file": "backlog\\stories\\MLOOP-040-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-021",
+      "target_file": "backlog\\stories\\MLOOP-041-BE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-022",
+      "target_file": "backlog\\stories\\MLOOP-042-FE.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-023",
+      "target_file": "backlog\\stories\\MLOOP-050-BE.md",
+      "category": "blueprint_drift",
+      "issue_description": "Marqueurs d'échafaudage ou bruits de titres interdits détectés ((IA Only",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-024",
+      "target_file": "backlog\\stories\\MLOOP-051-BE.md",
+      "category": "blueprint_drift",
+      "issue_description": "Marqueurs d'échafaudage ou bruits de titres interdits détectés ((IA Only",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-025",
+      "target_file": "backlog\\stories\\REC-001_initialisation_du_module_principal.md",
+      "category": "gherkin_4_pillars",
+      "issue_description": "Gherkin 4-Piliers Incomplet (1/4 scénarios exigés par ADR-0301 : Nominal, Exceptions, Résilience, UX",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    },
+    {
+      "eval_id": "EVAL-20260818-026",
+      "target_file": "backlog\\stories\\REC-001_initialisation_du_module_principal.md",
+      "category": "blueprint_drift",
+      "issue_description": "Récit orphelin 'REC-001_initialisation_du_module_principal' absent du sprint_backlog.md (SSOT non synchronisée",
+      "expected_rule": "Conformité au Gold Standard story_template.md et aux 4 piliers Gherkin.",
+      "severity": "BLOCKING",
+      "discovered_at": "2026-08-18 07:14:14",
+      "metadata": {
+        "source": "wikifix"
+      }
+    }
+  ]
+}

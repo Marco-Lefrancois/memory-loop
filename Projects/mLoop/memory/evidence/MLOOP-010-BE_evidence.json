@@ -1,0 +1,73 @@
+{
+  "story_id": "MLOOP-010-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-010-BE.md",
+  "timestamp": "2026-09-22T14:36:44.035446+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search knowledge_graph.json",
+      "source_file": "knowledge_graph.json",
+      "sha256": "a1972c98c23c8829a7865890bdba2bb19d5ce6191f6132991e8e5876816005ca",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : knowledge_graph.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:36:44.035446+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "knowledge_graph.json": "a1972c98c23c8829a7865890bdba2bb19d5ce6191f6132991e8e5876816005ca"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : knowledge_graph.json"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "knowledge_graph.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Recherche de code avec expansion 1-hop des relations",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Requête sur un outil MCP non répertorié",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résilience en l'absence de fichier knowledge_graph.json",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Recherche FTS5 ne retournant aucun résultat",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-010-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-010-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION"
+}

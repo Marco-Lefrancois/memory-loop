@@ -1,0 +1,54 @@
+{
+  "story_id": "FRAMEWORK-SYNC-BACKLOG",
+  "generated_at": "2026-09-24T11:23:43.579333+00:00",
+  "type": "framework_selfdev",
+  "adr_ref": [
+    "ADR-0376",
+    "ADR-0369",
+    "ADR-0202",
+    "ADR-0307"
+  ],
+  "status": "VALIDATED",
+  "socle_factuel_validated_by_human": true,
+  "plan_approved": true,
+  "plan_path": "C:\\Users\\mlefrancois\\.plannotator\\plans\\ralignement-ssot-du-sprint-bac-2026-09-24-approved.md",
+  "worker": {
+    "name": "worker_framework_selfdev_sync_ba",
+    "pane_id": "w1:p38",
+    "model": "claude-sonnet-4.6",
+    "task_type": "BUILD",
+    "outcome": "SUCCESS",
+    "report": "memory/scratch/worker_FRAMEWORK-SYNC-BACKLOG_report.md"
+  },
+  "file_hashes_after": {
+    "src/pipelines/sync.py": "DELETED",
+    "src/pipelines/sync/_sync_docs.py": "70ce55d909bacf1f37c92ff3a3343708cab5e9cb752779b110866adb073b6ec1",
+    "src/pipelines/sync/_sync_backlog_parser.py": "c4c241d668776ef39fde2ea199514c5e7830fb890e411956c7585b26090ede97",
+    "tests/test_sync_resilience.py": "210632c7e78fd3f1ef2486e018560881812e85fcb4fa468bc2aebc1a86d33b9e",
+    "tests/test_sync_logging.py": "8d58f615f79ad29683cb6a9bdd663a3ec8674987c77e7cc40abf87ffe4ff94dc",
+    "tests/test_sync_sprint_backlog.py": "42d3a2054c7c97de15298a0e5afeb381b808fe36fc7e4ac2916079bb602941a6",
+    "standards/protocols/PHASE_FILES_AND_TEST_PLAN.md": "00bccbfcaae8e53479d2e83d0f77fb1e1539caf2a9b9ae90fd6c93a9333c5886"
+  },
+  "verification_harness": {
+    "baseline_10_10": "PASS",
+    "new_tests_10_10": "PASS",
+    "targeted_sync_20_20": "PASS",
+    "import_smoke": "PASS",
+    "adr_0202_lines": 269,
+    "full_suite": "1 pre-existing FAIL in test_archify (out of scope)",
+    "git_commit_push": "NONE CONFIRMED"
+  },
+  "fact_search_proofs": [
+    "src/pipelines/sync.py dead code (542L, zero functional importers)",
+    "mocks patched to re-export __init__ (inert)",
+    "6 table headers with variable schemas in sprint_backlog.md",
+    "STATUS_VOCAB missing DONE_TESTED/DRAFT/TOMBSTONE"
+  ],
+  "implementation_decisions": [
+    "Extract _sync_backlog_parser.py to keep _sync_docs.py <=300L (ADR-0202)",
+    "Column-aware parsing via separator detection + header lookup",
+    "FAIT/PENDING excluded (Grill-me column, never Statut)",
+    "DONE_TESTED ordered before DONE in regex",
+    "Mocks retargeted to _sync_run.* namespace"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "story_id": "MLOOP-023-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-023-BE.md",
+  "timestamp": "2026-09-22T14:36:44.129229+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search deterministic_rules.json",
+      "source_file": "deterministic_rules.json",
+      "sha256": "1c9f3fc23d206fe2b2e0adf1a9eae293233b637bf5c8127c3b216031d3b18536",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : deterministic_rules.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:36:44.129229+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "deterministic_rules.json": "1c9f3fc23d206fe2b2e0adf1a9eae293233b637bf5c8127c3b216031d3b18536"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : deterministic_rules.json"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "deterministic_rules.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Consignation nominale d'une hypothèse rejetée dans le registre",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection et avertissement sur mot-clé déjà rejeté",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Bifurcation mécanique déterministe préservant le contexte LLM",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Collecteur nocturne Dream Collector marquant les règles obsolètes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-023-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-023-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION"
+}

@@ -1,0 +1,181 @@
+{
+  "story_id": "MLOOP-240-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-240-BE.md",
+  "timestamp": "2026-09-25T02:01:33.163567+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0202-modularite-interne-agents.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.712978+00:00"
+    },
+    {
+      "query": "Fact-Search 0308-mcp-prompts-and-evals-engine.md",
+      "source_file": "0308-mcp-prompts-and-evals-engine.md",
+      "sha256": "c1bdc548813756721a6b438145065b7b34afac7f1ac71975956b9b826d98eb25",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0308-mcp-prompts-and-evals-engine.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.792665+00:00"
+    },
+    {
+      "query": "Fact-Search 0348-wikiskill-tri-layer-evolution.md",
+      "source_file": "0348-wikiskill-tri-layer-evolution.md",
+      "sha256": "c64098e87ccfc1695120efe4b56de0bba8f95ae4006d7db04088d3ffb8728bf4",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0348-wikiskill-tri-layer-evolution.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.854437+00:00"
+    },
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : SKILL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.921144+00:00"
+    },
+    {
+      "query": "Fact-Search cases.json",
+      "source_file": "cases.json",
+      "sha256": "185c43ce7491505278b45ac58e4cad511aafe59f136d66bcf3d0a05b75dbf610",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : cases.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.953058+00:00"
+    },
+    {
+      "query": "Fact-Search epic_skills_eval_harness.md",
+      "source_file": "epic_skills_eval_harness.md",
+      "sha256": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_skills_eval_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.988337+00:00"
+    },
+    {
+      "query": "Fact-Search skills_eval_summary.json",
+      "source_file": "skills_eval_summary.json",
+      "sha256": "f42bf2c9e4c2489ae9aee3042e5188bf767af443d54354ea619932edb344a1da",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : skills_eval_summary.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.009938+00:00"
+    },
+    {
+      "query": "Fact-Search skills_eval_summary.md",
+      "source_file": "skills_eval_summary.md",
+      "sha256": "1a37a125e737bb654ac4db66ef77dea723f41c5121a5deb9208892e6ef9fbe12",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : skills_eval_summary.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.035185+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "0308-mcp-prompts-and-evals-engine.md": "c1bdc548813756721a6b438145065b7b34afac7f1ac71975956b9b826d98eb25",
+    "0348-wikiskill-tri-layer-evolution.md": "c64098e87ccfc1695120efe4b56de0bba8f95ae4006d7db04088d3ffb8728bf4",
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+    "cases.json": "185c43ce7491505278b45ac58e4cad511aafe59f136d66bcf3d0a05b75dbf610",
+    "epic_skills_eval_harness.md": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+    "skills_eval_summary.json": "f42bf2c9e4c2489ae9aee3042e5188bf767af443d54354ea619932edb344a1da",
+    "skills_eval_summary.md": "1a37a125e737bb654ac4db66ef77dea723f41c5121a5deb9208892e6ef9fbe12"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, 0308-mcp-prompts-and-evals-engine.md, 0348-wikiskill-tri-layer-evolution.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.525,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "0308-mcp-prompts-and-evals-engine.md",
+    "0348-wikiskill-tri-layer-evolution.md",
+    "SKILL.md",
+    "cases.json",
+    "epic_skills_eval_harness.md",
+    "skills_eval_summary.json",
+    "skills_eval_summary.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Évaluation nominale d'une skill avec golden dataset valide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Évaluation d'une HEAVY_META_SKILL sans golden dataset comportemental",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Fichier cases.json absent ou corrompu",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Violation AST — module dépasse 300 lignes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-240-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-240-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.525,
+  "status": "STALE_PENDING_REGENERATION",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

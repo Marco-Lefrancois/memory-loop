@@ -63,11 +63,13 @@ def run_shadow_estimator(
     split_res = herdr.split_pane(target_pane_id="p1", direction="right", no_focus=True)
     pane_id = split_res.get("new_pane_id") or "p_shadow"
 
+    from src.core.worker_runtimes import get_worker_runtime
+
     herdr.start_agent(
         agent_name=worker_name,
         kind="opencode",
         pane_id=str(pane_id),
-        extra_args=["--yolo", "--model", "nmedia_cloud/gpt-5.6-terra-thinking"]
+        extra_args=get_worker_runtime("opencode").build_flags(model="nmedia_cloud/gpt-5.6-terra-thinking"),
     )
 
     # 2. Formulate Prompt

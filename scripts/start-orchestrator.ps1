@@ -32,8 +32,8 @@ try {
 Write-Host "-> Workspace créé ($workspaceId) avec le volet racine : $rootPaneId" -ForegroundColor Green
 
 # 3. Lancer l'agent maître dans le volet via pane run (détection auto par Herdr)
-Write-Host "[3/4] Démarrage de l'agent maître (opencode --yolo)..." -ForegroundColor Yellow
-herdr pane run "$rootPaneId" "opencode --yolo"
+Write-Host "[3/4] Démarrage de l'agent maître (opencode --auto --agent orchestrator)..." -ForegroundColor Yellow
+herdr pane run "$rootPaneId" "opencode --auto --agent orchestrator"
 
 # Focus sur le nouveau workspace pour afficher OpenCode immédiatement à l'écran
 try {

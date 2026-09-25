@@ -1,0 +1,153 @@
+{
+  "story_id": "MLOOP-222-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-222-BE.md",
+  "timestamp": "2026-09-25T02:01:30.138339+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "source_file": "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "sha256": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:29.988208+00:00"
+    },
+    {
+      "query": "Fact-Search KN-052_wayfinder_fog_of_war.md",
+      "source_file": "KN-052_wayfinder_fog_of_war.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : KN-052_wayfinder_fog_of_war.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:30.022950+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-222-BE_fact_dossier.md",
+      "source_file": "MLOOP-222-BE_fact_dossier.md",
+      "sha256": "4f5ab8502f608b7717f9d60ac0b7e8c23b9d368dbaa8a425e69d89dfd2a4d027",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-222-BE_fact_dossier.md) : MLOOP-222-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:30.022950+00:00"
+    },
+    {
+      "query": "Fact-Search epic_tooling_ecosystem_harness.md",
+      "source_file": "epic_tooling_ecosystem_harness.md",
+      "sha256": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_tooling_ecosystem_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.057869+00:00"
+    },
+    {
+      "query": "Fact-Search wayfinder_map.md",
+      "source_file": "wayfinder_map.md",
+      "sha256": "92faf7f5c788a48166f1a79f56c2a0e480f4fb0d74cc5e1fa65e7500b3e9e5fa",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : wayfinder_map.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.057869+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-222-BE_fact_dossier.md": "4f5ab8502f608b7717f9d60ac0b7e8c23b9d368dbaa8a425e69d89dfd2a4d027",
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+    "epic_tooling_ecosystem_harness.md": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a",
+    "wayfinder_map.md": "92faf7f5c788a48166f1a79f56c2a0e480f4fb0d74cc5e1fa65e7500b3e9e5fa"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md, KN-052_wayfinder_fog_of_war.md, MLOOP-222-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.56,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+    "KN-052_wayfinder_fog_of_war.md",
+    "MLOOP-222-BE_fact_dossier.md",
+    "epic_tooling_ecosystem_harness.md",
+    "wayfinder_map.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Initialisation réussie d'une carte décisionnelle",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résolution d'un ticket HITL à la frontière",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Tentative de résolution d'un ticket inexistant",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résolution avec champ vide ou décision manquante",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Protection contre la concurrence et le double-clic de résolution",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Délai d'attente (timeout) sur sous-agent de recherche AFK",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Affichage ergonomique de la frontière de décision",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-222-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-222-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.56,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

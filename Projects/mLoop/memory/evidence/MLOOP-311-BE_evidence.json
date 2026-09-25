@@ -1,0 +1,136 @@
+{
+  "story_id": "MLOOP-311-BE",
+  "jira_key": "MLOOP-311-BE",
+  "file_path": "backlog/stories/MLOOP-311-BE.md",
+  "timestamp": "2026-09-25T09:07:01.988294+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "source_file": "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T09:07:01.886474+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-311-BE_fact_dossier.md",
+      "source_file": "MLOOP-311-BE_fact_dossier.md",
+      "sha256": "c3c968ab07cc607abe98c2b82fa3fb372593b98e34ea28298d6f8a684d30fe7b",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-311-BE_fact_dossier.md) : MLOOP-311-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T09:07:01.886474+00:00"
+    },
+    {
+      "query": "Fact-Search epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "source_file": "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "sha256": "78b6edf46ff72a942451bdf7e03dffd9eb8ddf38049f723dc38f8d94685be26e",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:07:01.900721+00:00"
+    },
+    {
+      "query": "Fact-Search rubber_duck_story.md",
+      "source_file": "rubber_duck_story.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : rubber_duck_story.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T09:07:01.918420+00:00"
+    },
+    {
+      "query": "Fact-Search story.md",
+      "source_file": "story.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : story.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T09:07:01.934743+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-311-BE_fact_dossier.md": "c3c968ab07cc607abe98c2b82fa3fb372593b98e34ea28298d6f8a684d30fe7b",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md": "78b6edf46ff72a942451bdf7e03dffd9eb8ddf38049f723dc38f8d94685be26e"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md, MLOOP-311-BE_fact_dossier.md, epic_fsm_anti_hardcoding_and_lifecycle_refactor.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.56,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+    "MLOOP-311-BE_fact_dossier.md",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+    "rubber_duck_story.md",
+    "story.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Résolution nominale d'un rapport de revue dans un sous-dossier modulaire",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet avec message d'erreur clair si aucun rapport de revue n'existe",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résolution par recherche récursive de secours sous contrainte de performance",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Configuration du TTL via variable d'environnement sans valeur null",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-311-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-311-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.56,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

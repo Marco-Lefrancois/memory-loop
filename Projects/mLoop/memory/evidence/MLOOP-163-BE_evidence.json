@@ -1,0 +1,165 @@
+{
+  "story_id": "MLOOP-163-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-163-BE.md",
+  "timestamp": "2026-09-23T12:35:58.048577+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-163-BE_fact_dossier.md",
+      "source_file": "MLOOP-163-BE_fact_dossier.md",
+      "sha256": "6f7638917c71e5d67dc69a7711255a1b84907e37e75e5aced11aa14bcb1b648c",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-163-BE_fact_dossier.md) : MLOOP-163-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.458236+00:00"
+    },
+    {
+      "query": "Fact-Search PYTHON_SENIOR_CODING_STANDARDS.md",
+      "source_file": "PYTHON_SENIOR_CODING_STANDARDS.md",
+      "sha256": "eeaa38467484dea19c13c30466f2e0de2a729e2e399f910833d661639ebdc20c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : PYTHON_SENIOR_CODING_STANDARDS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:47.475206+00:00"
+    },
+    {
+      "query": "Fact-Search epic_project_directives_ssot_enforcement.md",
+      "source_file": "epic_project_directives_ssot_enforcement.md",
+      "sha256": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_project_directives_ssot_enforcement.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:47.475722+00:00"
+    },
+    {
+      "query": "Fact-Search src/pipelines/vibe_check.py",
+      "source_file": "src/pipelines/vibe_check.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-163-BE_fact_dossier.md) : src/pipelines/vibe_check.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.485764+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-163-BE_fact_dossier.md": "6f7638917c71e5d67dc69a7711255a1b84907e37e75e5aced11aa14bcb1b648c",
+    "PYTHON_SENIOR_CODING_STANDARDS.md": "eeaa38467484dea19c13c30466f2e0de2a729e2e399f910833d661639ebdc20c",
+    "epic_project_directives_ssot_enforcement.md": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-163-BE_fact_dossier.md, PYTHON_SENIOR_CODING_STANDARDS.md, epic_project_directives_ssot_enforcement.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue",
+      "le correctif `is_valid` change la sémantique du verdict pour TOUS les projets — assumé (D1)."
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 1,
+      "multiplier": 0.73,
+      "score": 0.0,
+      "reason": "partial_richness (1/10)"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "vibe_check.py:712-713",
+      "rule_summary": "Le score ne compte QUE les PASS ; WARNING est exclu du numérateur.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "vibe_check.py:723",
+      "rule_summary": "Bug latent confirmé** : un WARNING fait chuter le score sous total → invalide le verdict. C'est la contrainte technique de RM-004.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "vibe_check.py:629-653` (Check 17)",
+      "rule_summary": "Précédent existant : un check WARNING passif est déjà voulu mais mal traité par le calcul actuel.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "vibe_check.py:156` + append pattern",
+      "rule_summary": "Point d'insertion du Check 20 : après le Check 19 (L710), avant `passed_count` (L712).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-05",
+      "source_ref": "Balayage cross-projets (constaté)",
+      "rule_summary": "Conditionnalité obligatoire : absence de `directives/` → PASS, sinon casse 7 projets.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "MLOOP-163-BE_fact_dossier.md",
+    "PYTHON_SENIOR_CODING_STANDARDS.md",
+    "epic_project_directives_ssot_enforcement.md",
+    "src/pipelines/vibe_check.py"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Projet avec directives conformes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Projet avec directives incomplètes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Projet sans répertoire de directives",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Un avertissement n'invalide pas le verdict global",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-163-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-163-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "VALIDATED",
+  "implementation_decisions": [],
+  "verbatim_extracts": [
+    {
+      "source_file": "memory/evidence/MLOOP-163-BE_fact_dossier.md",
+      "lines": [
+        36,
+        37
+      ],
+      "quote": "`passed_count = sum(1 for c in checks if c[\"status\"] == \"PASS\")` ; `total_count = len(checks)`\n`is_valid = passed_count == total_count`",
+      "established_fact": "Le score ne compte QUE les PASS ; WARNING est exclu du numérateur. (source d'origine: vibe_check.py:712-713)\n**Bug latent confirmé** : un WARNING fait chuter le score sous total → invalide le verdict. C'est la contrainte technique de RM-004. (source d'origine: vibe_check.py:723)"
+    }
+  ],
+  "declarative_contracts": []
+}

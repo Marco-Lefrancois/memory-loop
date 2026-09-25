@@ -1,0 +1,60 @@
+{
+  "story_id": "MLOOP-389-BE",
+  "created_at": "2026-09-25T18:37:00.000000+00:00",
+  "status": "QA_CERTIFIED",
+  "test_results": {
+    "total_tests": 38,
+    "passed": 38,
+    "failed": 0,
+    "duration_sec": 0.30,
+    "test_suites": [
+      "tests/test_worker_runtimes.py",
+      "tests/test_herdr_circuit_breaker.py",
+      "tests/test_worker_permissions.py"
+    ]
+  },
+  "code_traceability_matrix": [
+    {
+      "ast_symbol": "src/core/worker_runtimes.py::WorkerRuntimeSpec",
+      "requirement_ref": "ADR-0389",
+      "gherkin_scenario": "Pilier 1 (Nominal)",
+      "rationale": "Registre déclaratif unifié des runtimes de workers Herdr sans branche conditionnelle.",
+      "test_symbol": "tests/test_worker_permissions.py::test_opencode_flags_contain_auto_and_agent_worker"
+    },
+    {
+      "ast_symbol": "src/core/worker_runtimes.py::WorkerRuntimeSpec.build_flags",
+      "requirement_ref": "ADR-0389",
+      "gherkin_scenario": "Pilier 1 (Nominal)",
+      "rationale": "Construction des arguments CLI injectant --auto et --agent worker pour OpenCode, et --auto-approve true pour Cline.",
+      "test_symbol": "tests/test_worker_permissions.py::test_opencode_flags_preserve_model_with_auto"
+    },
+    {
+      "ast_symbol": "src/core/herdr_worker_core.py::spawn_story_worker_impl",
+      "requirement_ref": "ADR-0389",
+      "gherkin_scenario": "Pilier 1 (Nominal)",
+      "rationale": "Garantie déterministe d'auto-approbation pour tout worker unattended au moment du spawn.",
+      "test_symbol": "tests/test_worker_permissions.py::test_spawn_story_worker_guarantees_auto_for_opencode"
+    },
+    {
+      "ast_symbol": "src/core/_plan_act_guard.py::PlanActGuard.enforce_flags",
+      "requirement_ref": "ADR-0389",
+      "gherkin_scenario": "Pilier 2 (Exception)",
+      "rationale": "Préservation de --auto-approve true pour Cline même lors de l'adjonction de --plan.",
+      "test_symbol": "tests/test_worker_permissions.py::test_cline_plan_mode_preserves_auto_approve"
+    },
+    {
+      "ast_symbol": "src/commands/handlers/opencode.py::generate_opencode_config",
+      "requirement_ref": "ADR-0389",
+      "gherkin_scenario": "Pilier 3 (Résilience)",
+      "rationale": "Génération de la section permission incluant external_directory: allow pour les sous-projets.",
+      "test_symbol": "tests/test_worker_permissions.py::test_generate_opencode_config_contains_permissions_block"
+    }
+  ],
+  "adr_references": [
+    "ADR-0389",
+    "ADR-0376",
+    "ADR-0346",
+    "ADR-0311",
+    "ADR-0202"
+  ]
+}

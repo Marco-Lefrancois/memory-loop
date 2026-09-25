@@ -1,0 +1,143 @@
+{
+  "stories": {
+    "Projects/mLoop/backlog/stories/MLOOP-001-BE.md": {
+      "mtime": 1786030091.196394,
+      "status": "SHIPPED",
+      "category": "stories",
+      "story_id": "MLOOP-001-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-002-BE.md": {
+      "mtime": 1786030091.1986196,
+      "status": "SHIPPED",
+      "category": "stories",
+      "story_id": "MLOOP-002-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-003-BE.md": {
+      "mtime": 1786030091.201052,
+      "status": "SHIPPED",
+      "category": "stories",
+      "story_id": "MLOOP-003-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-010-BE.md": {
+      "mtime": 1786030091.2036088,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-010-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-011-BE.md": {
+      "mtime": 1786030091.205808,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-011-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-012-BE.md": {
+      "mtime": 1786030091.207519,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-012-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-013-BE.md": {
+      "mtime": 1786030091.2097108,
+      "status": "SHIPPED",
+      "category": "stories",
+      "story_id": "MLOOP-013-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-020-BE.md": {
+      "mtime": 1786030091.211374,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-020-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-021-BE.md": {
+      "mtime": 1786030091.2136765,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-021-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-022-BE.md": {
+      "mtime": 1786030091.2153258,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-022-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-023-BE.md": {
+      "mtime": 1786030091.2169304,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-023-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-024-BE.md": {
+      "mtime": 1786030091.2190337,
+      "status": "SHIPPED",
+      "category": "stories",
+      "story_id": "MLOOP-024-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-025-BE.md": {
+      "mtime": 1786030091.221133,
+      "status": "SHIPPED",
+      "category": "stories",
+      "story_id": "MLOOP-025-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-026-BE.md": {
+      "mtime": 1786030091.2228422,
+      "status": "SHIPPED",
+      "category": "stories",
+      "story_id": "MLOOP-026-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-030-BE.md": {
+      "mtime": 1786030091.2249372,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-030-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-031-BE.md": {
+      "mtime": 1786030091.2260094,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-031-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-032-BE.md": {
+      "mtime": 1786030091.2286744,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-032-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-040-BE.md": {
+      "mtime": 1786030091.230696,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-040-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-041-BE.md": {
+      "mtime": 1786030091.2332253,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-041-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-042-FE.md": {
+      "mtime": 1786030091.2345147,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-042-FE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-050-BE.md": {
+      "mtime": 1786030091.2369795,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-050-BE"
+    },
+    "Projects/mLoop/backlog/stories/MLOOP-051-BE.md": {
+      "mtime": 1786030091.2369795,
+      "status": "OPEN",
+      "category": "stories",
+      "story_id": "MLOOP-051-BE"
+    },
+    "Projects/mLoop/backlog/stories/REC-001_initialisation_du_module_principal.md": {
+      "mtime": 1786030091.2407732,
+      "status": "IN_ANALYZE",
+      "category": "stories",
+      "story_id": "REC-001_initialisation_du_module_principal"
+    }
+  },
+  "questions": {}
+}

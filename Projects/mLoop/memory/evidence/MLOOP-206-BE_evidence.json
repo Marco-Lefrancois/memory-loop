@@ -1,0 +1,334 @@
+{
+  "story_id": "MLOOP-206-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-206-BE.md",
+  "timestamp": "2026-09-24T14:41:48.968370+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.813492+00:00"
+    },
+    {
+      "query": "Fact-Search 0342-modular-project-architecture-and-subdomain-isolation.md",
+      "source_file": "0342-modular-project-architecture-and-subdomain-isolation.md",
+      "sha256": "3df2e2695dec86524ae2fa623c29b94e8debbcfd9fe9e2ed5289d497259122dd",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0342-modular-project-architecture-and-subdomain-isolation.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.833379+00:00"
+    },
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-24T14:41:48.846844+00:00"
+    },
+    {
+      "query": "Fact-Search DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "source_file": "DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "sha256": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.864390+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-206-BE_fact_dossier.md",
+      "source_file": "MLOOP-206-BE_fact_dossier.md",
+      "sha256": "135be5cb7a82f9518f5d482405429b2529bad35b180589b1bcde3667ce7cce3f",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-206-BE_fact_dossier.md) : MLOOP-206-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T14:41:48.864390+00:00"
+    },
+    {
+      "query": "Fact-Search ST-100-historique-transactions-avion.md",
+      "source_file": "ST-100-historique-transactions-avion.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : ST-100-historique-transactions-avion.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-24T14:41:48.880265+00:00"
+    },
+    {
+      "query": "Fact-Search ST-101-historique-transactions-avion-commerce.md",
+      "source_file": "ST-101-historique-transactions-avion-commerce.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : ST-101-historique-transactions-avion-commerce.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-24T14:41:48.890924+00:00"
+    },
+    {
+      "query": "Fact-Search epic_portfolio_governance_2026q4.md",
+      "source_file": "epic_portfolio_governance_2026q4.md",
+      "sha256": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_portfolio_governance_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.903179+00:00"
+    },
+    {
+      "query": "Fact-Search story_template.md",
+      "source_file": "story_template.md",
+      "sha256": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : story_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.904301+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-206-BE_fact_dossier.md": "135be5cb7a82f9518f5d482405429b2529bad35b180589b1bcde3667ce7cce3f",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "0342-modular-project-architecture-and-subdomain-isolation.md": "3df2e2695dec86524ae2fa623c29b94e8debbcfd9fe9e2ed5289d497259122dd",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+    "epic_portfolio_governance_2026q4.md": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+    "story_template.md": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, 0342-modular-project-architecture-and-subdomain-isolation.md, AGENTS.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 15,
+      "multiplier": 1.0,
+      "score": 0.78,
+      "reason": "full_richness"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "0342-modular-project-architecture-and-subdomain-isolation.md",
+    "AGENTS.md",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md",
+    "MLOOP-206-BE_fact_dossier.md",
+    "ST-100-historique-transactions-avion.md",
+    "ST-101-historique-transactions-avion-commerce.md",
+    "epic_portfolio_governance_2026q4.md",
+    "story_template.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-24T16:00:00.000000+00:00",
+  "verification_harness": [
+    {
+      "scenario_title": "Matrice macro de correspondance thématique complète",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Verdict RBC fondé sur la grille §4 ADR-0342",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Lien croisé de parenté RBC sous feu vert",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Prémisse §3 rejetée et diagnostic corrigé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Dépréciation d'un récit sous couvert de la cartographie refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Fusion de ST-100 et ST-101 refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Édition des liens croisés sans feu vert refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "ID OneTrust hors disque dans la matrice refusé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Récit SANTE legacy sans title YAML signalé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Dossier OneTrust absent signalé sans reconstruction",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec d'édition frontmatter stoppe la séquence",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Lecture de la matrice par le décideur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Inventaire exhaustif des 45 récits OneTrust",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-206-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-206-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.78,
+  "status": "VALIDATED",
+  "verbatim_extracts": [
+    "epic L23 : dette structurelle OneTrust x3, RBC x2",
+    "draft L6/L22/L38/L54 : matrice ADR-0342 S3 (inexistante) — rejetee",
+    "ADR-0342 S3 : baux OWNS:, S4 : Projet Distinct vs Sous-Module",
+    "AGENTS FOOD L24-25 : RBC Avion ST-100+, OneTrust FOOD MMA-4637+ par codebase",
+    "AGENTS COMMERCE L21-22 : OneTrust COMMERCE MMA-4638+, RBC ST-101+ par codebase",
+    "ST-100 : MMA-4630 / MMA-4629 / BACKLOG / MAUI FOOD / related: [ST-101]",
+    "ST-101 : MMA-4631 / MMA-4629 / OPEN / Pharma COMMERCE / related: [ST-100]",
+    "Globs : OneTrust FOOD=20, COMMERCE=16, SANTE=9, total=45"
+  ],
+  "implementation_decisions": [
+    "Q1=C hybride cible : OneTrust parente sans fusion, RBC audit strict, premisses S3 corrigee vers S4",
+    "Q2a=i parente RBC sans fusion, lien related croise uniquement",
+    "Q2b=alpha matrice macro 8-10 themes, IDs par ligne, tiret si absent",
+    "Q2c=a aucun Won't Fix, aucun retrait de tableau, zero mutation de statut",
+    "Q3a=I titre Cartographie de parente des initiatives OneTrust multi-codebase et RBC Avion",
+    "Q3b=alpha liens croises RBC inclus dans le feu vert d'execution",
+    "Q3c=XS macro confirmee (travail documentaire + 2 liens)"
+  ],
+  "declarative_contracts": [],
+  "conflict_matrix": [
+    {
+      "topic": "Nature doublons OneTrust",
+      "assertion": "3 recits stricts a purger",
+      "resolution": "variantes legitimes : 3 initiatives x 45 recits par codebase",
+      "winner": "constat disque + AGENTS"
+    },
+    {
+      "topic": "Matrice ADR-0342",
+      "assertion": "S3 = deduplication fusion/canonical",
+      "resolution": "premisses rejetee — S3 = OWNS:, S4 = Distinct vs Sous-Module",
+      "winner": "lecture integrale ADR"
+    },
+    {
+      "topic": "Strategie",
+      "assertion": "Q1=A purge canonical",
+      "resolution": "C hybride cible parente + audit RBC + correction premisses",
+      "winner": "Q1=C PO"
+    },
+    {
+      "topic": "Traitement RBC",
+      "assertion": "fusion en 1 recit",
+      "resolution": "i parente sans fusion, verdict S4 coexistence",
+      "winner": "Q2a=i PO"
+    },
+    {
+      "topic": "Profondeur matrice OneTrust",
+      "assertion": "exhaustif 1:1 45 recits",
+      "resolution": "alpha macro 8-10 themes",
+      "winner": "Q2b=alpha PO"
+    },
+    {
+      "topic": "Action Jira/statuts",
+      "assertion": "Won't Fix sur doublons",
+      "resolution": "a aucun Won't Fix, zero mutation de statut",
+      "winner": "Q2c=a PO"
+    },
+    {
+      "topic": "Titre",
+      "assertion": "Grill-project arbitrage S3",
+      "resolution": "I Cartographie de parente",
+      "winner": "Q3a=I PO"
+    },
+    {
+      "topic": "Liens RBC",
+      "assertion": "recommandes seulement (beta)",
+      "resolution": "alpha inclus au feu vert",
+      "winner": "Q3b=alpha PO"
+    },
+    {
+      "topic": "Macro size",
+      "assertion": "S maintenu",
+      "resolution": "XS — documentaire + 2 liens",
+      "winner": "Q3c=XS PO"
+    }
+  ],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:44.476396",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-206-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:44.476396",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 76.0,
+      "overall_trust": 91.6
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

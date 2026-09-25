@@ -1,0 +1,93 @@
+{
+  "story_id": "MLOOP-070-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-070-BE.md",
+  "timestamp": "2026-09-22T14:36:44.255584+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search # ex.md",
+      "source_file": "# ex.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : # ex.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-22T14:36:44.241625+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-070-BE_fact_dossier.md",
+      "source_file": "MLOOP-070-BE_fact_dossier.md",
+      "sha256": "091f97d382f97dba09c651dcb2b713c0a4ef3dd1d806e0d4fcf94784874dacd8",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-070-BE_fact_dossier.md) : MLOOP-070-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:36:44.241625+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-070-BE_fact_dossier.md": "091f97d382f97dba09c651dcb2b713c0a4ef3dd1d806e0d4fcf94784874dacd8"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : # ex.md, MLOOP-070-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "table_source",
+      "rule_summary": "Description de la règle métier ou verbatim...",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "# ex.md",
+    "MLOOP-070-BE_fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-19T10:04:00+00:00",
+  "verification_harness": [
+    {
+      "scenario_title": "Délégation linéaire d'orchestration sous le seuil maximal",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Interception d'une boucle circulaire alternée entre deux agents",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Réinitialisation légitime du compteur lors de l'écriture d'un artefact",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Consignation de la disjonction dans le journal d'état et le flux d'événements",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-070-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-070-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "VALIDATED"
+}

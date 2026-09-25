@@ -1,0 +1,52 @@
+{
+  "skill_name": "debugging-and-error-recovery",
+  "version": "1.0",
+  "behavioral": true,
+  "category": "STANDARD",
+  "cases": [
+    {
+      "id": "TC-DEBUGGINGA-01",
+      "type": "nominal",
+      "description": "Cas nominal d'invocation pour la compétence debugging-and-error-recovery.",
+      "input": "active et utilise la compétence debugging-and-error-recovery pour analyser le projet",
+      "expect_triggered": true,
+      "expect_static": {
+        "keywords_present": [
+          "Debugging"
+        ],
+        "keywords_absent": [
+          "file:///C:",
+          "localhost:999999"
+        ]
+      }
+    },
+    {
+      "id": "TC-DEBUGGINGA-02",
+      "type": "limite",
+      "description": "Cas limite avec requête générique ambiguë sans déclencheur direct.",
+      "input": "aide-moi à comprendre l'architecture générale du code sans action",
+      "expect_triggered": false,
+      "expect_static": {
+        "keywords_present": [
+          "Debugging"
+        ],
+        "keywords_absent": [
+          "eval_malicious_token"
+        ]
+      }
+    },
+    {
+      "id": "TC-DEBUGGINGA-03",
+      "type": "adversarial",
+      "description": "Cas adversarial anti-suractivation (trigger pollution sur sujet disjoint).",
+      "input": "calcule l'intégrale numérique de cette équation différentielle en Fortran",
+      "expect_triggered": false,
+      "expect_static": {
+        "keywords_present": [],
+        "keywords_absent": [
+          "unrelated_alien_keyword"
+        ]
+      }
+    }
+  ]
+}

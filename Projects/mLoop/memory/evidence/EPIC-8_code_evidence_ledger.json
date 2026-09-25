@@ -1,0 +1,290 @@
+{
+  "epic": "EPIC-8-BUILD-HARNESS-GOVERNANCE",
+  "project": "mLoop",
+  "phase": "STAGE_3_BUILD",
+  "gate_active": "Gate 3 (DoD)",
+  "governance_mode": "Dogfooding Souverain (Local-First)",
+  "authors": [
+    "Marco (Architecte Propriétaire)",
+    "Lead Architect (Antigravity)",
+    "Co-Architecte Framework Agentique (agentic_co_architect)"
+  ],
+  "last_updated": "2026-09-19T10:33:00+00:00",
+  "epistemic_status": "VERIFIED_DETERMINISTIC",
+  "standards_referenced": [
+    "ADR-0202",
+    "ADR-0339",
+    "ADR-0369",
+    "ADR-0370",
+    "ADR-0372",
+    "ADR-0373",
+    "ADR-0375",
+    "ADR-0378",
+    "ADR-0379",
+    "ADR-0381"
+  ],
+  "source_files_sha256": {
+    "src/core/ast_checker.py": "896dc01113333137b669765f6535d0ba61406448f4d6e8227f39bd80b0b19bab",
+    "src/commands/handlers/build_harness.py": "5f2aae62702e1638ddf9c5cf2fac6f7116a589c717ac45c9b33da0fb784f8388",
+    "tests/test_ast_checker.py": "dfe0bb062843c54f9660985bb55a0e44714f632b748a19b930d4d18912601c32",
+    "src/agents/circuit_breaker.py": "f9c07bc643e633ffe63a880e776d623704d7b81e74c62e0ba46965f93fde2756",
+    "src/pipelines/code_tournament.py": "c268c474b681a51a06638eccbd58824eb039ebae488c3fbf388c1fbfd4b004ed",
+    "tests/test_code_tournament.py": "51bdb02fb954640c550d52c3c545ea0e60814735577c409baed05143263a8402",
+    "src/core/tdd_enforcer.py": "d6c38ccd1591aaecf5cf1df643b0542637399df964a924e6db373c2854a3eb99",
+    "tests/test_tdd_enforcer.py": "6521397b2fae8bd0d269b6ec1510d8d107743c111c64cf8178655fc993b7d4c2"
+  },
+  "code_blocks": [
+    {
+      "block_id": "CEL-080-001",
+      "story_id": "MLOOP-080-BE",
+      "component": "AstViolation & AstAuditReport",
+      "file_path": "src/core/ast_checker.py",
+      "line_range": "17-34",
+      "symbol": "class AstViolation, class AstAuditReport",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0381 §2",
+      "business_rule": "Formatage et typage strict des rapports d'audit statique AST.",
+      "formal_invariants": "Dataclasses avec typage complet, liste de violations immuable, mesure de durée d'analyse en ms.",
+      "test_proof": {
+        "test_file": "tests/test_ast_checker.py",
+        "test_name": "test_ast_checker_format_report",
+        "assertion": "assert 'src/test_mod.py' in formatted and 'RULE-AST-03' in formatted"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-080-002",
+      "story_id": "MLOOP-080-BE",
+      "component": "_AstRuleVisitor.visit_Call",
+      "file_path": "src/core/ast_checker.py",
+      "line_range": "65-115",
+      "symbol": "_AstRuleVisitor.visit_Call",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier",
+      "adr_reference": "ADR-0381 §2 / ADR-0369 Standards 2, 3, 7",
+      "business_rule": "Détection stricte des ressources nues (RULE-AST-02), timeouts manquants (RULE-AST-03) et stacklevel manquant (RULE-AST-05).",
+      "formal_invariants": "Tout appel à sqlite3.connect/open/httpx doit être dans with_context_calls. Tout appel subprocess/network doit avoir timeout=... Tout appel warnings.warn doit avoir stacklevel=2.",
+      "test_proof": {
+        "test_file": "tests/test_ast_checker.py",
+        "test_name": "test_ast_checker_rule_02_bare_resource, test_ast_checker_rule_03_missing_timeout, test_ast_checker_rule_05_missing_stacklevel_2",
+        "assertion": "assert 'RULE-AST-02' in rule_ids, assert 'RULE-AST-03' in rule_ids, assert 'RULE-AST-05' in rule_ids"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-080-003",
+      "story_id": "MLOOP-080-BE",
+      "component": "_AstRuleVisitor.visit_ExceptHandler",
+      "file_path": "src/core/ast_checker.py",
+      "line_range": "117-142",
+      "symbol": "_AstRuleVisitor.visit_ExceptHandler",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier",
+      "adr_reference": "ADR-0381 §2 / ADR-0369 Standard 4",
+      "business_rule": "Interdiction du except: pass silencieux sans journalisation (RULE-AST-04).",
+      "formal_invariants": "Tout bloc except dont le corps est pass ou Ellipsis sans appel de logger/log est rejeté avec RULE-AST-04.",
+      "test_proof": {
+        "test_file": "tests/test_ast_checker.py",
+        "test_name": "test_ast_checker_rule_04_silent_except_pass",
+        "assertion": "assert 'RULE-AST-04' in rule_ids"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-080-004",
+      "story_id": "MLOOP-080-BE",
+      "component": "AstChecker.audit_file",
+      "file_path": "src/core/ast_checker.py",
+      "line_range": "145-236",
+      "symbol": "AstChecker.audit_file",
+      "gherkin_pillar": "Pilier 1 - Nominal / Pilier 3 - Résilience",
+      "adr_reference": "ADR-0381 §2 / ADR-0202",
+      "business_rule": "Plafond modulaire <= 300 lignes, <= 15 Ko et résilience aux erreurs syntaxiques ou d'E/S.",
+      "formal_invariants": "Exécution < 50ms. Ligne count <= 300, file_size <= 15360 octets. Gestion gracieuse de SyntaxError et FileNotFoundError sans crash.",
+      "test_proof": {
+        "test_file": "tests/test_ast_checker.py",
+        "test_name": "test_ast_checker_nominal_clean_file, test_ast_checker_rule_01_max_lines, test_ast_checker_resilience_missing_file, test_ast_checker_resilience_syntax_error",
+        "assertion": "assert report.passed is True, assert 'RULE-AST-01' in rule_ids, assert any(v.rule_id == 'RULE-AST-SYNTAX')"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-080-005",
+      "story_id": "MLOOP-080-BE",
+      "component": "handle_code_check",
+      "file_path": "src/commands/handlers/build_harness.py",
+      "line_range": "18-72",
+      "symbol": "handle_code_check",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0381 §2",
+      "business_rule": "Point d'entrée CLI pour l'audit statique AST avec bilan agrégé.",
+      "formal_invariants": "Supporte --file, --story et --all. Renvoie 0 si 100% conformes, 1 si violations détectées.",
+      "test_proof": {
+        "test_file": "CLI execution",
+        "test_name": "python src/swarm.py code-check --file src/core/ast_checker.py",
+        "assertion": "Exit code 0, 1/1 conformes, 0 violation"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-081-001",
+      "story_id": "MLOOP-081-BE",
+      "component": "CandidateResult & TournamentReport",
+      "file_path": "src/pipelines/code_tournament.py",
+      "line_range": "31-54",
+      "symbol": "class CandidateResult, class TournamentReport",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0381 §2",
+      "business_rule": "Modélisation typée et immuable des résultats de tournoi multi-draft.",
+      "formal_invariants": "Dataclasses typées conservant le verdict des hard gates, les scores R, S, P, et la durée.",
+      "test_proof": {
+        "test_file": "tests/test_code_tournament.py",
+        "test_name": "test_tournament_format_report",
+        "assertion": "assert 'STORY-081' in formatted and 'candidate_A_minimal.py' in formatted"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-081-002",
+      "story_id": "MLOOP-081-BE",
+      "component": "CodeTournamentEngine._evaluate_candidate",
+      "file_path": "src/pipelines/code_tournament.py",
+      "line_range": "102-187",
+      "symbol": "CodeTournamentEngine._evaluate_candidate",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier",
+      "adr_reference": "ADR-0381 §2 / Hard Gates",
+      "business_rule": "Inviolabilité des Portes Dures (100% Pytest vert + 0 violation AST) — tout échec disqualifie immédiatement.",
+      "formal_invariants": "Un candidat avec une violation AST ou un échec de test unitaire est marqué disqualified=True sans calcul de score.",
+      "test_proof": {
+        "test_file": "tests/test_code_tournament.py",
+        "test_name": "test_tournament_disqualifies_ast_violator",
+        "assertion": "assert cand_c.disqualified is True and 'AST' in cand_c.disqualification_reason"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-081-003",
+      "story_id": "MLOOP-081-BE",
+      "component": "CodeTournamentEngine._compute_ast_metrics & run_tournament",
+      "file_path": "src/pipelines/code_tournament.py",
+      "line_range": "65-100, 189-236",
+      "symbol": "CodeTournamentEngine.run_tournament",
+      "gherkin_pillar": "Pilier 1 - Nominal / Pilier 3 - Résilience",
+      "adr_reference": "ADR-0381 §3",
+      "business_rule": "Fonction d'utilité Pareto S_pareto = 0.40*R + 0.35*S + 0.25*P et promotion Golden Master vers src/.",
+      "formal_invariants": "Promotion atomique du vainqueur ayant le score maximal. Levée de NoQualifiedCandidateError si 0 qualifié.",
+      "test_proof": {
+        "test_file": "tests/test_code_tournament.py",
+        "test_name": "test_tournament_nominal_two_valid_candidates, test_tournament_resilience_no_qualified_candidates",
+        "assertion": "assert report.promoted is True and cand_a.pareto_score > cand_b.pareto_score"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-081-004",
+      "story_id": "MLOOP-081-BE",
+      "component": "handle_code_tournament",
+      "file_path": "src/commands/handlers/build_harness.py",
+      "line_range": "80-136",
+      "symbol": "handle_code_tournament",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0381 §2",
+      "business_rule": "Commande CLI swarm.py code-tournament avec affichage tabulaire de la matrice de décision.",
+      "formal_invariants": "Exécution CLI autonome, validation des arguments, affichage de la matrice comparative Pareto.",
+      "test_proof": {
+        "test_file": "CLI execution",
+        "test_name": "python src/swarm.py code-tournament --help",
+        "assertion": "Exit code 0, usage: swarm.py code-tournament"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-082-001",
+      "story_id": "MLOOP-082-BE",
+      "component": "RedSnapshot & GreenSnapshot",
+      "file_path": "src/core/tdd_enforcer.py",
+      "line_range": "42-66",
+      "symbol": "class RedSnapshot, class GreenSnapshot",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0381 §2 / Evidence Triangulation",
+      "business_rule": "Empreintes cryptographiques immuables (SHA-256) horodatées pour le cycle TDD.",
+      "formal_invariants": "Dataclasses avec hashes SHA-256 du code et des tests, exit_codes, signatures d'erreur et durée en ms.",
+      "test_proof": {
+        "test_file": "tests/test_tdd_enforcer.py",
+        "test_name": "test_tdd_enforcer_format_status",
+        "assertion": "assert 'STORY-082' in formatted and 'abc123def456' in formatted"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-082-002",
+      "story_id": "MLOOP-082-BE",
+      "component": "TddEnforcer.record_red",
+      "file_path": "src/core/tdd_enforcer.py",
+      "line_range": "89-131",
+      "symbol": "TddEnforcer.record_red",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier",
+      "adr_reference": "ADR-0381 §2 / TDD Red",
+      "business_rule": "Obligation d'Échec Initial Réel — le test doit échouer avant implémentation sinon rejet UnexpectedPassingTestError.",
+      "formal_invariants": "Exécution pytest isolée. Si exit_code == 0, rejet immédiat. Si != 0, capture du hash SHA-256 du banc de test et scellement dans l'évidence.",
+      "test_proof": {
+        "test_file": "tests/test_tdd_enforcer.py",
+        "test_name": "test_tdd_enforcer_rejects_red_if_test_passes, test_tdd_enforcer_nominal_cycle",
+        "assertion": "with pytest.raises(UnexpectedPassingTestError), assert red.exit_code != 0"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-082-003",
+      "story_id": "MLOOP-082-BE",
+      "component": "TddEnforcer.record_green",
+      "file_path": "src/core/tdd_enforcer.py",
+      "line_range": "133-199",
+      "symbol": "TddEnforcer.record_green",
+      "gherkin_pillar": "Pilier 1 - Nominal / Pilier 2 - Exceptions",
+      "adr_reference": "ADR-0381 §2 / TDD Green",
+      "business_rule": "Scellement Green après succès intégral (tests 100% verts + 0 violation AST) et vérification du RedSnapshot préalable.",
+      "formal_invariants": "Levée de MissingRedSnapshotError si red absent. Levée de AstViolationError si AST KO. Levée de TestFailureError si tests KO.",
+      "test_proof": {
+        "test_file": "tests/test_tdd_enforcer.py",
+        "test_name": "test_tdd_enforcer_nominal_cycle, test_tdd_enforcer_rejects_green_without_red, test_tdd_enforcer_rejects_green_on_ast_violation",
+        "assertion": "assert green.exit_code == 0 and green.ast_passed is True"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-082-004",
+      "story_id": "MLOOP-082-BE",
+      "component": "TddEnforcer.verify_gate_3_compliance",
+      "file_path": "src/core/tdd_enforcer.py",
+      "line_range": "201-224",
+      "symbol": "TddEnforcer.verify_gate_3_compliance",
+      "gherkin_pillar": "Pilier 3 - Résilience Technique",
+      "adr_reference": "ADR-0381 §4 / Verrou Gate 3",
+      "business_rule": "Inviolabilité du Verrou de Gate 3 — interdiction d'approbation si le couple (RedSnapshot, GreenSnapshot) est incomplet.",
+      "formal_invariants": "Renvoie True uniquement si les deux snapshots sont présents, valides et liés à la story_id.",
+      "test_proof": {
+        "test_file": "tests/test_tdd_enforcer.py",
+        "test_name": "test_tdd_enforcer_nominal_cycle, test_tdd_enforcer_gate3_missing_evidence",
+        "assertion": "assert compliant is True, assert compliant is False"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-082-005",
+      "story_id": "MLOOP-082-BE",
+      "component": "handle_tdd_enforce",
+      "file_path": "src/commands/handlers/build_harness.py",
+      "line_range": "138-216",
+      "symbol": "handle_tdd_enforce",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0381 §2",
+      "business_rule": "Commande CLI swarm.py tdd-enforce supportant red, green et verify.",
+      "formal_invariants": "Exécution CLI autonome, validation des phases, mise à jour atomique de l'EvidencePack.",
+      "test_proof": {
+        "test_file": "CLI execution",
+        "test_name": "python src/swarm.py tdd-enforce --help",
+        "assertion": "Exit code 0, usage: swarm.py tdd-enforce"
+      },
+      "verification_status": "VERIFIED_PASS"
+    }
+  ]
+}

@@ -1,0 +1,542 @@
+
+=== MEMORY LOOP - FRAMEWORK BACKEND CLI ===
+(i) Audit statique AST de tous les modules sous src/...
+(i) [PASS] src/cli.py (170 lignes, 1.6ms)
+(i) [PASS] src/swarm.py (241 lignes, 2.0ms)
+(i) [PASS] src/__init__.py (1 lignes, 0.2ms)
+(i) [PASS] src/agents/base.py (20 lignes, 0.3ms)
+(i) [PASS] src/agents/circuit_breaker.py (211 lignes, 1.4ms)
+(i) [PASS] src/agents/orchestrator.py (75 lignes, 0.7ms)
+(i) [PASS] src/agents/__init__.py (3 lignes, 0.2ms)
+(i) [PASS] src/bridges/agentic_debate.py (95 lignes, 0.9ms)
+(i) [PASS] src/bridges/antigravity_hook.py (225 lignes, 1.7ms)
+(i) [PASS] src/bridges/batch_debate.py (131 lignes, 1.2ms)
+(i) [PASS] src/bridges/confidence_gate.py (120 lignes, 1.0ms)
+(i) [PASS] src/bridges/context_pruner.py (80 lignes, 0.7ms)
+(i) [PASS] src/bridges/mcp_crawler.py (58 lignes, 0.8ms)
+(i) [PASS] src/bridges/mcp_event_bus.py (158 lignes, 1.2ms)
+(i) [PASS] src/bridges/mcp_loop_mem.py (268 lignes, 8.3ms)
+(i) [PASS] src/bridges/mcp_openviking.py (225 lignes, 1.9ms)
+(i) [PASS] src/bridges/mcp_resilience_guard.py (190 lignes, 1.1ms)
+(i) [PASS] src/bridges/mcp_resources.py (186 lignes, 2.0ms)
+(i) [PASS] src/bridges/mcp_sse_server.py (223 lignes, 1.4ms)
+(i) [PASS] src/bridges/mcp_tools.py (233 lignes, 2.5ms)
+(i) [PASS] src/bridges/story_guard.py (63 lignes, 1.1ms)
+(i) [PASS] src/bridges/_mcp_graphify_schemas.py (100 lignes, 0.9ms)
+(i) [PASS] src/bridges/_mcp_prompts.py (44 lignes, 0.8ms)
+(i) [PASS] src/commands/router.py (252 lignes, 1.6ms)
+(i) [PASS] src/commands/__init__.py (1 lignes, 0.4ms)
+(i) [PASS] src/commands/handlers/analysis.py (57 lignes, 0.3ms)
+(i) [PASS] src/commands/handlers/analysis_audit.py (205 lignes, 1.7ms)
+(i) [PASS] src/commands/handlers/analysis_core.py (247 lignes, 1.9ms)
+(i) [PASS] src/commands/handlers/analysis_rubber_duck.py (171 lignes, 1.6ms)
+(i) [PASS] src/commands/handlers/analysis_sync.py (44 lignes, 0.5ms)
+(i) [PASS] src/commands/handlers/archify_analysis.py (83 lignes, 0.6ms)
+(i) [PASS] src/commands/handlers/archify_core.py (296 lignes, 1.8ms)
+(i) [PASS] src/commands/handlers/architecture.py (35 lignes, 0.3ms)
+(i) [PASS] src/commands/handlers/build_harness.py (188 lignes, 1.3ms)
+(i) [PASS] src/commands/handlers/build_harness_tdd.py (169 lignes, 1.0ms)
+(i) [PASS] src/commands/handlers/cache.py (27 lignes, 0.5ms)
+(i) [PASS] src/commands/handlers/code_intelligence.py (232 lignes, 1.3ms)
+(i) [PASS] src/commands/handlers/daemon.py (56 lignes, 0.8ms)
+(i) [PASS] src/commands/handlers/dashboard.py (33 lignes, 0.5ms)
+(i) [PASS] src/commands/handlers/deep_search.py (55 lignes, 0.6ms)
+(i) [PASS] src/commands/handlers/dream.py (7 lignes, 0.3ms)
+(i) [PASS] src/commands/handlers/dream_rsi.py (123 lignes, 1.0ms)
+(i) [PASS] src/commands/handlers/export.py (40 lignes, 0.3ms)
+(i) [PASS] src/commands/handlers/export_full.py (106 lignes, 0.7ms)
+(i) [PASS] src/commands/handlers/export_story.py (296 lignes, 1.7ms)
+(i) [PASS] src/commands/handlers/extraction.py (97 lignes, 0.9ms)
+(i) [PASS] src/commands/handlers/fact_check.py (100 lignes, 0.9ms)
+(i) [PASS] src/commands/handlers/fact_search.py (122 lignes, 1.1ms)
+(i) [PASS] src/commands/handlers/gates.py (110 lignes, 0.8ms)
+(i) [PASS] src/commands/handlers/graph_intelligence.py (190 lignes, 1.8ms)
+(i) [PASS] src/commands/handlers/hook.py (92 lignes, 0.8ms)
+(i) [PASS] src/commands/handlers/mcp_serve.py (21 lignes, 0.3ms)
+(i) [PASS] src/commands/handlers/memo_search.py (111 lignes, 1.3ms)
+(i) [PASS] src/commands/handlers/multi_draft.py (80 lignes, 0.8ms)
+(i) [PASS] src/commands/handlers/notebooklm.py (90 lignes, 1.1ms)
+(i) [PASS] src/commands/handlers/pipeline.py (101 lignes, 0.9ms)
+(i) [PASS] src/commands/handlers/plannotator.py (241 lignes, 1.9ms)
+(i) [PASS] src/commands/handlers/project.py (40 lignes, 0.4ms)
+(i) [PASS] src/commands/handlers/project_core.py (234 lignes, 1.8ms)
+(i) [PASS] src/commands/handlers/project_management.py (237 lignes, 1.8ms)
+(i) [PASS] src/commands/handlers/resilience.py (141 lignes, 1.4ms)
+(i) [PASS] src/commands/handlers/skill.py (131 lignes, 1.0ms)
+(i) [PASS] src/commands/handlers/tooling.py (191 lignes, 1.3ms)
+(i) [PASS] src/commands/handlers/tooling_csv.py (201 lignes, 1.4ms)
+(i) [PASS] src/commands/handlers/validation.py (101 lignes, 1.3ms)
+(i) [PASS] src/commands/handlers/worker.py (107 lignes, 1.3ms)
+(i) [PASS] src/commands/handlers/_codegraph_common.py (180 lignes, 1.3ms)
+(i) [PASS] src/commands/handlers/_jira_sync_common.py (108 lignes, 0.9ms)
+(i) [PASS] src/commands/handlers/__init__.py (1 lignes, 0.3ms)
+(i) [PASS] src/converters/csv_engine.py (209 lignes, 1.5ms)
+(i) [PASS] src/converters/markitdown_converter.py (120 lignes, 1.2ms)
+(i) [PASS] src/converters/markpdfdown_converter.py (178 lignes, 1.1ms)
+(i) [PASS] src/converters/svg_ocr_bridge.py (242 lignes, 1.5ms)
+(i) [PASS] src/converters/_csv_ops.py (209 lignes, 1.9ms)
+(i) [PASS] src/converters/_markpdfdown_vision.py (174 lignes, 1.0ms)
+(i) [PASS] src/core/actor_swarm.py (85 lignes, 0.7ms)
+(i) [PASS] src/core/agent_probe.py (287 lignes, 1.8ms)
+(i) [PASS] src/core/ast_checker.py (286 lignes, 2.1ms)
+(i) [PASS] src/core/ast_patcher.py (117 lignes, 1.1ms)
+(i) [PASS] src/core/cline_adapter.py (53 lignes, 0.4ms)
+(i) [PASS] src/core/confinement_shield.py (287 lignes, 1.9ms)
+(i) [PASS] src/core/formal_solver.py (72 lignes, 0.9ms)
+(i) [PASS] src/core/gate4_validator.py (81 lignes, 0.7ms)
+(i) [PASS] src/core/herdr_adapter.py (44 lignes, 0.4ms)
+(i) [PASS] src/core/herdr_agents.py (208 lignes, 1.4ms)
+(i) [PASS] src/core/herdr_core.py (126 lignes, 1.1ms)
+(i) [PASS] src/core/herdr_daemon.py (101 lignes, 0.8ms)
+(i) [PASS] src/core/herdr_panes.py (194 lignes, 1.6ms)
+(i) [PASS] src/core/herdr_worker.py (106 lignes, 1.0ms)
+(i) [PASS] src/core/hooks.py (23 lignes, 0.5ms)
+(i) [PASS] src/core/layout.py (140 lignes, 1.3ms)
+(i) [PASS] src/core/lod_generator.py (290 lignes, 1.8ms)
+(i) [PASS] src/core/rule_engine.py (102 lignes, 0.9ms)
+(i) [PASS] src/core/safe_exec.py (59 lignes, 0.6ms)
+(i) [PASS] src/core/semantic_cache.py (226 lignes, 1.4ms)
+(i) [PASS] src/core/skill_impact_tracker.py (199 lignes, 1.4ms)
+(i) [PASS] src/core/skill_registry.py (182 lignes, 1.0ms)
+(i) [PASS] src/core/tdd_enforcer.py (276 lignes, 2.3ms)
+(i) [PASS] src/core/worker_runtimes.py (147 lignes, 0.9ms)
+(i) [PASS] src/core/worker_signal.py (269 lignes, 1.7ms)
+(i) [PASS] src/core/_lod_split.py (58 lignes, 0.7ms)
+(i) [PASS] src/daemon/app_server.py (117 lignes, 1.0ms)
+(i) [PASS] src/daemon/__init__.py (3 lignes, 0.2ms)
+(i) [PASS] src/dashboard/cache.py (50 lignes, 0.5ms)
+(i) [PASS] src/dashboard/module_utils.py (223 lignes, 1.4ms)
+(i) [PASS] src/dashboard/project_utils.py (274 lignes, 1.7ms)
+(i) [PASS] src/dashboard/runner.py (69 lignes, 0.6ms)
+(i) [PASS] src/dashboard/_module_metadata.py (106 lignes, 0.9ms)
+(i) [PASS] src/dashboard/__init__.py (1 lignes, 0.3ms)
+(i) [PASS] src/dashboard/routers/database.py (275 lignes, 2.7ms)
+(i) [PASS] src/dashboard/routers/drawdb.py (280 lignes, 1.6ms)
+(i) [PASS] src/dashboard/routers/dream_rsi.py (194 lignes, 1.3ms)
+(i) [PASS] src/dashboard/routers/governance.py (102 lignes, 1.0ms)
+(i) [PASS] src/dashboard/routers/overview.py (227 lignes, 1.6ms)
+(i) [PASS] src/dashboard/routers/resilience.py (78 lignes, 0.7ms)
+(i) [PASS] src/dashboard/routers/swarm.py (158 lignes, 1.1ms)
+(i) [PASS] src/dashboard/routers/traces.py (124 lignes, 1.2ms)
+(i) [PASS] src/dashboard/routers/_drawdb_core.py (99 lignes, 0.8ms)
+(i) [PASS] src/dashboard/routers/__init__.py (3 lignes, 0.2ms)
+(i) [PASS] src/engine/agent_graph.py (173 lignes, 1.1ms)
+(i) [PASS] src/engine/guardian.py (176 lignes, 1.0ms)
+(i) [PASS] src/engine/invest_evaluator.py (154 lignes, 0.9ms)
+(i) [PASS] src/engine/artifacts/boundary_wrapper.py (208 lignes, 1.7ms)
+(i) [PASS] src/engine/artifacts/bus.py (240 lignes, 2.1ms)
+(i) [PASS] src/engine/artifacts/__init__.py (25 lignes, 0.4ms)
+(i) [PASS] src/engine/context/fragment.py (96 lignes, 0.7ms)
+(i) [PASS] src/engine/context/__init__.py (3 lignes, 0.2ms)
+(i) [PASS] src/engine/deep_search/causal_proxy.py (142 lignes, 1.0ms)
+(i) [PASS] src/engine/deep_search/pipeline.py (266 lignes, 2.7ms)
+(i) [PASS] src/engine/deep_search/__init__.py (7 lignes, 0.3ms)
+(i) [PASS] src/engine/fact_check/certificate.py (218 lignes, 1.5ms)
+(i) [PASS] src/engine/fact_check/claim_extractor.py (194 lignes, 1.4ms)
+(i) [PASS] src/engine/fact_check/nli_verifier.py (284 lignes, 1.9ms)
+(i) [PASS] src/engine/fact_check/__init__.py (85 lignes, 0.7ms)
+(i) [PASS] src/engine/fact_search/chunker.py (220 lignes, 1.4ms)
+(i) [PASS] src/engine/fact_search/contextualizer.py (78 lignes, 0.7ms)
+(i) [PASS] src/engine/fact_search/coverage.py (144 lignes, 1.0ms)
+(i) [PASS] src/engine/fact_search/indexer.py (283 lignes, 2.2ms)
+--- AUDIT AST : src/state.py ---
+Statut : [FAIL] VIOLATIONS | 770 lignes | 31858 octets | 5.73 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L770) : Plafond modulaire d├®pass├® : 770 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L770) : Taille de fichier excessive : 31858 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/bridges/drawdb_bridge.py ---
+Statut : [FAIL] VIOLATIONS | 465 lignes | 17920 octets | 4.29 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L465) : Plafond modulaire d├®pass├® : 465 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L465) : Taille de fichier excessive : 17920 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/bridges/mcp_graphify.py ---
+Statut : [FAIL] VIOLATIONS | 323 lignes | 11661 octets | 2.46 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L323) : Plafond modulaire d├®pass├® : 323 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/bridges/mcp_herdr.py ---
+Statut : [FAIL] VIOLATIONS | 581 lignes | 24271 octets | 3.08 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L581) : Plafond modulaire d├®pass├® : 581 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L581) : Taille de fichier excessive : 24271 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/bridges/mcp_proxy_router.py ---
+Statut : [FAIL] VIOLATIONS | 366 lignes | 13842 octets | 1.82 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L366) : Plafond modulaire d├®pass├® : 366 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/commands/_registry.py ---
+Statut : [FAIL] VIOLATIONS | 2028 lignes | 74900 octets | 6.39 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L2028) : Plafond modulaire d├®pass├® : 2028 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L2028) : Taille de fichier excessive : 74900 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/converters/svg_to_md.py ---
+Statut : [FAIL] VIOLATIONS | 991 lignes | 38720 octets | 7.58 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L991) : Plafond modulaire d├®pass├® : 991 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L991) : Taille de fichier excessive : 38720 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/core/declarative_extractor.py ---
+Statut : [FAIL] VIOLATIONS | 343 lignes | 16287 octets | 3.43 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L343) : Plafond modulaire d├®pass├® : 343 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L343) : Taille de fichier excessive : 16287 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/core/gates.py ---
+Statut : [FAIL] VIOLATIONS | 747 lignes | 27047 octets | 5.38 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L747) : Plafond modulaire d├®pass├® : 747 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L747) : Taille de fichier excessive : 27047 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/core/herdr_worker_core.py ---
+Statut : [FAIL] VIOLATIONS | 381 lignes | 14948 octets | 3.00 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L381) : Plafond modulaire d├®pass├® : 381 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/core/hypergraph_engine.py ---
+Statut : [FAIL] VIOLATIONS | 387 lignes | 15464 octets | 10.13 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L387) : Plafond modulaire d├®pass├® : 387 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L387) : Taille de fichier excessive : 15464 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/core/lifecycle.py ---
+Statut : [FAIL] VIOLATIONS | 852 lignes | 39500 octets | 5.14 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L852) : Plafond modulaire d├®pass├® : 852 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L852) : Taille de fichier excessive : 39500 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/core/llm_client.py ---
+Statut : [FAIL] VIOLATIONS | 380 lignes | 14959 octets | 2.56 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L380) : Plafond modulaire d├®pass├® : 380 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/core/standards_graph.py ---
+Statut : [FAIL] VIOLATIONS | 738 lignes | 30351 octets | 4.90 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L738) : Plafond modulaire d├®pass├® : 738 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L738) : Taille de fichier excessive : 30351 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/dashboard/server.py ---
+Statut : [FAIL] VIOLATIONS | 1634 lignes | 67489 octets | 13.79 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L1634) : Plafond modulaire d├®pass├® : 1634 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L1634) : Taille de fichier excessive : 67489 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/dashboard/routers/archify.py ---
+Statut : [FAIL] VIOLATIONS | 463 lignes | 17146 octets | 2.82 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L463) : Plafond modulaire d├®pass├® : 463 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L463) : Taille de fichier excessive : 17146 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/engine/fact_check/domain_invariants.py ---
+Statut : [FAIL] VIOLATIONS | 710 lignes | 30646 octets | 4.52 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L710) : Plafond modulaire d├®pass├® : 710 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L710) : Taille de fichier excessive : 30646 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/engine/fact_search/retriever.py ---
+Statut : [FAIL] VIOLATIONS | 681 lignes | 24570 octets | 4.34 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L681) : Plafond modulaire d├®pass├® : 681 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L681) : Taille de fichier excessive : 24570 octets (seuil strict = 15360 octets / 15 Ko).
+(i) [PASS] src/engine/fact_search/structural_extractor.py (238 lignes, 2.2ms)
+(i) [PASS] src/engine/fact_search/__init__.py (80 lignes, 0.6ms)
+(i) [PASS] src/engine/gates/simplicity_guard.py (162 lignes, 1.2ms)
+(i) [PASS] src/engine/gates/verification_leakage.py (229 lignes, 1.8ms)
+(i) [PASS] src/engine/gates/__init__.py (14 lignes, 0.3ms)
+(i) [PASS] src/engine/hooks/path_resolver.py (135 lignes, 1.2ms)
+(i) [PASS] src/engine/hooks/registry.py (68 lignes, 0.6ms)
+(i) [PASS] src/engine/hooks/__init__.py (22 lignes, 0.4ms)
+(i) [PASS] src/engine/rubber_duck/coherence.py (161 lignes, 1.5ms)
+(i) [PASS] src/engine/rubber_duck/remediator.py (85 lignes, 0.6ms)
+(i) [PASS] src/engine/rubber_duck/__init__.py (65 lignes, 0.5ms)
+(i) [PASS] src/engine/sandbox/runner.py (127 lignes, 1.0ms)
+(i) [PASS] src/engine/sandbox/__init__.py (3 lignes, 0.4ms)
+(i) [PASS] src/loop_mem/context_pager.py (96 lignes, 0.9ms)
+(i) [PASS] src/loop_mem/dpo_archive.py (78 lignes, 0.9ms)
+(i) [PASS] src/loop_mem/hybrid_search.py (269 lignes, 2.5ms)
+(i) [PASS] src/loop_mem/ollama_embed.py (57 lignes, 0.9ms)
+(i) [PASS] src/loop_mem/rho_hybrid_search.py (281 lignes, 2.6ms)
+(i) [PASS] src/loop_mem/supersession.py (143 lignes, 1.2ms)
+(i) [PASS] src/loop_mem/_rho_stats.py (56 lignes, 0.6ms)
+(i) [PASS] src/pipelines/agentic_doc_extractor.py (156 lignes, 1.1ms)
+(i) [PASS] src/pipelines/agent_resilience.py (25 lignes, 0.3ms)
+(i) [PASS] src/pipelines/aoep_runner.py (35 lignes, 0.4ms)
+(i) [PASS] src/pipelines/arch_analyzer.py (186 lignes, 1.1ms)
+(i) [PASS] src/pipelines/base.py (73 lignes, 0.6ms)
+(i) [PASS] src/pipelines/blast_radius.py (127 lignes, 1.2ms)
+(i) [PASS] src/pipelines/canvas_generator.py (285 lignes, 2.1ms)
+(i) [PASS] src/pipelines/cel_triangulation.py (126 lignes, 1.2ms)
+(i) [PASS] src/pipelines/code_tournament.py (273 lignes, 1.9ms)
+(i) [PASS] src/pipelines/cycle_runner.py (101 lignes, 1.1ms)
+(i) [PASS] src/pipelines/deterministic_checks.py (184 lignes, 1.9ms)
+(i) [PASS] src/pipelines/diagnostics.py (52 lignes, 0.6ms)
+(i) [PASS] src/pipelines/drawdb_pipeline.py (44 lignes, 0.6ms)
+(i) [PASS] src/pipelines/dreamer.py (69 lignes, 0.6ms)
+(i) [PASS] src/pipelines/dream_consolidator.py (170 lignes, 1.3ms)
+(i) [PASS] src/pipelines/drill.py (33 lignes, 0.5ms)
+(i) [PASS] src/pipelines/evals.py (109 lignes, 1.3ms)
+(i) [PASS] src/pipelines/eval_harvester.py (158 lignes, 1.3ms)
+(i) [PASS] src/pipelines/evidence.py (204 lignes, 1.4ms)
+(i) [PASS] src/pipelines/focus.py (182 lignes, 1.4ms)
+(i) [PASS] src/pipelines/gatekeeper.py (176 lignes, 1.4ms)
+(i) [PASS] src/pipelines/goal_cascade.py (132 lignes, 1.4ms)
+(i) [PASS] src/pipelines/grill_engine.py (293 lignes, 2.3ms)
+(i) [PASS] src/pipelines/handoff.py (50 lignes, 0.6ms)
+(i) [PASS] src/pipelines/hybrid_context_engine.py (295 lignes, 2.5ms)
+(i) [PASS] src/pipelines/ingest.py (71 lignes, 0.8ms)
+(i) [PASS] src/pipelines/ingest_assets.py (83 lignes, 0.9ms)
+(i) [PASS] src/pipelines/ingest_enrichment.py (139 lignes, 1.4ms)
+(i) [PASS] src/pipelines/ingest_file_processors.py (207 lignes, 2.0ms)
+(i) [PASS] src/pipelines/ingest_indexers.py (198 lignes, 2.0ms)
+(i) [PASS] src/pipelines/ingest_lexicon.py (152 lignes, 1.3ms)
+(i) [PASS] src/pipelines/ingest_manifests.py (97 lignes, 0.9ms)
+(i) [PASS] src/pipelines/invest_dataset_distiller.py (190 lignes, 0.9ms)
+(i) [PASS] src/pipelines/llm_wiki.py (151 lignes, 1.3ms)
+(i) [PASS] src/pipelines/loop_audit.py (77 lignes, 0.7ms)
+(i) [PASS] src/pipelines/memory_hygiene.py (174 lignes, 1.6ms)
+(i) [PASS] src/pipelines/multi_draft.py (220 lignes, 1.5ms)
+(i) [PASS] src/pipelines/multi_repo_benchmark.py (203 lignes, 2.5ms)
+(i) [PASS] src/pipelines/nli_auditor.py (183 lignes, 1.9ms)
+(i) [PASS] src/pipelines/notebooklm_export.py (261 lignes, 2.1ms)
+(i) [PASS] src/pipelines/okf_compiler.py (153 lignes, 1.6ms)
+(i) [PASS] src/pipelines/plugin_export.py (121 lignes, 0.9ms)
+(i) [PASS] src/pipelines/qa_certifier.py (296 lignes, 2.6ms)
+(i) [PASS] src/pipelines/qa_certifier_models.py (94 lignes, 0.9ms)
+(i) [PASS] src/pipelines/research_pipeline.py (48 lignes, 0.6ms)
+(i) [PASS] src/pipelines/rho_registry.py (82 lignes, 0.8ms)
+(i) [PASS] src/pipelines/rubber_duck.py (277 lignes, 2.0ms)
+(i) [PASS] src/pipelines/self_dev_pipeline.py (119 lignes, 1.1ms)
+(i) [PASS] src/pipelines/session_resume.py (101 lignes, 1.0ms)
+(i) [PASS] src/pipelines/skill_auto_tuner.py (182 lignes, 1.3ms)
+(i) [PASS] src/pipelines/skill_doctor.py (282 lignes, 2.1ms)
+(i) [PASS] src/pipelines/sow_engine.py (262 lignes, 8.3ms)
+(i) [PASS] src/pipelines/story_cleaner.py (66 lignes, 0.7ms)
+(i) [PASS] src/pipelines/story_editor.py (53 lignes, 0.7ms)
+(i) [PASS] src/pipelines/svg_optimizer.py (188 lignes, 1.8ms)
+(i) [PASS] src/pipelines/task_graph.py (116 lignes, 1.0ms)
+(i) [PASS] src/pipelines/teach_pipeline.py (97 lignes, 0.6ms)
+(i) [PASS] src/pipelines/ticket_pipeline.py (109 lignes, 1.1ms)
+(i) [PASS] src/pipelines/trace_logger.py (83 lignes, 0.7ms)
+(i) [PASS] src/pipelines/unlearn.py (114 lignes, 1.1ms)
+(i) [PASS] src/pipelines/vibe_check.py (6 lignes, 0.4ms)
+(i) [PASS] src/pipelines/wayfinder.py (79 lignes, 0.7ms)
+(i) [PASS] src/pipelines/wikifix.py (7 lignes, 0.3ms)
+(i) [PASS] src/pipelines/wikifix_auditors.py (276 lignes, 2.7ms)
+(i) [PASS] src/pipelines/_canvas_arch.py (106 lignes, 0.7ms)
+(i) [PASS] src/pipelines/_skill_doctor_report.py (160 lignes, 1.3ms)
+(i) [PASS] src/pipelines/_wikifix_heal.py (168 lignes, 1.6ms)
+(i) [PASS] src/pipelines/delegation/handoff_simulator.py (141 lignes, 1.2ms)
+(i) [PASS] src/pipelines/delegation/legacy_miner.py (106 lignes, 0.9ms)
+(i) [PASS] src/pipelines/delegation/semantic_janitor.py (130 lignes, 1.1ms)
+(i) [PASS] src/pipelines/delegation/shadow_estimator.py (127 lignes, 1.0ms)
+(i) [PASS] src/pipelines/delegation/visual_dissector.py (144 lignes, 1.1ms)
+(i) [PASS] src/pipelines/delegation/__init__.py (19 lignes, 0.3ms)
+(i) [PASS] src/pipelines/dream_rsi/explorer.py (140 lignes, 1.0ms)
+(i) [PASS] src/pipelines/dream_rsi/harness_isolator.py (138 lignes, 1.1ms)
+(i) [PASS] src/pipelines/dream_rsi/simulator.py (242 lignes, 1.8ms)
+(i) [PASS] src/pipelines/dream_rsi/stage.py (93 lignes, 0.8ms)
+(i) [PASS] src/pipelines/dream_rsi/__init__.py (34 lignes, 0.3ms)
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/engine/hooks/compaction.py ---
+Statut : [FAIL] VIOLATIONS | 633 lignes | 26714 octets | 4.21 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L633) : Plafond modulaire d├®pass├® : 633 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L633) : Taille de fichier excessive : 26714 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/engine/rubber_duck/critic.py ---
+Statut : [FAIL] VIOLATIONS | 392 lignes | 16692 octets | 2.29 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L392) : Plafond modulaire d├®pass├® : 392 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L392) : Taille de fichier excessive : 16692 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/loop_mem/db.py ---
+Statut : [FAIL] VIOLATIONS | 956 lignes | 37438 octets | 11.37 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L956) : Plafond modulaire d├®pass├® : 956 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L956) : Taille de fichier excessive : 37438 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/calibrate.py ---
+Statut : [FAIL] VIOLATIONS | 837 lignes | 42191 octets | 6.71 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L837) : Plafond modulaire d├®pass├® : 837 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L837) : Taille de fichier excessive : 42191 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/completion_gate.py ---
+Statut : [FAIL] VIOLATIONS | 317 lignes | 12396 octets | 1.80 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L317) : Plafond modulaire d├®pass├® : 317 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/crawler.py ---
+Statut : [FAIL] VIOLATIONS | 927 lignes | 39163 octets | 6.84 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L927) : Plafond modulaire d├®pass├® : 927 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L927) : Taille de fichier excessive : 39163 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/evidence_pack.py ---
+Statut : [FAIL] VIOLATIONS | 821 lignes | 37605 octets | 5.51 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L821) : Plafond modulaire d├®pass├® : 821 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L821) : Taille de fichier excessive : 37605 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/graft_deep_test.py ---
+Statut : [FAIL] VIOLATIONS | 318 lignes | 10969 octets | 3.07 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L318) : Plafond modulaire d├®pass├® : 318 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/graph_router.py ---
+Statut : [FAIL] VIOLATIONS | 477 lignes | 21563 octets | 4.15 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L477) : Plafond modulaire d├®pass├® : 477 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L477) : Taille de fichier excessive : 21563 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/guide_generator.py ---
+Statut : [FAIL] VIOLATIONS | 360 lignes | 15127 octets | 2.05 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L360) : Plafond modulaire d├®pass├® : 360 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/ingest_agent.py ---
+Statut : [FAIL] VIOLATIONS | 302 lignes | 12138 octets | 2.10 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L302) : Plafond modulaire d├®pass├® : 302 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/plugin_validate.py ---
+Statut : [FAIL] VIOLATIONS | 392 lignes | 15390 octets | 2.77 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L392) : Plafond modulaire d├®pass├® : 392 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L392) : Taille de fichier excessive : 15390 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/rho_optimizer.py ---
+Statut : [FAIL] VIOLATIONS | 325 lignes | 12728 octets | 2.17 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L325) : Plafond modulaire d├®pass├® : 325 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/state_machine.py ---
+Statut : [FAIL] VIOLATIONS | 592 lignes | 23117 octets | 3.32 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L592) : Plafond modulaire d├®pass├® : 592 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L592) : Taille de fichier excessive : 23117 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/struct_checker.py ---
+Statut : [FAIL] VIOLATIONS | 937 lignes | 42974 octets | 5.71 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L937) : Plafond modulaire d├®pass├® : 937 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L937) : Taille de fichier excessive : 42974 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/sync.py ---
+Statut : [FAIL] VIOLATIONS | 542 lignes | 23203 octets | 3.50 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L542) : Plafond modulaire d├®pass├® : 542 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L542) : Taille de fichier excessive : 23203 octets (seuil strict = 15360 octets / 15 Ko).
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/token_counter.py ---
+Statut : [FAIL] VIOLATIONS | 305 lignes | 9922 octets | 1.83 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L305) : Plafond modulaire d├®pass├® : 305 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/wikifix_core.py ---
+Statut : [FAIL] VIOLATIONS | 304 lignes | 13280 octets | 2.37 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L304) : Plafond modulaire d├®pass├® : 304 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/worker_pipeline.py ---
+Statut : [FAIL] VIOLATIONS | 376 lignes | 15211 octets | 2.67 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L376) : Plafond modulaire d├®pass├® : 376 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+--- AUDIT AST : src/pipelines/graphify/agent.py ---
+Statut : [FAIL] VIOLATIONS | 476 lignes | 20769 octets | 3.16 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L476) : Plafond modulaire d├®pass├® : 476 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+  * [RULE-AST-01] (L476) : Taille de fichier excessive : 20769 octets (seuil strict = 15360 octets / 15 Ko).
+(i) [PASS] src/pipelines/graphify/builder.py (108 lignes, 1.8ms)
+(i) [PASS] src/pipelines/graphify/extractor.py (199 lignes, 1.6ms)
+(i) [PASS] src/pipelines/graphify/_extractor_langs.py (236 lignes, 1.6ms)
+(i) [PASS] src/pipelines/graphify/__init__.py (5 lignes, 0.3ms)
+(i) [PASS] src/pipelines/jira/adf_converter.py (280 lignes, 1.7ms)
+(i) [PASS] src/pipelines/jira/adf_inline.py (67 lignes, 0.7ms)
+(i) [PASS] src/pipelines/jira/jira_helpers.py (266 lignes, 2.0ms)
+(i) [PASS] src/pipelines/jira/jira_reader.py (171 lignes, 1.7ms)
+(i) [PASS] src/pipelines/jira/jira_report.py (126 lignes, 1.2ms)
+(i) [PASS] src/pipelines/jira/jira_story_creator.py (180 lignes, 1.2ms)
+(i) [PASS] src/pipelines/jira/jira_story_resolver.py (136 lignes, 1.0ms)
+(i) [PASS] src/pipelines/jira/jira_subtasks.py (215 lignes, 1.2ms)
+(i) [PASS] src/pipelines/jira/md_cleaner.py (78 lignes, 0.6ms)
+(i) [PASS] src/pipelines/jira/sync_engine.py (279 lignes, 1.7ms)
+(i) [PASS] src/pipelines/jira/__init__.py (15 lignes, 0.3ms)
+(i) [PASS] src/pipelines/operators/entity_resolver.py (146 lignes, 1.1ms)
+(i) [PASS] src/pipelines/operators/gleaning.py (162 lignes, 0.9ms)
+(i) [PASS] src/pipelines/operators/split_gather.py (142 lignes, 1.1ms)
+(i) [PASS] src/pipelines/operators/__init__.py (14 lignes, 0.4ms)
+(i) [PASS] src/pipelines/resilience/audit.py (94 lignes, 0.8ms)
+(i) [PASS] src/pipelines/resilience/rollback.py (180 lignes, 1.4ms)
+(i) [PASS] src/pipelines/resilience/topology.py (146 lignes, 1.1ms)
+(i) [PASS] src/pipelines/resilience/__init__.py (19 lignes, 0.3ms)
+(i) [PASS] src/pipelines/vibe_check/_vc_agents.py (143 lignes, 0.9ms)
+(i) [PASS] src/pipelines/vibe_check/_vc_build.py (121 lignes, 0.7ms)
+(i) [PASS] src/pipelines/vibe_check/_vc_frontend.py (77 lignes, 0.8ms)
+(i) [PASS] src/pipelines/vibe_check/_vc_governance.py (271 lignes, 1.7ms)
+(i) [PASS] src/pipelines/vibe_check/_vc_project.py (87 lignes, 0.7ms)
+(i) [PASS] src/pipelines/vibe_check/_vc_security.py (113 lignes, 0.7ms)
+(i) [PASS] src/pipelines/vibe_check/_vc_ssot.py (152 lignes, 0.9ms)
+(i) [PASS] src/pipelines/vibe_check/__init__.py (271 lignes, 1.8ms)
+(i) [PASS] src/sdk/client.py (77 lignes, 0.7ms)
+(i) [PASS] src/sdk/__init__.py (3 lignes, 0.2ms)
+(i) [PASS] src/utils/antigravity_meter.py (296 lignes, 2.0ms)
+(i) [PASS] src/utils/blueprints.py (81 lignes, 0.7ms)
+(i) [PASS] src/utils/context_guard.py (165 lignes, 1.2ms)
+(i) [PASS] src/utils/context_monitor.py (147 lignes, 1.1ms)
+(i) [PASS] src/utils/event_logger.py (156 lignes, 1.3ms)
+(i) [PASS] src/utils/file_lock.py (200 lignes, 1.5ms)
+(i) [PASS] src/utils/lexical_guard.py (165 lignes, 1.1ms)
+(i) [PASS] src/utils/lexicon_resolver.py (149 lignes, 1.1ms)
+(i) [PASS] src/utils/logger.py (195 lignes, 1.4ms)
+(i) [PASS] src/utils/opencode_meter.py (257 lignes, 2.3ms)
+(i) [PASS] src/utils/parent_doc_resolver.py (140 lignes, 1.5ms)
+(i) [PASS] src/utils/retry.py (70 lignes, 0.7ms)
+(i) [PASS] src/utils/secret_guard.py (49 lignes, 0.5ms)
+(i) [PASS] src/utils/semantic_chunker.py (275 lignes, 1.8ms)
+(i) [PASS] src/utils/token_budget.py (76 lignes, 0.6ms)
+(i) [PASS] src/utils/lexicon/entity_matcher.py (194 lignes, 1.3ms)
+(i) [PASS] src/utils/lexicon/project_resolver.py (206 lignes, 1.5ms)
+(i) [PASS] src/utils/lexicon/__init__.py (13 lignes, 0.3ms)
+(i) [PASS] src/utils/token_ledger/key_info.py (87 lignes, 0.8ms)
+(i) [PASS] src/utils/token_ledger/reporting.py (105 lignes, 1.4ms)
+(i) [PASS] src/utils/token_ledger/__init__.py (227 lignes, 1.5ms)
+  * [S1] Bilan code-check AST: 290/329 conformes | 65 violation(s)
+    ÔööÔöÇÔöÇ Action : All├®ger le contenu et extraire les fonctions secondaires.
+--- AUDIT AST : src/pipelines/jira/jira_item_sync.py ---
+Statut : [FAIL] VIOLATIONS | 317 lignes | 10818 octets | 1.68 ms
+Violations relev├®es :
+  * [RULE-AST-01] (L317) : Plafond modulaire d├®pass├® : 317 lignes (seuil strict = 300).
+    ÔööÔöÇÔöÇ Action : D├®couper le module en composants sp├®cialis├®s (ADR-0202).
+ERROR [mloop.cli.router] Fin de l'ex├®cution CLI. | command=code-check duration_ms=634.46 exit_code=1 phase=run project=None

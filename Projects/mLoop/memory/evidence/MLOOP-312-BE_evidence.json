@@ -1,0 +1,111 @@
+{
+  "story_id": "MLOOP-312-BE",
+  "jira_key": "MLOOP-312-BE",
+  "file_path": "backlog/stories/MLOOP-312-BE.md",
+  "timestamp": "2026-09-25T09:19:03.433531+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "source_file": "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "sha256": "3adeba417d696ca35dae0d3388fe2151720ac4ada18c304ae17f74581190cf41",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.400797+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-312-BE_fact_dossier.md",
+      "source_file": "MLOOP-312-BE_fact_dossier.md",
+      "sha256": "80cb955187fda4397319949d8ee52e4fdc1b483e4759dc551b7009bbccb44194",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-312-BE_fact_dossier.md) : MLOOP-312-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T09:19:03.401791+00:00"
+    },
+    {
+      "query": "Fact-Search epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "source_file": "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "sha256": "1e721a09b9c9a7de866fc10fe39e359676f46451031fe7e4a5b74933568a0b33",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.414850+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-312-BE_fact_dossier.md": "80cb955187fda4397319949d8ee52e4fdc1b483e4759dc551b7009bbccb44194",
+    "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md": "3adeba417d696ca35dae0d3388fe2151720ac4ada18c304ae17f74581190cf41",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md": "1e721a09b9c9a7de866fc10fe39e359676f46451031fe7e4a5b74933568a0b33"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md, MLOOP-312-BE_fact_dossier.md, epic_fsm_anti_hardcoding_and_lifecycle_refactor.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.581,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+    "MLOOP-312-BE_fact_dossier.md",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Déroulement nominal complet du cycle des 5 phases jusqu'à la clôture automatique",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet immédiat d'un saut de phase illicite",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rétrogradation directe de READY_FOR_QA vers IN_DEV lors d'un échec de test",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Validation de Gate 5 autonome sans blocage de nom d'agent ni champ vide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-312-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-312-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.581,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

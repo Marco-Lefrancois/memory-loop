@@ -1,0 +1,167 @@
+{
+  "story_id": "MLOOP-314-FULL",
+  "jira_key": "MLOOP-314-FULL",
+  "file_path": "backlog/stories/MLOOP-314-FULL.md",
+  "timestamp": "2026-09-25T09:19:03.603508+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "source_file": "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "sha256": "3adeba417d696ca35dae0d3388fe2151720ac4ada18c304ae17f74581190cf41",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.526882+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-314-FULL_fact_dossier.md",
+      "source_file": "MLOOP-314-FULL_fact_dossier.md",
+      "sha256": "c626a172102e0d62e64bec8e7659f14a161aec53e8d5185842306bdd28fc9edd",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-314-FULL_fact_dossier.md) : MLOOP-314-FULL_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T09:19:03.526882+00:00"
+    },
+    {
+      "query": "Fact-Search STORY_LIFECYCLE_PROTOCOL.md",
+      "source_file": "STORY_LIFECYCLE_PROTOCOL.md",
+      "sha256": "40297a304e824a9bbbe1c9ecd4da0b39ae7439038ec0c140b70566ab1aa603e0",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : STORY_LIFECYCLE_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.551930+00:00"
+    },
+    {
+      "query": "Fact-Search epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "source_file": "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "sha256": "1e721a09b9c9a7de866fc10fe39e359676f46451031fe7e4a5b74933568a0b33",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.566387+00:00"
+    },
+    {
+      "query": "Fact-Search project_sprint_backlog_template.md",
+      "source_file": "project_sprint_backlog_template.md",
+      "sha256": "433d34de9896c95fa97e5dd5203d932a8027f2284732f142f4a333c12c55c3b6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : project_sprint_backlog_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.567398+00:00"
+    },
+    {
+      "query": "Fact-Search sprint_backlog.md",
+      "source_file": "sprint_backlog.md",
+      "sha256": "55f38f60f6271d24fb8bd42282137448493e9bdae805d7229490be385270e57d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : sprint_backlog.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.567398+00:00"
+    },
+    {
+      "query": "Fact-Search sprint_backlog_template.md",
+      "source_file": "sprint_backlog_template.md",
+      "sha256": "ea3d2b593df88e35762a40fa141d8491a26b5e5ae65ede780c607c23ac685c0e",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : sprint_backlog_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.568385+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-314-FULL_fact_dossier.md": "c626a172102e0d62e64bec8e7659f14a161aec53e8d5185842306bdd28fc9edd",
+    "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md": "3adeba417d696ca35dae0d3388fe2151720ac4ada18c304ae17f74581190cf41",
+    "STORY_LIFECYCLE_PROTOCOL.md": "40297a304e824a9bbbe1c9ecd4da0b39ae7439038ec0c140b70566ab1aa603e0",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md": "1e721a09b9c9a7de866fc10fe39e359676f46451031fe7e4a5b74933568a0b33",
+    "project_sprint_backlog_template.md": "433d34de9896c95fa97e5dd5203d932a8027f2284732f142f4a333c12c55c3b6",
+    "sprint_backlog.md": "55f38f60f6271d24fb8bd42282137448493e9bdae805d7229490be385270e57d",
+    "sprint_backlog_template.md": "ea3d2b593df88e35762a40fa141d8491a26b5e5ae65ede780c607c23ac685c0e"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md, MLOOP-314-FULL_fact_dossier.md, STORY_LIFECYCLE_PROTOCOL.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.553,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+    "MLOOP-314-FULL_fact_dossier.md",
+    "STORY_LIFECYCLE_PROTOCOL.md",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+    "project_sprint_backlog_template.md",
+    "sprint_backlog.md",
+    "sprint_backlog_template.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Publication conforme de l'ADR-0391 et alignement du protocole",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection et rejet de toute tentative d'altération d'un récit scellé DONE",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Exécution de la suite complète de 1638+ tests sans régression",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Alignement de la légende du sprint backlog sans valeur null",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-314-FULL",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-314-FULL.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.553,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

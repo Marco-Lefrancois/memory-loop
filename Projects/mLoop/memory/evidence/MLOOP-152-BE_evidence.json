@@ -1,0 +1,130 @@
+{
+  "story_id": "MLOOP-152-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-152-BE.md",
+  "timestamp": "2026-09-23T21:48:08.775191+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T21:48:08.757950+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-152-BE_evidence.json",
+      "source_file": "MLOOP-152-BE_evidence.json",
+      "sha256": "f1ec8b110b90160c8e9a7602a3261039a4fae68ecf83773b1f22b1fad30c752d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : MLOOP-152-BE_evidence.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T21:48:08.757950+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-152-BE_fact_dossier.md",
+      "source_file": "MLOOP-152-BE_fact_dossier.md",
+      "sha256": "062c25de2a0e0218bc759833c9e907dec64cd75113daf8e786e637a6a67bc92e",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-152-BE_fact_dossier.md) : MLOOP-152-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T21:48:08.757950+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-152-BE_fact_dossier.md": "062c25de2a0e0218bc759833c9e907dec64cd75113daf8e786e637a6a67bc92e",
+    "MLOOP-152-BE_evidence.json": "f1ec8b110b90160c8e9a7602a3261039a4fae68ecf83773b1f22b1fad30c752d"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : AGENTS.md, MLOOP-152-BE_evidence.json, MLOOP-152-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.581,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "AGENTS.md",
+    "MLOOP-152-BE_evidence.json",
+    "MLOOP-152-BE_fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [
+    {
+      "type": "NOTE",
+      "text": "**Fichier restauré le 2026-09-22** à partir du dossier de preuves intact `memory/evidence/MLOOP-152-BE_fact_dossier.md` et de l'EvidencePack `MLOOP-152-BE_evidence.json`, après suppression physique externe du fichier original (agents parallèles WORKING détectés — voir `worker-status`). **Palier 2 atteint** : `status: READY_FOR_DEV`, `grill_me: DONE`, séance Grill-Me 1:1 tenue le 2026-09-22, DoR 6/6 validé."
+    }
+  ],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Visualisation d'un schéma DBML en local",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Fichier DBML invalide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Aucun schéma DBML détecté",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Anti-rebond du démarrage automatique",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Démarrage automatique du serveur drawdb",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Dashboard seul en fonction",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Widget de santé du serveur DrawDB",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-152-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-152-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.581,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

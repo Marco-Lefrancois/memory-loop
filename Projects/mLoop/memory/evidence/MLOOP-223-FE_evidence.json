@@ -1,0 +1,152 @@
+{
+  "story_id": "MLOOP-223-FE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-223-FE.md",
+  "timestamp": "2026-09-25T02:01:30.445204+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "source_file": "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "sha256": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.202670+00:00"
+    },
+    {
+      "query": "Fact-Search KN-050_opencode_cli_runtime.md",
+      "source_file": "KN-050_opencode_cli_runtime.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : KN-050_opencode_cli_runtime.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:30.242594+00:00"
+    },
+    {
+      "query": "Fact-Search KN-051_plannotator_workflow.md",
+      "source_file": "KN-051_plannotator_workflow.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : KN-051_plannotator_workflow.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:30.291740+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-223-FE_fact_dossier.md",
+      "source_file": "MLOOP-223-FE_fact_dossier.md",
+      "sha256": "4041036d7d28661d2fa13f26c6a0a0755f360f13ad1243b32f322e784712cfe6",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-223-FE_fact_dossier.md) : MLOOP-223-FE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:30.292746+00:00"
+    },
+    {
+      "query": "Fact-Search epic_tooling_ecosystem_harness.md",
+      "source_file": "epic_tooling_ecosystem_harness.md",
+      "sha256": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_tooling_ecosystem_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.322884+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-223-FE_fact_dossier.md": "4041036d7d28661d2fa13f26c6a0a0755f360f13ad1243b32f322e784712cfe6",
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+    "epic_tooling_ecosystem_harness.md": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md, KN-050_opencode_cli_runtime.md, KN-051_plannotator_workflow.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.56,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+    "KN-050_opencode_cli_runtime.md",
+    "KN-051_plannotator_workflow.md",
+    "MLOOP-223-FE_fact_dossier.md",
+    "epic_tooling_ecosystem_harness.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Récupération réussie du statut des runtimes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Affichage des badges de statut sur la page Overview",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Traitement d'un runtime non installé ou non disponible",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Réponse avec champ vide ou caractère spécial inattendu",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Coupure réseau ou délai d'attente (timeout) de l'API",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Protection anti-rebond sur le bouton d'action Plannotator",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Navigation accessible au clavier et conformité ARIA",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-223-FE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-223-FE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.56,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

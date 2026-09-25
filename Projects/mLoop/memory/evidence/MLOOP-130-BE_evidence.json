@@ -1,0 +1,124 @@
+{
+  "story_id": "MLOOP-130-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-130-BE.md",
+  "timestamp": "2026-09-23T12:35:58.029421+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0204-dual-engine-graph-architecture-graphify-codegraph.md",
+      "source_file": "0204-dual-engine-graph-architecture-graphify-codegraph.md",
+      "sha256": "15a7bab4d4e8931ded938699aec42f0a446b8a30b9ae0f82d5d05de336dda850",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0204-dual-engine-graph-architecture-graphify-codegraph.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:47.048830+00:00"
+    },
+    {
+      "query": "Fact-Search ANALYSE-GRAFT-TRAILHQ_fact_dossier.md",
+      "source_file": "ANALYSE-GRAFT-TRAILHQ_fact_dossier.md",
+      "sha256": "730761c61adb50797fc032e7fe038bd549e40a2f06c941bdecb351cf75e8be47",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (ANALYSE-GRAFT-TRAILHQ_fact_dossier.md) : ANALYSE-GRAFT-TRAILHQ_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.049830+00:00"
+    },
+    {
+      "query": "Fact-Search KN-020_dual_engine_graph_codegraph_graphify.md",
+      "source_file": "KN-020_dual_engine_graph_codegraph_graphify.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : KN-020_dual_engine_graph_codegraph_graphify.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-22T14:26:47.058534+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-130-BE_evidence.json",
+      "source_file": "MLOOP-130-BE_evidence.json",
+      "sha256": "bbe9a71c5517ed1bf7717ab917f71e7f402879c3d743a1863e8e9ac43ede968d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : MLOOP-130-BE_evidence.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:47.058534+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "ANALYSE-GRAFT-TRAILHQ_fact_dossier.md": "730761c61adb50797fc032e7fe038bd549e40a2f06c941bdecb351cf75e8be47",
+    "0204-dual-engine-graph-architecture-graphify-codegraph.md": "15a7bab4d4e8931ded938699aec42f0a446b8a30b9ae0f82d5d05de336dda850",
+    "MLOOP-130-BE_evidence.json": "bbe9a71c5517ed1bf7717ab917f71e7f402879c3d743a1863e8e9ac43ede968d"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0204-dual-engine-graph-architecture-graphify-codegraph.md, ANALYSE-GRAFT-TRAILHQ_fact_dossier.md, KN-020_dual_engine_graph_codegraph_graphify.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue",
+      "NO_SOURCE_AVAILABLE : aucun fact_dossier, plan ni section Règles d'affaires exploitable pour ce récit (backfill MLOOP-182-BE)."
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.0,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0204-dual-engine-graph-architecture-graphify-codegraph.md",
+    "ANALYSE-GRAFT-TRAILHQ_fact_dossier.md",
+    "KN-020_dual_engine_graph_codegraph_graphify.md",
+    "MLOOP-130-BE_evidence.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Exécution nominale du benchmark complet sur le corpus tiers",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet d'un run dont la graine ou le corpus n'est pas conforme",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Indisponibilité ou temporisation d'un moteur pendant un run",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Traçabilité complète de chaque run pour reproductibilité",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-130-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-130-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.81,
+  "status": "VALIDATED",
+  "implementation_decisions": [],
+  "verbatim_extracts": [],
+  "declarative_contracts": []
+}

@@ -1,0 +1,73 @@
+{
+  "story_id": "MLOOP-021-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-021-BE.md",
+  "timestamp": "2026-09-22T14:36:44.105175+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search wikifix_report.md",
+      "source_file": "wikifix_report.md",
+      "sha256": "f996e096a90b7823873d4e47db11530bbff212fc10eb87daf24dc8fb9d2b2629",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : wikifix_report.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:36:44.105175+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "wikifix_report.md": "f996e096a90b7823873d4e47db11530bbff212fc10eb87daf24dc8fb9d2b2629"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : wikifix_report.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "wikifix_report.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Exécution complète de l'audit et auto-healing des callouts",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection bloquante de non-conformité structurelle INVEST",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résilience lors d'erreurs I/O avec traçabilité explicite",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Traitement gracieux d'un projet sans fichiers markdown",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-021-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-021-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION"
+}

@@ -4,6 +4,7 @@
 **Date** : 17 août 2026  
 **Auteurs** : Équipe mLoop & Co-Architecte Agentique  
 **Domaine** : Runtime Multi-Agents, Gestion de Contexte (AI Coding Loop), Herdr PTY Multiplexer, Traçabilité  
+**Amendement ADR-0389 (25 sept. 2026)** : Actualisation des drapeaux de lancement des workers — `--auto --agent worker` pour OpenCode, `--auto-approve true` pour Cline.
 
 ---
 

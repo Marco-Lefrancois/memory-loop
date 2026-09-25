@@ -18,9 +18,8 @@ from src.core._plan_act_guard import (
     start_with_circuit_breaker,
 )
 
-# Ré-exports du teardown gate extrait (_worker_reaper.py) — API publique préservée
-# pour src/core/herdr_worker.py qui importe ces symboles depuis herdr_worker_core.
-from src.core._worker_reaper import (  # noqa: F401 — ré-exports rétrocompatibles
+# Ré-exports teardown gate extrait (_worker_reaper.py) pour herdr_worker.py.
+from src.core._worker_reaper import (  # noqa: F401
     audit_and_reap_zombies_impl,
     detect_stalled_agents_impl,
     extract_agents_list_impl,
@@ -34,8 +33,7 @@ TASK_MODEL_MAP = {
     "deepening": "nmedia_cloud/claude-opus-4.8",
     "validation": "nmedia_cloud/gpt-5.6-terra-thinking",
     "deepsearch": "nmedia_cloud/claude-sonnet-5",
-    # Free tier natif OpenCode (ADR-0388) : facilite dev/build sans coût LiteLLM.
-    # Portes qualité (deepening/validation/deepsearch/compaction) inchangées.
+    # Free tier OpenCode (ADR-0388) : dev/build sans coût LiteLLM
     "build": "opencode/mimo-v2.6-flash-free",
     "compaction": "nmedia_cloud/gemini-3.8-flash",
 }
@@ -109,7 +107,9 @@ def spawn_story_worker_impl(
     if runtime_spec is not None:
         flags = runtime_spec.build_flags(model=target_model, extra_args=extra_args)
     else:
-        flags = list(extra_args) if extra_args else ["--dangerously-skip-permissions"]
+        flags = list(extra_args) if extra_args else ["--auto", "--agent", "worker"]
+    if kind == "opencode" and "--auto" not in flags:
+        flags.insert(0, "--auto")
 
     # MLOOP-262-BE : Verrouillage strict du mode Plan/Act pour Cline (guard extrait).
     lifecycle_mode: Optional[str] = None

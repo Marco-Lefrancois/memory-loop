@@ -1,0 +1,57 @@
+{
+  "project_name": "mLoop",
+  "certified_at": "2026-09-25T08:12:16Z",
+  "is_certified": true,
+  "pytest_result": {
+    "all_passed": true,
+    "total_tests": 1638,
+    "passed_tests": 1638,
+    "failed_tests": 0,
+    "duration_seconds": 343.68,
+    "coverage_percent": 100.0,
+    "details": "........................................................................ [  4%]\n........................................................................ [  8%]\n........................................................................ [ 13%]\n........................................................................ [ 17%]\n........................................................................ [ 21%]\n........................................................................ [ 26%]\n........................................................................ [ 30%]\n........................................"
+  },
+  "ast_summary": {
+    "files_audited": 3,
+    "total_violations": 0,
+    "passed": true,
+    "violations": []
+  },
+  "cel_result": {
+    "cel_found": true,
+    "ledger_path": "Projects\\mLoop\\memory\\evidence\\EPIC-9_code_evidence_ledger.json",
+    "total_blocks": 5,
+    "covered_pillars": [
+      "PILIER_1_CHEMIN_NOMINAL",
+      "PILIER_2_EXCEPTIONS_REJETS",
+      "PILIER_3_RESILIENCE_MODE_DEGRADE",
+      "PILIER_4_UX_OBSERVABILITE"
+    ],
+    "missing_pillars": [],
+    "is_complete": true,
+    "sprint_files": [
+      "src/core/gate4_validator.py",
+      "src/pipelines/nli_auditor.py",
+      "src/pipelines/qa_certifier.py",
+      "tests/test_lifecycle_gate4.py",
+      "tests/test_nli_auditor.py",
+      "tests/test_qa_certifier.py"
+    ]
+  },
+  "leakage_summary": {
+    "files_audited": 3,
+    "critical_violations": 0,
+    "warning_violations": 0,
+    "passed": true,
+    "details": []
+  },
+  "nli_summary": {
+    "claims_verified": 1,
+    "entailments": 0,
+    "contradictions": 0,
+    "unsupported": 0,
+    "passed": true,
+    "details": []
+  },
+  "blocking_reasons": []
+}

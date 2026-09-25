@@ -1,0 +1,57 @@
+{
+  "story_id": "MLOOP-140-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-140-BE.md",
+  "timestamp": "2026-09-22T14:26:47.093106+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-140-BE_fact_dossier.md",
+      "source_file": "MLOOP-140-BE_fact_dossier.md",
+      "sha256": "d539139884e880e49c58906ea49a82e9972c2613b077a0f2d0f57a794cd3348c",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-140-BE_fact_dossier.md) : MLOOP-140-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.090013+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-140-BE_fact_dossier.md": "d539139884e880e49c58906ea49a82e9972c2613b077a0f2d0f57a794cd3348c"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-140-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "MLOOP-140-BE_fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [
+    {
+      "type": "IMPORTANT",
+      "text": "*Ces questions constituent l'ordre du jour obligatoire de la session contradictoire Grill-Me 1:1.*"
+    }
+  ],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-140-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-140-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "VALIDATED"
+}

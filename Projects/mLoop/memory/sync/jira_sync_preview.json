@@ -1,0 +1,20 @@
+{
+  "manifest_id": "af0ca8d9",
+  "generated_at": "2026-09-23T07:01:50.476451",
+  "project": "mLoop",
+  "target_keys": [
+    "MLOOP-180-BE"
+  ],
+  "eligible": [
+    {
+      "id": "MLOOP-180-BE",
+      "jira_key": "",
+      "title": "📖 MLOOP-180-BE : Extension du Schema EvidencePackEngine vers la Parité Phase 2 (5 Champs de Richesse)",
+      "status": "IN_QA"
+    }
+  ],
+  "rejected": [],
+  "file_hashes": {
+    "C:\\Memory Loop\\Projects\\mLoop\\backlog\\stories\\MLOOP-180-BE.md": "68b794e83cef82399de6078bf9deb2e7867462c5133d9b09dc5d6673e6ba879e"
+  }
+}

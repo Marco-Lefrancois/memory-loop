@@ -18,6 +18,38 @@ Il orchestre la dualité de la Phase 2 :
 
 ---
 
+## 🚀 Protocole d'Ouverture de Session Plan (Obligatoire)
+
+En début de toute session `/plan`, avant tout découpage, l'agent DOIT émettre ce bref état des lieux :
+
+```markdown
+## 📋 Cadrage Initial — Session Plan
+### 1. Ce que je sais déjà (Faits établis & Preuves pivots)
+- 📌 **Périmètre confirmé** : [Périmètre Epic/Projet confirmé depuis docs/ ou backlog/]
+  > 🔍 *Preuve pivot :* `[docs/01-architecture/...:Lignes X-Y]`
+- 📌 **Contraintes & Standards** : [Contraintes d'architecture identifiées (ADR-XXXX, templates)]
+  > 🔍 *Preuve pivot :* `[standards/adr-system/...:Lignes X-Y]`
+- 📁 *Dossier de preuves d'analyse :* `memory/evidence/<EPIC_OU_STORY>_fact_dossier.md`
+
+### 2. L'unique arbitrage à trancher avant de découper
+> ❓ **<Titre du point bloquant>**
+> <Contexte factuel + impact sur le découpage>
+> - **Option A** (Recommandée) : <Approche + justification appuyée par les preuves>
+> - **Option B** : <Alternative + compromis>
+> ➡️ Votre réponse débloque immédiatement le découpage.
+
+### 3. Plan d'action dès validation
+- [ ] Découper en N Story Drafts (gabarit story_draft_template.md)
+- [ ] Ouvrir grill-me --story <ID> pour le récit le plus prioritaire
+- [ ] Synchroniser sprint_backlog.md et EvidencePack
+```
+
+**Règles d'or du Cadrage :**
+- **Principe Preuve Pivot & Sidecar** : Extraire 1 à 3 faits ou contraintes majeures avec liens cliquables (`[fichier.md:LX-Y]`). Ne pas polluer le chat avec le dossier exhaustif.
+- Si aucun arbitrage fonctionnel n'est requis (tous les faits et règles sont documentés), supprimer le bloc 2 et passer directement à l'exécution du bloc 3. Ne jamais inventer une question pour paraître interactif.
+
+---
+
 ## Les 6 Règles Inviolables de Planification
 
 ### 1. Règle Stricte des Exactement Deux Templates de Récits (Two-Tier Maturation)

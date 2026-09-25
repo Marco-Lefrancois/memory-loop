@@ -1,0 +1,252 @@
+{
+  "story_id": "MLOOP-260-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-260-BE.md",
+  "timestamp": "2026-09-25T12:08:54.605621+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-260-BE_evidence.json",
+      "source_file": "MLOOP-260-BE_evidence.json",
+      "sha256": "25ac99c2a8fd9bbdba3c52e2ba232858d7248c3723cf99104799eae90281ee18",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : MLOOP-260-BE_evidence.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.191068+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-260-BE_fact_dossier.md",
+      "source_file": "MLOOP-260-BE_fact_dossier.md",
+      "sha256": "2ccb62c4405e5344f3227725ea2d03647df73f4584569dbe9239997a37b7e14d",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-260-BE_fact_dossier.md) : MLOOP-260-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T12:08:54.191574+00:00"
+    },
+    {
+      "query": "Fact-Search _evidence.json",
+      "source_file": "_evidence.json",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _evidence.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:54.222889+00:00"
+    },
+    {
+      "query": "Fact-Search activeContext.md",
+      "source_file": "activeContext.md",
+      "sha256": "3160923b192ef52bbe6d9cc84eea1e17ff1619315bcf4d19970b1ace377e868b",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : activeContext.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.241051+00:00"
+    },
+    {
+      "query": "Fact-Search mloop.md",
+      "source_file": "mloop.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : mloop.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:54.272000+00:00"
+    },
+    {
+      "query": "Fact-Search productContext.md",
+      "source_file": "productContext.md",
+      "sha256": "80c7c899a3cecd3903467709decc1b73e4b23473b4e350aceafbba3ff4907053",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : productContext.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.289401+00:00"
+    },
+    {
+      "query": "Fact-Search progress.md",
+      "source_file": "progress.md",
+      "sha256": "a6eda05cff0e8ffdd8941d8300ec2bb1aca86d507f86bb1c159b652f4320f4d5",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : progress.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.310805+00:00"
+    },
+    {
+      "query": "Fact-Search projectbrief.md",
+      "source_file": "projectbrief.md",
+      "sha256": "414fbaa1fda8018da0df66c5f44bfd3748a2978568af7e5360ba1ee5e30e8135",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : projectbrief.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.324418+00:00"
+    },
+    {
+      "query": "Fact-Search source_adr_0346.md",
+      "source_file": "source_adr_0346.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_adr_0346.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:54.345129+00:00"
+    },
+    {
+      "query": "Fact-Search source_adr_0377.md",
+      "source_file": "source_adr_0377.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_adr_0377.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:54.370023+00:00"
+    },
+    {
+      "query": "Fact-Search source_cline_doc.md",
+      "source_file": "source_cline_doc.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_cline_doc.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:54.401643+00:00"
+    },
+    {
+      "query": "Fact-Search sprint_backlog.md",
+      "source_file": "sprint_backlog.md",
+      "sha256": "775ba7bcf355da29749276abc801ab9c0e9a950a1e27ac4723908fac28d754f7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : sprint_backlog.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.402644+00:00"
+    },
+    {
+      "query": "Fact-Search systemPatterns.md",
+      "source_file": "systemPatterns.md",
+      "sha256": "1fab4e408bf09b33265dcd3f241560dac556bf8160033858ea6feb7707003ae6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : systemPatterns.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.419616+00:00"
+    },
+    {
+      "query": "Fact-Search techContext.md",
+      "source_file": "techContext.md",
+      "sha256": "dbd215a27773ee23fd5ff8e30446facfbb14a20bf4c139e5e621a47e57a9fd04",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : techContext.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:54.436861+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-260-BE_fact_dossier.md": "2ccb62c4405e5344f3227725ea2d03647df73f4584569dbe9239997a37b7e14d",
+    "MLOOP-260-BE_evidence.json": "25ac99c2a8fd9bbdba3c52e2ba232858d7248c3723cf99104799eae90281ee18",
+    "activeContext.md": "3160923b192ef52bbe6d9cc84eea1e17ff1619315bcf4d19970b1ace377e868b",
+    "productContext.md": "80c7c899a3cecd3903467709decc1b73e4b23473b4e350aceafbba3ff4907053",
+    "progress.md": "a6eda05cff0e8ffdd8941d8300ec2bb1aca86d507f86bb1c159b652f4320f4d5",
+    "projectbrief.md": "414fbaa1fda8018da0df66c5f44bfd3748a2978568af7e5360ba1ee5e30e8135",
+    "sprint_backlog.md": "775ba7bcf355da29749276abc801ab9c0e9a950a1e27ac4723908fac28d754f7",
+    "systemPatterns.md": "1fab4e408bf09b33265dcd3f241560dac556bf8160033858ea6feb7707003ae6",
+    "techContext.md": "dbd215a27773ee23fd5ff8e30446facfbb14a20bf4c139e5e621a47e57a9fd04"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-260-BE_evidence.json, MLOOP-260-BE_fact_dossier.md, _evidence.json"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "6 fichiers obligatoires et standardisés.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "`memory_bank_bridge.py` s'établit à 257 lignes, strictement conforme.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "MLOOP-260-BE_evidence.json",
+    "MLOOP-260-BE_fact_dossier.md",
+    "_evidence.json",
+    "activeContext.md",
+    "mloop.md",
+    "productContext.md",
+    "progress.md",
+    "projectbrief.md",
+    "source_adr_0346.md",
+    "source_adr_0377.md",
+    "source_cline_doc.md",
+    "sprint_backlog.md",
+    "systemPatterns.md",
+    "techContext.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-260-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-260-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

@@ -1,0 +1,162 @@
+{
+  "story_id": "MLOOP-171-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-171-BE.md",
+  "timestamp": "2026-09-24T14:41:47.798331+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-171-BE_fact_dossier.md",
+      "source_file": "MLOOP-171-BE_fact_dossier.md",
+      "sha256": "9bea4ceae0f838db5817d7c23a862c145ba3f802d6ed60110fd58b0ead774e0a",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-171-BE_fact_dossier.md) : MLOOP-171-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T14:41:47.785639+00:00"
+    },
+    {
+      "query": "Fact-Search epic_modular_refactoring_ast_debt.md",
+      "source_file": "epic_modular_refactoring_ast_debt.md",
+      "sha256": "f1f405d0522715dedb93ff517e380a0a97ca99bbbf63cf3c3a07163598e75d85",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-171-BE_fact_dossier.md) : epic_modular_refactoring_ast_debt.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T14:41:47.793439+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-171-BE_fact_dossier.md": "9bea4ceae0f838db5817d7c23a862c145ba3f802d6ed60110fd58b0ead774e0a",
+    "epic_modular_refactoring_ast_debt.md": "f1f405d0522715dedb93ff517e380a0a97ca99bbbf63cf3c3a07163598e75d85"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-171-BE_fact_dossier.md, epic_modular_refactoring_ast_debt.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "périmètre = 39 fichiers en violation RULE-AST-01 (hors pilote 170).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "3 cibles >900L identifiées pour priorisation par blast radius.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "frontière de cadrage close, aucun OQ résiduel ouvert.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "DoR Sentinel satisfait pour passage Palier 2.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "MLOOP-171-BE_fact_dossier.md",
+    "epic_modular_refactoring_ast_debt.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Production de l'inventaire priorisé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Commit aggravant rejeté",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "CodeGraph indisponible",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Matrice lisible et actionnable",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-171-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-171-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:41.868901",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-171-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:41.868901",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 52.0,
+      "overall_trust": 83.2
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+      "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [
+      {
+        "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+        "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+        "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+        "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+      },
+      {
+        "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+        "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+        "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+        "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+      }
+    ],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

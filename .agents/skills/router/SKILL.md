@@ -1,6 +1,6 @@
 ---
 name: router
-description: "Router: Index des compétences mLoop et Agent-Skills. Indique quel skill utiliser selon le contexte."
+description: "Router: Index des compétences mLoop et Agent-Skills. Indique quel skill utiliser selon le contexte. Use when selecting skills, dispatching tasks, or determining interaction criticality level."
 disable-model-invocation: true
 ---
 
@@ -10,6 +10,23 @@ disable-model-invocation: true
 
 ## 🎯 Rôle Souverain
 Ce catalogue centralise la cartographie complète des compétences disponibles dans `.agents/skills/`. Il permet d'orienter les agents et l'humain vers la compétence idoine selon la phase du cycle de vie cognitif ou la tâche d'ingénierie à accomplir.
+
+---
+
+## ⚖️ Matrice d'Intervention & Criticité ("Plan-First")
+
+Pour éviter tant l'interactivité épuisante (fatigue cognitive de l'utilisateur) que le silence radio dangereux (dérive hors-piste), toute action d'orchestration ou d'exécution calibre son interactivité selon cette matrice à 3 niveaux :
+
+| Niveau | Impact & Périmètre | Mode d'Interactivité de l'Orchestrateur | Comportement & Garde-Fou |
+| :--- | :--- | :--- | :--- |
+| **Niveau 1 : Trivial** | Correction typo, formatage cosmétique, consultation read-only, inspection de fichiers/graphe. | **Zero-Gate** (Autonome) | Exécution autonome immédiate sans interruption ni demande de confirmation. |
+| **Niveau 2 : Moyen** | 1 à 2 fichiers modifiés, ajustement d'un test unitaire, scénario de correction ciblé, refactoring localisé. | **Micro-Plan** (Synthèse) | Résumé express en 2–3 puces dans le terminal/chat avant exécution. Poursuite fluide sauf veto. |
+| **Niveau 3 : Critique** | $\ge 3$ fichiers modifiés, création/promotion de Story (`READY_FOR_DEV`), contrat d'API, refonte d'architecture, migration de schéma, arbitrage contractuel (SOW/ADR Type 1). | **Plan Formel Bloquant (HITL)** | Présentation d'un plan complet structuré et attente impérative d'un accord explicite (`[Y/n]` ou validation utilisateur). Interdiction d'agir sans confirmation. |
+
+### 🛑 Sentinelles de Dérive & Protocole Stop & Ask
+1. **Stalled Reasoning Breaker** : Si l'orchestrateur observe 3 itérations consécutives avec moins de 5 % de progrès sémantique réel, ou s'il commence à osciller entre deux solutions, couper immédiatement l'inférence et lever une interruption HITL explicite (`[HITL REQUIRED] Arbitrage requis avant poursuite`).
+2. **Question Bloquante (`OQ-XXX`)** : Quand un blocage externe ou métier survient, consigner une *Open Question* persistante dans le backlog (`docs/04-transverse/00-questions-ouvertes.md`) et alerter l'utilisateur plutôt que d'extrapoler une solution bancale.
+3. **Changement de Posture Explicite** : Annoncer visuellement tout basculement de casquette cognitive (ex: `[PLAN] Découpage en cours...`, `[BUILD] Implémentation TDD...`, `[AUDIT - Sentinel] Revue contradictoire...`).
 
 ---
 

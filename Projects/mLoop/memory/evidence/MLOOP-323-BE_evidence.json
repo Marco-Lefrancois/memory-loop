@@ -1,0 +1,170 @@
+{
+  "story_id": "MLOOP-323-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-323-BE.md",
+  "timestamp": "2026-09-25T14:10:56.497171+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "source_file": "0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "sha256": "66e5659a7be499141e01c8ac896b523721caca839bbd5129243c692b5c601098",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T14:10:56.317845+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+      "source_file": "ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+      "sha256": "f71eedf829fc4ae82decfb9874044e207ba92c5a984a9cec666ac23b78de43ba",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T14:10:56.345163+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-020_micro-grill_mloop-323-be__2_decisions.md",
+      "source_file": "ADR-020_micro-grill_mloop-323-be__2_decisions.md",
+      "sha256": "1be4004efc7acd3957d68ba7a5d09a188ae240384da4df012cf2e8e9a3942287",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-020_micro-grill_mloop-323-be__2_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T14:10:56.373323+00:00"
+    },
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T14:10:56.393424+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-323-BE_fact_dossier.md",
+      "source_file": "MLOOP-323-BE_fact_dossier.md",
+      "sha256": "71c922d98b4e4d22da7bbd4bed3b0db0fb9e9479d517f849b3c2c973215ce09d",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-323-BE_fact_dossier.md) : MLOOP-323-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T14:10:56.393930+00:00"
+    },
+    {
+      "query": "Fact-Search _fact_dossier.md",
+      "source_file": "_fact_dossier.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _fact_dossier.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T14:10:56.414811+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-323-BE_fact_dossier.md": "71c922d98b4e4d22da7bbd4bed3b0db0fb9e9479d517f849b3c2c973215ce09d",
+    "0393-decouplage-modalite-grill-scope-anti-cascade.md": "66e5659a7be499141e01c8ac896b523721caca839bbd5129243c692b5c601098",
+    "ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md": "f71eedf829fc4ae82decfb9874044e207ba92c5a984a9cec666ac23b78de43ba",
+    "ADR-020_micro-grill_mloop-323-be__2_decisions.md": "1be4004efc7acd3957d68ba7a5d09a188ae240384da4df012cf2e8e9a3942287"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0393-decouplage-modalite-grill-scope-anti-cascade.md, ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md, ADR-020_micro-grill_mloop-323-be__2_decisions.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "L'option `--mode` amalgame le format et le scope. Le CLI ne permet pas encore de spécifier indépendamment `--format` et `--scope`.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Aucune sonde ne vérifie actuellement la vélocité anormale d'apparition des récits en Palier 2 ni l'existence de dossiers de preuves individuels horodatés pou...",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le contrat d'acceptation du Check 28 est fondé sur l'absence de preuves unitaires pour un lot de récits promus rapidement.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0393-decouplage-modalite-grill-scope-anti-cascade.md",
+    "ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+    "ADR-020_micro-grill_mloop-323-be__2_decisions.md",
+    "AGENTS.md",
+    "MLOOP-323-BE_fact_dossier.md",
+    "_fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-25T08:24:00.000000+00:00",
+  "verification_harness": [
+    {
+      "scenario_title": "Exécution conforme du Check 28 sur un backlog avec dossiers de preuves réguliers",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection d'une promotion groupée sans preuves et blocage en Phase 4",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résilience face aux frappes concurrentes sous 500 millisecondes et perte réseau",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection d'arguments invalides, champ vide ou conflit d'options CLI",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-323-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-323-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

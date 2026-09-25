@@ -1,0 +1,254 @@
+{
+  "story_id": "MLOOP-181-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-181-BE.md",
+  "timestamp": "2026-09-23T12:08:11.389913+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-181-BE_fact_dossier.md",
+      "source_file": "MLOOP-181-BE_fact_dossier.md",
+      "sha256": "fd566c70dabccf72e5d4e6cba19c89c95b9fd5744cdeb8b95d0a9f15d4b6d288",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-181-BE_fact_dossier.md) : MLOOP-181-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T12:08:11.337885+00:00"
+    },
+    {
+      "query": "Fact-Search _evidence.json",
+      "source_file": "_evidence.json",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _evidence.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T12:08:11.345724+00:00"
+    },
+    {
+      "query": "Fact-Search _fact_dossier.md",
+      "source_file": "_fact_dossier.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _fact_dossier.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T12:08:11.356709+00:00"
+    },
+    {
+      "query": "Fact-Search epic_evidence_impl_decisions.md",
+      "source_file": "epic_evidence_impl_decisions.md",
+      "sha256": "ae47c4a6a757a32b252a6c66d8e77cd158fbce87d44547a46a1f6d186260a5ec",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-181-BE_fact_dossier.md) : epic_evidence_impl_decisions.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T12:08:11.356709+00:00"
+    },
+    {
+      "query": "Fact-Search evidence_pack.py",
+      "source_file": "evidence_pack.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-181-BE_fact_dossier.md) : evidence_pack.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T12:08:11.365806+00:00"
+    },
+    {
+      "query": "Fact-Search state_machine.py",
+      "source_file": "state_machine.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-181-BE_fact_dossier.md) : state_machine.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T12:08:11.382289+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-181-BE_fact_dossier.md": "fd566c70dabccf72e5d4e6cba19c89c95b9fd5744cdeb8b95d0a9f15d4b6d288",
+    "epic_evidence_impl_decisions.md": "ae47c4a6a757a32b252a6c66d8e77cd158fbce87d44547a46a1f6d186260a5ec"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-181-BE_fact_dossier.md, _evidence.json, _fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 1,
+      "multiplier": 0.73,
+      "score": 0.73,
+      "reason": "partial_richness (1/10)"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "l'intégration doit brancher un gate **rétrocompatible** — pas de blocage rétroactif sur les 71 packs legacy.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "la dérivée de confiance est **déterministe et traçable** — le harnais doit exposer `richness_penalty` dans l'audit, pas le calcul en silence.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "double écriture** — le harnais Phase 3 doit écrire aux deux emplacements (JSON sidecar + Markdown fact_dossier).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "toute régénération de pack après édition exige `stamp_content_hash` — le harnais doit préserver cet ordre (éditer → stamper → sync).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-05",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "intégration **impossible avant** le schema de 180 — séquence stricte imposée par le frontmatter.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "MLOOP-181-BE_fact_dossier.md",
+    "_evidence.json",
+    "_fact_dossier.md",
+    "epic_evidence_impl_decisions.md",
+    "evidence_pack.py",
+    "state_machine.py"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Arbitrage tournoi capturé comme décision",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Décision en double rejetée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Contrat API inconnu pendant le build",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Fichier modifié supprimé avant extraction citation",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Timeout extraction sur gros diff",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Richesse visible dans le rapport de build",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-181-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-181-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.73,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [
+    {
+      "decision_id": "DEC-711fcd0da5031af7",
+      "category": "testing",
+      "rationale": "Cycle TDD complet scellé (red exit=2 -> green exit=0) sur tests/test_pack_preserver.py",
+      "alternatives_considered": [
+        "test unitaire isolé (rejeté: granularité par cycle complet retenue, Grill Déc. 2)"
+      ],
+      "timestamp": "2026-09-23T11:56:01.080250+00:00"
+    }
+  ],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "tdd_cycle": {
+    "red": {
+      "story_id": "MLOOP-181-BE",
+      "test_file": "tests/test_pack_preserver.py",
+      "test_sha256": "9a39ba980a15469c22ac966c5659854488bb94605fa0f243a0a3ad3be5929ab5",
+      "exit_code": 2,
+      "failure_signature": "1 error in 0.26s",
+      "timestamp_utc": "2026-09-23T11:55:15.216753+00:00"
+    },
+    "green": {
+      "story_id": "MLOOP-181-BE",
+      "test_file": "tests/test_pack_preserver.py",
+      "test_sha256": "9a39ba980a15469c22ac966c5659854488bb94605fa0f243a0a3ad3be5929ab5",
+      "source_file": "src/pipelines/pack_preserver.py",
+      "source_sha256": "259cfd2a8097dc6dc577b160703bcb54373241605e7558f4ddca0d1d986f1b05",
+      "exit_code": 0,
+      "duration_seconds": 0.605,
+      "ast_passed": true,
+      "timestamp_utc": "2026-09-23T11:56:01.077250+00:00"
+    }
+  },
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:43.022559",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-181-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:43.022559",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 64.0,
+      "overall_trust": 87.4
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [
+      {
+        "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+        "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+        "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+        "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+      }
+    ],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

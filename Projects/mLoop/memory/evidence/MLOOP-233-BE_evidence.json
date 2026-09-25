@@ -1,0 +1,190 @@
+{
+  "story_id": "MLOOP-233-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-233-BE.md",
+  "timestamp": "2026-09-25T02:01:32.306564+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search # ex.md",
+      "source_file": "# ex.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : # ex.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:31.972939+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-015_epic-23_gouvernance_stockage_persistant_et_retention.md",
+      "source_file": "ADR-015_epic-23_gouvernance_stockage_persistant_et_retention.md",
+      "sha256": "aa71d5c4535cf45386074eb84ca1b50f0cca51c23ba1542f9572fca697ee162b",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-015_epic-23_gouvernance_stockage_persistant_et_retention.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.027135+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-233-BE_fact_dossier.md",
+      "source_file": "MLOOP-233-BE_fact_dossier.md",
+      "sha256": "a1102f76f12cd09c48112f5049c2c6c6d5ec075c521ef1390bb50a592127bde4",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-233-BE_fact_dossier.md) : MLOOP-233-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:32.029148+00:00"
+    },
+    {
+      "query": "Fact-Search _prompt.md",
+      "source_file": "_prompt.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _prompt.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:32.052793+00:00"
+    },
+    {
+      "query": "Fact-Search _report.md",
+      "source_file": "_report.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _report.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:32.085465+00:00"
+    },
+    {
+      "query": "Fact-Search epic_data_hygiene_and_retention.md",
+      "source_file": "epic_data_hygiene_and_retention.md",
+      "sha256": "fb84d695e26d2a5b81408efa0637b8246a33eeff399aedccecf9765ba9af63d3",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_data_hygiene_and_retention.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:32.106069+00:00"
+    },
+    {
+      "query": "Fact-Search worker_prompt_MLOOP-233-BE.md",
+      "source_file": "worker_prompt_MLOOP-233-BE.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : worker_prompt_MLOOP-233-BE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:32.133228+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-233-BE_fact_dossier.md": "a1102f76f12cd09c48112f5049c2c6c6d5ec075c521ef1390bb50a592127bde4",
+    "ADR-015_epic-23_gouvernance_stockage_persistant_et_retention.md": "aa71d5c4535cf45386074eb84ca1b50f0cca51c23ba1542f9572fca697ee162b",
+    "epic_data_hygiene_and_retention.md": "fb84d695e26d2a5b81408efa0637b8246a33eeff399aedccecf9765ba9af63d3"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : # ex.md, ADR-015_epic-23_gouvernance_stockage_persistant_et_retention.md, MLOOP-233-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "table_source",
+      "rule_summary": "Description de la règle métier ou verbatim...",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "# ex.md",
+    "ADR-015_epic-23_gouvernance_stockage_persistant_et_retention.md",
+    "MLOOP-233-BE_fact_dossier.md",
+    "_prompt.md",
+    "_report.md",
+    "epic_data_hygiene_and_retention.md",
+    "worker_prompt_MLOOP-233-BE.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Élagage réussi des artefacts jetables au-delà du délai",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Maintien du plafond strict des checkpoints",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Tentative de purge sur dossier protégé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Validation des paramètres de délai invalides",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Protection anti-rebond et exécutions concurrentes de nettoyage",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Purge automatique déclenchée par la transition de statut",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Gestion de fin de session en cours de purge",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Confirmation console claire",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-233-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-233-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

@@ -46,6 +46,13 @@ Groupement par composant / domaine fonctionnel, ordonné par dépendance logique
 - #### `[DELETE]` [`chemin/vers/ancien_fichier.ext`](file:///c:/Memory%20Loop/chemin/vers/ancien_fichier.ext)
   - **Intention** : [Raison de la suppression / obsolescence]
 
+### Matrice de Traçabilité Code ↔ Exigences (Code Evidence — ADR-0394)
+> *Obligation de lier chaque symbole physique créé ou modifié à la règle métier ou au scénario Gherkin qui justifie son implémentation.*
+
+| Symbole AST Qualifié (`chemin/fichier.py::symbole`) | Règle Métier Cible (`RM-XXX`) | Scénario Gherkin (Pilier 1-4) | Justification de l'Implémentation & Rationale | Test Unitaire Associé |
+| :--- | :---: | :--- | :--- | :--- |
+| `[chemin/fichier.ext::Symbole]` | `[RM-XXX ou N/A]` | `[Nom du Scénario]` | [Pourquoi ce code précis est requis, compromis ou garde-fou] | `[chemin/test_fichier.py::test_nom]` |
+
 ---
 
 ## 4. Gestion des Risques & Rollback

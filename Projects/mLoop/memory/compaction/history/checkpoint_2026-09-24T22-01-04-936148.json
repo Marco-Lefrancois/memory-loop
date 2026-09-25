@@ -1,0 +1,55 @@
+{
+  "project_name": "mLoop",
+  "focused_story_id": "MLOOP-215-FULL",
+  "stage": "BUILD",
+  "timestamp": "2026-09-24T22:01:04.936148",
+  "story_context": null,
+  "active_acceptance_criteria": [],
+  "file_reservations": [
+    {
+      "path": "backlog/sprint_backlog.md",
+      "status": "M",
+      "sha256": "1f5b4c14bd16"
+    },
+    {
+      "path": "backlog/stories/MLOOP-212-FE.md",
+      "status": "M",
+      "sha256": "1b4fe18dd1d8"
+    },
+    {
+      "path": "backlog/stories/MLOOP-214-BE.md",
+      "status": "M",
+      "sha256": "186ff2e3d7d3"
+    },
+    {
+      "path": "backlog/stories/MLOOP-215-FULL.md",
+      "status": "M",
+      "sha256": "f12b9181ef18"
+    },
+    {
+      "path": "backlog/stories/MLOOP-240-BE.md",
+      "status": "M",
+      "sha256": "ccc4d96adb7c"
+    },
+    {
+      "path": "backlog/stories/MLOOP-241-BE.md",
+      "status": "M",
+      "sha256": "a7d7dbdb15cd"
+    },
+    {
+      "path": "backlog/stories/MLOOP-242-BE.md",
+      "status": "M",
+      "sha256": "98775d16aac9"
+    },
+    {
+      "path": "backlog/stories/MLOOP-243-FE.md",
+      "status": "M",
+      "sha256": "3c6463990e06"
+    }
+  ],
+  "tool_outcomes": [],
+  "primary_artifact_uri": "evidence://MLOOP-215-FULL_fact_dossier.md",
+  "visual_contract_uri": null,
+  "resume_instructions": "## 🛡️ mLoop Checkpoint Invariant [@root: Projects/mLoop]\n- **Étape** : `BUILD` | Story : `story://MLOOP-215-FULL`\n- **Vérité SSOT #1** : `evidence://MLOOP-215-FULL_fact_dossier.md` (Consultation obligatoire via view_file en cas de doute)\n- **Fichiers sous Contrat** : `[M] backlog/sprint_backlog.md`, `[M] backlog/stories/MLOOP-212-FE.md`, `[M] backlog/stories/MLOOP-214-BE.md`, `[M] backlog/stories/MLOOP-215-FULL.md` (+4 autres)\n- **Consignes de Reprise Non Négociables** :\n  1. INTERDICTION formelle d'explorer le disque (`ls -R`, `find`).\n  2. Poursuivre directement l'action en cours sans régression.",
+  "checkpoint_hash": "3ab9c7e258dad7a2c6655ba990f300f81c2327954851974ab974a4eab9b16bad"
+}

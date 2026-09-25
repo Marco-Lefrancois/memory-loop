@@ -1,0 +1,185 @@
+{
+  "story_id": "MLOOP-190-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-190-BE.md",
+  "timestamp": "2026-09-24T18:14:04.725175+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-190-BE_fact_dossier.md) : 0202-modularite-interne-agents.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.609175+00:00"
+    },
+    {
+      "query": "Fact-Search 0339-project-lifecycle-stages-governance-gates.md",
+      "source_file": "0339-project-lifecycle-stages-governance-gates.md",
+      "sha256": "f4f481dc57d2afd3f8176da6e1edd6521a24dd21b73d3173465a4bd0702e4e5b",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-190-BE_fact_dossier.md) : 0339-project-lifecycle-stages-governance-gates.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.628658+00:00"
+    },
+    {
+      "query": "Fact-Search 0369-python-senior-robustness-and-resource-governance.md",
+      "source_file": "0369-python-senior-robustness-and-resource-governance.md",
+      "sha256": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-190-BE_fact_dossier.md) : 0369-python-senior-robustness-and-resource-governance.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.648903+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-190-BE.md",
+      "source_file": "MLOOP-190-BE.md",
+      "sha256": "540a548bd6ee38490350ddd05c4436e9f192cbe06e8818778fe6c4803295e12f",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-190-BE_fact_dossier.md) : MLOOP-190-BE.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.657424+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-190-BE_fact_dossier.md",
+      "source_file": "MLOOP-190-BE_fact_dossier.md",
+      "sha256": "740dd92159e70b3a7dde2d1f3c2b4087c2b4099986799bfe12b4dbd2fd271555",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-190-BE_fact_dossier.md) : MLOOP-190-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.657424+00:00"
+    },
+    {
+      "query": "Fact-Search epic_click_cli_engine.md",
+      "source_file": "epic_click_cli_engine.md",
+      "sha256": "2ed4ac9977f6bd9df9b9d8290439d3e516377a1fd8445d0be6e02703ded48803",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-190-BE_fact_dossier.md) : epic_click_cli_engine.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.666835+00:00"
+    },
+    {
+      "query": "Fact-Search router.py",
+      "source_file": "router.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-190-BE_fact_dossier.md) : router.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.682856+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-190-BE_fact_dossier.md": "740dd92159e70b3a7dde2d1f3c2b4087c2b4099986799bfe12b4dbd2fd271555",
+    "MLOOP-190-BE.md": "540a548bd6ee38490350ddd05c4436e9f192cbe06e8818778fe6c4803295e12f",
+    "epic_click_cli_engine.md": "2ed4ac9977f6bd9df9b9d8290439d3e516377a1fd8445d0be6e02703ded48803",
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "0339-project-lifecycle-stages-governance-gates.md": "f4f481dc57d2afd3f8176da6e1edd6521a24dd21b73d3173465a4bd0702e4e5b",
+    "0369-python-senior-robustness-and-resource-governance.md": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, 0339-project-lifecycle-stages-governance-gates.md, 0369-python-senior-robustness-and-resource-governance.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le garde-fou de cycle de vie est aujourd'hui centralisé dans une seule fonction procédurale (`_run_cli()`), justifiant l'encapsulation objet demandée par MLO...",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le mécanisme actuel invoque déjà `ProjectLifecycleManager.can_execute_command()` et émet le message `[LIFECYCLE GATE VIOLATION]` — CA-4 du récit prescrit la ...",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "CA-6 (plafond de 300 lignes pour `context.py`) est directement dérivé de la règle constitutionnelle RULE-AST-01 et n'est pas un critère arbitraire.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "0339-project-lifecycle-stages-governance-gates.md",
+    "0369-python-senior-robustness-and-resource-governance.md",
+    "MLOOP-190-BE.md",
+    "MLOOP-190-BE_fact_dossier.md",
+    "epic_click_cli_engine.md",
+    "router.py"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Exécution d'une commande valide avec contexte résolu",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Violation d'une Lifecycle Gate",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Nom de projet sous forme d'alias non canonique",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Omission du paramètre projet requis",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-190-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-190-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

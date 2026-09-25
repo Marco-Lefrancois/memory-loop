@@ -1,0 +1,55 @@
+{
+  "project_name": "mLoop",
+  "focused_story_id": "MLOOP-233-BE",
+  "stage": "BUILD",
+  "timestamp": "2026-09-24T18:48:12.182275",
+  "story_context": null,
+  "active_acceptance_criteria": [],
+  "file_reservations": [
+    {
+      "path": "backlog/sprint_backlog.md",
+      "status": "M",
+      "sha256": "96cc068ac2d7"
+    },
+    {
+      "path": "backlog/stories/MLOOP-212-FE.md",
+      "status": "M",
+      "sha256": "05710c8e1fb6"
+    },
+    {
+      "path": "backlog/stories/MLOOP-230-BE.md",
+      "status": "M",
+      "sha256": "fdd839667ac5"
+    },
+    {
+      "path": "backlog/stories/MLOOP-231-BE.md",
+      "status": "M",
+      "sha256": "5081b64e62b6"
+    },
+    {
+      "path": "backlog/stories/MLOOP-232-BE.md",
+      "status": "M",
+      "sha256": "0af2c98b2f9d"
+    },
+    {
+      "path": "backlog/stories/MLOOP-233-BE.md",
+      "status": "M",
+      "sha256": "b94c87f20d18"
+    },
+    {
+      "path": "memory/SESSION_MEMORY_HEALTH.md",
+      "status": "M",
+      "sha256": "dd80c75a0e1b"
+    },
+    {
+      "path": "memory/cache/wikifix_cache.json",
+      "status": "M",
+      "sha256": "20298109137d"
+    }
+  ],
+  "tool_outcomes": [],
+  "primary_artifact_uri": "evidence://MLOOP-233-BE_fact_dossier.md",
+  "visual_contract_uri": null,
+  "resume_instructions": "## 🛡️ mLoop Checkpoint Invariant [@root: Projects/mLoop]\n- **Étape** : `BUILD` | Story : `story://MLOOP-233-BE`\n- **Vérité SSOT #1** : `evidence://MLOOP-233-BE_fact_dossier.md` (Consultation obligatoire via view_file en cas de doute)\n- **Fichiers sous Contrat** : `[M] backlog/sprint_backlog.md`, `[M] backlog/stories/MLOOP-212-FE.md`, `[M] backlog/stories/MLOOP-230-BE.md`, `[M] backlog/stories/MLOOP-231-BE.md` (+4 autres)\n- **Consignes de Reprise Non Négociables** :\n  1. INTERDICTION formelle d'explorer le disque (`ls -R`, `find`).\n  2. Poursuivre directement l'action en cours sans régression.",
+  "checkpoint_hash": "c70698baaea66a7d76b0ddd598a4024130dd76d96e32ed0de11a355e702cd9fb"
+}

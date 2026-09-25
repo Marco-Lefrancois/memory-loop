@@ -1,0 +1,148 @@
+{
+  "checkpoint_version": "1.0",
+  "timestamp": 1790174963,
+  "datetime_utc": "2026-09-23T14:49:23.923480+00:00",
+  "reason": "crawler_in_flight",
+  "state": {
+    "project_name": "mLoop",
+    "project_mode": "client",
+    "current_phase": "spec",
+    "previous_phase": null,
+    "current_state_id": null,
+    "session_start_utc": "2026-09-23T10:07:07.436158+00:00",
+    "last_checkpoint_timestamp": 1790158027.4361587,
+    "checkpoint_interval_seconds": 60,
+    "analysis": null,
+    "plan": null,
+    "qa_report": null,
+    "directives": {
+      "tech": "",
+      "business": ""
+    },
+    "clarifications": [],
+    "journal": [
+      {
+        "id": "entry_1790159840",
+        "timestamp": "2026-09-23T06:37:20.376758",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: sprint_backlog.md, MLOOP-170-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790161325",
+        "timestamp": "2026-09-23T07:02:05.072939",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: sprint_backlog.md, MLOOP-170-BE.md, MLOOP-171-BE.md, MLOOP-172-BE.md, MLOOP-181-BE.md, MLOOP-182-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790162365",
+        "timestamp": "2026-09-23T07:19:25.355061",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: epic_modular_refactoring_ast_debt.md, sprint_backlog.md, MLOOP-171-BE.md, MLOOP-172-BE.md, MLOOP-180-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790163094",
+        "timestamp": "2026-09-23T07:31:34.091240",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Recalcul complet du graphe.\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790164142",
+        "timestamp": "2026-09-23T07:49:02.789076",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: epic_modular_refactoring_ast_debt.md, sprint_backlog.md, MLOOP-172-BE.md | Ajoutés: MLOOP-173-BE.md, MLOOP-174-BE.md, MLOOP-175-BE.md, MLOOP-176-BE.md, MLOOP-177-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790164294",
+        "timestamp": "2026-09-23T07:51:34.483430",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: sprint_backlog.md, MLOOP-181-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790164366",
+        "timestamp": "2026-09-23T07:52:46.513229",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: sprint_backlog.md, MLOOP-181-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790164942",
+        "timestamp": "2026-09-23T08:02:22.159041",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: epic_modular_refactoring_ast_debt.md, sprint_backlog.md | Ajoutés: MLOOP-178-BE.md, MLOOP-179-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790165301",
+        "timestamp": "2026-09-23T08:08:21.250741",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: sprint_backlog.md, MLOOP-181-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790166931",
+        "timestamp": "2026-09-23T08:35:31.298102",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: epic_modular_refactoring_ast_debt.md, sprint_backlog.md, MLOOP-182-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790168151",
+        "timestamp": "2026-09-23T08:55:51.348020",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: sprint_backlog.md, MLOOP-173-BE.md, MLOOP-178-BE.md, MLOOP-179-BE.md, MLOOP-182-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      },
+      {
+        "id": "entry_1790168222",
+        "timestamp": "2026-09-23T08:57:02.617853",
+        "event": "Auto-Sync [Graphify]",
+        "details": "Modifiés: MLOOP-173-BE.md\nÉvolution du graphe : 23 nœuds et 73 relations [+0 nœuds, +0 relations].",
+        "impacted_nodes": [
+          "Graphify Database"
+        ]
+      }
+    ],
+    "jira_project_key": null,
+    "jira_epic_key": null,
+    "jira_default_component_id": null,
+    "jira_default_billing_id": null,
+    "jira_default_subtasks": [],
+    "jira_subtask_mapping": {},
+    "ingested_sources": [],
+    "ingest_initiative": null,
+    "token_budget": {
+      "tokens_used": 0,
+      "max_tokens": 50000
+    },
+    "hitl_required": false,
+    "graph_path": "graphify-out/graph.json"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "story_id": "MLOOP-091-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-091-BE.md",
+  "timestamp": "2026-09-22T14:36:44.554515+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search qa_certification_report.json",
+      "source_file": "qa_certification_report.json",
+      "sha256": "ab4885774960e9fa2ae7b07f5f518dddb0e6b284c6656f579eeff15eaa156cf3",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : qa_certification_report.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:36:44.554515+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "qa_certification_report.json": "ab4885774960e9fa2ae7b07f5f518dddb0e6b284c6656f579eeff15eaa156cf3"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : qa_certification_report.json"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "qa_certification_report.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Certification réussie d'un sprint sans fuite de test ni contradiction",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet de certification suite à un test accédant à un membre privé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet de certification suite à une contradiction documentaire formelle",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Émission du rapport opposable enrichi des niveaux NLI et Leakage",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-091-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-091-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION"
+}

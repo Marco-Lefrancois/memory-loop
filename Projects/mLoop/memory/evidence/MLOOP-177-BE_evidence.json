@@ -1,0 +1,145 @@
+{
+  "story_id": "MLOOP-177-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-177-BE.md",
+  "timestamp": "2026-09-23T15:05:06.767750+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MODULAR_EXTRACTION_PROTOCOL.md",
+      "source_file": "MODULAR_EXTRACTION_PROTOCOL.md",
+      "sha256": "9fcb2680b16db15e9295ec27fe8d03f9ddb67b1036586ecc1755bb636fe89891",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : MODULAR_EXTRACTION_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T15:05:06.703575+00:00"
+    },
+    {
+      "query": "Fact-Search epic17_prioritization_matrix.md",
+      "source_file": "epic17_prioritization_matrix.md",
+      "sha256": "e100ab5add191162f244623289cfad63c2d6dd795a373365040ab892264ae9e0",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic17_prioritization_matrix.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T15:05:06.703575+00:00"
+    },
+    {
+      "query": "Fact-Search implementation_plan_MLOOP-177-BE.md",
+      "source_file": "implementation_plan_MLOOP-177-BE.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : implementation_plan_MLOOP-177-BE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T15:05:06.726214+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MODULAR_EXTRACTION_PROTOCOL.md": "9fcb2680b16db15e9295ec27fe8d03f9ddb67b1036586ecc1755bb636fe89891",
+    "epic17_prioritization_matrix.md": "e100ab5add191162f244623289cfad63c2d6dd795a373365040ab892264ae9e0"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MODULAR_EXTRACTION_PROTOCOL.md, epic17_prioritization_matrix.md, implementation_plan_MLOOP-177-BE.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.525,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "MODULAR_EXTRACTION_PROTOCOL.md",
+    "epic17_prioritization_matrix.md",
+    "implementation_plan_MLOOP-177-BE.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Découpage modulaire réussi sous le seuil strict de 300 lignes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet des violations de plafonds modulaires",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Tolérance aux données JSONL corrompues ou manquantes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Non-régression complète de l'application FastAPI et de la suite de tests",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-177-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-177-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.525,
+  "status": "STALE_PENDING_REGENERATION",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:42.573506",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-177-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:42.573506",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 70.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 64.0,
+      "overall_trust": 76.9
+    },
+    "critical_flaws": [
+      "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+    ],
+    "silent_failures": [
+      "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [
+      {
+        "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+        "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+        "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+        "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+      }
+    ],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "gate_execution_ledger": {
+    "source_file": "DEMO-001.gates.md",
+    "status": "ALL_MET",
+    "total_gates": 3,
+    "met_gates": 3,
+    "gates": [
+      {
+        "id": "G1",
+        "title": "Moteur core gates.py opérationnel",
+        "passed": true,
+        "exit_code": 0,
+        "output_digest": "",
+        "output_bytes": 0,
+        "path_fingerprint": "",
+        "abandon_reason": null,
+        "duration_ms": 0.0
+      },
+      {
+        "id": "G2",
+        "title": "Commande CLI gates disponible dans le registre",
+        "passed": true,
+        "exit_code": 0,
+        "output_digest": "",
+        "output_bytes": 0,
+        "path_fingerprint": "",
+        "abandon_reason": null,
+        "duration_ms": 0.0
+      },
+      {
+        "id": "G3",
+        "title": "Revue sémantique et documentaire du standard ADR-0341",
+        "passed": true,
+        "exit_code": 0,
+        "output_digest": "",
+        "output_bytes": 0,
+        "path_fingerprint": "",
+        "abandon_reason": null,
+        "duration_ms": 0.0
+      }
+    ]
+  }
+}

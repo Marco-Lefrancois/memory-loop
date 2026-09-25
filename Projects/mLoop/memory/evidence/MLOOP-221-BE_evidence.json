@@ -1,0 +1,192 @@
+{
+  "story_id": "MLOOP-221-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-221-BE.md",
+  "timestamp": "2026-09-25T02:01:29.933097+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "source_file": "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "sha256": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:29.453046+00:00"
+    },
+    {
+      "query": "Fact-Search KN-051_plannotator_workflow.md",
+      "source_file": "KN-051_plannotator_workflow.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : KN-051_plannotator_workflow.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:29.499309+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-220-BE_phase_plan.md",
+      "source_file": "MLOOP-220-BE_phase_plan.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : MLOOP-220-BE_phase_plan.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:29.541142+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-221-BE_fact_dossier.md",
+      "source_file": "MLOOP-221-BE_fact_dossier.md",
+      "sha256": "75d561704aff7f0d7352dd51ea0366032c1d518555d6f7ff0d88ae3806c060e7",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-221-BE_fact_dossier.md) : MLOOP-221-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:29.541142+00:00"
+    },
+    {
+      "query": "Fact-Search PHASE_FILES_AND_TEST_PLAN.md",
+      "source_file": "PHASE_FILES_AND_TEST_PLAN.md",
+      "sha256": "27d53f707f5c5a13760a9bf5e30230bcafeeff151d5db217762f5d55019b3b8e",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : PHASE_FILES_AND_TEST_PLAN.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:29.616981+00:00"
+    },
+    {
+      "query": "Fact-Search _phase_plan.md",
+      "source_file": "_phase_plan.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _phase_plan.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:29.648292+00:00"
+    },
+    {
+      "query": "Fact-Search annotated.md",
+      "source_file": "annotated.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : annotated.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:29.680162+00:00"
+    },
+    {
+      "query": "Fact-Search epic_tooling_ecosystem_harness.md",
+      "source_file": "epic_tooling_ecosystem_harness.md",
+      "sha256": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_tooling_ecosystem_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:29.712991+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-221-BE_fact_dossier.md": "75d561704aff7f0d7352dd51ea0366032c1d518555d6f7ff0d88ae3806c060e7",
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+    "PHASE_FILES_AND_TEST_PLAN.md": "27d53f707f5c5a13760a9bf5e30230bcafeeff151d5db217762f5d55019b3b8e",
+    "epic_tooling_ecosystem_harness.md": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md, KN-051_plannotator_workflow.md, MLOOP-220-BE_phase_plan.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.546,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+    "KN-051_plannotator_workflow.md",
+    "MLOOP-220-BE_phase_plan.md",
+    "MLOOP-221-BE_fact_dossier.md",
+    "PHASE_FILES_AND_TEST_PLAN.md",
+    "_phase_plan.md",
+    "annotated.md",
+    "epic_tooling_ecosystem_harness.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Ouverture réussie d'un plan de phase dans Plannotator",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Approbation headless en mode CI/CD",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Tentative d'ouverture avec plan inexistant ou champ vide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Binaire Plannotator non installé sur le système",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Protection contre la concurrence et le double-clic lors de l'approbation",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Dépassement de délai d'attente (timeout) lors de l'appel système",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Diagnostic d'état et accessibilité de la ligne de commande",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-221-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-221-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.546,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

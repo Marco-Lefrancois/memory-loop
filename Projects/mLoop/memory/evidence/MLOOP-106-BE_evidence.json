@@ -1,0 +1,239 @@
+{
+  "story_id": "MLOOP-106-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-106-BE.md",
+  "timestamp": "2026-09-23T12:36:01.282441+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : 0202-modularite-interne-agents.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.684947+00:00"
+    },
+    {
+      "query": "Fact-Search 0369-python-senior-robustness-and-resource-governance.md",
+      "source_file": "0369-python-senior-robustness-and-resource-governance.md",
+      "sha256": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0369-python-senior-robustness-and-resource-governance.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.701793+00:00"
+    },
+    {
+      "query": "Fact-Search 0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+      "source_file": "0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+      "sha256": "bdfaf163fe5728fb89d9f4cf8d2a03c5aeaa418d0c4757865d59145787b048da",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.718528+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-106-BE_fact_dossier.md",
+      "source_file": "MLOOP-106-BE_fact_dossier.md",
+      "sha256": "fe7594434728577947fd487f6ff78a601044611f15f615d5d7d9e953244d728a",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : MLOOP-106-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.718528+00:00"
+    },
+    {
+      "query": "Fact-Search _registry.py",
+      "source_file": "_registry.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : _registry.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.725625+00:00"
+    },
+    {
+      "query": "Fact-Search analysis.py",
+      "source_file": "analysis.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : analysis.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.740973+00:00"
+    },
+    {
+      "query": "Fact-Search architecture.py",
+      "source_file": "architecture.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : architecture.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.745617+00:00"
+    },
+    {
+      "query": "Fact-Search export.py",
+      "source_file": "export.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : export.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.755690+00:00"
+    },
+    {
+      "query": "Fact-Search implementation_plan_MLOOP-106-BE.md",
+      "source_file": "implementation_plan_MLOOP-106-BE.md",
+      "sha256": "d9b34c120bfe14889ff787480a7d63236b67a76004be5ca5472b167fb216bfe0",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : implementation_plan_MLOOP-106-BE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.755690+00:00"
+    },
+    {
+      "query": "Fact-Search pipeline.py",
+      "source_file": "pipeline.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : pipeline.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.775523+00:00"
+    },
+    {
+      "query": "Fact-Search project.py",
+      "source_file": "project.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-106-BE_fact_dossier.md) : project.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.786447+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-106-BE_fact_dossier.md": "fe7594434728577947fd487f6ff78a601044611f15f615d5d7d9e953244d728a",
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "0369-python-senior-robustness-and-resource-governance.md": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113",
+    "0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md": "bdfaf163fe5728fb89d9f4cf8d2a03c5aeaa418d0c4757865d59145787b048da",
+    "implementation_plan_MLOOP-106-BE.md": "d9b34c120bfe14889ff787480a7d63236b67a76004be5ca5472b167fb216bfe0"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, 0369-python-senior-robustness-and-resource-governance.md, 0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 2,
+      "multiplier": 0.76,
+      "score": 0.0,
+      "reason": "partial_richness (2/10)"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "0369-python-senior-robustness-and-resource-governance.md",
+    "0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+    "MLOOP-106-BE_fact_dossier.md",
+    "_registry.py",
+    "analysis.py",
+    "architecture.py",
+    "export.py",
+    "implementation_plan_MLOOP-106-BE.md",
+    "pipeline.py",
+    "project.py"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Découpage complet des handlers monolithiques en packages conformes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet d'un module excédant le plafond de modularité",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Blocage sur divergence de comportement d'une commande critique",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Maintien de la performance sous sollicitations successives",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Robustesse face à un conflit de concurrence sur le fichier de verrouillage",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Comportement observable inchangé après le découpage",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-106-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-106-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.93,
+  "status": "VALIDATED",
+  "implementation_decisions": [],
+  "verbatim_extracts": [],
+  "declarative_contracts": [
+    {
+      "method": "N/A",
+      "path": "[API de soumission à définir]",
+      "status": "to_define",
+      "source": "memory/plan/implementation_plan_MLOOP-106-BE.md"
+    },
+    {
+      "method": "N/A",
+      "path": "[API de soumission à définir]",
+      "status": "to_define",
+      "source": "memory/plan/implementation_plan_MLOOP-106-BE.md"
+    }
+  ]
+}

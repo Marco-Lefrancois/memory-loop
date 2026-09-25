@@ -1,0 +1,204 @@
+{
+  "story_id": "MLOOP-281-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-281-BE.md",
+  "timestamp": "2026-09-25T02:01:36.436392+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:35.846092+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-001.md",
+      "source_file": "ADR-001.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : ADR-001.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:35.872641+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-002_focus.md",
+      "source_file": "ADR-002_focus.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : ADR-002_focus.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:35.913038+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-005.md",
+      "source_file": "ADR-005.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : ADR-005.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:35.952861+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-011_lock.md",
+      "source_file": "ADR-011_lock.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : ADR-011_lock.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:35.993103+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "source_file": "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "sha256": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.041516+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-0389_grill_v2.md",
+      "source_file": "ADR-0389_grill_v2.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : ADR-0389_grill_v2.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:36.083009+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-281-BE_fact_dossier.md",
+      "source_file": "MLOOP-281-BE_fact_dossier.md",
+      "sha256": "81e41c2898155471eb55769c1b8e0bfc59f0823373929b2d410b0fa4fe0e748f",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-281-BE_fact_dossier.md) : MLOOP-281-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:36.083009+00:00"
+    },
+    {
+      "query": "Fact-Search README.md",
+      "source_file": "README.md",
+      "sha256": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : README.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.135799+00:00"
+    },
+    {
+      "query": "Fact-Search epic_adr_clean_architecture.md",
+      "source_file": "epic_adr_clean_architecture.md",
+      "sha256": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.162649+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-281-BE_fact_dossier.md": "81e41c2898155471eb55769c1b8e0bfc59f0823373929b2d410b0fa4fe0e748f",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+    "README.md": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+    "epic_adr_clean_architecture.md": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, ADR-001.md, ADR-002_focus.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.546,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "ADR-001.md",
+    "ADR-002_focus.md",
+    "ADR-005.md",
+    "ADR-011_lock.md",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+    "ADR-0389_grill_v2.md",
+    "MLOOP-281-BE_fact_dossier.md",
+    "README.md",
+    "epic_adr_clean_architecture.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Calcul nominal contigu dans un projet standard",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Présence de trous de numérotation sans collision",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Répertoire vide ou contenant des fichiers non conformes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Transition automatique vers les formats à 4 chiffres",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-281-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-281-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.546,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

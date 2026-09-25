@@ -1,0 +1,78 @@
+{
+  "story_id": "MLOOP-145-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-145-BE.md",
+  "timestamp": "2026-09-22T14:26:47.108657+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-145-BE_fact_dossier.md",
+      "source_file": "MLOOP-145-BE_fact_dossier.md",
+      "sha256": "1dd9184ca568b68573821cf26562d6c493847a8fdf685ac101500413ec569905",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-145-BE_fact_dossier.md) : MLOOP-145-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.108657+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-145-BE_fact_dossier.md": "1dd9184ca568b68573821cf26562d6c493847a8fdf685ac101500413ec569905"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-145-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "MLOOP-145-BE_fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [
+    {
+      "type": "IMPORTANT",
+      "text": "*Ces questions constituent l'ordre du jour obligatoire de la session contradictoire Grill-Me 1:1.*"
+    }
+  ],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Instrumentation complète d'un module non instrumenté",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Module avec logger existant (Groupe A)",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec d'instrumentation sur un module",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Validation de la couverture 100%",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-145-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-145-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "VALIDATED"
+}

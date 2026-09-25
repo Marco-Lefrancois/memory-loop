@@ -1,0 +1,172 @@
+{
+  "story_id": "MLOOP-192-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-192-BE.md",
+  "timestamp": "2026-09-24T18:14:05.072435+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-192-BE_fact_dossier.md) : 0202-modularite-interne-agents.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:04.999943+00:00"
+    },
+    {
+      "query": "Fact-Search 0369-python-senior-robustness-and-resource-governance.md",
+      "source_file": "0369-python-senior-robustness-and-resource-governance.md",
+      "sha256": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-192-BE_fact_dossier.md) : 0369-python-senior-robustness-and-resource-governance.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.024142+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-192-BE.md",
+      "source_file": "MLOOP-192-BE.md",
+      "sha256": "a6eb3c822a0f788348a6fbe4db0274ba4e7621dd3f907e7873cf13fdf2615e9e",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-192-BE_fact_dossier.md) : MLOOP-192-BE.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.030872+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-192-BE_fact_dossier.md",
+      "source_file": "MLOOP-192-BE_fact_dossier.md",
+      "sha256": "a47b33e335b237d4168b1675cbee2994489952268250b4f83dfde3445bb238af",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-192-BE_fact_dossier.md) : MLOOP-192-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.031387+00:00"
+    },
+    {
+      "query": "Fact-Search epic_click_cli_engine.md",
+      "source_file": "epic_click_cli_engine.md",
+      "sha256": "2ed4ac9977f6bd9df9b9d8290439d3e516377a1fd8445d0be6e02703ded48803",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-192-BE_fact_dossier.md) : epic_click_cli_engine.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.040209+00:00"
+    },
+    {
+      "query": "Fact-Search sprint_backlog.md",
+      "source_file": "sprint_backlog.md",
+      "sha256": "3f7fc532d9e6a9176cf1438e903df5c21b53f7aadbf81525ea97357e074d3fb2",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : sprint_backlog.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T18:14:05.041206+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-192-BE_fact_dossier.md": "a47b33e335b237d4168b1675cbee2994489952268250b4f83dfde3445bb238af",
+    "MLOOP-192-BE.md": "a6eb3c822a0f788348a6fbe4db0274ba4e7621dd3f907e7873cf13fdf2615e9e",
+    "epic_click_cli_engine.md": "2ed4ac9977f6bd9df9b9d8290439d3e516377a1fd8445d0be6e02703ded48803",
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "0369-python-senior-robustness-and-resource-governance.md": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113",
+    "sprint_backlog.md": "3f7fc532d9e6a9176cf1438e903df5c21b53f7aadbf81525ea97357e074d3fb2"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, 0369-python-senior-robustness-and-resource-governance.md, MLOOP-192-BE.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "L'environnement de référence des développeurs mLoop est PowerShell/pwsh sous Windows — ce qui justifie l'ordre de priorité CA-1 (PowerShell + Bash) et l'exem...",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le bénéfice métier est chiffré (division par 3 du temps de saisie), fondant la métrique de performance CA-4 (< 15ms) comme un seuil non arbitraire lié à l'ex...",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le Pilier 3 du récit (« l'exception I/O est interceptée silencieusement en DEBUG ») est directement conforme à la Règle 4 d'ADR-0369 — aucune invention, alig...",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "0369-python-senior-robustness-and-resource-governance.md",
+    "MLOOP-192-BE.md",
+    "MLOOP-192-BE_fact_dossier.md",
+    "epic_click_cli_engine.md",
+    "sprint_backlog.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Autocomplétion dynamique d'un nom de projet",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Projet introuvable lors de la complétion de story",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec de lecture du dossier Projects/",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Affichage des instructions d'installation du profil shell",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-192-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-192-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

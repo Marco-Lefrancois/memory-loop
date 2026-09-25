@@ -23,19 +23,19 @@ def test_cline_agent_in_catalog():
 def test_build_cline_flags_model():
     """Un modèle explicite produit -m <model-id> (surface CLI réelle 3.0.62)."""
     flags = build_cline_flags(model="nmedia_cloud/glm-5.3-flash")
-    assert flags == ["--model", "nmedia_cloud/glm-5.3-flash"]
+    assert flags == ["--auto-approve", "true", "--model", "nmedia_cloud/glm-5.3-flash"]
 
 
 def test_build_cline_flags_default_model():
     """Sans modèle explicite, la mission route vers le modèle Cline par défaut."""
     flags = build_cline_flags(model=DEFAULT_CLINE_MODEL)
-    assert flags == ["--model", DEFAULT_CLINE_MODEL]
+    assert flags == ["--auto-approve", "true", "--model", DEFAULT_CLINE_MODEL]
 
 
 def test_build_cline_flags_extra_args_priority():
     """extra_args explicites court-circuitent la construction par défaut (contrat herdr_adapter)."""
     assert build_cline_flags(extra_args=["--thinking", "high"]) == ["--thinking", "high"]
-    assert build_cline_flags(model="x", extra_args=[]) == ["--model", "x"]
+    assert build_cline_flags(model="x", extra_args=[]) == ["--auto-approve", "true", "--model", "x"]
 
 
 def test_resolve_cline_binary_prefers_appdata_exe(tmp_path, monkeypatch):

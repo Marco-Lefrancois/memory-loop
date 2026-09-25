@@ -1,0 +1,124 @@
+{
+  "story_id": "MLOOP-310-BE",
+  "jira_key": "MLOOP-310-BE",
+  "file_path": "backlog/stories/MLOOP-310-BE.md",
+  "timestamp": "2026-09-25T08:58:30.937957+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0390-harmonisation-cycle-de-vie-recits-5-phases.md",
+      "source_file": "0390-harmonisation-cycle-de-vie-recits-5-phases.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : 0390-harmonisation-cycle-de-vie-recits-5-phases.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T08:58:30.864177+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-310-BE_fact_dossier.md",
+      "source_file": "MLOOP-310-BE_fact_dossier.md",
+      "sha256": "c82e17d6363ad580f88a36cce90dd7dcad9f8087d6e36e92f5fb7171c3cad55f",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-310-BE_fact_dossier.md) : MLOOP-310-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T08:58:30.865184+00:00"
+    },
+    {
+      "query": "Fact-Search STORY_LIFECYCLE_PROTOCOL.md",
+      "source_file": "STORY_LIFECYCLE_PROTOCOL.md",
+      "sha256": "96573b86f1e25403b3ebd86944603ce9c5cf44a47b17bb1788752c97b13ac57d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : STORY_LIFECYCLE_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:58:30.890216+00:00"
+    },
+    {
+      "query": "Fact-Search epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "source_file": "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "sha256": "78b6edf46ff72a942451bdf7e03dffd9eb8ddf38049f723dc38f8d94685be26e",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:58:30.904742+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-310-BE_fact_dossier.md": "c82e17d6363ad580f88a36cce90dd7dcad9f8087d6e36e92f5fb7171c3cad55f",
+    "STORY_LIFECYCLE_PROTOCOL.md": "96573b86f1e25403b3ebd86944603ce9c5cf44a47b17bb1788752c97b13ac57d",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md": "78b6edf46ff72a942451bdf7e03dffd9eb8ddf38049f723dc38f8d94685be26e"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0390-harmonisation-cycle-de-vie-recits-5-phases.md, MLOOP-310-BE_fact_dossier.md, STORY_LIFECYCLE_PROTOCOL.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.567,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0390-harmonisation-cycle-de-vie-recits-5-phases.md",
+    "MLOOP-310-BE_fact_dossier.md",
+    "STORY_LIFECYCLE_PROTOCOL.md",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Résolution nominale des nouveaux statuts du cycle 5 phases",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Normalisation tolérante de variantes textuelles avec casse et séparateurs",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Préservation stricte des statuts historiques DONE_TESTED et SHIPPED sous concurrence",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Repli défensif fail-open sur valeur de statut corrompue, champ vide ou valeur null",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-310-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-310-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.567,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

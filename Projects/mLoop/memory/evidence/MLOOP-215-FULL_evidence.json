@@ -1,0 +1,227 @@
+{
+  "story_id": "MLOOP-215-FULL",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-215-FULL.md",
+  "timestamp": "2026-09-25T08:45:01.014007+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0369-python-senior-robustness-and-resource-governance.md",
+      "source_file": "0369-python-senior-robustness-and-resource-governance.md",
+      "sha256": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0369-python-senior-robustness-and-resource-governance.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.693783+00:00"
+    },
+    {
+      "query": "Fact-Search 0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md",
+      "source_file": "0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md",
+      "sha256": "7377b36c5d8dd73ddb08181e8e9b008d451066d2503e8a7d89bc18648a663df7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.731655+00:00"
+    },
+    {
+      "query": "Fact-Search 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "source_file": "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "sha256": "592e0addfd60f33c1b2b3e488b13793f15222af232d7d3044281b0c358e42d46",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.761597+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "source_file": "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "sha256": "73319b069d9f0caf7595a424c556dd0a27758062afe45582b9bb487837ea089d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.792150+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-010_micro-grill_mloop-215-full__2_decisions.md",
+      "source_file": "ADR-010_micro-grill_mloop-215-full__2_decisions.md",
+      "sha256": "467440cd94865879d6286e6ca1ca9309f6a3f1030e0dd0a678b3d5f0dede26d0",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-010_micro-grill_mloop-215-full__2_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.818684+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-215-FULL_fact_dossier.md",
+      "source_file": "MLOOP-215-FULL_fact_dossier.md",
+      "sha256": "b85fdff3354c0b39ccae562c9935921bbd335e57568af8802e862b3919506e19",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-215-FULL_fact_dossier.md) : MLOOP-215-FULL_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T08:45:00.818684+00:00"
+    },
+    {
+      "query": "Fact-Search epic_mcp_modern_suite_2026q4.md",
+      "source_file": "epic_mcp_modern_suite_2026q4.md",
+      "sha256": "575708ca916663934656097084453e7e2a42fec4ff024c06ae727df4a1ac719a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_mcp_modern_suite_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.835233+00:00"
+    },
+    {
+      "query": "Fact-Search source_adr_0387.md",
+      "source_file": "source_adr_0387.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_adr_0387.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T08:45:00.851259+00:00"
+    },
+    {
+      "query": "Fact-Search source_macro_adr_004.md",
+      "source_file": "source_macro_adr_004.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_macro_adr_004.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T08:45:00.870801+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-215-FULL_fact_dossier.md": "b85fdff3354c0b39ccae562c9935921bbd335e57568af8802e862b3919506e19",
+    "0369-python-senior-robustness-and-resource-governance.md": "81f3525dc32e4550113f70d6aab533ef34d528331bf29a695590fecf1bd2a113",
+    "0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md": "7377b36c5d8dd73ddb08181e8e9b008d451066d2503e8a7d89bc18648a663df7",
+    "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md": "592e0addfd60f33c1b2b3e488b13793f15222af232d7d3044281b0c358e42d46",
+    "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md": "73319b069d9f0caf7595a424c556dd0a27758062afe45582b9bb487837ea089d",
+    "ADR-010_micro-grill_mloop-215-full__2_decisions.md": "467440cd94865879d6286e6ca1ca9309f6a3f1030e0dd0a678b3d5f0dede26d0",
+    "epic_mcp_modern_suite_2026q4.md": "575708ca916663934656097084453e7e2a42fec4ff024c06ae727df4a1ac719a"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0369-python-senior-robustness-and-resource-governance.md, 0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md, 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "1404 collectés au 2026-09-24 → critère reformulé en compteur dynamique (215-Q1).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "scénario legacy à couvrir dans le harnais (lien direct macro Q1 / 210-Q1).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "la dépendance existe en écosystème mais aucun harnais iframe (lot à créer).",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0369-python-senior-robustness-and-resource-governance.md",
+    "0385-protocole-falsification-frontieres-architecture-immunite-cognitive.md",
+    "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+    "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+    "ADR-010_micro-grill_mloop-215-full__2_decisions.md",
+    "MLOOP-215-FULL_fact_dossier.md",
+    "epic_mcp_modern_suite_2026q4.md",
+    "source_adr_0387.md",
+    "source_macro_adr_004.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Certification nominale des extensions modernes et verdict conforme",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rendu d'une ressource d'affichage indisponible pour le client hôte",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Ressource hors registre ou contenu non autonome",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Dépassement de délai lors du lancement d'un pont en sous-processus",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Client hérité sans extension moderne certifié sans régression",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Audit manuel de niveau 3 des IDE réels hors du socle automatisé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Restitution du rapport de certification et compteurs dynamiques",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-215-FULL",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-215-FULL.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

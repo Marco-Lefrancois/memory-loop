@@ -1,0 +1,66 @@
+{
+  "story_id": "MLOOP-100-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-100-BE.md",
+  "timestamp": "2026-09-23T12:35:58.009260+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [],
+  "source_hashes_sha256": {},
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification basée sur modèle déclaratif"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue",
+      "NO_SOURCE_AVAILABLE : aucun fact_dossier, plan ni section Règles d'affaires exploitable pour ce récit (backfill MLOOP-182-BE)."
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.0,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Synchronisation bidirectionnelle fluide via les sous-modules spécialisés",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Journalisation détaillée lors d'un échec de conversion ADF",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Reprise transactionnelle sur coupure réseau distante",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rapport d'audit de conformité AST vierge d'anomalies",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-100-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-100-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION",
+  "implementation_decisions": [],
+  "verbatim_extracts": [],
+  "declarative_contracts": []
+}

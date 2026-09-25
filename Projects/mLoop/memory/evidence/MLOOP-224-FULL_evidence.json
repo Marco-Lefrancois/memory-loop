@@ -1,0 +1,167 @@
+{
+  "story_id": "MLOOP-224-FULL",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-224-FULL.md",
+  "timestamp": "2026-09-25T02:01:30.860199+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0375-standard-preuve-epistemique-et-tracabilite-radicale.md",
+      "source_file": "0375-standard-preuve-epistemique-et-tracabilite-radicale.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : 0375-standard-preuve-epistemique-et-tracabilite-radicale.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:30.488539+00:00"
+    },
+    {
+      "query": "Fact-Search 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "source_file": "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "sha256": "92b630b13fb9f0095edd00b33dc7de6e1ad5d90531ce128aaed50429b68e51b6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.560795+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "source_file": "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "sha256": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.612579+00:00"
+    },
+    {
+      "query": "Fact-Search CLI_PIPELINE_GUIDE.md",
+      "source_file": "CLI_PIPELINE_GUIDE.md",
+      "sha256": "bd41e52d8415fcb780a3c808248ef3adfb3600025d0e247e26bc915578f4dd84",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : CLI_PIPELINE_GUIDE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.677125+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-224-FULL_fact_dossier.md",
+      "source_file": "MLOOP-224-FULL_fact_dossier.md",
+      "sha256": "d7341194253022c40bea20838d5b469c4c02fbf43990971acab3d9dcb9f5ae74",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-224-FULL_fact_dossier.md) : MLOOP-224-FULL_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:30.677125+00:00"
+    },
+    {
+      "query": "Fact-Search epic_tooling_ecosystem_harness.md",
+      "source_file": "epic_tooling_ecosystem_harness.md",
+      "sha256": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_tooling_ecosystem_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:30.702729+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-224-FULL_fact_dossier.md": "d7341194253022c40bea20838d5b469c4c02fbf43990971acab3d9dcb9f5ae74",
+    "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md": "92b630b13fb9f0095edd00b33dc7de6e1ad5d90531ce128aaed50429b68e51b6",
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md": "585fc4a91c15b6a6ac315550282b72690e18ba1edc95d4568bfa76c09cd2ad21",
+    "CLI_PIPELINE_GUIDE.md": "bd41e52d8415fcb780a3c808248ef3adfb3600025d0e247e26bc915578f4dd84",
+    "epic_tooling_ecosystem_harness.md": "c121db249ec753e4679ce4c1274611613eeb7c9d53ed0efbfbb07b7a2c34f07a"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0375-standard-preuve-epistemique-et-tracabilite-radicale.md, 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md, ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.553,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0375-standard-preuve-epistemique-et-tracabilite-radicale.md",
+    "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+    "ADR-014_epic-22_integration_operationnelle_ecosysteme_tooling.md",
+    "CLI_PIPELINE_GUIDE.md",
+    "MLOOP-224-FULL_fact_dossier.md",
+    "epic_tooling_ecosystem_harness.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Cycle complet réussi de la décision au plan validé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Certification Vibe-Check au vert",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection d'un fichier orphelin créé à la racine",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Exécution avec projet corrompu ou données partielles",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résilience face à un timeout lors de l'exécution du plan",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Concurrence de plusieurs tests E2E",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Restitution détaillée du rapport de certification",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-224-FULL",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-224-FULL.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.553,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

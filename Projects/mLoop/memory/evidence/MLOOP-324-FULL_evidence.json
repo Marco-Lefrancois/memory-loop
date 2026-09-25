@@ -1,0 +1,105 @@
+{
+  "story_id": "MLOOP-324-FULL",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-324-FULL.md",
+  "timestamp": "2026-09-25T08:29:00.000000+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search tests/test_grill_engine.py",
+      "source_file": "tests/test_grill_engine.py",
+      "sha256": "57cbbe38b4c027878d65561a3575ceb2feaa7f1d43a12d3c907153b3ebfa09f0",
+      "section": "temp_project fixture",
+      "matched_fact": "Standard de test hermétique via pytest tmp_path",
+      "verification_method": "file_inspection",
+      "source_type": "test_suite",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T08:29:00.000000+00:00"
+    },
+    {
+      "query": "Fact-Search standards/protocols/CLI_PIPELINE_GUIDE.md",
+      "source_file": "standards/protocols/CLI_PIPELINE_GUIDE.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "grill options",
+      "matched_fact": "Documentation des options CLI nécessitant mise à jour paritaire",
+      "verification_method": "file_inspection",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T08:29:00.000000+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "tests/test_grill_engine.py": "57cbbe38b4c027878d65561a3575ceb2feaa7f1d43a12d3c907153b3ebfa09f0"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux standards de tests unitaires mLoop existants"
+    ],
+    "what_it_does_not_prove": [
+      "Arbitrage sur la stratégie d'isolation des tests et la couverture multi-OS"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint à la suite de tests automatisés et à la synchronisation du guide CLI",
+    "richness_penalty": {
+      "richness": 1,
+      "multiplier": 1.0,
+      "score": 1.0,
+      "reason": "verified_sources_with_verbatim"
+    }
+  },
+  "facts_verified": [
+    "Les tests mLoop utilisent tmp_path pour isoler les opérations filesystem.",
+    "La suite globale pytest doit demeurer 100% verte sans régression.",
+    "CLI_PIPELINE_GUIDE.md doit refléter exactement les options du registre CLI sous peine de violation Check 15."
+  ],
+  "sources_consulted": [
+    "tests/test_grill_engine.py",
+    "src/pipelines/state_machine.py",
+    "standards/protocols/CLI_PIPELINE_GUIDE.md",
+    "Projects/mLoop/docs/01-architecture/ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [
+    "Q1: Stratégie d'isolation des tests (fixtures tmp_path hermétiques vs workspace réel)",
+    "Q2: Couverture de normalisation multi-OS dans les assertions de chemins"
+  ],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-25T08:29:00.000000+00:00",
+  "verification_harness": [],
+  "next_actions": [
+    "Micro-Grill 1:1 Q1 sur MLOOP-324-FULL"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "READY_FOR_GRILL",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-25T08:30:17.100053",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-324-FULL",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-25T08:30:17.100053",
+    "status": "APPROVED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 100.0,
+      "overall_trust": 100.0
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

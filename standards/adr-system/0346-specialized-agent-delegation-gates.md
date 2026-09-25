@@ -4,6 +4,7 @@
 - **Date** : 2026-09-02
 - **Auteurs** : Équipe mLoop Swarm & Co-Architecte Agentique
 - **Périmètre** : Framework Backend mLoop, Pipelines de Délégation, Simulation Black-Box, Mining Legacy, Shadow Estimation, Dissection Visuelle, Watcher Mémoire
+- **Amendement ADR-0389 (25 sept. 2026)** : Délégation unifiée via `worker_runtimes.py` sans flags `--yolo` en dur, permissions explicites OpenCode (`--auto --agent worker`) et Cline (`--auto-approve true`).
 
 ---
 

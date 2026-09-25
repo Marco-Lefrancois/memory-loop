@@ -3,7 +3,7 @@
 Tests unitaires pour le Circuit-Breaker Herdr et le verrouillage Plan Mode (MLOOP-262-BE, MLOOP-263-BE).
 Vérifie que :
 1. En Phase 2 (plan/grill), Cline reçoit obligatoirement le flag '--plan'.
-2. En cas d'échec de démarrage de Cline (erreur ou exception), Herdr bascule sur OpenCode (--yolo).
+2. En cas d'échec de démarrage de Cline (erreur ou exception), Herdr bascule sur OpenCode (--auto).
 """
 
 from pathlib import Path
@@ -72,7 +72,7 @@ def test_circuit_breaker_triggers_on_cline_failure_dict(mock_sleep):
 
     assert first_call_args["kind"] == "cline"
     assert second_call_args["kind"] == "opencode"
-    assert "--yolo" in second_call_args["extra_args"]
+    assert "--auto" in second_call_args["extra_args"]
 
 
 @patch("time.sleep", return_value=None)
@@ -96,7 +96,7 @@ def test_circuit_breaker_triggers_on_cline_exception(mock_sleep):
     assert dummy.start_agent.call_count == 2
     assert dummy.start_agent.call_args_list[0][1]["kind"] == "cline"
     assert dummy.start_agent.call_args_list[1][1]["kind"] == "opencode"
-    assert "--yolo" in dummy.start_agent.call_args_list[1][1]["extra_args"]
+    assert "--auto" in dummy.start_agent.call_args_list[1][1]["extra_args"]
 
 
 # ─── Tests unitaires du guard Plan/Act extrait (MLOOP-262-BE) ──────────────────
@@ -149,9 +149,9 @@ def test_plan_act_guard_enforce_flags_injects_plan():
 
 def test_plan_act_guard_enforce_flags_purges_plan_in_act_mode():
     """Mode 'act' purge tout résidu '--plan' / '-p'."""
-    result = PlanActGuard.enforce_flags(["--yolo", "--plan", "-p"], "act")
+    result = PlanActGuard.enforce_flags(["--auto", "--plan", "-p"], "act")
     assert "--plan" not in result and "-p" not in result
-    assert "--yolo" in result
+    assert "--auto" in result
 
 
 def test_resolve_story_path_finds_story(tmp_path: Path):

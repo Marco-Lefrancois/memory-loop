@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Tests unitaires du registre SSOT multi-runtimes des workers Herdr (ADR-0346).
+Tests unitaires du registre SSOT multi-runtimes des workers Herdr (ADR-0346 / ADR-0389).
 
 Ground truth :
-- opencode : one-shot via --yolo, pas de modèle par défaut (sémantique
-  historique intangible) ;
-- cline 3.0.62 : one-shot auto-apprové natif (pas de --yolo), sélection modèle
+- opencode : one-shot via --auto et --agent worker (ADR-0389), pas de modèle par défaut ;
+- cline 3.x : auto-approbation explicite (--auto-approve true), sélection modèle
   -m/--model, binaire npm .exe requis sous Windows ;
 - pi / omp : mode interactif historique (--dangerously-skip-permissions +
   --model) préservé à l'identique.
@@ -39,11 +38,13 @@ def test_unknown_kind_raises_keyerror():
 
 
 def test_opencode_one_shot_flags_historical_semantics():
-    """OpenCode : --yolo seul, puis --model ajouté si absent (comportement historique)."""
+    """OpenCode : --auto et --agent worker (ADR-0389), puis --model ajouté si absent."""
     spec = get_worker_runtime("opencode")
-    assert spec.build_flags() == ["--yolo"]
+    assert spec.build_flags() == ["--auto", "--agent", "worker"]
     assert spec.build_flags(model="nmedia_cloud/claude-opus-4.8") == [
-        "--yolo",
+        "--auto",
+        "--agent",
+        "worker",
         "--model",
         "nmedia_cloud/claude-opus-4.8",
     ]
@@ -89,10 +90,10 @@ def test_task_model_map_core_mixin_parity():
 
 
 def test_cline_one_shot_native_auto_approve():
-    """Cline 3.x : aucun flag one-shot requis (auto-apprové par défaut)."""
+    """Cline 3.x : auto-approbation explicite (--auto-approve true, ADR-0389)."""
     spec = get_worker_runtime("cline")
-    assert spec.one_shot_flags == []
-    assert spec.build_flags() == []
+    assert spec.one_shot_flags == ["--auto-approve", "true"]
+    assert spec.build_flags() == ["--auto-approve", "true"]
 
 
 def test_cline_default_model_is_glm():
@@ -100,6 +101,8 @@ def test_cline_default_model_is_glm():
     spec = get_worker_runtime("cline")
     assert spec.default_model == DEFAULT_CLINE_MODEL == "cline-free/deepseek-v4.1-flash"
     assert spec.build_flags(model=DEFAULT_CLINE_MODEL) == [
+        "--auto-approve",
+        "true",
         "--model",
         DEFAULT_CLINE_MODEL,
     ]

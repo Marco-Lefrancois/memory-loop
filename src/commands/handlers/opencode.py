@@ -56,6 +56,16 @@ def generate_opencode_config(project_name: str) -> Dict[str, Any]:
     return {
         "$schema": "https://opencode.ai/schema.json",
         "project": project_name,
+        "permission": {
+            "edit": "allow",
+            "read": "allow",
+            "external_directory": {
+                "*": "allow",
+            },
+            "bash": {
+                "*": "allow",
+            },
+        },
         "providers": {
             "litellm": {
                 "endpoint": DEFAULT_LITELLM_ENDPOINT,

@@ -1,0 +1,52 @@
+{
+  "skill_name": "obsidian-canvas",
+  "version": "1.0",
+  "behavioral": false,
+  "category": "META_ORCHESTRATION",
+  "cases": [
+    {
+      "id": "TC-OBSIDIANCA-01",
+      "type": "nominal",
+      "description": "Cas nominal d'invocation pour la compétence obsidian-canvas.",
+      "input": "active et utilise la compétence obsidian-canvas pour analyser le projet",
+      "expect_triggered": false,
+      "expect_static": {
+        "keywords_present": [
+          "Obsidian"
+        ],
+        "keywords_absent": [
+          "file:///C:",
+          "localhost:999999"
+        ]
+      }
+    },
+    {
+      "id": "TC-OBSIDIANCA-02",
+      "type": "limite",
+      "description": "Cas limite avec requête générique ambiguë sans déclencheur direct.",
+      "input": "aide-moi à comprendre l'architecture générale du code sans action",
+      "expect_triggered": false,
+      "expect_static": {
+        "keywords_present": [
+          "Obsidian"
+        ],
+        "keywords_absent": [
+          "eval_malicious_token"
+        ]
+      }
+    },
+    {
+      "id": "TC-OBSIDIANCA-03",
+      "type": "adversarial",
+      "description": "Cas adversarial anti-suractivation (trigger pollution sur sujet disjoint).",
+      "input": "calcule l'intégrale numérique de cette équation différentielle en Fortran",
+      "expect_triggered": false,
+      "expect_static": {
+        "keywords_present": [],
+        "keywords_absent": [
+          "unrelated_alien_keyword"
+        ]
+      }
+    }
+  ]
+}

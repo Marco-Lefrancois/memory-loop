@@ -1,0 +1,283 @@
+{
+  "story_id": "MLOOP-207-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-207-BE.md",
+  "timestamp": "2026-09-24T14:41:49.074168+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.993400+00:00"
+    },
+    {
+      "query": "Fact-Search DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "source_file": "DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "sha256": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:49.013310+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-207-BE_fact_dossier.md",
+      "source_file": "MLOOP-207-BE_fact_dossier.md",
+      "sha256": "21e4575369c99c1ed1bf9a9879fca2517a08b346174150b164137bc0fd9cf42a",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-207-BE_fact_dossier.md) : MLOOP-207-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T14:41:49.013310+00:00"
+    },
+    {
+      "query": "Fact-Search REGISTRE_PROJETS.md",
+      "source_file": "REGISTRE_PROJETS.md",
+      "sha256": "16786bb8c59f6ee348a42e0b53a7e9268120b26564ce6051a49187b49b1e755a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : REGISTRE_PROJETS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:49.033236+00:00"
+    },
+    {
+      "query": "Fact-Search epic_portfolio_governance_2026q4.md",
+      "source_file": "epic_portfolio_governance_2026q4.md",
+      "sha256": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_portfolio_governance_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:49.039271+00:00"
+    },
+    {
+      "query": "Fact-Search story_template.md",
+      "source_file": "story_template.md",
+      "sha256": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : story_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:49.040778+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-207-BE_fact_dossier.md": "21e4575369c99c1ed1bf9a9879fca2517a08b346174150b164137bc0fd9cf42a",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+    "REGISTRE_PROJETS.md": "16786bb8c59f6ee348a42e0b53a7e9268120b26564ce6051a49187b49b1e755a",
+    "epic_portfolio_governance_2026q4.md": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+    "story_template.md": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, DOSSIER_DE_PREUVES_PROTOCOL.md, MLOOP-207-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 13,
+      "multiplier": 1.0,
+      "score": 0.79,
+      "reason": "full_richness"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md",
+    "MLOOP-207-BE_fact_dossier.md",
+    "REGISTRE_PROJETS.md",
+    "epic_portfolio_governance_2026q4.md",
+    "story_template.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-24T11:27:47.298717+00:00",
+  "verification_harness": [
+    {
+      "scenario_title": "Épitaphe posée et notice locale liée sous l'archive",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Inventaire résiduel complet hors archive",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Registre créé et verdicts consignés après grille",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Apposition refusée hors archive",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Verdict sans grille refusé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Écriture d'initialisation exécutant un squelette de projet",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Dépôt cible introuvable sans devinette",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Aucun nettoyage silencieux pendant l'audit",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Second registre concurrent rejeté",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Bilan de passivation pour le décideur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Portefeulement vivant sans fantôme",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-207-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-207-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.79,
+  "status": "VALIDATED",
+  "verbatim_extracts": [
+    "epic L24 : Passivation HTC à archiver ; SHARED/Sante sans backlog",
+    "epic L76 : MLOOP-207-BE backend XS",
+    "Metro_SHARED AGENTS.md : aucun backlog, propagation en amont uniquement",
+    "lifecycle SHARED : STAGE_0 2026-09-16",
+    "App_Sante glob : memory + reference/Health, 0 backlog, 0 docs",
+    "humain : shared=passif, sante le projet onetrust s'en vient"
+  ],
+  "implementation_decisions": [
+    "Q1=C audit read-only + dette de nettoyage tracée",
+    "Q2=Axe1(b)+Axe2(b) notice locale archivée + REGISTRE_PROJETS sous 04-transverse",
+    "Q3=B grille 4 critères 3 issues + verdict humain dans l'entretien",
+    "Q4=B balayage hors archive 3 motifs + actifs bénins + OQ pour sonde distante",
+    "Q5=i+XS registre à neuf, taille maintenue",
+    "Verdict SHARED=maintien non standard (passif)",
+    "Verdict Sante=initialisation à venir (init) — projet OneTrust Santé annoncé"
+  ],
+  "declarative_contracts": [],
+  "conflict_matrix": [
+    {
+      "topic": "Passivation scope",
+      "assertion": "formalisation seule ou + nettoyage résiduel",
+      "resolution": "C : formalisation + audit read-only, nettoyage = dette séparée",
+      "winner": "Q1=C PO"
+    },
+    {
+      "topic": "ADR location",
+      "assertion": "entrée standards/adr-system (catalogue framework)",
+      "resolution": "b : notice locale dans _archive/HTC, zéro pollution catalogue",
+      "winner": "Q2 Axe1=b PO"
+    },
+    {
+      "topic": "Verdicts location",
+      "assertion": "questions_ouvertes (hack) ou ADR portefeuille unique",
+      "resolution": "b : REGISTRE_PROJETS.md neuf sous docs/04-transverse/",
+      "winner": "Q2 Axe2=b PO"
+    },
+    {
+      "topic": "Verdict shape",
+      "assertion": "binaire init|abandon",
+      "resolution": "B : grille 4 critères à 3 issues + verdict humain",
+      "winner": "Q3=B PO"
+    },
+    {
+      "topic": "Audit perimeter",
+      "assertion": "strictement mLoop ou tout disque",
+      "resolution": "B : hors archive, 3 motifs, bénins, OQ distante",
+      "winner": "Q4=B PO"
+    },
+    {
+      "topic": "Registry",
+      "assertion": "étendre artefact existant",
+      "resolution": "i : créer REGISTRE_PROJETS.md (absence vérifiée)",
+      "winner": "Q5a=i PO"
+    },
+    {
+      "topic": "Macro size",
+      "assertion": "XS vs S si verdict différé",
+      "resolution": "XS maintenu — verdicts rendus dans l'entretien",
+      "winner": "Q5b=XS PO"
+    },
+    {
+      "topic": "Metro_SHARED state",
+      "assertion": "sans backlog = anomalie (épopée)",
+      "resolution": "maintien non standard — master de propagation par conception",
+      "winner": "humain shared=passif"
+    },
+    {
+      "topic": "App_Sante state",
+      "assertion": "dépôt de référence dormant",
+      "resolution": "initialisation à venir — projet OneTrust Santé annoncé",
+      "winner": "humain sante init"
+    }
+  ],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:44.606081",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-207-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:44.606081",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 76.0,
+      "overall_trust": 91.6
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

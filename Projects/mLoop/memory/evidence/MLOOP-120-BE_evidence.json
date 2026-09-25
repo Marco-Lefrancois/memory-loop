@@ -1,0 +1,153 @@
+{
+  "story_id": "MLOOP-120-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-120-BE.md",
+  "timestamp": "2026-09-23T12:35:58.026209+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0383-deterministic-phase-4-qa-certification-harness.md",
+      "source_file": "0383-deterministic-phase-4-qa-certification-harness.md",
+      "sha256": "431cecd217a01067efdf79d105192e607f63e2502b565bc1423a0f3f0f2b31ed",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0383-deterministic-phase-4-qa-certification-harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.898709+00:00"
+    },
+    {
+      "query": "Fact-Search CLI_PIPELINE_GUIDE.md",
+      "source_file": "CLI_PIPELINE_GUIDE.md",
+      "sha256": "72ba4c5c43973a565f3a6d183d69564a1b7103d65e8a171494f0920b04f49143",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : CLI_PIPELINE_GUIDE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.908337+00:00"
+    },
+    {
+      "query": "Fact-Search PHASE_FILES_AND_TEST_PLAN.md",
+      "source_file": "PHASE_FILES_AND_TEST_PLAN.md",
+      "sha256": "db1c023c9db408f10897e7d107a0ca548f7cb93a5a039681af3d8d13b8d4164b",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : PHASE_FILES_AND_TEST_PLAN.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.930325+00:00"
+    },
+    {
+      "query": "Fact-Search README.md",
+      "source_file": "README.md",
+      "sha256": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : README.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.944436+00:00"
+    },
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : SKILL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.956092+00:00"
+    },
+    {
+      "query": "Fact-Search phase4-qa-review-checklist.md",
+      "source_file": "phase4-qa-review-checklist.md",
+      "sha256": "5c356589298c3dfb6c91a1a12027db78a28e1440709f07e196f0c5808a838820",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : phase4-qa-review-checklist.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.956092+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "0383-deterministic-phase-4-qa-certification-harness.md": "431cecd217a01067efdf79d105192e607f63e2502b565bc1423a0f3f0f2b31ed",
+    "CLI_PIPELINE_GUIDE.md": "72ba4c5c43973a565f3a6d183d69564a1b7103d65e8a171494f0920b04f49143",
+    "PHASE_FILES_AND_TEST_PLAN.md": "db1c023c9db408f10897e7d107a0ca548f7cb93a5a039681af3d8d13b8d4164b",
+    "README.md": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+    "phase4-qa-review-checklist.md": "5c356589298c3dfb6c91a1a12027db78a28e1440709f07e196f0c5808a838820"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0383-deterministic-phase-4-qa-certification-harness.md, CLI_PIPELINE_GUIDE.md, PHASE_FILES_AND_TEST_PLAN.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue",
+      "NO_SOURCE_AVAILABLE : aucun fact_dossier, plan ni section Règles d'affaires exploitable pour ce récit (backfill MLOOP-182-BE)."
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.0,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0383-deterministic-phase-4-qa-certification-harness.md",
+    "CLI_PIPELINE_GUIDE.md",
+    "PHASE_FILES_AND_TEST_PLAN.md",
+    "README.md",
+    "SKILL.md",
+    "phase4-qa-review-checklist.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Rédaction et indexation de l'ADR-0383",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet d'une ADR-0383 descriptive uniquement",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Checklist Phase 4 introuvable",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Vérification parité CLI guide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-120-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-120-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION",
+  "implementation_decisions": [],
+  "verbatim_extracts": [],
+  "declarative_contracts": []
+}

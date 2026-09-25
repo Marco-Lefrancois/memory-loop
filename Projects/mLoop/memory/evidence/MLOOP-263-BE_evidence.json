@@ -1,0 +1,140 @@
+{
+  "story_id": "MLOOP-263-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-263-BE.md",
+  "timestamp": "2026-09-25T12:08:55.978861+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-263-BE_fact_dossier.md",
+      "source_file": "MLOOP-263-BE_fact_dossier.md",
+      "sha256": "c8fd13567e8667eaa460c13aabb991a14470b560771ead2909a21a750fb2eb54",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-263-BE_fact_dossier.md) : MLOOP-263-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T12:08:55.716952+00:00"
+    },
+    {
+      "query": "Fact-Search _team_log.md",
+      "source_file": "_team_log.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _team_log.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:55.742019+00:00"
+    },
+    {
+      "query": "Fact-Search mloop.md",
+      "source_file": "mloop.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : mloop.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:55.766752+00:00"
+    },
+    {
+      "query": "Fact-Search source_adr_0346.md",
+      "source_file": "source_adr_0346.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_adr_0346.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:55.792408+00:00"
+    },
+    {
+      "query": "Fact-Search source_adr_0377.md",
+      "source_file": "source_adr_0377.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_adr_0377.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:55.821097+00:00"
+    },
+    {
+      "query": "Fact-Search source_cline_doc.md",
+      "source_file": "source_cline_doc.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_cline_doc.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:08:55.847601+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-263-BE_fact_dossier.md": "c8fd13567e8667eaa460c13aabb991a14470b560771ead2909a21a750fb2eb54"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-263-BE_fact_dossier.md, _team_log.md, mloop.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Mécanique officielle de coordination inter-agents via `--team-name`.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le Circuit-Breaker déterministe vers OpenCode (`opencode --yolo`) est obligatoire.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "MLOOP-263-BE_fact_dossier.md",
+    "_team_log.md",
+    "mloop.md",
+    "source_adr_0346.md",
+    "source_adr_0377.md",
+    "source_cline_doc.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-263-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-263-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

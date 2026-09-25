@@ -1,0 +1,55 @@
+{
+  "project_name": "mLoop",
+  "focused_story_id": "MLOOP-324-FULL",
+  "stage": "BUILD",
+  "timestamp": "2026-09-25T06:30:24.824598",
+  "story_context": null,
+  "active_acceptance_criteria": [],
+  "file_reservations": [
+    {
+      "path": "backlog/sprint_backlog.md",
+      "status": "M",
+      "sha256": "8243f20517be"
+    },
+    {
+      "path": "backlog/sprint_dag.canvas",
+      "status": "M",
+      "sha256": "ffab563300d3"
+    },
+    {
+      "path": "backlog/story_mapping.canvas",
+      "status": "M",
+      "sha256": "9e710e97049e"
+    },
+    {
+      "path": "memory/SESSION_MEMORY_HEALTH.md",
+      "status": "M",
+      "sha256": "13cc984b14ca"
+    },
+    {
+      "path": "memory/cache/wikifix_cache.json",
+      "status": "M",
+      "sha256": "c54e54be99ba"
+    },
+    {
+      "path": "memory/hypergraph.json",
+      "status": "M",
+      "sha256": "49f27e669395"
+    },
+    {
+      "path": "memory/wikifix_report.md",
+      "status": "M",
+      "sha256": "498b294e5e57"
+    },
+    {
+      "path": "backlog/epics/epic_grill_modality_decoupling_anti_cascade.md",
+      "status": "M",
+      "sha256": "fa22a1eaed17"
+    }
+  ],
+  "tool_outcomes": [],
+  "primary_artifact_uri": "story://MLOOP-324-FULL",
+  "visual_contract_uri": null,
+  "resume_instructions": "## 🛡️ mLoop Checkpoint Invariant [@root: Projects/mLoop]\n- **Étape** : `BUILD` | Story : `story://MLOOP-324-FULL`\n- **Vérité SSOT #1** : `story://MLOOP-324-FULL` (Consultation obligatoire via view_file en cas de doute)\n- **Fichiers sous Contrat** : `[M] backlog/sprint_backlog.md`, `[M] backlog/sprint_dag.canvas`, `[M] backlog/story_mapping.canvas`, `[M] memory/SESSION_MEMORY_HEALTH.md` (+4 autres)\n- **Consignes de Reprise Non Négociables** :\n  1. INTERDICTION formelle d'explorer le disque (`ls -R`, `find`).\n  2. Poursuivre directement l'action en cours sans régression.",
+  "checkpoint_hash": "0bb36e549c24531c06ea8a071807ef98050db71ca69ccf80d6bd9ca769ff3319"
+}

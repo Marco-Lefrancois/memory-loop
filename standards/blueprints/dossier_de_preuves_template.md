@@ -102,4 +102,10 @@ erDiagram
 #### [CAS B — Si Zéro Arbitrage Requis] ✅ Constat Formel de Frontière Vide
 *Tous les faits nécessaires à la rédaction de la spécification sont vérifiés, documentés et exempts de zones d'ombre.*  
 👉 **Validation formelle du socle factuel sollicitée auprès de l'humain avant d'enclencher la rédaction de la User Story.**
+
+---
+
+### 🔗 6. Continuum de Traçabilité Amont vs Aval (ADR-0394)
+* **Preuve d'Amont (Ce document)** : Justifie l'existence des exigences et des contrats à partir des sources brutes (ateliers, maquettes, directives).
+* **Preuve d'Aval (Phase 3 BUILD)** : La justification des blocs de code physiques (symboles AST) est scellée dans le plan d'implémentation (`implementation_plan_<STORY_ID>.md`) et l'EvidencePack sidecar (`<STORY_ID>_evidence.json`), préservant la pureté no-code du récit Markdown.
 ```

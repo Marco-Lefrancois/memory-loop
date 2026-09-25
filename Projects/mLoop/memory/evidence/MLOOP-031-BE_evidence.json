@@ -1,0 +1,73 @@
+{
+  "story_id": "MLOOP-031-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-031-BE.md",
+  "timestamp": "2026-09-22T14:36:44.145624+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search wayfinder_map.md",
+      "source_file": "wayfinder_map.md",
+      "sha256": "92faf7f5c788a48166f1a79f56c2a0e480f4fb0d74cc5e1fa65e7500b3e9e5fa",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : wayfinder_map.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:36:44.145624+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "wayfinder_map.md": "92faf7f5c788a48166f1a79f56c2a0e480f4fb0d74cc5e1fa65e7500b3e9e5fa"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : wayfinder_map.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "wayfinder_map.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Conversion d'une carte de tickets en graphe DAG ordonné",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Évaluation du risque élevé sur tickets critiques",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Conversion sécurisée en l'absence de fichier wayfinder_map.md",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Initialisation initiale d'une nouvelle carte d'initiative",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-031-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-031-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION"
+}

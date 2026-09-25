@@ -1,0 +1,157 @@
+{
+  "story_id": "MLOOP-290-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-290-BE.md",
+  "timestamp": "2026-09-25T02:01:37.212639+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.015276+00:00"
+    },
+    {
+      "query": "Fact-Search 0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+      "source_file": "0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+      "sha256": "da7a92ffcea37dd08f3ec9a626daa7468c61bc53789b338762cb7e696ed2b73f",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.052766+00:00"
+    },
+    {
+      "query": "Fact-Search 12_things_people_get_wrong_with_grill_me_and_grill_with_docs.md",
+      "source_file": "12_things_people_get_wrong_with_grill_me_and_grill_with_docs.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : 12_things_people_get_wrong_with_grill_me_and_grill_with_docs.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:37.078726+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+      "source_file": "ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+      "sha256": "76f127139fd1572826326fd66ecd0619b3d9c9e292f3dea54988e015478c7d21",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.103102+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-290-BE_fact_dossier.md",
+      "source_file": "MLOOP-290-BE_fact_dossier.md",
+      "sha256": "93f820e3c02e8bb2635797c368e25e3e712699ea3ad5e04d25ff7a1190993aa8",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-290-BE_fact_dossier.md) : MLOOP-290-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:37.109498+00:00"
+    },
+    {
+      "query": "Fact-Search epic_grill_v2_frontier_rounds_ungrillable_context.md",
+      "source_file": "epic_grill_v2_frontier_rounds_ungrillable_context.md",
+      "sha256": "d7d78d615d305944aaaa679b3a16d4310fdd632a3f6b0173e46556589c4cdd37",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_grill_v2_frontier_rounds_ungrillable_context.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.130580+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-290-BE_fact_dossier.md": "93f820e3c02e8bb2635797c368e25e3e712699ea3ad5e04d25ff7a1190993aa8",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md": "da7a92ffcea37dd08f3ec9a626daa7468c61bc53789b338762cb7e696ed2b73f",
+    "ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md": "76f127139fd1572826326fd66ecd0619b3d9c9e292f3dea54988e015478c7d21",
+    "epic_grill_v2_frontier_rounds_ungrillable_context.md": "d7d78d615d305944aaaa679b3a16d4310fdd632a3f6b0173e46556589c4cdd37"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, 0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md, 12_things_people_get_wrong_with_grill_me_and_grill_with_docs.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.553,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+    "12_things_people_get_wrong_with_grill_me_and_grill_with_docs.md",
+    "ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+    "MLOOP-290-BE_fact_dossier.md",
+    "epic_grill_v2_frontier_rounds_ungrillable_context.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Exécution par défaut de grill-project en mode round",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Exécution par défaut de grill-me en mode atomic",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Validation granulaire d'un round avec amendement partiel",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection du seuil critique Dumb Zone (> 120k tokens)",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Inspection instantanée de la santé du contexte via CLI",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-290-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-290-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.553,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

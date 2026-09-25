@@ -1,0 +1,334 @@
+{
+  "story_id": "MLOOP-205-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-205-BE.md",
+  "timestamp": "2026-09-24T14:41:48.787008+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.633536+00:00"
+    },
+    {
+      "query": "Fact-Search 0342-declarative-yaml-extraction-blueprints.md",
+      "source_file": "0342-declarative-yaml-extraction-blueprints.md",
+      "sha256": "78173641326a1c8da9946dc7185fa4ca13495cff9ffb90524f9d71e098177f65",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0342-declarative-yaml-extraction-blueprints.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.653273+00:00"
+    },
+    {
+      "query": "Fact-Search 0342-modular-project-architecture-and-subdomain-isolation.md",
+      "source_file": "0342-modular-project-architecture-and-subdomain-isolation.md",
+      "sha256": "3df2e2695dec86524ae2fa623c29b94e8debbcfd9fe9e2ed5289d497259122dd",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0342-modular-project-architecture-and-subdomain-isolation.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.674077+00:00"
+    },
+    {
+      "query": "Fact-Search DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "source_file": "DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "sha256": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.697275+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-205-BE_fact_dossier.md",
+      "source_file": "MLOOP-205-BE_fact_dossier.md",
+      "sha256": "0c13ed911cc39c65661017d1f7f5eb784f9e136c6755c66a91eb23c0820981f1",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-205-BE_fact_dossier.md) : MLOOP-205-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T14:41:48.697275+00:00"
+    },
+    {
+      "query": "Fact-Search README.md",
+      "source_file": "README.md",
+      "sha256": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : README.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.713220+00:00"
+    },
+    {
+      "query": "Fact-Search epic_portfolio_governance_2026q4.md",
+      "source_file": "epic_portfolio_governance_2026q4.md",
+      "sha256": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_portfolio_governance_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.728960+00:00"
+    },
+    {
+      "query": "Fact-Search sprint_backlog.md",
+      "source_file": "sprint_backlog.md",
+      "sha256": "9c687bf4b357c330b537f9ae13f409ae2e213ba107e0cabb52050d59e3512b91",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : sprint_backlog.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.728960+00:00"
+    },
+    {
+      "query": "Fact-Search story_template.md",
+      "source_file": "story_template.md",
+      "sha256": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : story_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.729961+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-205-BE_fact_dossier.md": "0c13ed911cc39c65661017d1f7f5eb784f9e136c6755c66a91eb23c0820981f1",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "0342-declarative-yaml-extraction-blueprints.md": "78173641326a1c8da9946dc7185fa4ca13495cff9ffb90524f9d71e098177f65",
+    "0342-modular-project-architecture-and-subdomain-isolation.md": "3df2e2695dec86524ae2fa623c29b94e8debbcfd9fe9e2ed5289d497259122dd",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+    "README.md": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+    "epic_portfolio_governance_2026q4.md": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+    "sprint_backlog.md": "9c687bf4b357c330b537f9ae13f409ae2e213ba107e0cabb52050d59e3512b91",
+    "story_template.md": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, 0342-declarative-yaml-extraction-blueprints.md, 0342-modular-project-architecture-and-subdomain-isolation.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 13,
+      "multiplier": 1.0,
+      "score": 0.78,
+      "reason": "full_richness"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "0342-declarative-yaml-extraction-blueprints.md",
+    "0342-modular-project-architecture-and-subdomain-isolation.md",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md",
+    "MLOOP-205-BE_fact_dossier.md",
+    "README.md",
+    "epic_portfolio_governance_2026q4.md",
+    "sprint_backlog.md",
+    "story_template.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-24T14:30:00.000000+00:00",
+  "verification_harness": [
+    {
+      "scenario_title": "Vocabulaire fermé inventorié pour chaque dépôt",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Colonnes module et phase ajoutées sans perte de colonne",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Phase dérivée par table de correspondance déterministe",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Index du catalogue réparé pour les deux décisions numérotées 0342",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Contrôle de texte puis synchronisation séquentielle puis graphe",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Module hors vocabulaire fermé refusé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Suppression d'une colonne existante refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Renumérotation d'un fichier d'architecture refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Synchronisation concurrente refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Tableau illisible signalé sans invention",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Statut absent sans dérivation de phase possible",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec de synchronisation stoppe la séquence",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Lecture croisée du portefeuille Metro pour le décideur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Vocabulaire découvert à partir du disque uniquement",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-205-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-205-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.78,
+  "status": "VALIDATED",
+  "verbatim_extracts": [
+    "epic : dette naming modulaire inegal, OneTrust x3, RBC x2, phase badge-atomique",
+    "draft L64 : ADR-0342 §3 liste fermee ? (prémisse posee puis rejetee)",
+    "ADR-0342 modulaire : §2 motifs generiques, §3 OWNS:, §4 arbitrage — zero liste",
+    "README L83 : index ne reference que 0342-declarative-yaml-extraction",
+    "FOOD/COMMERCE : | Recit | Composant | Statut | sans module ni phase",
+    "SANTE : | ID | Jira | Titre | Taille | Effort | Valeur | Statut | heterogene",
+    "grep frontmatter module:/phase: : 0 match sur 56 recits"
+  ],
+  "implementation_decisions": [
+    "Q1=C deux colonnes module initiative + phase derivee, zéro renommage dossiers ; prémisse §3 rejetee",
+    "Q2a=i ecritures limitees aux 3 sprint_backlog.md ; frontmatter = dette nominative",
+    "Q2b=β schema SANTE preserve, ajout non regressif",
+    "Q2c=y index 0342 repare en 2 references, zero renumérotation (dette)",
+    "Q3a=P controle texte puis 3 syncs sequentiels puis graph-query",
+    "Q3b=XS macro revise de M a XS (scope reel 3 tableaux + 1 index)"
+  ],
+  "declarative_contracts": [],
+  "conflict_matrix": [
+    {
+      "topic": "Vocabulaire modules",
+      "assertion": "liste fermee §3 ADR-0342 (draft)",
+      "resolution": "premisse rejetee — ADR sans §3 de noms ; vocabulaire = initiatives disque",
+      "winner": "constat SSOT + Q1=C PO"
+    },
+    {
+      "topic": "Forme colonnes",
+      "assertion": "module fonctionnel vs technique unique",
+      "resolution": "C : module=initiative + composant=technique deja present + phase derivee",
+      "winner": "Q1=C PO"
+    },
+    {
+      "topic": "Portee ecritures",
+      "assertion": "colonnes + frontmatter 56 recits",
+      "resolution": "i : 3 sprint_backlog.md seulement ; frontmatter = dette",
+      "winner": "Q2a=i PO"
+    },
+    {
+      "topic": "Schema SANTE",
+      "assertion": "harmoniser sur FOOD/COMMERCE",
+      "resolution": "β : preservation, ajout non regressif",
+      "winner": "Q2b=β PO"
+    },
+    {
+      "topic": "Collision 0342",
+      "assertion": "hors scope ou renumerotation complete",
+      "resolution": "y : reparation index 2 lignes, zero renumerotation (dette)",
+      "winner": "Q2c=y PO"
+    },
+    {
+      "topic": "Validation",
+      "assertion": "graphe seul ou grep seul",
+      "resolution": "P : grep puis 3 syncs sequentiels puis graph-query",
+      "winner": "Q3a=P PO"
+    },
+    {
+      "topic": "Macro size",
+      "assertion": "M maintenu",
+      "resolution": "XS — scope reel 3 tableaux + 1 index, renommage/ADR hors scope",
+      "winner": "Q3b=XS PO"
+    },
+    {
+      "topic": "Renommage dossiers",
+      "assertion": "01-<module> ADR-0342 sur arborescence",
+      "resolution": "hors scope — blast radius Jira/evidence ; vocabulaire vit dans le tableau",
+      "winner": "corollaire Q1=C"
+    }
+  ],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:44.343354",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-205-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:44.343354",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 76.0,
+      "overall_trust": 91.6
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

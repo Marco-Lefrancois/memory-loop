@@ -1,0 +1,202 @@
+{
+  "story_id": "MLOOP-175-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-175-BE.md",
+  "timestamp": "2026-09-23T20:34:15.033232+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T20:34:14.772841+00:00"
+    },
+    {
+      "query": "Fact-Search CLI_PIPELINE_GUIDE.md",
+      "source_file": "CLI_PIPELINE_GUIDE.md",
+      "sha256": "72ba4c5c43973a565f3a6d183d69564a1b7103d65e8a171494f0920b04f49143",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : CLI_PIPELINE_GUIDE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T20:34:14.802812+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-175-BE_fact_dossier.md",
+      "source_file": "MLOOP-175-BE_fact_dossier.md",
+      "sha256": "a129d8ac73bde12bf62b27a0e14991414cfbd0a04fa7d7ee22aad2c38ed3ef13",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-175-BE_fact_dossier.md) : MLOOP-175-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T20:34:14.803829+00:00"
+    },
+    {
+      "query": "Fact-Search MODULAR_EXTRACTION_PROTOCOL.md",
+      "source_file": "MODULAR_EXTRACTION_PROTOCOL.md",
+      "sha256": "9fcb2680b16db15e9295ec27fe8d03f9ddb67b1036586ecc1755bb636fe89891",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : MODULAR_EXTRACTION_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T20:34:14.839961+00:00"
+    },
+    {
+      "query": "Fact-Search epic17_prioritization_matrix.md",
+      "source_file": "epic17_prioritization_matrix.md",
+      "sha256": "692242810352c5e81b0e067721c17d7b6c3abc660861e766d3fbdf54a5c32e98",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic17_prioritization_matrix.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T20:34:14.839961+00:00"
+    },
+    {
+      "query": "Fact-Search implementation_plan_MLOOP-175-BE.md",
+      "source_file": "implementation_plan_MLOOP-175-BE.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : implementation_plan_MLOOP-175-BE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T20:34:14.863668+00:00"
+    },
+    {
+      "query": "Fact-Search source_1.md",
+      "source_file": "source_1.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_1.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T20:34:14.889856+00:00"
+    },
+    {
+      "query": "Fact-Search source_2.md",
+      "source_file": "source_2.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_2.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T20:34:14.913828+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-175-BE_fact_dossier.md": "a129d8ac73bde12bf62b27a0e14991414cfbd0a04fa7d7ee22aad2c38ed3ef13",
+    "CLI_PIPELINE_GUIDE.md": "72ba4c5c43973a565f3a6d183d69564a1b7103d65e8a171494f0920b04f49143",
+    "MODULAR_EXTRACTION_PROTOCOL.md": "9fcb2680b16db15e9295ec27fe8d03f9ddb67b1036586ecc1755bb636fe89891",
+    "epic17_prioritization_matrix.md": "692242810352c5e81b0e067721c17d7b6c3abc660861e766d3fbdf54a5c32e98"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : AGENTS.md, CLI_PIPELINE_GUIDE.md, MLOOP-175-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.546,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "AGENTS.md",
+    "CLI_PIPELINE_GUIDE.md",
+    "MLOOP-175-BE_fact_dossier.md",
+    "MODULAR_EXTRACTION_PROTOCOL.md",
+    "epic17_prioritization_matrix.md",
+    "implementation_plan_MLOOP-175-BE.md",
+    "source_1.md",
+    "source_2.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Découpage modulaire transparent du registre CLI",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection d'une commande manquante après extraction",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Recharge dynamique du registre sous accès concurrent",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Parité du guide CLI après extraction",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-175-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-175-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.546,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:42.352681",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-175-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:42.352681",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 76.0,
+      "overall_trust": 91.6
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

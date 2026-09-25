@@ -1,0 +1,1336 @@
+{
+  "project": "mLoop",
+  "score": 75.3,
+  "semantic_quality_score": 75.3,
+  "eval_framework": "Google Agents CLI Eval (Harness Engineering)",
+  "pass_threshold_score": 85.0,
+  "total_stories": 42,
+  "passed": 20,
+  "failed": 22,
+  "details": [
+    {
+      "test_case_id": "EVAL-MLOOP-170-BE",
+      "file": "MLOOP-170-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 90.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-171-BE",
+      "file": "MLOOP-171-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 95.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-172-BE",
+      "file": "MLOOP-172-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 90.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-173-BE",
+      "file": "MLOOP-173-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-174-BE",
+      "file": "MLOOP-174-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-175-BE",
+      "file": "MLOOP-175-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-176-BE",
+      "file": "MLOOP-176-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-177-BE",
+      "file": "MLOOP-177-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 70.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-178-BE",
+      "file": "MLOOP-178-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-179-BE",
+      "file": "MLOOP-179-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-180-BE",
+      "file": "MLOOP-180-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-181-BE",
+      "file": "MLOOP-181-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-182-BE",
+      "file": "MLOOP-182-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 95.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-190-BE",
+      "file": "MLOOP-190-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 60.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-191-BE",
+      "file": "MLOOP-191-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 0.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": false
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md).",
+        "[FUITE DE CODE] Remplacer les blocs de code physique par des règles d'affaires déclaratives.",
+        "[DÉTERMINISTE] Présence de blocs de code physique interdits : ['```python']"
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-192-BE",
+      "file": "MLOOP-192-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 65.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-193-BE",
+      "file": "MLOOP-193-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 65.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-194-BE",
+      "file": "MLOOP-194-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 0.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": false
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md).",
+        "[FUITE DE CODE] Remplacer les blocs de code physique par des règles d'affaires déclaratives.",
+        "[DÉTERMINISTE] Présence de blocs de code physique interdits : ['```python']"
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-200-BE",
+      "file": "MLOOP-200-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-201-BE",
+      "file": "MLOOP-201-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-202-BE",
+      "file": "MLOOP-202-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-203-BE",
+      "file": "MLOOP-203-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-204-BE",
+      "file": "MLOOP-204-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-205-BE",
+      "file": "MLOOP-205-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-206-BE",
+      "file": "MLOOP-206-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-207-BE",
+      "file": "MLOOP-207-BE.md",
+      "verdict": "PASSED",
+      "passed": true,
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 30.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 20.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-210-BE",
+      "file": "MLOOP-210-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 60.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-211-BE",
+      "file": "MLOOP-211-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 57.5,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 22.5,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions.",
+        "Prendre en compte les cas limites non traités : données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-212-FE",
+      "file": "MLOOP-212-FE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 60.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 15.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-213-BE",
+      "file": "MLOOP-213-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 65.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-214-BE",
+      "file": "MLOOP-214-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-215-FULL",
+      "file": "MLOOP-215-FULL.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-220-BE",
+      "file": "MLOOP-220-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-221-BE",
+      "file": "MLOOP-221-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-222-BE",
+      "file": "MLOOP-222-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-223-FE",
+      "file": "MLOOP-223-FE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 60.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 15.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-224-FULL",
+      "file": "MLOOP-224-FULL.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 50.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-230-BE",
+      "file": "MLOOP-230-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 65.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 30.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Prendre en compte les cas limites non traités : données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-231-BE",
+      "file": "MLOOP-231-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 52.5,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 22.5,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-232-BE",
+      "file": "MLOOP-232-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 45.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-233-BE",
+      "file": "MLOOP-233-BE.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 50.0,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 15.0,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 15.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions), Pilier 3 (Résilience).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions, Résilience.",
+        "Prendre en compte les cas limites non traités : timeout/offline."
+      ]
+    },
+    {
+      "test_case_id": "EVAL-MLOOP-234-FULL",
+      "file": "MLOOP-234-FULL.md",
+      "verdict": "FAILED",
+      "passed": false,
+      "total_score": 52.5,
+      "scores_breakdown": {
+        "grounding_and_hallucination": 0.0,
+        "gherkin_four_pillars": 22.5,
+        "declarative_purity": 20.0,
+        "scope_and_edge_cases": 10.0
+      },
+      "deterministic_checks": {
+        "max_file_lines": true,
+        "frontmatter_valid": true,
+        "zero_local_hardcoded_paths": true,
+        "zero_code_snippets": true
+      },
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "Gherkin 4-Piliers incomplet. Piliers manquants : Pilier 2 (Exceptions).",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "recommendations": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés.",
+        "Compléter les piliers Gherkin manquants : Exceptions.",
+        "Prendre en compte les cas limites non traités : timeout/offline, données invalides/vides."
+      ]
+    }
+  ]
+}

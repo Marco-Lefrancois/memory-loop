@@ -1,0 +1,196 @@
+{
+  "story_id": "MLOOP-321-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-321-BE.md",
+  "timestamp": "2026-09-25T12:16:44.415208+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "source_file": "0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "sha256": "66e5659a7be499141e01c8ac896b523721caca839bbd5129243c692b5c601098",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:16:44.083451+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+      "source_file": "ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+      "sha256": "f71eedf829fc4ae82decfb9874044e207ba92c5a984a9cec666ac23b78de43ba",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:16:44.139882+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-018_micro-grill_mloop-321-be__2_decisions.md",
+      "source_file": "ADR-018_micro-grill_mloop-321-be__2_decisions.md",
+      "sha256": "6fe2c2c10889c36099d6274b345c57a1cc96daf454013eac2ad69f7769270425",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-018_micro-grill_mloop-321-be__2_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:16:44.179597+00:00"
+    },
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:16:44.207409+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-321-BE_fact_dossier.md",
+      "source_file": "MLOOP-321-BE_fact_dossier.md",
+      "sha256": "c97ec49e22c4e627a8be7e7cafb776e10a18bdec84e38027600cc0aea52fb9e4",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-321-BE_fact_dossier.md) : MLOOP-321-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T12:16:44.208409+00:00"
+    },
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : SKILL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:16:44.245831+00:00"
+    },
+    {
+      "query": "Fact-Search grill_with_docs_protocol.md",
+      "source_file": "grill_with_docs_protocol.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : grill_with_docs_protocol.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:16:44.274376+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-321-BE_fact_dossier.md": "c97ec49e22c4e627a8be7e7cafb776e10a18bdec84e38027600cc0aea52fb9e4",
+    "0393-decouplage-modalite-grill-scope-anti-cascade.md": "66e5659a7be499141e01c8ac896b523721caca839bbd5129243c692b5c601098",
+    "ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md": "f71eedf829fc4ae82decfb9874044e207ba92c5a984a9cec666ac23b78de43ba",
+    "ADR-018_micro-grill_mloop-321-be__2_decisions.md": "6fe2c2c10889c36099d6274b345c57a1cc96daf454013eac2ad69f7769270425",
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0393-decouplage-modalite-grill-scope-anti-cascade.md, ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md, ADR-018_micro-grill_mloop-321-be__2_decisions.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "La mention d'avancement automatique sans pause humaine unitaire dans le skill d'origine a été le vecteur direct de rationalisation pour le chaînage d'écritur...",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "L'injonction « Enchaîner directement » sans conditionner cette action à un mandat humain explicite pousse le LLM à bypasser le rituel d'orientation.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le standard système exige une séparation orthogonale absolue entre la granularité des questions et la granularité de l'objet métier.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le skill doit graver cet arrêt formel comme invariant opérationnel.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-05",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "L'alignement du skill `.agents/skills/grill/SKILL.md` et de ses bundles exportables est une exigence contractuelle d'EPIC-32.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0393-decouplage-modalite-grill-scope-anti-cascade.md",
+    "ADR-017_epic-32_decouplage_modalite_grill_et_anti_cascade.md",
+    "ADR-018_micro-grill_mloop-321-be__2_decisions.md",
+    "AGENTS.md",
+    "MLOOP-321-BE_fact_dossier.md",
+    "SKILL.md",
+    "grill_with_docs_protocol.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": true,
+  "socle_factuel_validated_at": "2026-09-25T08:13:00.000000+00:00",
+  "verification_harness": [
+    {
+      "scenario_title": "Application de la matrice Format x Scope lors d'une session de grill",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Blocage de l'auto-promotion et respect de la table anti-rationalisation",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résilience face aux soumissions concurrentes sous 500 millisecondes et perte réseau",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Détection de commande ambiguë et guidage vers la syntaxe normée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-321-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-321-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

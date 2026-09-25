@@ -1,0 +1,3257 @@
+{
+  "backlog/stories/MLOOP-001-BE.md": {
+    "mtime": 1786992634.0538497,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-001-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (3/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Accès concurrents, Données partielles / Null, Sécurité / Auth, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-002-BE.md": {
+    "mtime": 1787313850.2493036,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-002-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (3/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Critères d'acceptation vagues détectés : ['approprié']. Utiliser des métriques quantifiables.",
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Accès concurrents, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-003-BE.md": {
+    "mtime": 1787313850.282905,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-003-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Accès concurrents, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-010-BE.md": {
+    "mtime": 1787313850.3110034,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-010-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-011-BE.md": {
+    "mtime": 1787313850.3426101,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-011-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-012-BE.md": {
+    "mtime": 1787313850.3753486,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-012-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-013-BE.md": {
+    "mtime": 1787313850.402802,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-013-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (2/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-020-BE.md": {
+    "mtime": 1787313850.4307542,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-020-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-021-BE.md": {
+    "mtime": 1787313850.4609282,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-021-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-022-BE.md": {
+    "mtime": 1787313850.4895003,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-022-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-023-BE.md": {
+    "mtime": 1787313850.5186985,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-023-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-024-BE.md": {
+    "mtime": 1787313850.5574892,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-024-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (2/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Critères d'acceptation vagues détectés : ['rapide']. Utiliser des métriques quantifiables.",
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-025-BE.md": {
+    "mtime": 1787313850.5962734,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-025-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (2/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-026-BE.md": {
+    "mtime": 1787313850.6262062,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-026-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-030-BE.md": {
+    "mtime": 1787313850.654674,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-030-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-031-BE.md": {
+    "mtime": 1787313850.6851132,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-031-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-032-BE.md": {
+    "mtime": 1787313850.71759,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-032-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-040-BE.md": {
+    "mtime": 1787313850.747221,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-040-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-041-BE.md": {
+    "mtime": 1787313850.7771664,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-041-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "[ADR-0319] Récit `layer: backend` sans Matrice des Contrats API dans le Profil B. Documenter chaque route connue (Méthode · Route · Finalité) ou consigner une OQ-XXX avec `[API de soumission à définir]` si la route n'est pas encore confirmée."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-042-FE.md": {
+    "mtime": 1787313850.808478,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-042-FE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate)."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Rate Limits / Charge.",
+        "[ADR-0319] Récit `layer: frontend` : la Matrice CTA ne référence aucune route HTTP connue ni mention `[API à définir]`. Vérifier la symétrie FE ↔ BE et documenter l'action réseau."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-050-BE.md": {
+    "mtime": 1787313850.8478892,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-050-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de section 'Critères d'acceptation' explicite."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Accès concurrents, Sécurité / Auth, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-051-BE.md": {
+    "mtime": 1787313850.8818133,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-051-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de section 'Critères d'acceptation' explicite."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Accès concurrents, Données partielles / Null, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/REC-001_initialisation_du_module_principal.md": {
+    "mtime": 1787313850.9161353,
+    "critique": {
+      "target_file": "backlog\\stories\\REC-001_initialisation_du_module_principal.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Gherkin 4-Piliers incomplet (1/4 scénarios requis : Nominal, Exceptions, Résilience, UX).",
+        "Récit incomplet : Découpage UI (composants/états) absent.",
+        "Récit incomplet : Contrats API Backend et Modèle de données absents.",
+        "Section Maquettes (liens Figma ou visuels UI) manquante (Visual Gate).",
+        "Parenthèses de renvoi interne interdites (Règle #9 RHO) : (REC-001), (file:///C:/Memory Loop/Projects/mLoop/memory/evidence/REC-001_evidence.json). Utiliser la référence Jira officielle (ex: COUVBOIRE-703) ou le nom métier pur."
+      ],
+      "non_blocking_issues": [
+        "Vecteurs de résilience technique non-adressés dans le récit : Offline / Mode dégradé, Données partielles / Null, Sécurité / Auth, Rate Limits / Charge."
+      ],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ]
+    }
+  },
+  "backlog/stories/MLOOP-101-BE.md": {
+    "mtime": 1789909165.3098063,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-101-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-106-BE.md": {
+    "mtime": 1789992609.8171716,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-106-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-110-BE.md": {
+    "mtime": 1790031363.8742778,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-110-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-120-BE.md": {
+    "mtime": 1790031402.8901477,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-120-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-122-BE.md": {
+    "mtime": 1790031500.2382271,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-122-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-123-BE.md": {
+    "mtime": 1790031568.0909781,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-123-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-124-BE.md": {
+    "mtime": 1790031719.240639,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-124-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-131-BE.md": {
+    "mtime": 1790031828.6984117,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-131-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-132-BE.md": {
+    "mtime": 1790031974.5462863,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-132-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-133-BE.md": {
+    "mtime": 1790032049.5744915,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-133-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-134-BE.md": {
+    "mtime": 1790032137.764965,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-134-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-135-BE.md": {
+    "mtime": 1790032369.3979,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-135-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-145-BE.md": {
+    "mtime": 1790032545.7483852,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-145-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-163-BE.md": {
+    "mtime": 1790081347.034264,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-163-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-160-BE.md": {
+    "mtime": 1790081308.0361805,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-160-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-161-BE.md": {
+    "mtime": 1790081321.0593917,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-161-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-162-BE.md": {
+    "mtime": 1790081332.751201,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-162-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-164-BE.md": {
+    "mtime": 1790081361.1591742,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-164-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-165-BE.md": {
+    "mtime": 1790081374.2390337,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-165-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-150-BE.md": {
+    "mtime": 1790082602.8073041,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-150-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-151-FE.md": {
+    "mtime": 1790082619.3465784,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-151-FE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-152-BE.md": {
+    "mtime": 1790082689.839669,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-152-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-180-BE.md": {
+    "mtime": 1790162346.9736526,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-180-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-181-BE.md": {
+    "mtime": 1790165236.0860393,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-181-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-182-BE.md": {
+    "mtime": 1790166974.5192444,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-182-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-170-BE.md": {
+    "mtime": 1790159850.2294497,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-170-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-172-BE.md": {
+    "mtime": 1790260905.3545692,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-172-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-171-BE.md": {
+    "mtime": 1790260905.3545692,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-171-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-173-BE.md": {
+    "mtime": 1790177418.608563,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-173-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-174-BE.md": {
+    "mtime": 1790185207.1708996,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-174-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-175-BE.md": {
+    "mtime": 1790189508.651894,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-175-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-176-BE.md": {
+    "mtime": 1790261550.348337,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-176-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-178-BE.md": {
+    "mtime": 1790182163.5849009,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-178-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-179-BE.md": {
+    "mtime": 1790183570.266758,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-179-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-190-BE.md": {
+    "mtime": 1790260945.1715817,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-190-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 70.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 72.7
+      }
+    }
+  },
+  "backlog/stories/MLOOP-191-BE.md": {
+    "mtime": 1790245587.8699758,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-191-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 70.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 72.7
+      }
+    }
+  },
+  "backlog/stories/MLOOP-192-BE.md": {
+    "mtime": 1790245587.8699758,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-192-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 70.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 72.7
+      }
+    }
+  },
+  "backlog/stories/MLOOP-193-BE.md": {
+    "mtime": 1790245587.87148,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-193-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 70.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 72.7
+      }
+    }
+  },
+  "backlog/stories/MLOOP-194-BE.md": {
+    "mtime": 1790245587.87148,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-194-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 70.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 72.7
+      }
+    }
+  },
+  "backlog/stories/MLOOP-200-BE.md": {
+    "mtime": 1790259647.789184,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-200-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-201-BE.md": {
+    "mtime": 1790259647.789184,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-201-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-202-BE.md": {
+    "mtime": 1790259647.789184,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-202-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-203-BE.md": {
+    "mtime": 1790259647.7906904,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-203-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-207-BE.md": {
+    "mtime": 1790259647.7926993,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-207-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-205-BE.md": {
+    "mtime": 1790259647.7916987,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-205-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-206-BE.md": {
+    "mtime": 1790259647.7916987,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-206-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-204-BE.md": {
+    "mtime": 1790259647.7906904,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-204-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-177-BE.md": {
+    "mtime": 1790170813.3690321,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-177-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "Absence de contextualisation d'affaires ou de critères d'acceptation formalisés.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 70.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 76.9
+      }
+    }
+  },
+  "backlog/stories/MLOOP-210-BE.md": {
+    "mtime": 1790270125.6139824,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-210-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-211-BE.md": {
+    "mtime": 1790270162.4765098,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-211-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-212-FE.md": {
+    "mtime": 1790271354.5946743,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-212-FE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-213-BE.md": {
+    "mtime": 1790271660.5434492,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-213-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-214-BE.md": {
+    "mtime": 1790271837.7373304,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-214-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-215-FULL.md": {
+    "mtime": 1790271772.918022,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-215-FULL.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-220-BE.md": {
+    "mtime": 1790279636.467841,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-220-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-221-BE.md": {
+    "mtime": 1790279656.042769,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-221-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-222-BE.md": {
+    "mtime": 1790279675.052078,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-222-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-223-FE.md": {
+    "mtime": 1790279733.5175471,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-223-FE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-224-FULL.md": {
+    "mtime": 1790279701.6203768,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-224-FULL.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [],
+      "suggestions": [
+        "Considérer la journalisation des événements d'audit (X-Correlation-ID)."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-230-BE.md": {
+    "mtime": 1790281959.9469733,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-230-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 88.0,
+        "overall_trust": 95.8
+      }
+    }
+  },
+  "backlog/stories/MLOOP-231-BE.md": {
+    "mtime": 1790281972.7258677,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-231-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-232-BE.md": {
+    "mtime": 1790281986.7404225,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-232-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-233-BE.md": {
+    "mtime": 1790282006.626984,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-233-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-234-FULL.md": {
+    "mtime": 1790282036.8801372,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-234-FULL.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-260-BE.md": {
+    "mtime": 1790295375.9208627,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-260-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-261-BE.md": {
+    "mtime": 1790275213.2152479,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-261-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-262-BE.md": {
+    "mtime": 1790275337.0356433,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-262-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 64.0,
+        "overall_trust": 87.4
+      }
+    }
+  },
+  "backlog/stories/MLOOP-263-BE.md": {
+    "mtime": 1790275495.0838187,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-263-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-264-FULL.md": {
+    "mtime": 1790275623.619161,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-264-FULL.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 88.0,
+        "overall_trust": 95.8
+      }
+    }
+  },
+  "backlog/stories/MLOOP-270-BE.md": {
+    "mtime": 1790330421.4194953,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-270-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-280-BE.md": {
+    "mtime": 1790278347.3270488,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-280-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-281-BE.md": {
+    "mtime": 1790277997.3048294,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-281-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-282-BE.md": {
+    "mtime": 1790278004.2858543,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-282-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-283-FULL.md": {
+    "mtime": 1790278026.6559792,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-283-FULL.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-290-BE.md": {
+    "mtime": 1790278700.661432,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-290-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-292-DOC.md": {
+    "mtime": 1790278714.1041439,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-292-DOC.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-291-FE.md": {
+    "mtime": 1790278599.2411082,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-291-FE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-293-FULL.md": {
+    "mtime": 1790278749.3336666,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-293-FULL.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-310-BE.md": {
+    "mtime": 1790325888.749727,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-310-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-311-BE.md": {
+    "mtime": 1790326299.416952,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-311-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 88.0,
+        "overall_trust": 95.8
+      }
+    }
+  },
+  "backlog/stories/MLOOP-312-BE.md": {
+    "mtime": 1790326309.2057185,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-312-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 88.0,
+        "overall_trust": 95.8
+      }
+    }
+  },
+  "backlog/stories/MLOOP-313-BE.md": {
+    "mtime": 1790326318.8799102,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-313-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-314-FULL.md": {
+    "mtime": 1790326329.495111,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-314-FULL.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 88.0,
+        "overall_trust": 95.8
+      }
+    }
+  },
+  "backlog/stories/MLOOP-300-BE.md": {
+    "mtime": 1790330759.2806766,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-300-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/archive/stories/MLOOP-110-BE.md": {
+    "mtime": 1790086796.0770779,
+    "critique": {
+      "target_file": "backlog\\archive\\stories\\MLOOP-110-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-301-BE.md": {
+    "mtime": 1790330769.7699158,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-301-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-302-BE.md": {
+    "mtime": 1790330779.495372,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-302-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-303-BE.md": {
+    "mtime": 1790330790.5565977,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-303-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-304-FULL.md": {
+    "mtime": 1790330801.1057878,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-304-FULL.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-320-BE.md": {
+    "mtime": 1790338098.152071,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-320-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets.",
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 76.0,
+        "overall_trust": 91.6
+      }
+    }
+  },
+  "backlog/stories/MLOOP-321-BE.md": {
+    "mtime": 1790338556.7442572,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-321-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-322-BE.md": {
+    "mtime": 1790338948.6834793,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-322-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-323-BE.md": {
+    "mtime": 1790339251.8588908,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-323-BE.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-324-FULL.md": {
+    "mtime": 1790339409.3004682,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-324-FULL.md",
+      "status": "APPROVED",
+      "blocking_issues": [],
+      "non_blocking_issues": [
+        "[ADR-0319] Récit layer:fullstack sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 100.0,
+        "overall_trust": 100.0
+      }
+    }
+  },
+  "backlog/stories/MLOOP-330-BE.md": {
+    "mtime": 1790359455.8659744,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-330-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  },
+  "backlog/stories/MLOOP-331-BE.md": {
+    "mtime": 1790359463.0753324,
+    "critique": {
+      "target_file": "backlog\\stories\\MLOOP-331-BE.md",
+      "status": "REJECTED",
+      "blocking_issues": [
+        "[ADR-0319] Récit layer:backend sans Matrice des Contrats API (section '#### Matrice des Contrats API') ni clause d'exemption OQ-XXX. Toute route API doit être déclarée explicitement ou consignée en question ouverte (Zéro Fausse Route, AGENTS.md)."
+      ],
+      "non_blocking_issues": [
+        "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+        "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+        "Absence de gestion de l'expiration de session en cours de formulaire.",
+        "Absence de validation des saisies extrêmes ou champs incomplets."
+      ],
+      "suggestions": [
+        "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+      ],
+      "remediation_patches": [
+        {
+          "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+          "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+          "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+          "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+        },
+        {
+          "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+          "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+          "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+          "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+        }
+      ],
+      "scores": {
+        "business_discernment": 100.0,
+        "ecosystem_coherence": 100.0,
+        "technical_rigor": 52.0,
+        "overall_trust": 83.2
+      }
+    }
+  }
+}

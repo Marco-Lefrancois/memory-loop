@@ -1,0 +1,194 @@
+{
+  "story_id": "MLOOP-202-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-202-BE.md",
+  "timestamp": "2026-09-24T14:41:48.243273+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.167566+00:00"
+    },
+    {
+      "query": "Fact-Search 0342-modular-project-architecture-and-subdomain-isolation.md",
+      "source_file": "0342-modular-project-architecture-and-subdomain-isolation.md",
+      "sha256": "3df2e2695dec86524ae2fa623c29b94e8debbcfd9fe9e2ed5289d497259122dd",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0342-modular-project-architecture-and-subdomain-isolation.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.193529+00:00"
+    },
+    {
+      "query": "Fact-Search DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "source_file": "DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "sha256": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.207414+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-202-BE_fact_dossier.md",
+      "source_file": "MLOOP-202-BE_fact_dossier.md",
+      "sha256": "ebfb96d08cce3b4e5323d47063919a7861cf8804d7b291631a733594836dc533",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-202-BE_fact_dossier.md) : MLOOP-202-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T14:41:48.207414+00:00"
+    },
+    {
+      "query": "Fact-Search epic_portfolio_governance_2026q4.md",
+      "source_file": "epic_portfolio_governance_2026q4.md",
+      "sha256": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_portfolio_governance_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.218480+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-202-BE_fact_dossier.md": "ebfb96d08cce3b4e5323d47063919a7861cf8804d7b291631a733594836dc533",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "0342-modular-project-architecture-and-subdomain-isolation.md": "3df2e2695dec86524ae2fa623c29b94e8debbcfd9fe9e2ed5289d497259122dd",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+    "epic_portfolio_governance_2026q4.md": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, 0342-modular-project-architecture-and-subdomain-isolation.md, DOSSIER_DE_PREUVES_PROTOCOL.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.56,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "0342-modular-project-architecture-and-subdomain-isolation.md",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md",
+    "MLOOP-202-BE_fact_dossier.md",
+    "epic_portfolio_governance_2026q4.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Séquence complète des douze récits vers la prontitude",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Registre transverse consultable avant les revues unitaires",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Question macro déjà tranchée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Socle ambigu ou absent pour un récit",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Refus de promotion sans feu vert",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec d'une revue sans cascade",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Relance Sentinel rejetée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Tentative d'inclusion des récits hors séquence",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Bilan de séquence pour le pilote de gouvernance",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Projet sans feu vert résiduel",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-202-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-202-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.56,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:43.980148",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-202-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:43.980148",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 76.0,
+      "overall_trust": 91.6
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

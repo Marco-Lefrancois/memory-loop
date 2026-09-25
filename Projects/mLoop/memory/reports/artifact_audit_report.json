@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-09-25T12:56:17.622248+00:00",
+  "project_path": "Projects\\mLoop",
+  "strict": false,
+  "total": 4,
+  "pass": 3,
+  "fail": 1,
+  "verdict": "FAIL",
+  "artifacts": [
+    {
+      "file": "Projects\\mLoop\\docs\\00-ingested\\ingest_anomalies.json",
+      "verdict": "PASS",
+      "errors": [],
+      "reason": "ARTIFACT_CONFORME",
+      "raster_ratio": 0.0,
+      "vector_elements_count": 0,
+      "checksum": "18528927b84fa9b2e52f459c7c40e42b480ab20298a05b1cb0e1d588920205be",
+      "topology_score": 1.0,
+      "composite_score": 1.0
+    },
+    {
+      "file": "Projects\\mLoop\\docs\\01-architecture\\architecture.canvas",
+      "verdict": "PASS",
+      "errors": [],
+      "reason": "ARTIFACT_CONFORME",
+      "raster_ratio": 0.0,
+      "vector_elements_count": 5,
+      "checksum": "5e014761595d4d2eac0e968fc0fbfff8a43ef4fc8dfa89813ebb5d049b3f8488",
+      "node_count": 5,
+      "edge_count": 4,
+      "topology_score": 1.0,
+      "composite_score": 1.0
+    },
+    {
+      "file": "Projects\\mLoop\\backlog\\sprint_dag.canvas",
+      "verdict": "PASS",
+      "errors": [],
+      "reason": "ARTIFACT_CONFORME",
+      "raster_ratio": 0.0,
+      "vector_elements_count": 16,
+      "checksum": "ffab563300d36f8c9ef9f1aec40470f817f3ddf42051277503d6c86d33ecf1dc",
+      "node_count": 16,
+      "edge_count": 15,
+      "topology_score": 1.0,
+      "composite_score": 1.0
+    },
+    {
+      "file": "Projects\\mLoop\\backlog\\story_mapping.canvas",
+      "verdict": "FAIL",
+      "errors": [
+        "CONNECTOR_COLLAPSE_DETECTED: 20 blocs modulaires sans aucun connecteur relationnel"
+      ],
+      "reason": "ARTIFACT_CONFORME",
+      "raster_ratio": 0.0,
+      "vector_elements_count": 20,
+      "checksum": "9e710e97049ef318bca6094e5b65d2a3e2b88179e9d273d5c51715abd0818e53",
+      "node_count": 20,
+      "edge_count": 0,
+      "topology_score": 0.4,
+      "composite_score": 0.4
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "story_id": "MLOOP-180-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-180-BE.md",
+  "timestamp": "2026-09-23T11:19:14.760979+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 00-questions-ouvertes.md",
+      "source_file": "00-questions-ouvertes.md",
+      "sha256": "5bea9bd72e8f74da96e9259b39ca7fdacb0f69e334d67ff0fa5bfdb2bce764a7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 00-questions-ouvertes.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T11:19:14.660309+00:00"
+    },
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T11:19:14.673338+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-180-BE_fact_dossier.md",
+      "source_file": "MLOOP-180-BE_fact_dossier.md",
+      "sha256": "b276ca317c2bf3777d52fb487b6e12a1113152ee5e03b8590595395bc784a660",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-180-BE_fact_dossier.md) : MLOOP-180-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T11:19:14.673338+00:00"
+    },
+    {
+      "query": "Fact-Search _evidence.json",
+      "source_file": "_evidence.json",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _evidence.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T11:19:14.687837+00:00"
+    },
+    {
+      "query": "Fact-Search _fact_dossier.md",
+      "source_file": "_fact_dossier.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : _fact_dossier.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T11:19:14.700592+00:00"
+    },
+    {
+      "query": "Fact-Search critic.py",
+      "source_file": "critic.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-180-BE_fact_dossier.md) : critic.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T11:19:14.712960+00:00"
+    },
+    {
+      "query": "Fact-Search epic_evidence_impl_decisions.md",
+      "source_file": "epic_evidence_impl_decisions.md",
+      "sha256": "ae47c4a6a757a32b252a6c66d8e77cd158fbce87d44547a46a1f6d186260a5ec",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-180-BE_fact_dossier.md) : epic_evidence_impl_decisions.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T11:19:14.712960+00:00"
+    },
+    {
+      "query": "Fact-Search evidence_pack.py",
+      "source_file": "evidence_pack.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-180-BE_fact_dossier.md) : evidence_pack.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T11:19:14.725468+00:00"
+    },
+    {
+      "query": "Fact-Search story_template.md",
+      "source_file": "story_template.md",
+      "sha256": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : story_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T11:19:14.726480+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-180-BE_fact_dossier.md": "b276ca317c2bf3777d52fb487b6e12a1113152ee5e03b8590595395bc784a660",
+    "epic_evidence_impl_decisions.md": "ae47c4a6a757a32b252a6c66d8e77cd158fbce87d44547a46a1f6d186260a5ec",
+    "00-questions-ouvertes.md": "5bea9bd72e8f74da96e9259b39ca7fdacb0f69e334d67ff0fa5bfdb2bce764a7",
+    "story_template.md": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 00-questions-ouvertes.md, AGENTS.md, MLOOP-180-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "le schema actuel ne contient **aucun** champ `implementation_decisions`, `verbatim_extracts`, `declarative_contracts`, `conflict_matrix`.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "écart épistémique mesuré sur 8 dimensions, 5 en `❌`, 2 en `⚠️`.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "périmètre = EPIC 10→18 (code parfait), EPIC 1-9 legacy intouché.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "headings **exacts** H2 requis — variances de casse/numérotation rejetées.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-05",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "regex exige **chiffres** (`OQ-001`, pas `OQ-XXX`) + marqueur différé.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-06",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "hash frontmatter obligatoire après édition sur statuts READY_* — ré-estampillage `stamp_content_hash` requis.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "00-questions-ouvertes.md",
+    "AGENTS.md",
+    "MLOOP-180-BE_fact_dossier.md",
+    "_evidence.json",
+    "_fact_dossier.md",
+    "critic.py",
+    "epic_evidence_impl_decisions.md",
+    "evidence_pack.py",
+    "story_template.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Génération d'un pack de parité",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet d'une catégorie de décision hors liste fermée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Réjection d'une citation sans ancrage ligne",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Pack sans les 5 champs (rétrocompatibilité legacy)",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Fichier source citation introuvable sur disque",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Timeout de calcul SHA-256 sur source volumineuse",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Score de confiance reflétant la richesse du pack",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rapport de régénération traçable",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-180-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-180-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:42.916369",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-180-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:42.916369",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 64.0,
+      "overall_trust": 87.4
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [
+      {
+        "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+        "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+        "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+        "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+      }
+    ],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "story_id": "MLOOP-213-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-213-BE.md",
+  "timestamp": "2026-09-25T08:45:00.308062+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "source_file": "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "sha256": "592e0addfd60f33c1b2b3e488b13793f15222af232d7d3044281b0c358e42d46",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.090584+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "source_file": "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "sha256": "73319b069d9f0caf7595a424c556dd0a27758062afe45582b9bb487837ea089d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.116284+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-008_micro-grill_mloop-213-be__2_decisions.md",
+      "source_file": "ADR-008_micro-grill_mloop-213-be__2_decisions.md",
+      "sha256": "c1c343a753253c4f657feb67e77c0925cc69d48309ecd6d00c300b17d14dca79",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-008_micro-grill_mloop-213-be__2_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.146230+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-213-BE_fact_dossier.md",
+      "source_file": "MLOOP-213-BE_fact_dossier.md",
+      "sha256": "3750af6b841c7c13f097f1de90fc9c8b3b6e57ec4fe3727d0e262d3c1ebfacc0",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-213-BE_fact_dossier.md) : MLOOP-213-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T08:45:00.147227+00:00"
+    },
+    {
+      "query": "Fact-Search epic_mcp_modern_suite_2026q4.md",
+      "source_file": "epic_mcp_modern_suite_2026q4.md",
+      "sha256": "575708ca916663934656097084453e7e2a42fec4ff024c06ae727df4a1ac719a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_mcp_modern_suite_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T08:45:00.161787+00:00"
+    },
+    {
+      "query": "Fact-Search source_adr_0387.md",
+      "source_file": "source_adr_0387.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_adr_0387.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T08:45:00.179746+00:00"
+    },
+    {
+      "query": "Fact-Search source_macro_adr_004.md",
+      "source_file": "source_macro_adr_004.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_macro_adr_004.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T08:45:00.198688+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-213-BE_fact_dossier.md": "3750af6b841c7c13f097f1de90fc9c8b3b6e57ec4fe3727d0e262d3c1ebfacc0",
+    "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md": "592e0addfd60f33c1b2b3e488b13793f15222af232d7d3044281b0c358e42d46",
+    "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md": "73319b069d9f0caf7595a424c556dd0a27758062afe45582b9bb487837ea089d",
+    "ADR-008_micro-grill_mloop-213-be__2_decisions.md": "c1c343a753253c4f657feb67e77c0925cc69d48309ecd6d00c300b17d14dca79",
+    "epic_mcp_modern_suite_2026q4.md": "575708ca916663934656097084453e7e2a42fec4ff024c06ae727df4a1ac719a"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md, ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md, ADR-008_micro-grill_mloop-213-be__2_decisions.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "format d'entrée = JSON-Schema → `pending_elicitation` persiste ce schéma (213-Q1), pas un état UI.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "le repli est un chemin d'écriture `decision_records` à part entière (`fallback_used: true`).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "`record_adr` reste réservé aux ADR ; les réponses de formulaire n'y vont PAS (éviterait la pollution du catalogue).",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+    "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+    "ADR-008_micro-grill_mloop-213-be__2_decisions.md",
+    "MLOOP-213-BE_fact_dossier.md",
+    "epic_mcp_modern_suite_2026q4.md",
+    "source_adr_0387.md",
+    "source_macro_adr_004.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Question d'arbitrage servie en formulaire puis décision tracée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Expiration de l'attente après cinq minutes puis reprise du formulaire",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet d'une réponse incompatible avec le schéma émis",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Régénération du formulaire après reconnexion de la séance",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Repli textuel sur un environnement sans élicitation",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Question déjà tranchée jamais reposée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Widget interactif et retour de soumission",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Traçabilité unifiée des deux provenances de décision",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-213-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-213-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

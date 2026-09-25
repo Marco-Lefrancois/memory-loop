@@ -129,6 +129,9 @@ Les documents ci-dessous sont des **Standards Normatifs (Lois)** régissant le c
 *   **[ADR-0391](0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md)** : Harmonisation Déterministe du Cycle de Vie des Récits (5 Phases, Machine à États SSOT, Éradication du Hardcoding & Auto-Clôture Gate 5)
 *   **[ADR-0392](0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md)** : Harnais de Fidélité Visuelle & Intégrité des Artefacts Topologiques (Anti-Raster Paste & Graphe Fermé Strict)
 *   **[ADR-0393](0393-decouplage-modalite-grill-scope-anti-cascade.md)** : Découplage Déterministe Modalité de Grill (Format) vs Périmètre (Scope), Verrou Anti-Cascade & Gating d'Écriture
+*   **[ADR-0394](0394-tracabilite-bidirectionnelle-code-exigences-preuves-programmation-ast.md)** : Traçabilité Bidirectionnelle Code ↔ Exigences, Preuves de Programmation AST & EvidencePack 2.0
+*   **[ADR-0395](0395-wiki-graph-dual-layer-et-fact-search-reflexif-wfm.md)** : Wiki Graph Dual-Layer, Fact-Search Réflexif Biaisé & Mode Reject Souverain (Intégration Cognitive WFM)
+*   **[ADR-0396](0396-audit-artefacts-5-axes-et-anti-inversion-causale-refigbench.md)** : Grille d'Audit Découplée 5-Axes, Détection Matricielle d'Inversion Causale & Handoff Multi-Harnais (Extension ReFigBench)
 
 ---
 *Dernière consolidation constitutionnelle : 24 septembre 2026 — 106 ADRs Unifiées (Zéro Conflit)*

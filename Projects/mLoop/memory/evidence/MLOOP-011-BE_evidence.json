@@ -1,0 +1,73 @@
+{
+  "story_id": "MLOOP-011-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-011-BE.md",
+  "timestamp": "2026-09-22T14:36:44.065368+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : SKILL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:36:44.060321+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : SKILL.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "SKILL.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Lecture d'une compétence existante via son URI canonique",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Demande de lecture pour une compétence inexistante",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Énumération robuste lorsque aucun répertoire de skill n'est accessible",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Liste exhaustive des compétences dans resources/list",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-011-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-011-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION"
+}

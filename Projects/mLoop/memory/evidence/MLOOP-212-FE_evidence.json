@@ -1,0 +1,260 @@
+{
+  "story_id": "MLOOP-212-FE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-212-FE.md",
+  "timestamp": "2026-09-25T02:01:28.568263+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "source_file": "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "sha256": "592e0addfd60f33c1b2b3e488b13793f15222af232d7d3044281b0c358e42d46",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:28.302622+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "source_file": "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "sha256": "73319b069d9f0caf7595a424c556dd0a27758062afe45582b9bb487837ea089d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:28.338349+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-007_micro-grill_mloop-212-fe__2_decisions.md",
+      "source_file": "ADR-007_micro-grill_mloop-212-fe__2_decisions.md",
+      "sha256": "26b8bfac32c5f89f97516da87030c5c99bee906e1d9e97c22842a00208f5b5c3",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-007_micro-grill_mloop-212-fe__2_decisions.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:28.387412+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-212-FE_fact_dossier.md",
+      "source_file": "MLOOP-212-FE_fact_dossier.md",
+      "sha256": "ff9c45b0450dae62cd4515af9cf5236ad4252bcce7c457e9679c82c2835d38ce",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-212-FE_fact_dossier.md) : MLOOP-212-FE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:28.387412+00:00"
+    },
+    {
+      "query": "Fact-Search epic_mcp_modern_suite_2026q4.md",
+      "source_file": "epic_mcp_modern_suite_2026q4.md",
+      "sha256": "575708ca916663934656097084453e7e2a42fec4ff024c06ae727df4a1ac719a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_mcp_modern_suite_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:28.404682+00:00"
+    },
+    {
+      "query": "Fact-Search source_adr_0387.md",
+      "source_file": "source_adr_0387.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_adr_0387.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:28.439523+00:00"
+    },
+    {
+      "query": "Fact-Search source_macro_adr_004.md",
+      "source_file": "source_macro_adr_004.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_macro_adr_004.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:28.466726+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-212-FE_fact_dossier.md": "ff9c45b0450dae62cd4515af9cf5236ad4252bcce7c457e9679c82c2835d38ce",
+    "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md": "592e0addfd60f33c1b2b3e488b13793f15222af232d7d3044281b0c358e42d46",
+    "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md": "73319b069d9f0caf7595a424c556dd0a27758062afe45582b9bb487837ea089d",
+    "ADR-007_micro-grill_mloop-212-fe__2_decisions.md": "26b8bfac32c5f89f97516da87030c5c99bee906e1d9e97c22842a00208f5b5c3",
+    "epic_mcp_modern_suite_2026q4.md": "575708ca916663934656097084453e7e2a42fec4ff024c06ae727df4a1ac719a"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md, ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md, ADR-007_micro-grill_mloop-212-fe__2_decisions.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 8,
+      "multiplier": 0.94,
+      "score": 0.94,
+      "reason": "partial_richness (8/10)"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "2 ressources cibles (le draft 212 utilise un préfixe `mloop/` — divergence mineure à réaligner en build sur la spec).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "l'iframe ne doit PAS appeler d'API réseau (valide 212-Q1 contre Option B).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "fallback déjà contractualisé → 212-Q2 l'étend au cas « iframe trop petite ».",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "le canal d'état projet côté bridge existe — 212 ne le duplique pas.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0387-mcp-modern-spec-2026-07-28-tasks-ui-elicitation-architecture.md",
+    "ADR-004_epic-21-mcp-modern-suite_-_cadrage_macro_grill__6_decisions.md",
+    "ADR-007_micro-grill_mloop-212-fe__2_decisions.md",
+    "MLOOP-212-FE_fact_dossier.md",
+    "epic_mcp_modern_suite_2026q4.md",
+    "source_adr_0387.md",
+    "source_macro_adr_004.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Affichage nominal des deux ressources ui:// dans l'IDE",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Appel d'outil sur client hôte sans support de l'extension ui://",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Adresse de ressource hors registre des adresses officielles",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Repli par bannière lorsque la largeur du cadre passe sous le seuil",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Isolement réseau préservé à l'intérieur du cadre",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Mise à jour en place lors d'un changement de projet",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Indicateurs de progression, états de surface et traçabilité du repli",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-212-FE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-212-FE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 0.94,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [
+    {
+      "decision_id": "D-212-01",
+      "decision": "Dixieme de capacite strict: extension comptee uniquement si capabilities.extensions[io.modelcontextprotocol/ui].mimeTypes contient text/html;profile=mcp-app (sans elle -> degradation gracieuse, jamais isError).",
+      "grounded_in": "SEP-1865 (a client that omits it does not count)"
+    },
+    {
+      "decision_id": "D-212-02",
+      "decision": "Serveur annonce capabilities.extensions symetriques {mimeTypes: [text/html;profile=mcp-app]} via ui_server_capabilities() (registre unique revoyable).",
+      "grounded_in": "Plan 212-FE §2 / SEP-1865 SDK advertise"
+    },
+    {
+      "decision_id": "D-212-03",
+      "decision": "Strip des 3 balises link Google Fonts au service de l artefact Archify showcase (In-Scope zero CDN); DrawDB servi par render_schema_page autonome.",
+      "grounded_in": "Recit In-Scope + ADR-007 micro-grill"
+    },
+    {
+      "decision_id": "D-212-04",
+      "decision": "Repli dimensionnel UI_MIN_WIDTH_PX=320 dans le registre partagé (banniere non bloquante, liens declaratifs 4 etats); repli local http://localhost:8081/ (DrawDB) et http://localhost:8080/api/archify/html (cockpit).",
+      "grounded_in": "ADR-007 212-Q2"
+    },
+    {
+      "decision_id": "D-212-05",
+      "decision": "Zoom/pan shell opt-in (zoomTarget) uniquement sur DrawDB #schema-container; Archify conserve son pan/zoom natif; mise a jour en place via postMessage project_changed (renderSchema, zero location.reload, garde event.source !== window.parent).",
+      "grounded_in": "ADR-007 212-Q1 + recit Scenario 6"
+    }
+  ],
+  "declarative_contracts": [
+    {
+      "contract": "resources/list ui://",
+      "fields": [
+        "uri",
+        "name",
+        "title",
+        "mimeType=text/html;profile=mcp-app",
+        "description",
+        "_meta.ui.csp={connectDomains:[],resourceDomains:[]}"
+      ]
+    },
+    {
+      "contract": "resources/read ui://",
+      "fields": [
+        "contents[0].uri",
+        "contents[0].mimeType",
+        "contents[0].text (HTML5 CSP-stricte)"
+      ],
+      "error_case": "isError + hors registre"
+    },
+    {
+      "contract": "tools/show_architecture|show_database_schema",
+      "fields": [
+        "_meta.ui.resourceUri (si capacite)",
+        "content[0].text toujours significatif (repli local sinon)",
+        "jamais isError de repli"
+      ]
+    }
+  ],
+  "conflict_matrix": []
+}

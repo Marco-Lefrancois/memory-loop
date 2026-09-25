@@ -1,0 +1,386 @@
+{
+  "story_id": "MLOOP-204-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-204-BE.md",
+  "timestamp": "2026-09-24T14:41:48.607416+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0304-gouvernance-synchronisation-jira.md",
+      "source_file": "0304-gouvernance-synchronisation-jira.md",
+      "sha256": "dbe6031e9ca567c981ea872ab3ed3cca35ad46cf28fb9343b71bf176cfefa492",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0304-gouvernance-synchronisation-jira.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.380822+00:00"
+    },
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.398362+00:00"
+    },
+    {
+      "query": "Fact-Search 0324-auto-eval-harvesting-context-guard.md",
+      "source_file": "0324-auto-eval-harvesting-context-guard.md",
+      "sha256": "84c01dfb2e3e8a5d4e2a09e40f479d00d9e0891d5138070e48d12a0901a24516",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0324-auto-eval-harvesting-context-guard.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.418305+00:00"
+    },
+    {
+      "query": "Fact-Search 0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md",
+      "source_file": "0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md",
+      "sha256": "efc4792dd0a106753ebb4f0d0801b434d3d143a8b02246f992d98ccba44f61df",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.437502+00:00"
+    },
+    {
+      "query": "Fact-Search CLI_PIPELINE_GUIDE.md",
+      "source_file": "CLI_PIPELINE_GUIDE.md",
+      "sha256": "0ee8538b904f5b36b2d9de75dff9fda1a2ffb49da89ad597b58429cbe1e6446a",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : CLI_PIPELINE_GUIDE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.453105+00:00"
+    },
+    {
+      "query": "Fact-Search DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "source_file": "DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "sha256": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : DOSSIER_DE_PREUVES_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.475995+00:00"
+    },
+    {
+      "query": "Fact-Search FRAMEWORK_STATE.md",
+      "source_file": "FRAMEWORK_STATE.md",
+      "sha256": "c1c0b541d96a6573a700679a916a4a7f16de9a210fa6bd315defe0eaa1e37c6e",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : FRAMEWORK_STATE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.476994+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-204-BE_fact_dossier.md",
+      "source_file": "MLOOP-204-BE_fact_dossier.md",
+      "sha256": "d443834d75196ee594a0a4b3cdaa5a46966558dbf7f0ecb2a8a79f8369e53099",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-204-BE_fact_dossier.md) : MLOOP-204-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T14:41:48.476994+00:00"
+    },
+    {
+      "query": "Fact-Search PHASE_FILES_AND_TEST_PLAN.md",
+      "source_file": "PHASE_FILES_AND_TEST_PLAN.md",
+      "sha256": "27d53f707f5c5a13760a9bf5e30230bcafeeff151d5db217762f5d55019b3b8e",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : PHASE_FILES_AND_TEST_PLAN.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.493296+00:00"
+    },
+    {
+      "query": "Fact-Search PROJECT_LIFECYCLE_STAGES.md",
+      "source_file": "PROJECT_LIFECYCLE_STAGES.md",
+      "sha256": "74ecd3f9f66d940c7e50988b1d24e451fd9d8aeee92bf1dc3b9fb3d5cec9d04d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : PROJECT_LIFECYCLE_STAGES.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.513494+00:00"
+    },
+    {
+      "query": "Fact-Search epic_portfolio_governance_2026q4.md",
+      "source_file": "epic_portfolio_governance_2026q4.md",
+      "sha256": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_portfolio_governance_2026q4.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.517779+00:00"
+    },
+    {
+      "query": "Fact-Search jira_sync_history.md",
+      "source_file": "jira_sync_history.md",
+      "sha256": "920b02f06e439249b9efc26192aba781bf8f607a37bbaab7e8af295b7614bc81",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : jira_sync_history.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.523348+00:00"
+    },
+    {
+      "query": "Fact-Search jira_sync_report.md",
+      "source_file": "jira_sync_report.md",
+      "sha256": "dd343e34bd5bfad5b627cf3071bd77734db7b7403342978c2cf80f9d17e983a7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : jira_sync_report.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.523348+00:00"
+    },
+    {
+      "query": "Fact-Search lifecycle_state.json",
+      "source_file": "lifecycle_state.json",
+      "sha256": "31392f86d40252aa56e7c44b72947ce345f66d0c15cdfb9f0f1fdc0a9ccd0a44",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : lifecycle_state.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.523348+00:00"
+    },
+    {
+      "query": "Fact-Search story_template.md",
+      "source_file": "story_template.md",
+      "sha256": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : story_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.524373+00:00"
+    },
+    {
+      "query": "Fact-Search supersession_ledger.json",
+      "source_file": "supersession_ledger.json",
+      "sha256": "e5792d71d187e7f45a9b0d079a992a5872c713d67065af72f4a8d7bd690c330b",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : supersession_ledger.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T14:41:48.524373+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-204-BE_fact_dossier.md": "d443834d75196ee594a0a4b3cdaa5a46966558dbf7f0ecb2a8a79f8369e53099",
+    "0304-gouvernance-synchronisation-jira.md": "dbe6031e9ca567c981ea872ab3ed3cca35ad46cf28fb9343b71bf176cfefa492",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "0324-auto-eval-harvesting-context-guard.md": "84c01dfb2e3e8a5d4e2a09e40f479d00d9e0891d5138070e48d12a0901a24516",
+    "0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md": "efc4792dd0a106753ebb4f0d0801b434d3d143a8b02246f992d98ccba44f61df",
+    "CLI_PIPELINE_GUIDE.md": "0ee8538b904f5b36b2d9de75dff9fda1a2ffb49da89ad597b58429cbe1e6446a",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md": "e2b2b263a38c5a0082ff9c46866e8fcb66229a054996b7f9865ac5b8d33bb1ee",
+    "FRAMEWORK_STATE.md": "c1c0b541d96a6573a700679a916a4a7f16de9a210fa6bd315defe0eaa1e37c6e",
+    "PHASE_FILES_AND_TEST_PLAN.md": "27d53f707f5c5a13760a9bf5e30230bcafeeff151d5db217762f5d55019b3b8e",
+    "PROJECT_LIFECYCLE_STAGES.md": "74ecd3f9f66d940c7e50988b1d24e451fd9d8aeee92bf1dc3b9fb3d5cec9d04d",
+    "epic_portfolio_governance_2026q4.md": "2bfcecae21203022e2ad90fa23b5f1bda035bb441931f79b510b78316fb1857f",
+    "jira_sync_history.md": "920b02f06e439249b9efc26192aba781bf8f607a37bbaab7e8af295b7614bc81",
+    "jira_sync_report.md": "dd343e34bd5bfad5b627cf3071bd77734db7b7403342978c2cf80f9d17e983a7",
+    "lifecycle_state.json": "31392f86d40252aa56e7c44b72947ce345f66d0c15cdfb9f0f1fdc0a9ccd0a44",
+    "story_template.md": "0c96297a9cda7cf6fdda2a8eec3136a6d20f553b1bb5a1cefab17606aa8c60e7",
+    "supersession_ledger.json": "e5792d71d187e7f45a9b0d079a992a5872c713d67065af72f4a8d7bd690c330b"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0304-gouvernance-synchronisation-jira.md, 0320-grill-me-frontier-design-tree-alignment.md, 0324-auto-eval-harvesting-context-guard.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.539,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0304-gouvernance-synchronisation-jira.md",
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "0324-auto-eval-harvesting-context-guard.md",
+    "0386-gouvernance-github-rulesets-pull-requests-et-garde-fous-phase-5-ship.md",
+    "CLI_PIPELINE_GUIDE.md",
+    "DOSSIER_DE_PREUVES_PROTOCOL.md",
+    "FRAMEWORK_STATE.md",
+    "MLOOP-204-BE_fact_dossier.md",
+    "PHASE_FILES_AND_TEST_PLAN.md",
+    "PROJECT_LIFECYCLE_STAGES.md",
+    "epic_portfolio_governance_2026q4.md",
+    "jira_sync_history.md",
+    "jira_sync_report.md",
+    "lifecycle_state.json",
+    "story_template.md",
+    "supersession_ledger.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Inventaire de ciblage constitué à partir des clés de ticket réelles",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Simulation de synchronisation puis approbation puis écriture ciblée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Archivage local des connaissances remplacées",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Sous-suite de phase verte puis poussée sous feu vert puis scellement de porte",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Bascule en écriture avant approbation du rapport refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Balayage de l'intégralité du projet sans confirmation dédiée refusé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Poussée de dépôt sans feu vert distinct refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Poussée alors qu'un échec subsiste en sous-suite refusée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Archivage utilisé comme substitut à la synchronisation de tickets refusé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Code de sortie non nul stoppe la séquence",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Liste de ciblage vide signalée sans exécution silencieuse",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec best-effort de la suite complète traité comme dette non bloquante",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Interruption réseau pendant l'écriture sans état partiel déclaré à tort",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rapport de simulation restitué intégralement au décideur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Aucune notification externe automatique à la clôture",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "État de cinquième porte traçable avec approbateur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-204-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-204-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.539,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:44.213846",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-204-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:44.213846",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 64.0,
+      "overall_trust": 87.4
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [
+      {
+        "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+        "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+        "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+        "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+      }
+    ],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

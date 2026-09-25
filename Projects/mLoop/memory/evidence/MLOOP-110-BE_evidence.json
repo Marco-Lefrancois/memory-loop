@@ -1,0 +1,140 @@
+{
+  "story_id": "MLOOP-110-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-110-BE.md",
+  "timestamp": "2026-09-22T14:26:46.875876+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0369-standards-robustesse-python.md",
+      "source_file": "0369-standards-robustesse-python.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : 0369-standards-robustesse-python.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-22T14:26:46.845762+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-110-BE_fact_dossier.md",
+      "source_file": "MLOOP-110-BE_fact_dossier.md",
+      "sha256": "8dd11cbaaa26916c4cdabb2acf321f40fc5405fede0215d927ac65a341740c3e",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-110-BE_fact_dossier.md) : MLOOP-110-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:46.845762+00:00"
+    },
+    {
+      "query": "Fact-Search README.md",
+      "source_file": "README.md",
+      "sha256": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : README.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.858414+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-110-BE_fact_dossier.md": "8dd11cbaaa26916c4cdabb2acf321f40fc5405fede0215d927ac65a341740c3e",
+    "README.md": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0369-standards-robustesse-python.md, MLOOP-110-BE_fact_dossier.md, README.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0369-standards-robustesse-python.md",
+    "MLOOP-110-BE_fact_dossier.md",
+    "README.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Une erreur émise après activation reste consultable après la fin du processus",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Aucune persistance n'est créée tant qu'elle n'est pas explicitement demandée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Emplacement de sortie inaccessible sans interruption de l'exécution",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Bornage automatique de l'espace et ciblage sur les erreurs",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-110-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-110-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.83,
+  "status": "VALIDATED",
+  "project_name": "mLoop",
+  "last_updated": "2026-09-25T06:05:23.556590",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-110-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-25T06:05:23.556590",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 52.0,
+      "overall_trust": 83.2
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+      "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [
+      {
+        "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+        "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+        "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+        "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+      },
+      {
+        "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+        "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+        "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+        "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+      }
+    ],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

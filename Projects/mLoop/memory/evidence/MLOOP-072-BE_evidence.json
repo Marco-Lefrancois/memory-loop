@@ -1,0 +1,93 @@
+{
+  "story_id": "MLOOP-072-BE",
+  "jira_key": "'-'",
+  "file_path": "backlog/stories/MLOOP-072-BE.md",
+  "timestamp": "2026-09-22T14:36:44.330961+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search # ex.md",
+      "source_file": "# ex.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : # ex.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-22T14:36:44.318942+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-072-BE_fact_dossier.md",
+      "source_file": "MLOOP-072-BE_fact_dossier.md",
+      "sha256": "bbefa4e5616ee195c158155414e878539c6e557f8ea83277d4546e1f3fc7ea3f",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-072-BE_fact_dossier.md) : MLOOP-072-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:36:44.319941+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-072-BE_fact_dossier.md": "bbefa4e5616ee195c158155414e878539c6e557f8ea83277d4546e1f3fc7ea3f"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : # ex.md, MLOOP-072-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit"
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "table_source",
+      "rule_summary": "Description de la règle métier ou verbatim...",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "# ex.md",
+    "MLOOP-072-BE_fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Émission d'un span d'outil conforme à la taxonomie OpenInference",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Normalisation automatique d'un type d'événement non standard",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Résilience d'écriture lors d'accès concurrents sur le fichier JSONL",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Lecture et filtrage des spans récents pour l'interface utilisateur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-072-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-072-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "VALIDATED"
+}

@@ -17,12 +17,13 @@ from src.utils.logger import get_logger
 
 logger = get_logger("pipelines.pack_preserver")
 
-#: Champs de parité (MLOOP-180-BE) qui doivent survivre à la régénération.
+#: Champs de parité et traçabilité qui doivent survivre à la régénération (ADR-0394).
 PRESERVED_LIST_FIELDS = (
     "verbatim_extracts",
     "implementation_decisions",
     "declarative_contracts",
     "conflict_matrix",
+    "code_traceability_matrix",
 )
 
 #: Sceau cryptographique TDD (ADR-0381) — dict {red, green}.

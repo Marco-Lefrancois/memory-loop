@@ -1,0 +1,53 @@
+{
+  "project_name": "mLoop",
+  "current_stage": "STAGE_5_SHIP",
+  "gates": {
+    "1": {
+      "gate_number": 1,
+      "gate_name": "Gate 1 : Ingestion & Cadrage Initial Prêt",
+      "approved_at_utc": "2026-09-19T12:29:46.763572+00:00",
+      "approver": "Marco",
+      "notes": "Cycle 2 — EPIC-10-SAFETY-COMPLIANCE : modules WikiFix, RHO, J-Lens, Story Guard validation",
+      "checksum": "cycle2_gate1",
+      "qa_certification_hash": null
+    },
+    "2": {
+      "gate_number": 2,
+      "gate_name": "Gate 2 : Definition of Ready (DoR)",
+      "approved_at_utc": "2026-09-19T12:29:46.763572+00:00",
+      "approver": "Marco",
+      "notes": "Cycle 2 — Stories MLOOP-100, 101, 102, 103 pré-planifiées et ready",
+      "checksum": "cycle2_gate2",
+      "qa_certification_hash": null
+    },
+    "3": {
+      "gate_number": 3,
+      "gate_name": "Gate 3 : Definition of Done (DoD)",
+      "approved_at_utc": "2026-09-20T13:32:32.687551+00:00",
+      "approver": "Marco",
+      "notes": "",
+      "checksum": "empty_phase_deliverable",
+      "qa_certification_hash": null
+    },
+    "4": {
+      "gate_number": 4,
+      "gate_name": "Gate 4 : Conformité Métier & Recette QA",
+      "approved_at_utc": "2026-09-20T13:42:13.342309+00:00",
+      "approver": "Marco",
+      "notes": "",
+      "checksum": "empty_phase_deliverable",
+      "qa_certification_hash": null
+    },
+    "5": {
+      "gate_number": 5,
+      "gate_name": "Gate 5 : Clôture de Cycle & Synchronisation",
+      "approved_at_utc": "2026-09-25T09:30:42.000800+00:00",
+      "approver": "Marco",
+      "notes": "Clôture EPIC-31 : FSM anti-hardcoding, alignement déterministe 5 phases, ADR-0391 formalisée, suite globale 1669/1669 tests verts, git push origin main",
+      "checksum": "empty_phase_deliverable",
+      "qa_certification_hash": null
+    }
+  },
+  "created_at_utc": "2026-09-19T12:29:46.763572+00:00",
+  "updated_at_utc": "2026-09-25T09:30:42.000800+00:00"
+}

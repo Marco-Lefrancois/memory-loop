@@ -1,0 +1,48 @@
+{
+  "project_name": "mLoop",
+  "current_stage": "STAGE_5_SHIP",
+  "gates": {
+    "1": {
+      "gate_number": 1,
+      "gate_name": "Gate 1 : Ingestion & Cadrage Initial Prêt",
+      "approved_at_utc": "2026-09-18T10:56:07.569845+00:00",
+      "approver": "Architecte Lead",
+      "notes": "Transition vers Phase 2 PLAN & ANALYSE",
+      "checksum": "2a7caf8c0f2dbcaa"
+    },
+    "2": {
+      "gate_number": 2,
+      "gate_name": "Gate 2 : Definition of Ready (DoR)",
+      "approved_at_utc": "2026-09-19T09:44:53.976446+00:00",
+      "approver": "Architecte Lead",
+      "notes": "DoR approuvé pour EPIC-7-AGENTIC-OBSERVABILITY (6 récits struct-check 100% conformes, dossiers factuels et evidence packs scellés)",
+      "checksum": "bb1e20b9d1ea6837"
+    },
+    "3": {
+      "gate_number": 3,
+      "gate_name": "Gate 3 : Definition of Done (DoD)",
+      "approved_at_utc": "2026-09-19T12:00:38.988750+00:00",
+      "approver": "Marco & Antigravity",
+      "notes": "DoD approuvé pour EPIC-7 (6 stories complétées, 49/49 tests validés, CEL scellé)",
+      "checksum": "empty_phase_deliverable"
+    },
+    "4": {
+      "gate_number": 4,
+      "gate_name": "Gate 4 : Conformité Métier & Recette QA",
+      "approved_at_utc": "2026-09-19T12:13:45.294263+00:00",
+      "approver": "Marco & Lead Architect",
+      "notes": "Recette QA Phase 4 certifiée conforme (5/5 niveaux validés, 881/881 tests verts)",
+      "checksum": "empty_phase_deliverable"
+    },
+    "5": {
+      "gate_number": 5,
+      "gate_name": "Gate 5 : Clôture de Cycle & Synchronisation",
+      "approved_at_utc": "2026-09-19T12:14:07.151684+00:00",
+      "approver": "Marco",
+      "notes": "Cycle de livraison EPIC-7 et EPIC-9 scellé avec succès",
+      "checksum": "empty_phase_deliverable"
+    }
+  },
+  "created_at_utc": "2026-09-16T17:43:09.528022+00:00",
+  "updated_at_utc": "2026-09-19T12:14:07.151684+00:00"
+}

@@ -1,0 +1,55 @@
+{
+  "project_name": "mLoop",
+  "focused_story_id": "MLOOP-124-BE",
+  "stage": "BUILD",
+  "timestamp": "2026-09-21T07:19:46.445231",
+  "story_context": null,
+  "active_acceptance_criteria": [],
+  "file_reservations": [
+    {
+      "path": "../../src/bridges/mcp_loop_mem.py",
+      "status": "M",
+      "sha256": "09ca50833b19"
+    },
+    {
+      "path": "../../src/pipelines/grill_engine.py",
+      "status": "M",
+      "sha256": "0c003dc2ba1e"
+    },
+    {
+      "path": "../../src/pipelines/jira/md_cleaner.py",
+      "status": "M",
+      "sha256": "0bf993f512da"
+    },
+    {
+      "path": "../../src/pipelines/resilience/__init__.py",
+      "status": "M",
+      "sha256": "d42f54b5dd44"
+    },
+    {
+      "path": "../../src/pipelines/wikifix.py",
+      "status": "M",
+      "sha256": "68b1261103ac"
+    },
+    {
+      "path": "../../src/pipelines/wikifix_auditors.py",
+      "status": "M",
+      "sha256": "628f200d770d"
+    },
+    {
+      "path": "../../src/pipelines/wikifix_core.py",
+      "status": "M",
+      "sha256": "590f50829bf7"
+    },
+    {
+      "path": "../../standards/blueprints/git_pre_commit_hook.sh",
+      "status": "M",
+      "sha256": "c848b2757b9a"
+    }
+  ],
+  "tool_outcomes": [],
+  "primary_artifact_uri": "story://MLOOP-124-BE",
+  "visual_contract_uri": null,
+  "resume_instructions": "## 🛡️ mLoop Checkpoint Invariant [@root: Projects/mLoop]\n- **Étape** : `BUILD` | Story : `story://MLOOP-124-BE`\n- **Vérité SSOT #1** : `story://MLOOP-124-BE` (Consultation obligatoire via view_file en cas de doute)\n- **Fichiers sous Contrat** : `[M] ../../src/bridges/mcp_loop_mem.py`, `[M] ../../src/pipelines/grill_engine.py`, `[M] ../../src/pipelines/jira/md_cleaner.py`, `[M] ../../src/pipelines/resilience/__init__.py` (+4 autres)\n- **Consignes de Reprise Non Négociables** :\n  1. INTERDICTION formelle d'explorer le disque (`ls -R`, `find`).\n  2. Poursuivre directement l'action en cours sans régression.",
+  "checkpoint_hash": "d110cb5e7b286282f9f83851d01c761f8e57483e533314dbd0c9a30891539ad9"
+}

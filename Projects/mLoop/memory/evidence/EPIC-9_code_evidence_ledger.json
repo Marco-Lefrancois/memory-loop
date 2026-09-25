@@ -1,0 +1,123 @@
+{
+  "epic": "EPIC-9-STAGE4-DETERMINISTIC-VALIDATION",
+  "project": "mLoop",
+  "phase": "STAGE_4_VALIDATE",
+  "gate_active": "Gate 4 (Recette QA)",
+  "governance_mode": "Dogfooding Souverain (Local-First)",
+  "authors": [
+    "Marco (Architecte Propriétaire)",
+    "Lead Architect (Antigravity)"
+  ],
+  "last_updated": "2026-09-19T12:09:00+00:00",
+  "epistemic_status": "VERIFIED_DETERMINISTIC",
+  "standards_referenced": [
+    "ADR-0202",
+    "ADR-0326",
+    "ADR-0339",
+    "ADR-0354",
+    "ADR-0369",
+    "ADR-0375",
+    "ADR-0381",
+    "ADR-0383"
+  ],
+  "source_files_sha256": {
+    "src/pipelines/qa_certifier.py": "8a01fe911e3b2e57ab721e51240ff87cbce910f5454fa23c52a537f5979f13ce",
+    "src/pipelines/nli_auditor.py": "3775dca2e9ec8ca4e650b814a090b832b85e053fcf584a7e94e50d6034ad9ee0",
+    "src/core/gate4_validator.py": "1c7bba443c7b2034938faeef4cbdf81921350a41d9e79435b8004f21db7c02b2",
+    "tests/test_qa_certifier.py": "9d02161b9a9dcfd7589d8924bce8f5f0884d59a22f676e625ffbd44f7d43b745",
+    "tests/test_nli_auditor.py": "c622b78119c368d1840003b573d42c3ff51952e46f6f254b0e517865c3bbef16",
+    "tests/test_lifecycle_gate4.py": "49d0f085f2fe49e7552aa5fa848d56b0d91244ab910243e8bb43588961be44e2"
+  },
+  "code_blocks": [
+    {
+      "block_id": "CEL-090-001",
+      "story_id": "MLOOP-090-BE",
+      "component": "QaCertifierEngine.certify_sprint",
+      "file_path": "src/pipelines/qa_certifier.py",
+      "line_range": "217-264",
+      "symbol": "QaCertifierEngine.certify_sprint",
+      "gherkin_pillar": "Pilier 1 - Chemin Nominal",
+      "adr_reference": "ADR-0383 §4.1",
+      "business_rule": "Certification déterministe intégrale des 5 niveaux de conformité Phase 4.",
+      "formal_invariants": "Exécute pytest, audit AST des modules du sprint, triangulation CEL, NLI et Leakage Gate.",
+      "test_proof": {
+        "test_file": "tests/test_qa_certifier.py",
+        "test_name": "test_certify_sprint_nominal_all_passed",
+        "assertion": "assert report.is_certified is True"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-090-002",
+      "story_id": "MLOOP-090-BE",
+      "component": "QaCertifierEngine.run_ast_audit",
+      "file_path": "src/pipelines/qa_certifier.py",
+      "line_range": "190-215",
+      "symbol": "QaCertifierEngine.run_ast_audit",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier",
+      "adr_reference": "ADR-0202 / ADR-0369",
+      "business_rule": "Rejet impitoyable de tout module présentant une violation des standards AST de production.",
+      "formal_invariants": "total_violations == 0 pour valider la phase 4.",
+      "test_proof": {
+        "test_file": "tests/test_qa_certifier.py",
+        "test_name": "test_certify_sprint_fails_on_ast_violations",
+        "assertion": "assert report.is_certified is False"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-091-001",
+      "story_id": "MLOOP-091-BE",
+      "component": "NliAuditorEngine.audit_leakage",
+      "file_path": "src/pipelines/nli_auditor.py",
+      "line_range": "72-118",
+      "symbol": "NliAuditorEngine.audit_leakage",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier / Pilier 3 - Résilience",
+      "adr_reference": "ADR-0354 §2",
+      "business_rule": "Interdiction des tests tautologiques et accès aux membres privés (Verification Leakage Gate).",
+      "formal_invariants": "Black-Box strict, Anti-tautologie mocks, Invariants causaux métier.",
+      "test_proof": {
+        "test_file": "tests/test_nli_auditor.py",
+        "test_name": "test_leakage_audit_rejects_private_attribute_assertion",
+        "assertion": "assert summary.passed is False"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-091-002",
+      "story_id": "MLOOP-091-BE",
+      "component": "NliAuditorEngine.audit_nli_claims",
+      "file_path": "src/pipelines/nli_auditor.py",
+      "line_range": "120-174",
+      "symbol": "NliAuditorEngine.audit_nli_claims",
+      "gherkin_pillar": "Pilier 3 - Résilience & Mode Dégradé",
+      "adr_reference": "ADR-0326 §3",
+      "business_rule": "Inférence logique de non-contradiction sémantique documentation SSOT vs invariants code.",
+      "formal_invariants": "Zéro verdict CONTRADICTION sur les invariants stricts du domaine.",
+      "test_proof": {
+        "test_file": "tests/test_nli_auditor.py",
+        "test_name": "test_nli_claims_audit_without_contradiction",
+        "assertion": "assert summary.passed is True and summary.contradictions == 0"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-092-001",
+      "story_id": "MLOOP-092-BE",
+      "component": "validate_gate4_approval",
+      "file_path": "src/core/gate4_validator.py",
+      "line_range": "18-80",
+      "symbol": "validate_gate4_approval",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier / Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0383 §6",
+      "business_rule": "Verrouillage constitutionnel de Gate 4 par 5 contrôles bloquants et signature humaine obligatoire.",
+      "formal_invariants": "Refuse toute signature bot (sentinel, ai, subagent) et exige rapport QA vert, AST 0 violation, CEL 4 piliers.",
+      "test_proof": {
+        "test_file": "tests/test_lifecycle_gate4.py",
+        "test_name": "test_gate4_nominal_human_approval_succeeds",
+        "assertion": "assert new_state.current_stage == ProjectLifecycleStage.STAGE_5_SHIP"
+      },
+      "verification_status": "VERIFIED_PASS"
+    }
+  ]
+}

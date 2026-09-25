@@ -1,0 +1,219 @@
+{
+  "story_id": "MLOOP-193-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-193-BE.md",
+  "timestamp": "2026-09-24T18:14:05.271545+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-193-BE_fact_dossier.md) : 0202-modularite-interne-agents.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.156332+00:00"
+    },
+    {
+      "query": "Fact-Search 0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+      "source_file": "0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+      "sha256": "bdfaf163fe5728fb89d9f4cf8d2a03c5aeaa418d0c4757865d59145787b048da",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-193-BE_fact_dossier.md) : 0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.179243+00:00"
+    },
+    {
+      "query": "Fact-Search CLI_PIPELINE_GUIDE.md",
+      "source_file": "CLI_PIPELINE_GUIDE.md",
+      "sha256": "99936846c78b6a71c3a44ecefdfc2c7db59b81a4b3c47a1c4d71a18c7d4bc931",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : CLI_PIPELINE_GUIDE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T18:14:05.199810+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-193-BE.md",
+      "source_file": "MLOOP-193-BE.md",
+      "sha256": "3cbec84c25c39f2af69309a3e8afe80a8e3d058360669bb4a798ef630e0b4a7e",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-193-BE_fact_dossier.md) : MLOOP-193-BE.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.207324+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-193-BE_fact_dossier.md",
+      "source_file": "MLOOP-193-BE_fact_dossier.md",
+      "sha256": "b87314de8991ac9f9c62e03a0ac0cd1135044844a539f0ce3c2ae7f92aa325ab",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-193-BE_fact_dossier.md) : MLOOP-193-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.207324+00:00"
+    },
+    {
+      "query": "Fact-Search document.pdf",
+      "source_file": "document.pdf",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : document.pdf",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-24T18:14:05.220231+00:00"
+    },
+    {
+      "query": "Fact-Search epic_click_cli_engine.md",
+      "source_file": "epic_click_cli_engine.md",
+      "sha256": "2ed4ac9977f6bd9df9b9d8290439d3e516377a1fd8445d0be6e02703ded48803",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-193-BE_fact_dossier.md) : epic_click_cli_engine.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T18:14:05.229495+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-193-BE_fact_dossier.md": "b87314de8991ac9f9c62e03a0ac0cd1135044844a539f0ce3c2ae7f92aa325ab",
+    "MLOOP-193-BE.md": "3cbec84c25c39f2af69309a3e8afe80a8e3d058360669bb4a798ef630e0b4a7e",
+    "epic_click_cli_engine.md": "2ed4ac9977f6bd9df9b9d8290439d3e516377a1fd8445d0be6e02703ded48803",
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md": "bdfaf163fe5728fb89d9f4cf8d2a03c5aeaa418d0c4757865d59145787b048da",
+    "CLI_PIPELINE_GUIDE.md": "99936846c78b6a71c3a44ecefdfc2c7db59b81a4b3c47a1c4d71a18c7d4bc931"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, 0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md, CLI_PIPELINE_GUIDE.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 2,
+      "multiplier": 0.76,
+      "score": 0.76,
+      "reason": "partial_richness (2/10)"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le défaut actuel d'ergonomie (liste alphabétique brute) est documenté et constitue la baseline comparative pour CA-1 (regroupement par phase).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Le fichier `CLI_PIPELINE_GUIDE.md` existe réellement sous `standards/protocols/` (confirmé physiquement) et sert de référentiel de regroupement pour `PhaseHe...",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "CA-6 (plafond de 300 lignes pour `formatter.py`) découle directement de la règle constitutionnelle applicable à tout nouveau module.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "0370-cli-pipeline-ssot-generator-and-anti-drift-governance.md",
+    "CLI_PIPELINE_GUIDE.md",
+    "MLOOP-193-BE.md",
+    "MLOOP-193-BE_fact_dossier.md",
+    "document.pdf",
+    "epic_click_cli_engine.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Affichage structuré de l'aide par phase",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Fourniture d'un fichier inexistant pour une option typée Path",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Commande non classifiée dans la matrice des phases",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Alignement visuel et coloration du terminal",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-193-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-193-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.76,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [
+    {
+      "type": "architecture",
+      "date": "2026-09-24",
+      "decision": "install_phase_help(cls) effectue 2 assignations de classe externes (format_commands -> format_phase_commands ; get_help -> pose ctx.formatter_class = PhaseHelpFormatter) plutôt qu'un sous-classement de MLoopMultiCommand",
+      "rationale": "Diff router.py minimale (+5L) pour cohabitation sûre avec MLOOP-192-BE en parallèle sur le même fichier partagé",
+      "tradeoffs": "Monomorphie perdue sur format_commands/get_help (déjà monkey-patché côté MLoopMultiCommand de toute façon) vs gain de clarté du diff",
+      "reversibility": "Réversible en supprimant les 2 blocs annotés MLOOP-193-BE dans router.py"
+    },
+    {
+      "type": "architecture",
+      "date": "2026-09-24",
+      "decision": "phase_of() réutilise directement PHASE_MAPPING de guide_data.py (source runtime du guide SSOT) avec repli 'transverse'",
+      "rationale": "Zéro dérive ADR-0370 : l'aide click et le guide CLI partagent la même matrice (guide_generator.py fait PHASE_MAPPING.get(cname,'transverse'))",
+      "tradeoffs": "Le headline du guide 'Commandes Transverses' est affiché via un libellé CA-2 (E3) pour satisfaire le littéral du récit sans changer la classification",
+      "reversibility": "Réversible : phase_of est le seul consommateur"
+    }
+  ],
+  "declarative_contracts": [],
+  "conflict_matrix": [
+    {
+      "conflict": "Pilier 1 récit (vibe-check -> Phase 4, ingest -> Phase 1) vs guide_data PHASE_MAPPING (transverse, sow)",
+      "resolution": "SSOT prioritaire (mission explicite) ; anomalie E1 documentée",
+      "sources_in_conflict": [
+        "MLOOP-193-BE.md (Lignes 98-105)",
+        "src/pipelines/guide_data.py PHASE_MAPPING"
+      ]
+    },
+    {
+      "conflict": "Pilier 2 récit (message 'Path ... does not exist.') vs run-time Click 8.5 (File/Directory ... does not exist.)",
+      "resolution": "Contrat fonctionnel (exit 2 + interruption avant handler + message clair) respecté ; wording héréditaire de click.Path ; anomalie E2 documentée",
+      "sources_in_conflict": [
+        "MLOOP-193-BE.md (Lignes 107-115)",
+        "click 8.5.0 (_compat / types.PathType)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "story_id": "MLOOP-162-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-162-BE.md",
+  "timestamp": "2026-09-23T12:35:58.047236+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search .agents/skills/grill/SKILL.md",
+      "source_file": ".agents/skills/grill/SKILL.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-162-BE_fact_dossier.md) : .agents/skills/grill/SKILL.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.410464+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-162-BE_fact_dossier.md",
+      "source_file": "MLOOP-162-BE_fact_dossier.md",
+      "sha256": "d416aaed2b4533192d4b2588722109e52ef98b16aaae1edb2b57f5e9a5450d8c",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-162-BE_fact_dossier.md) : MLOOP-162-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.410464+00:00"
+    },
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-162-BE_fact_dossier.md) : SKILL.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.425547+00:00"
+    },
+    {
+      "query": "Fact-Search epic_project_directives_ssot_enforcement.md",
+      "source_file": "epic_project_directives_ssot_enforcement.md",
+      "sha256": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_project_directives_ssot_enforcement.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:47.425547+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-162-BE_fact_dossier.md": "d416aaed2b4533192d4b2588722109e52ef98b16aaae1edb2b57f5e9a5450d8c",
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+    "epic_project_directives_ssot_enforcement.md": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : .agents/skills/grill/SKILL.md, MLOOP-162-BE_fact_dossier.md, SKILL.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue",
+      "l'efficacité comportementale repose sur la lecture par l'agent ; complétée par le contrôle mécanique du récit 163."
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.0,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "grill/SKILL.md` — Étape 0 « Search-Before-Ask »",
+      "rule_summary": "L'Étape 0 impose déjà le fact-search mais **ne mentionne pas** la localisation du SSOT via `directives/`. C'est le gap exact.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "grill/SKILL.md` — Table Anti-Rationalisation",
+      "rule_summary": "Le skill connaît déjà la discipline de cadrage amont ; il faut y greffer la localisation SSOT.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Incident fondateur (session 22/09)",
+      "rule_summary": "Preuve empirique que l'absence de consigne de localisation SSOT produit des briefs non sourcés.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    ".agents/skills/grill/SKILL.md",
+    "MLOOP-162-BE_fact_dossier.md",
+    "SKILL.md",
+    "epic_project_directives_ssot_enforcement.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Entrevue avec localisation SSOT préalable",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Blocage d'un brief de délégation non sourcé",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Projet dépourvu de directives",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Traçabilité de l'ordre de recherche appliqué",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-162-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-162-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "VALIDATED",
+  "implementation_decisions": [],
+  "verbatim_extracts": [],
+  "declarative_contracts": []
+}

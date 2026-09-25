@@ -85,11 +85,13 @@ def run_visual_dissector(
     split_res = herdr.split_pane(target_pane_id="p1", direction="down", no_focus=True)
     pane_id = split_res.get("new_pane_id") or "p_ui_dissect"
 
+    from src.core.worker_runtimes import get_worker_runtime
+
     herdr.start_agent(
         agent_name=worker_name,
         kind="opencode",
         pane_id=str(pane_id),
-        extra_args=["--yolo", "--model", "nmedia_cloud/gemini-3.8-flash"]
+        extra_args=get_worker_runtime("opencode").build_flags(model="nmedia_cloud/gemini-3.8-flash"),
     )
 
     # 2. Formulate Prompt

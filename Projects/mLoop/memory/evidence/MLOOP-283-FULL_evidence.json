@@ -1,0 +1,167 @@
+{
+  "story_id": "MLOOP-283-FULL",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-283-FULL.md",
+  "timestamp": "2026-09-25T02:01:36.962668+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "source_file": "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "sha256": "92b630b13fb9f0095edd00b33dc7de6e1ad5d90531ce128aaed50429b68e51b6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.793028+00:00"
+    },
+    {
+      "query": "Fact-Search 0383-deterministic-phase-4-qa-certification-harness.md",
+      "source_file": "0383-deterministic-phase-4-qa-certification-harness.md",
+      "sha256": "431cecd217a01067efdf79d105192e607f63e2502b565bc1423a0f3f0f2b31ed",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0383-deterministic-phase-4-qa-certification-harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.839505+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "source_file": "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "sha256": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.872700+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-283-FULL_fact_dossier.md",
+      "source_file": "MLOOP-283-FULL_fact_dossier.md",
+      "sha256": "9a39333315edad1cce9be38cd6bcb86138f1e14b70a9c58aa8fe15251b6a6f36",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-283-FULL_fact_dossier.md) : MLOOP-283-FULL_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:36.872700+00:00"
+    },
+    {
+      "query": "Fact-Search epic_adr_clean_architecture.md",
+      "source_file": "epic_adr_clean_architecture.md",
+      "sha256": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.897055+00:00"
+    },
+    {
+      "query": "Fact-Search project_adr_template.md",
+      "source_file": "project_adr_template.md",
+      "sha256": "3826727596031af4d2cf20afcfcd10360752618120e119ea141a9cd45a0809df",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : project_adr_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.898069+00:00"
+    },
+    {
+      "query": "Fact-Search sprint_backlog.md",
+      "source_file": "sprint_backlog.md",
+      "sha256": "1f5b4c14bd1693d00eb7531408b7cb81a960118acf545a022ebd75ccb478a219",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : sprint_backlog.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.898069+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-283-FULL_fact_dossier.md": "9a39333315edad1cce9be38cd6bcb86138f1e14b70a9c58aa8fe15251b6a6f36",
+    "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md": "92b630b13fb9f0095edd00b33dc7de6e1ad5d90531ce128aaed50429b68e51b6",
+    "0383-deterministic-phase-4-qa-certification-harness.md": "431cecd217a01067efdf79d105192e607f63e2502b565bc1423a0f3f0f2b31ed",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+    "epic_adr_clean_architecture.md": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987",
+    "project_adr_template.md": "3826727596031af4d2cf20afcfcd10360752618120e119ea141a9cd45a0809df",
+    "sprint_backlog.md": "1f5b4c14bd1693d00eb7531408b7cb81a960118acf545a022ebd75ccb478a219"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md, 0383-deterministic-phase-4-qa-certification-harness.md, ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.553,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+    "0383-deterministic-phase-4-qa-certification-harness.md",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+    "MLOOP-283-FULL_fact_dossier.md",
+    "epic_adr_clean_architecture.md",
+    "project_adr_template.md",
+    "sprint_backlog.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Exécution verte de la suite de tests unitaires étendue",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Validation des cas extrêmes de génération d'ADRs",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Contrôle souverain Vibe-Check sans échec",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Synchronisation de la gouvernance de sprint",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-283-FULL",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-283-FULL.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.553,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

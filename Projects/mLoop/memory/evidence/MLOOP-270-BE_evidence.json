@@ -1,0 +1,178 @@
+{
+  "story_id": "MLOOP-270-BE",
+  "jira_key": "MLOOP-270-BE",
+  "file_path": "backlog/stories/MLOOP-270-BE.md",
+  "timestamp": "2026-09-25T12:11:32.205138+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search ADR-011_verrou_anti-promotion_ready_for_dev__epic-27.md",
+      "source_file": "ADR-011_verrou_anti-promotion_ready_for_dev__epic-27.md",
+      "sha256": "e5fbe0b9f13e243378f4e5893f98e1aa5cdf0a805ffa3d582b510bd988dd4286",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-011_verrou_anti-promotion_ready_for_dev__epic-27.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:11:32.040339+00:00"
+    },
+    {
+      "query": "Fact-Search EPIC-27_incident_state_lock_brief.md",
+      "source_file": "EPIC-27_incident_state_lock_brief.md",
+      "sha256": "4ce33bf912a3c7b5e33f6277499a3657cf7b4dd6e4605682e13b3f2b11172a04",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : EPIC-27_incident_state_lock_brief.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:11:32.042197+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-270-BE_fact_dossier.md",
+      "source_file": "MLOOP-270-BE_fact_dossier.md",
+      "sha256": "1a0111d28deb6b9af1fb90b1b75b70beba64e8dbb4ed0d21cc4a7a94a0eccb4f",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-270-BE_fact_dossier.md) : MLOOP-270-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T12:11:32.042800+00:00"
+    },
+    {
+      "query": "Fact-Search STORY_LIFECYCLE_PROTOCOL.md",
+      "source_file": "STORY_LIFECYCLE_PROTOCOL.md",
+      "sha256": "9c905144396dbcfff997839877f818ddb992a70f4e3ae9f824b18a1c6b3714e6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : STORY_LIFECYCLE_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:11:32.106007+00:00"
+    },
+    {
+      "query": "Fact-Search epic_lifecycle_state_lock.md",
+      "source_file": "epic_lifecycle_state_lock.md",
+      "sha256": "3f517d261eb838a4e713062bc9fa656503e86fd0b65dc88ced6f70ec86666326",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_lifecycle_state_lock.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:11:32.141729+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-270-BE_fact_dossier.md": "1a0111d28deb6b9af1fb90b1b75b70beba64e8dbb4ed0d21cc4a7a94a0eccb4f",
+    "ADR-011_verrou_anti-promotion_ready_for_dev__epic-27.md": "e5fbe0b9f13e243378f4e5893f98e1aa5cdf0a805ffa3d582b510bd988dd4286",
+    "EPIC-27_incident_state_lock_brief.md": "4ce33bf912a3c7b5e33f6277499a3657cf7b4dd6e4605682e13b3f2b11172a04",
+    "STORY_LIFECYCLE_PROTOCOL.md": "9c905144396dbcfff997839877f818ddb992a70f4e3ae9f824b18a1c6b3714e6",
+    "epic_lifecycle_state_lock.md": "3f517d261eb838a4e713062bc9fa656503e86fd0b65dc88ced6f70ec86666326"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : ADR-011_verrou_anti-promotion_ready_for_dev__epic-27.md, EPIC-27_incident_state_lock_brief.md, MLOOP-270-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 8,
+      "multiplier": 0.94,
+      "score": 0.752,
+      "reason": "partial_richness (8/10)"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "ADR-011_verrou_anti-promotion_ready_for_dev__epic-27.md",
+    "EPIC-27_incident_state_lock_brief.md",
+    "MLOOP-270-BE_fact_dossier.md",
+    "STORY_LIFECYCLE_PROTOCOL.md",
+    "epic_lifecycle_state_lock.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Promotion approuvée puis écrite de façon atomique avec journalisation",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Promotion vers READY_FOR_DEV sans approbation humaine",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Signature d'approbation purement machine",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Transition hors de la table des transitions autorisées",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Contention du verrou entre sessions concurrentes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec d'écriture du journal pendant une transition",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Re-jeu d'une promotion déjà restaurée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Consultation du journal des transitions",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Revendication de contrôle non corroborée",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rétro-équipement d'un projet legacy sans approbateur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-270-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-270-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.752,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [
+    "OQ-270-1 : READY_FOR_DEV→READY_FOR_GROOMING hors ALLOWED_TRANSITIONS → sanction via écriture directe origin=\"sanction\" (bypass FSM uniquement, jamais verrou ni journal)",
+    "Backfill exempte les statuts terminaux {DONE_TESTED, SHIPPED, DONE, ACCEPTED, QA_CERTIFIED, READY_TO_SHIP} (motif scratch_prune)",
+    "GATED_STATUSES = {READY_FOR_DEV, READY_FOR_GROOMING, IN_DEV, READY_FOR_QA, IN_QA, QA_CERTIFIED} ; aucun comparateur d'ordre, appartenance à l'ensemble seulement",
+    "Règle C13 : (a) READY_FOR_DEV sans approbation → BLOCKING toujours ; (b) mismatch journal ↔ ligne d'état → BLOCKING si strict sinon WARNING ; (c) récit engagé sans entrée journal → idem ; (d) non engagé → rien ; terminaux jamais bloquants",
+    "Contrôle projet-wide renuméroté check_25_story_state_lock (après check_24) ; « contrôle 14 » du plan = même contrôle (estimation provisoire, jamais existé physiquement)",
+    "CA-3 (rétrogradation) portée uniquement par scan_transitions() ; C13 et check 25 rapportent sans écrire",
+    "--approver non required au registre : validation CA-5 remontée au handler pour garantir zéro écriture sur refus",
+    "Atomicité récit+journal : append_entry() en second, rollback du texte original via commit_with_rollback en cas d'échec journal"
+  ],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

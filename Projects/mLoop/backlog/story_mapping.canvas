@@ -1,0 +1,205 @@
+{
+  "nodes": [
+    {
+      "id": "group-epic-0",
+      "type": "group",
+      "label": "📦 Épopée : EPIC-26-CLINE-ECOSYSTEM-HARNESS",
+      "x": 0,
+      "y": 0,
+      "width": 760,
+      "height": 640,
+      "color": "6"
+    },
+    {
+      "id": "node-story-MLOOP-260-BE",
+      "type": "text",
+      "text": "### [[MLOOP-260-BE|MLOOP-260-BE]] 🟢\n**Titre** : Bridge de Mémoire Bidirectionnel mLoop <-> Cl\n**Statut** : `READY_FOR_DEV` · **Layer** : `backend`",
+      "x": 40,
+      "y": 60,
+      "width": 320,
+      "height": 160,
+      "color": "4"
+    },
+    {
+      "id": "node-story-MLOOP-261-BE",
+      "type": "text",
+      "text": "### [[MLOOP-261-BE|MLOOP-261-BE]] 🟢\n**Titre** : Génération Automatique de la Parité .clinerul\n**Statut** : `READY_FOR_DEV` · **Layer** : `backend`",
+      "x": 400,
+      "y": 60,
+      "width": 320,
+      "height": 160,
+      "color": "4"
+    },
+    {
+      "id": "node-story-MLOOP-262-BE",
+      "type": "text",
+      "text": "### [[MLOOP-262-BE|MLOOP-262-BE]] 🟢\n**Titre** : Intégration du Mode Plan/Act de Cline (--plan\n**Statut** : `READY_FOR_DEV` · **Layer** : `backend`",
+      "x": 40,
+      "y": 250,
+      "width": 320,
+      "height": 160,
+      "color": "4"
+    },
+    {
+      "id": "node-story-MLOOP-263-BE",
+      "type": "text",
+      "text": "### [[MLOOP-263-BE|MLOOP-263-BE]] 🟢\n**Titre** : \"Adaptateur Worker Cline Agent Teams (--team-\n**Statut** : `READY_FOR_DEV` · **Layer** : `backend`",
+      "x": 400,
+      "y": 250,
+      "width": 320,
+      "height": 160,
+      "color": "4"
+    },
+    {
+      "id": "node-story-MLOOP-264-FULL",
+      "type": "text",
+      "text": "### [[MLOOP-264-FULL|MLOOP-264-FULL]] 🟢\n**Titre** : \"Commandes CLI mLoop cline-sync & Harnais de \n**Statut** : `READY_FOR_DEV` · **Layer** : `backend`",
+      "x": 40,
+      "y": 440,
+      "width": 320,
+      "height": 160,
+      "color": "4"
+    },
+    {
+      "id": "group-epic-1",
+      "type": "group",
+      "label": "📦 Épopée : EPIC-27-LIFECYCLE-STATE-LOCK",
+      "x": 800,
+      "y": 0,
+      "width": 400,
+      "height": 260,
+      "color": "6"
+    },
+    {
+      "id": "node-story-MLOOP-270-BE",
+      "type": "text",
+      "text": "### [[MLOOP-270-BE|MLOOP-270-BE]] 🟢\n**Titre** : Verrou Anti-Promotion & Journal des Transitio\n**Statut** : `READY_FOR_DEV` · **Layer** : `backend`",
+      "x": 840,
+      "y": 60,
+      "width": 320,
+      "height": 160,
+      "color": "4"
+    },
+    {
+      "id": "group-epic-2",
+      "type": "group",
+      "label": "📦 Épopée : EPIC-30-MULTIMODAL-ARTIFACT-HARNESS",
+      "x": 1240,
+      "y": 0,
+      "width": 760,
+      "height": 640,
+      "color": "6"
+    },
+    {
+      "id": "node-story-MLOOP-300-BE",
+      "type": "text",
+      "text": "### [[MLOOP-300-BE|MLOOP-300-BE]] ⚪\n**Titre** : Porte Déterministe d'Artefacts & Anti-Raster \n**Statut** : `READY_FOR_GROOMING` · **Layer** : `backend`",
+      "x": 1280,
+      "y": 60,
+      "width": 320,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "node-story-MLOOP-301-BE",
+      "type": "text",
+      "text": "### [[MLOOP-301-BE|MLOOP-301-BE]] ⚪\n**Titre** : \"Validation Topologique Anti-Effondrement des\n**Statut** : `READY_FOR_GROOMING` · **Layer** : `backend`",
+      "x": 1640,
+      "y": 60,
+      "width": 320,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "node-story-MLOOP-302-BE",
+      "type": "text",
+      "text": "### [[MLOOP-302-BE|MLOOP-302-BE]] ⚪\n**Titre** : \"Filtre d'Ingestion Documentaire ORBIT pour S\n**Statut** : `READY_FOR_GROOMING` · **Layer** : `backend`",
+      "x": 1280,
+      "y": 250,
+      "width": 320,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "node-story-MLOOP-303-BE",
+      "type": "text",
+      "text": "### [[MLOOP-303-BE|MLOOP-303-BE]] ⚪\n**Titre** : \"Grille d'Audit Architectural Découplée : Str\n**Statut** : `READY_FOR_GROOMING` · **Layer** : `backend`",
+      "x": 1640,
+      "y": 250,
+      "width": 320,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "node-story-MLOOP-304-FULL",
+      "type": "text",
+      "text": "### [[MLOOP-304-FULL|MLOOP-304-FULL]] ⚪\n**Titre** : \"Contrats de Dev Handoff Multi-Harnais & Comm\n**Statut** : `READY_FOR_GROOMING` · **Layer** : `fullstack`",
+      "x": 1280,
+      "y": 440,
+      "width": 320,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "group-epic-3",
+      "type": "group",
+      "label": "📦 Épopée : EPIC-32",
+      "x": 2040,
+      "y": 0,
+      "width": 760,
+      "height": 640,
+      "color": "6"
+    },
+    {
+      "id": "node-story-MLOOP-320-BE",
+      "type": "text",
+      "text": "### [[MLOOP-320-BE|MLOOP-320-BE]] ⚪\n**Titre** : \"Formalisation Normative & Triangulation des \n**Statut** : `DRAFT` · **Layer** : `backend`",
+      "x": 2080,
+      "y": 60,
+      "width": 320,
+      "height": 160,
+      "color": "5"
+    },
+    {
+      "id": "node-story-MLOOP-321-BE",
+      "type": "text",
+      "text": "### [[MLOOP-321-BE|MLOOP-321-BE]] ⚪\n**Titre** : \"Refonte du Skill Grill & Table Anti-Rational\n**Statut** : `DRAFT` · **Layer** : `backend`",
+      "x": 2440,
+      "y": 60,
+      "width": 320,
+      "height": 160,
+      "color": "5"
+    },
+    {
+      "id": "node-story-MLOOP-322-BE",
+      "type": "text",
+      "text": "### [[MLOOP-322-BE|MLOOP-322-BE]] ⚪\n**Titre** : \"Garde Mécanique FSM & Verrou Anti-Promotion \n**Statut** : `DRAFT` · **Layer** : `backend`",
+      "x": 2080,
+      "y": 250,
+      "width": 320,
+      "height": 160,
+      "color": "5"
+    },
+    {
+      "id": "node-story-MLOOP-323-BE",
+      "type": "text",
+      "text": "### [[MLOOP-323-BE|MLOOP-323-BE]] ⚪\n**Titre** : \"Contrôle de Gating CLI & Sonde de Détection \n**Statut** : `DRAFT` · **Layer** : `backend`",
+      "x": 2440,
+      "y": 250,
+      "width": 320,
+      "height": 160,
+      "color": "5"
+    },
+    {
+      "id": "node-story-MLOOP-324-FULL",
+      "type": "text",
+      "text": "### [[MLOOP-324-FULL|MLOOP-324-FULL]] ⚪\n**Titre** : \"Harnais de Non-Régression & Suite de Tests A\n**Statut** : `DRAFT` · **Layer** : `fullstack`",
+      "x": 2080,
+      "y": 440,
+      "width": 320,
+      "height": 160,
+      "color": "5"
+    }
+  ],
+  "edges": []
+}

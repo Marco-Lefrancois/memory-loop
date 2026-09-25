@@ -1,0 +1,199 @@
+{
+  "story_id": "MLOOP-161-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-161-BE.md",
+  "timestamp": "2026-09-24T00:43:15.499822+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-161-BE_fact_dossier.md) : AGENTS.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T00:43:15.386687+00:00"
+    },
+    {
+      "query": "Fact-Search ECOSYSTEM_RIGOR_PROTOCOL.md",
+      "source_file": "ECOSYSTEM_RIGOR_PROTOCOL.md",
+      "sha256": "c42bdd65bfe5269b17a82d8047f3d7bebc2ee0ef7fd3746efe99ab113f96f85d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ECOSYSTEM_RIGOR_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T00:43:15.403958+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-161-BE_fact_dossier.md",
+      "source_file": "MLOOP-161-BE_fact_dossier.md",
+      "sha256": "9e9f41986a581fdaad350a32b809e714b9f47558e01659bf7bc0698220ce8e12",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-161-BE_fact_dossier.md) : MLOOP-161-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T00:43:15.404957+00:00"
+    },
+    {
+      "query": "Fact-Search Projects/BoireFrere_Segment2/directives/business.md",
+      "source_file": "Projects/BoireFrere_Segment2/directives/business.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-161-BE_fact_dossier.md) : Projects/BoireFrere_Segment2/directives/business.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T00:43:15.417475+00:00"
+    },
+    {
+      "query": "Fact-Search README.md",
+      "source_file": "README.md",
+      "sha256": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-161-BE_fact_dossier.md) : README.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T00:43:15.432523+00:00"
+    },
+    {
+      "query": "Fact-Search epic_project_directives_ssot_enforcement.md",
+      "source_file": "epic_project_directives_ssot_enforcement.md",
+      "sha256": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_project_directives_ssot_enforcement.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-24T00:43:15.432523+00:00"
+    },
+    {
+      "query": "Fact-Search standards/adr-system/README.md",
+      "source_file": "standards/adr-system/README.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-161-BE_fact_dossier.md) : standards/adr-system/README.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-24T00:43:15.444564+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-161-BE_fact_dossier.md": "9e9f41986a581fdaad350a32b809e714b9f47558e01659bf7bc0698220ce8e12",
+    "ECOSYSTEM_RIGOR_PROTOCOL.md": "c42bdd65bfe5269b17a82d8047f3d7bebc2ee0ef7fd3746efe99ab113f96f85d",
+    "README.md": "a5e2b0d20b8a482213718e940613a6d3fc38f5d9da89ce7de1c21b26d5184ffe",
+    "epic_project_directives_ssot_enforcement.md": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : AGENTS.md, ECOSYSTEM_RIGOR_PROTOCOL.md, MLOOP-161-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 1,
+      "multiplier": 0.73,
+      "score": 0.73,
+      "reason": "partial_richness (1/10)"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "AGENTS.md` (Check 1 vibe_check, constaté)",
+      "rule_summary": "Toute clause ajoutée à AGENTS.md est propagée automatiquement aux miroirs.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "standards/adr-system/` (listing)",
+      "rule_summary": "Prochain slot libre au cadrage = `0384` (à reconfirmer au build).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "directives/business.md:26",
+      "rule_summary": "Le Contrat Visuel Premier est une loi projet — motive la clause SSOT dans la charte.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "AGENTS.md` (§2 Boire, constaté)",
+      "rule_summary": "Correction requise : lister `directives/` et déclarer `docs/03-models/` comme SSOT.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "AGENTS.md",
+    "ECOSYSTEM_RIGOR_PROTOCOL.md",
+    "MLOOP-161-BE_fact_dossier.md",
+    "Projects/BoireFrere_Segment2/directives/business.md",
+    "README.md",
+    "epic_project_directives_ssot_enforcement.md",
+    "standards/adr-system/README.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Traçabilité de la décision dans le catalogue",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet d'une réécriture destructive d'un ADR antérieur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Collision de numérotation au moment du build",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Parité miroir de la clause racine",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-161-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-161-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.73,
+  "status": "VALIDATED",
+  "verbatim_extracts": [
+    {
+      "source_file": "memory/evidence/MLOOP-161-BE_fact_dossier.md",
+      "lines": [
+        43,
+        43
+      ],
+      "quote": "Souveraineté des Maquettes Figma (SSOT Première) […] Tout récit […] ne découlant pas directement d'un écran […] est réputé non requis.",
+      "established_fact": "Le Contrat Visuel Premier est une loi projet — motive la clause SSOT dans la charte. (source d'origine: directives/business.md:26)"
+    }
+  ],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

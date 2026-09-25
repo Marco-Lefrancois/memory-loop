@@ -5,6 +5,71 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère aux principes de [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [2.35.0] - 2026-09-25
+
+### Added
+- **EPIC-26 Cline Ecosystem Integration — 5/5 stories DONE_TESTED (MLOOP-260 à 264)** :
+  - `MLOOP-260-BE` : Bridge mémoire bidirectionnel `memory_bank_bridge.py` (Memory Bank ➔ mLoop).
+  - `MLOOP-261-BE` : Parité et miroir des directives `.clinerules` et `.clinerules/` (`rules_mirror.py`).
+  - `MLOOP-262-BE` : Intégration Plan/Act et garde-fous d'exécution hermétiques (`_plan_act_guard.py`).
+  - `MLOOP-263-BE` : Adaptateur Agent Teams et faucheuse de zombies (`_worker_reaper.py`, `herdr_worker_core.py`).
+  - `MLOOP-264-FULL` : Commandes CLI `cline-sync` et `cline-status` avec parité guide SSOT.
+- **EPIC-30 Multimodal Artifacts & Topological Integrity — 5/5 stories DONE_TESTED (MLOOP-300 à 304)** :
+  - `MLOOP-300-BE` : `ArtifactGate` — rejet strict anti-raster-paste et validation SVG native (`artifact_gate.py`).
+  - `MLOOP-301-BE` : `ConnectorValidator` — intégrité topologique et anti-effondrement des connecteurs (`connector_validator.py`).
+  - `MLOOP-302-BE` : `OrbitCaptionHarvester` — moissonnage et injection de légendes d'orbites (`orbit_caption_harvester.py`).
+  - `MLOOP-303-BE` : `AuditDecoupler` — découplage modal et isolation des audits d'artefacts (`audit_decoupler.py`).
+  - `MLOOP-304-FULL` : CLI `artifact-check` (--file, --json, --strict) + Check 27 Vibe-Check (`_vc_artifact.py`).
+- **EPIC-32 Grill Modality Decoupling & Anti-Cascade Gating — 5/5 stories DONE_TESTED (MLOOP-320 à 324)** :
+  - `MLOOP-320-BE` : Amendement normatif orthogonalité Format x Scope (`STORY_LIFECYCLE_PROTOCOL.md`, `ADR-0320 F`, `ADR-0393`).
+  - `MLOOP-321-BE` : Refonte du skill `/grill` (matrice 2x2, table anti-rationalisation, diagramme Mermaid).
+  - `MLOOP-322-BE` : Gardes d'autorité FSM déterministes (`_fsm_authority.py`, `_grill_guards.py`, Gate 2 anti-bot).
+  - `MLOOP-323-BE` : Contrôle Vibe-Check Check 28 (Cascade Drift Detection) et flags CLI `--format` / `--scope`.
+  - `MLOOP-324-FULL` : Suite de tests hermétiques (14 tests), synchronisation SSOT guide (135 commandes).
+- **EPIC-27 Verrou Anti-Promotion & Journal des Transitions — 1/1 story DONE_TESTED (MLOOP-270-BE)** :
+  - Journal append-only `story_transitions.jsonl` couplé atomiquement aux changements d'état.
+  - Écrivain unique verrouillé (`set_story_status`) et scan rétrogradant anti-fraude (`scan_transitions`).
+  - CLI `story-approve` et `story-backfill` ; Check C13 (struct-check) et Check 25 (vibe-check).
+- **EPIC-24 & 25 Skill Eval Flywheel & OpenCode Ecosystem — 10/10 stories DONE_TESTED (MLOOP-240 à 254)** :
+  - Moteur d'évaluation continue `SkillEvalEngine` et golden datasets 39 skills (`MLOOP-240-BE` à `244-FULL`).
+  - Dashboard Skills Health SVG Radar et CLI `skill-eval`.
+  - Intégration outillage OpenCode, sidecar et parité CLI (`MLOOP-250-BE` à `254-FULL`).
+- **EPIC-28 & 29 Modularisation Grill & Frontier Rounds** :
+  - Scission modulaire `src/pipelines/grill/` (CLI handler, engine, guards, cascade).
+  - Frontier Rounds, Sandbox Handoff zero-build, context health et gates G6/G7.
+- **EPIC-31 Harmonisation 5 Phases Universelles** :
+  - Consolidation FSM et protocole formel de transition d'état.
+- **Traçabilité Bidirectionnelle Code-Exigences (ADR-0394)** :
+  - `CodeEvidenceTracer` (`src/engine/code_evidence_tracer.py`) avec extraction AST des ancres d'exigences et preuves de couverture.
+
+### Changed
+- **Gouvernance & Archivage Automatique (ADR-0391)** :
+  - Rollover automatique du sprint backlog et archivage post-git des récits DONE dans `Projects/mLoop/backlog/archive/`.
+  - Colonne « Livrable Associé (Preuve sur disque) » formalisée dans la matrice d'état.
+- **Gouvernance Git & Isolation Dépôt Unique** :
+  - Suppression définitive des branches parasites distantes `master` et `project-mLoop` sur GitHub.
+  - Neutralisation du sous-dépôt Git interne `Projects/mLoop/.git` (archivé) pour garantir l'unicité absolue du dépôt `Memory Loop` (`main`).
+  - Matrice des synchronisations (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`) verrouillée contre tout push parasite depuis les sous-dossiers internes.
+- **Confinement Workers & Permissions Zero-Blindspot (ADR-0389)** :
+  - Alignement des flags CLI d'exécution non-interactive : OpenCode (`--auto --agent worker`), Cline (`--auto-approve true`).
+  - Renforcement du disjoncteur Herdr et des permissions AST.
+
+### Standards & Architecture Decisions
+- `ADR-0389` : Confinement des Runtimes Workers & Isolation des Permissions
+- `ADR-0391` : Automatisation du Rollover et Archivage Post-Git du Sprint Backlog
+- `ADR-0392` : Intégrité Topologique & Fidélité Visuelle des Artefacts Multimodaux
+- `ADR-0393` : Découplage Modal Grill (Format x Scope) & Gating Anti-Cascade
+- `ADR-0394` : Traçabilité Bidirectionnelle Code-Exigences-Preuves par Programmation AST
+- `ADR-0395` : Wiki-Graph Dual Layer & Fact-Search Réflexif (WFM)
+- `ADR-0396` : Audit Artefacts 5 Axes & Anti-Inversion Causale (RefigBench)
+
+### Fixed
+- Correction des assertions d'auto-approbation dans `tests/test_cline_adapter.py` (parité ADR-0389).
+- Résolution dual-context dans `src/swarm.py` et sortie en code non-zéro en cas d'exception non gérée.
+- Suite complète : 1848 tests unitaires et d'intégration 100% au vert.
+
+---
+
 ## [2.34.0] - 2026-09-21
 
 ### Added

@@ -1,0 +1,163 @@
+{
+  "story_id": "MLOOP-320-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-320-BE.md",
+  "timestamp": "2026-09-25T12:11:32.686663+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:11:32.386618+00:00"
+    },
+    {
+      "query": "Fact-Search 0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "source_file": "0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "sha256": "66e5659a7be499141e01c8ac896b523721caca839bbd5129243c692b5c601098",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0393-decouplage-modalite-grill-scope-anti-cascade.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:11:32.447140+00:00"
+    },
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T12:11:32.481646+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-320-BE_fact_dossier.md",
+      "source_file": "MLOOP-320-BE_fact_dossier.md",
+      "sha256": "863fcbfb654d86c64ee2f49b1a127884c9a3c8938b8b9e648774efe3890885b2",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-320-BE_fact_dossier.md) : MLOOP-320-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T12:11:32.481646+00:00"
+    },
+    {
+      "query": "Fact-Search STORY_LIFECYCLE_PROTOCOL.md",
+      "source_file": "STORY_LIFECYCLE_PROTOCOL.md",
+      "sha256": "9c905144396dbcfff997839877f818ddb992a70f4e3ae9f824b18a1c6b3714e6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : STORY_LIFECYCLE_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:11:32.551803+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-320-BE_fact_dossier.md": "863fcbfb654d86c64ee2f49b1a127884c9a3c8938b8b9e648774efe3890885b2",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "0393-decouplage-modalite-grill-scope-anti-cascade.md": "66e5659a7be499141e01c8ac896b523721caca839bbd5129243c692b5c601098",
+    "STORY_LIFECYCLE_PROTOCOL.md": "9c905144396dbcfff997839877f818ddb992a70f4e3ae9f824b18a1c6b3714e6"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, 0393-decouplage-modalite-grill-scope-anti-cascade.md, AGENTS.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.7,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "La modalité de questionnement est totalement orthogonale au périmètre et à la décision de rédaction.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "L'arrêt d'écriture après un round macro est un invariant déterministe strict.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Toute tentative de l'agent d'auto-promouvoir un récit vers `READY_FOR_DEV` est une infraction directe au protocole.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "Cette clause a été formulée pour le dépouillement séquentiel d'un lot en grooming 1:1, mais a été détournée par l'agent pour justifier un bulk-spawning après...",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "0393-decouplage-modalite-grill-scope-anti-cascade.md",
+    "AGENTS.md",
+    "MLOOP-320-BE_fact_dossier.md",
+    "STORY_LIFECYCLE_PROTOCOL.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Clôture de round macro avec arrêt formel et proposition de menu d'orientation",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rétrogradation automatique lors d'une tentative de promotion en série",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Protection anti-rebond lors de commandes multiples sous 500 millisecondes et perte réseau",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet de saisie incomplète et blocage de l'auto-promotion directe",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-320-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-320-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.7,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

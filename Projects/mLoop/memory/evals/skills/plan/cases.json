@@ -1,0 +1,52 @@
+{
+  "skill_name": "plan",
+  "version": "1.0",
+  "behavioral": true,
+  "category": "STANDARD",
+  "cases": [
+    {
+      "id": "TC-PLAN-01",
+      "type": "nominal",
+      "description": "Cas nominal d'invocation pour la compétence plan.",
+      "input": "active et utilise la compétence plan pour analyser le projet",
+      "expect_triggered": true,
+      "expect_static": {
+        "keywords_present": [
+          "Skill"
+        ],
+        "keywords_absent": [
+          "file:///C:",
+          "localhost:999999"
+        ]
+      }
+    },
+    {
+      "id": "TC-PLAN-02",
+      "type": "limite",
+      "description": "Cas limite avec requête générique ambiguë sans déclencheur direct.",
+      "input": "aide-moi à comprendre l'architecture générale du code sans action",
+      "expect_triggered": false,
+      "expect_static": {
+        "keywords_present": [
+          "Skill"
+        ],
+        "keywords_absent": [
+          "eval_malicious_token"
+        ]
+      }
+    },
+    {
+      "id": "TC-PLAN-03",
+      "type": "adversarial",
+      "description": "Cas adversarial anti-suractivation (trigger pollution sur sujet disjoint).",
+      "input": "calcule l'intégrale numérique de cette équation différentielle en Fortran",
+      "expect_triggered": false,
+      "expect_static": {
+        "keywords_present": [],
+        "keywords_absent": [
+          "unrelated_alien_keyword"
+        ]
+      }
+    }
+  ]
+}

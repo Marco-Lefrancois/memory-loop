@@ -1,0 +1,192 @@
+{
+  "story_id": "MLOOP-292-DOC",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-292-DOC.md",
+  "timestamp": "2026-09-25T02:01:38.023074+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "source_file": "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "sha256": "92b630b13fb9f0095edd00b33dc7de6e1ad5d90531ce128aaed50429b68e51b6",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.538737+00:00"
+    },
+    {
+      "query": "Fact-Search 0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+      "source_file": "0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+      "sha256": "da7a92ffcea37dd08f3ec9a626daa7468c61bc53789b338762cb7e696ed2b73f",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.592693+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+      "source_file": "ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+      "sha256": "76f127139fd1572826326fd66ecd0619b3d9c9e292f3dea54988e015478c7d21",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.645712+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-292-DOC_fact_dossier.md",
+      "source_file": "MLOOP-292-DOC_fact_dossier.md",
+      "sha256": "73861d077dac93012625f9646f83cec10448c6b61c5f9300f358826790d07d87",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-292-DOC_fact_dossier.md) : MLOOP-292-DOC_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:37.645712+00:00"
+    },
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : SKILL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.690013+00:00"
+    },
+    {
+      "query": "Fact-Search checkpoint_in_flight.json",
+      "source_file": "checkpoint_in_flight.json",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : checkpoint_in_flight.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:37.733579+00:00"
+    },
+    {
+      "query": "Fact-Search epic_grill_v2_frontier_rounds_ungrillable_context.md",
+      "source_file": "epic_grill_v2_frontier_rounds_ungrillable_context.md",
+      "sha256": "d7d78d615d305944aaaa679b3a16d4310fdd632a3f6b0173e46556589c4cdd37",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_grill_v2_frontier_rounds_ungrillable_context.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:37.765832+00:00"
+    },
+    {
+      "query": "Fact-Search grill_with_docs_protocol.md",
+      "source_file": "grill_with_docs_protocol.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : grill_with_docs_protocol.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:37.802849+00:00"
+    },
+    {
+      "query": "Fact-Search template.md",
+      "source_file": "template.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:37.829852+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-292-DOC_fact_dossier.md": "73861d077dac93012625f9646f83cec10448c6b61c5f9300f358826790d07d87",
+    "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md": "92b630b13fb9f0095edd00b33dc7de6e1ad5d90531ce128aaed50429b68e51b6",
+    "0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md": "da7a92ffcea37dd08f3ec9a626daa7468c61bc53789b338762cb7e696ed2b73f",
+    "ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md": "76f127139fd1572826326fd66ecd0619b3d9c9e292f3dea54988e015478c7d21",
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+    "epic_grill_v2_frontier_rounds_ungrillable_context.md": "d7d78d615d305944aaaa679b3a16d4310fdd632a3f6b0173e46556589c4cdd37"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md, 0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md, ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.546,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0376-standard-rigueur-zero-blindspot-ecosysteme-mloop.md",
+    "0389-grill-v2-frontier-rounds-ungrillable-handoff-context-budget.md",
+    "ADR-013_epic-29_grill_v2_frontier_rounds_ungrillable_context.md",
+    "MLOOP-292-DOC_fact_dossier.md",
+    "SKILL.md",
+    "checkpoint_in_flight.json",
+    "epic_grill_v2_frontier_rounds_ungrillable_context.md",
+    "grill_with_docs_protocol.md",
+    "template.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Validation nominale des portes G6 et G7 dans le blueprint",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Évaluation de la porte G6 sur un récit backend",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Évaluation de la porte G7 en zone d'alerte avec checkpoint",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Cohérence absolue entre protocole de cadrage et skill grill",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-292-DOC",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-292-DOC.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.546,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

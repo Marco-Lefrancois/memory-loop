@@ -1,0 +1,893 @@
+{
+  "project_name": "mLoop",
+  "version": "1.0",
+  "metadata": {},
+  "stats": {
+    "total_nodes": 71,
+    "total_edges": 15
+  },
+  "nodes": {
+    "STORY:MLOOP-330-BE": {
+      "node_id": "STORY:MLOOP-330-BE",
+      "node_type": "Story",
+      "label": "Normalisation des Gabarits de Traçabilité Code ↔ Exigences & Schéma EvidencePack 2.0",
+      "metadata": {
+        "story_id": "MLOOP-330-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "BR:RM-012": {
+      "node_id": "BR:RM-012",
+      "node_type": "BusinessRule",
+      "label": "RM-012",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-331-BE": {
+      "node_id": "STORY:MLOOP-331-BE",
+      "node_type": "Story",
+      "label": "Moteur d'Extraction AST & Résolution Déterministe des Symboles de Code",
+      "metadata": {
+        "story_id": "MLOOP-331-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "ADR:ADR-0369": {
+      "node_id": "ADR:ADR-0369",
+      "node_type": "ADR",
+      "label": "ADR-0369",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Détection de symboles physiques non ancrés dans la matrice": {
+      "node_id": "TEST:Détection de symboles physiques non ancrés dans la matrice",
+      "node_type": "GherkinTest",
+      "label": "Détection de symboles physiques non ancrés dans la matrice",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Extraction complète des classes et méthodes d'un module Python": {
+      "node_id": "TEST:Extraction complète des classes et méthodes d'un module Python",
+      "node_type": "GherkinTest",
+      "label": "Extraction complète des classes et méthodes d'un module Python",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Génération d'un rapport de réconciliation exploitable par les linters": {
+      "node_id": "TEST:Génération d'un rapport de réconciliation exploitable par les linters",
+      "node_type": "GherkinTest",
+      "label": "Génération d'un rapport de réconciliation exploitable par les linters",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Prise en charge des fonctions asynchrones et tolérance des helpers privés": {
+      "node_id": "TEST:Prise en charge des fonctions asynchrones et tolérance des helpers privés",
+      "node_type": "GherkinTest",
+      "label": "Prise en charge des fonctions asynchrones et tolérance des helpers privés",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-332-BE": {
+      "node_id": "STORY:MLOOP-332-BE",
+      "node_type": "Story",
+      "label": "Pipeline d'Harmonisation Synchrone EvidencePack 2.0 & Archivage des Preuves",
+      "metadata": {
+        "story_id": "MLOOP-332-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Préservation intégrale du sceau TDD et du certificat Fact-Check": {
+      "node_id": "TEST:Préservation intégrale du sceau TDD et du certificat Fact-Check",
+      "node_type": "GherkinTest",
+      "label": "Préservation intégrale du sceau TDD et du certificat Fact-Check",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rejet lors de l'extraction d'une table Markdown corrompue": {
+      "node_id": "TEST:Rejet lors de l'extraction d'une table Markdown corrompue",
+      "node_type": "GherkinTest",
+      "label": "Rejet lors de l'extraction d'une table Markdown corrompue",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Synchronisation nominale d'un plan d'implémentation vers l'EvidencePack": {
+      "node_id": "TEST:Synchronisation nominale d'un plan d'implémentation vers l'EvidencePack",
+      "node_type": "GherkinTest",
+      "label": "Synchronisation nominale d'un plan d'implémentation vers l'EvidencePack",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Traçabilité transparente avec retour console normé": {
+      "node_id": "TEST:Traçabilité transparente avec retour console normé",
+      "node_type": "GherkinTest",
+      "label": "Traçabilité transparente avec retour console normé",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-333-BE": {
+      "node_id": "STORY:MLOOP-333-BE",
+      "node_type": "Story",
+      "label": "Sonde Vibe-Check Check 29 (Intégrité Traçabilité Code ↔ Exigences) & Commande CLI",
+      "metadata": {
+        "story_id": "MLOOP-333-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "ADR:ADR-0394": {
+      "node_id": "ADR:ADR-0394",
+      "node_type": "ADR",
+      "label": "ADR-0394",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-334-FULL": {
+      "node_id": "STORY:MLOOP-334-FULL",
+      "node_type": "Story",
+      "label": "Harnais de Validation Intégrale, Tests de Non-Régression & Parité Documentaire",
+      "metadata": {
+        "story_id": "MLOOP-334-FULL"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "ADR:ADR-0370": {
+      "node_id": "ADR:ADR-0370",
+      "node_type": "ADR",
+      "label": "ADR-0370",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "ADR:ADR-0376": {
+      "node_id": "ADR:ADR-0376",
+      "node_type": "ADR",
+      "label": "ADR-0376",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-340-BE": {
+      "node_id": "STORY:MLOOP-340-BE",
+      "node_type": "Story",
+      "label": "Schéma Relationnel & Persistance SQLite du Wiki Graph Dual-Layer (Entities, Passages & Hyper-Edges)",
+      "metadata": {
+        "story_id": "MLOOP-340-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "ADR:ADR-0392": {
+      "node_id": "ADR:ADR-0392",
+      "node_type": "ADR",
+      "label": "ADR-0392",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "ADR:ADR-0395": {
+      "node_id": "ADR:ADR-0395",
+      "node_type": "ADR",
+      "label": "ADR-0395",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Idempotence lors d'exécutions multiples successives de la migration": {
+      "node_id": "TEST:Idempotence lors d'exécutions multiples successives de la migration",
+      "node_type": "GherkinTest",
+      "label": "Idempotence lors d'exécutions multiples successives de la migration",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Initialisation nominale du schéma et liaison entité-passage": {
+      "node_id": "TEST:Initialisation nominale du schéma et liaison entité-passage",
+      "node_type": "GherkinTest",
+      "label": "Initialisation nominale du schéma et liaison entité-passage",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Journalisation structurée de la migration et de la latence": {
+      "node_id": "TEST:Journalisation structurée de la migration et de la latence",
+      "node_type": "GherkinTest",
+      "label": "Journalisation structurée de la migration et de la latence",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rejet lors de l'enregistrement d'une entité avec un type inconnu": {
+      "node_id": "TEST:Rejet lors de l'enregistrement d'une entité avec un type inconnu",
+      "node_type": "GherkinTest",
+      "label": "Rejet lors de l'enregistrement d'une entité avec un type inconnu",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-341-BE": {
+      "node_id": "STORY:MLOOP-341-BE",
+      "node_type": "Story",
+      "label": "Moteur d'Ingestion & Indexation Dual-Space (Passages Denses, Entités Métier & Hyper-Arêtes)",
+      "metadata": {
+        "story_id": "MLOOP-341-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Découpage sémantique d'un document d'architecture et liaison d'entités": {
+      "node_id": "TEST:Découpage sémantique d'un document d'architecture et liaison d'entités",
+      "node_type": "GherkinTest",
+      "label": "Découpage sémantique d'un document d'architecture et liaison d'entités",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Ré-indexation idempotente suite à modification mineure d'un fichier": {
+      "node_id": "TEST:Ré-indexation idempotente suite à modification mineure d'un fichier",
+      "node_type": "GherkinTest",
+      "label": "Ré-indexation idempotente suite à modification mineure d'un fichier",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Synthèse structurée des entités et passages moissonnés": {
+      "node_id": "TEST:Synthèse structurée des entités et passages moissonnés",
+      "node_type": "GherkinTest",
+      "label": "Synthèse structurée des entités et passages moissonnés",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Traitement sécurisé d'un fichier vide ou sans en-tête Markdown": {
+      "node_id": "TEST:Traitement sécurisé d'un fichier vide ou sans en-tête Markdown",
+      "node_type": "GherkinTest",
+      "label": "Traitement sécurisé d'un fichier vide ou sans en-tête Markdown",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-342-BE": {
+      "node_id": "STORY:MLOOP-342-BE",
+      "node_type": "Story",
+      "label": "Boucle de Fact-Search Réflexif à Budget Borné (B <= 4) & Arrêt Anticipé Adaptatif",
+      "metadata": {
+        "story_id": "MLOOP-342-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Arrêt adaptatif précoce dès que les preuves sont complètes": {
+      "node_id": "TEST:Arrêt adaptatif précoce dès que les preuves sont complètes",
+      "node_type": "GherkinTest",
+      "label": "Arrêt adaptatif précoce dès que les preuves sont complètes",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Interruption préventive en cas de requête dérivée redondante": {
+      "node_id": "TEST:Interruption préventive en cas de requête dérivée redondante",
+      "node_type": "GherkinTest",
+      "label": "Interruption préventive en cas de requête dérivée redondante",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rapport d'efficience et journalisation des gains de passes": {
+      "node_id": "TEST:Rapport d'efficience et journalisation des gains de passes",
+      "node_type": "GherkinTest",
+      "label": "Rapport d'efficience et journalisation des gains de passes",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Épuisement du budget maximal sur une recherche complexe à plusieurs sauts": {
+      "node_id": "TEST:Épuisement du budget maximal sur une recherche complexe à plusieurs sauts",
+      "node_type": "GherkinTest",
+      "label": "Épuisement du budget maximal sur une recherche complexe à plusieurs sauts",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-343-BE": {
+      "node_id": "STORY:MLOOP-343-BE",
+      "node_type": "Story",
+      "label": "Mode Reject Souverain Anti-Hallucination & Régularisation de Variance de Scoring",
+      "metadata": {
+        "story_id": "MLOOP-343-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Alerte visuelle en cas d'abstention forcée": {
+      "node_id": "TEST:Alerte visuelle en cas d'abstention forcée",
+      "node_type": "GherkinTest",
+      "label": "Alerte visuelle en cas d'abstention forcée",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Approbation nominale lorsque toutes les exigences sont étayées par des preuves": {
+      "node_id": "TEST:Approbation nominale lorsque toutes les exigences sont étayées par des preuves",
+      "node_type": "GherkinTest",
+      "label": "Approbation nominale lorsque toutes les exigences sont étayées par des preuves",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rejet strict pour manque de fondement documentaire sur une règle critique": {
+      "node_id": "TEST:Rejet strict pour manque de fondement documentaire sur une règle critique",
+      "node_type": "GherkinTest",
+      "label": "Rejet strict pour manque de fondement documentaire sur une règle critique",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Ré-étalement dynamique en cas de variance de scoring effondrée": {
+      "node_id": "TEST:Ré-étalement dynamique en cas de variance de scoring effondrée",
+      "node_type": "GherkinTest",
+      "label": "Ré-étalement dynamique en cas de variance de scoring effondrée",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-344-FULL": {
+      "node_id": "STORY:MLOOP-344-FULL",
+      "node_type": "Story",
+      "label": "Commande CLI mloop wiki-search, Intégration Grill-Me & Sonde Vibe-Check Check 30",
+      "metadata": {
+        "story_id": "MLOOP-344-FULL"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Détection par la sonde Check 30 d'un schéma corrompu ou incomplet": {
+      "node_id": "TEST:Détection par la sonde Check 30 d'un schéma corrompu ou incomplet",
+      "node_type": "GherkinTest",
+      "label": "Détection par la sonde Check 30 d'un schéma corrompu ou incomplet",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Export au format JSON strict pour orchestration agentique": {
+      "node_id": "TEST:Export au format JSON strict pour orchestration agentique",
+      "node_type": "GherkinTest",
+      "label": "Export au format JSON strict pour orchestration agentique",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Exécution CLI réussie d'une recherche avec affichage console": {
+      "node_id": "TEST:Exécution CLI réussie d'une recherche avec affichage console",
+      "node_type": "GherkinTest",
+      "label": "Exécution CLI réussie d'une recherche avec affichage console",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Échec CLI en mode Reject lorsqu'aucune preuve n'existe": {
+      "node_id": "TEST:Échec CLI en mode Reject lorsqu'aucune preuve n'existe",
+      "node_type": "GherkinTest",
+      "label": "Échec CLI en mode Reject lorsqu'aucune preuve n'existe",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-350-BE": {
+      "node_id": "STORY:MLOOP-350-BE",
+      "node_type": "Story",
+      "label": "Moteur d'Audit Déterministe d'Arbre d'Objets Natifs pour Livrables d'Architecture",
+      "metadata": {
+        "story_id": "MLOOP-350-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "ADR:ADR-0396": {
+      "node_id": "ADR:ADR-0396",
+      "node_type": "ADR",
+      "label": "ADR-0396",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Audit d'un diagramme Archify IR comportant nœuds et connecteurs": {
+      "node_id": "TEST:Audit d'un diagramme Archify IR comportant nœuds et connecteurs",
+      "node_type": "GherkinTest",
+      "label": "Audit d'un diagramme Archify IR comportant nœuds et connecteurs",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rejet lors de l'analyse d'un format de fichier binaire non supporté": {
+      "node_id": "TEST:Rejet lors de l'analyse d'un format de fichier binaire non supporté",
+      "node_type": "GherkinTest",
+      "label": "Rejet lors de l'analyse d'un format de fichier binaire non supporté",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Traitement résilient d'un document SVG syntaxiquement tronqué": {
+      "node_id": "TEST:Traitement résilient d'un document SVG syntaxiquement tronqué",
+      "node_type": "GherkinTest",
+      "label": "Traitement résilient d'un document SVG syntaxiquement tronqué",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Émission des métriques de synthèse dans le journal de diagnostic": {
+      "node_id": "TEST:Émission des métriques de synthèse dans le journal de diagnostic",
+      "node_type": "GherkinTest",
+      "label": "Émission des métriques de synthèse dans le journal de diagnostic",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-351-BE": {
+      "node_id": "STORY:MLOOP-351-BE",
+      "node_type": "Story",
+      "label": "Grille d'Audit Découplée 5-Axes Pénétrante (T20 + S30 + L15 + E25 + V10)",
+      "metadata": {
+        "story_id": "MLOOP-351-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Application du plafond déterministe de 50 points sur un collage raster": {
+      "node_id": "TEST:Application du plafond déterministe de 50 points sur un collage raster",
+      "node_type": "GherkinTest",
+      "label": "Application du plafond déterministe de 50 points sur un collage raster",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Certification d'un schéma d'architecture atteignant l'excellence sur les 5 axes": {
+      "node_id": "TEST:Certification d'un schéma d'architecture atteignant l'excellence sur les 5 axes",
+      "node_type": "GherkinTest",
+      "label": "Certification d'un schéma d'architecture atteignant l'excellence sur les 5 axes",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Restitution détaillée du diagramme en radar des 5 dimensions": {
+      "node_id": "TEST:Restitution détaillée du diagramme en radar des 5 dimensions",
+      "node_type": "GherkinTest",
+      "label": "Restitution détaillée du diagramme en radar des 5 dimensions",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Échec éliminatoire pour déficit sémantique malgré un rendu très soigné": {
+      "node_id": "TEST:Échec éliminatoire pour déficit sémantique malgré un rendu très soigné",
+      "node_type": "GherkinTest",
+      "label": "Échec éliminatoire pour déficit sémantique malgré un rendu très soigné",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-352-BE": {
+      "node_id": "STORY:MLOOP-352-BE",
+      "node_type": "Story",
+      "label": "Linter Matriciel d'Inversion Causale par Comparaison d'Adjacence (A_spec vs A_diag)",
+      "metadata": {
+        "story_id": "MLOOP-352-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Détection et rejet éliminatoire d'une flèche de dépendance inversée": {
+      "node_id": "TEST:Détection et rejet éliminatoire d'une flèche de dépendance inversée",
+      "node_type": "GherkinTest",
+      "label": "Détection et rejet éliminatoire d'une flèche de dépendance inversée",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Prise en compte légitime d'une relation déclarée explicitement bidirectionnelle": {
+      "node_id": "TEST:Prise en compte légitime d'une relation déclarée explicitement bidirectionnelle",
+      "node_type": "GherkinTest",
+      "label": "Prise en compte légitime d'une relation déclarée explicitement bidirectionnelle",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rapport textuel précis des nœuds concernés par l'inversion": {
+      "node_id": "TEST:Rapport textuel précis des nœuds concernés par l'inversion",
+      "node_type": "GherkinTest",
+      "label": "Rapport textuel précis des nœuds concernés par l'inversion",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Validation d'un schéma d'architecture dont toutes les flèches respectent la spécification": {
+      "node_id": "TEST:Validation d'un schéma d'architecture dont toutes les flèches respectent la spécification",
+      "node_type": "GherkinTest",
+      "label": "Validation d'un schéma d'architecture dont toutes les flèches respectent la spécification",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-353-BE": {
+      "node_id": "STORY:MLOOP-353-BE",
+      "node_type": "Story",
+      "label": "Adaptateur de Dev Handoff Multi-Harnais Dédié (Claude Code, OpenCode, Codex & Cursor)",
+      "metadata": {
+        "story_id": "MLOOP-353-BE"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Bascule transparente sur le profil générique en cas de harnais inconnu": {
+      "node_id": "TEST:Bascule transparente sur le profil générique en cas de harnais inconnu",
+      "node_type": "GherkinTest",
+      "label": "Bascule transparente sur le profil générique en cas de harnais inconnu",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Empreinte SHA-256 du bundle de handoff pour traçabilité radicale": {
+      "node_id": "TEST:Empreinte SHA-256 du bundle de handoff pour traçabilité radicale",
+      "node_type": "GherkinTest",
+      "label": "Empreinte SHA-256 du bundle de handoff pour traçabilité radicale",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Génération d'un bundle optimisé pour le harnais Claude Code": {
+      "node_id": "TEST:Génération d'un bundle optimisé pour le harnais Claude Code",
+      "node_type": "GherkinTest",
+      "label": "Génération d'un bundle optimisé pour le harnais Claude Code",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rejet de génération de handoff si la story n'a pas franchi la Gate 4": {
+      "node_id": "TEST:Rejet de génération de handoff si la story n'a pas franchi la Gate 4",
+      "node_type": "GherkinTest",
+      "label": "Rejet de génération de handoff si la story n'a pas franchi la Gate 4",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "STORY:MLOOP-354-FULL": {
+      "node_id": "STORY:MLOOP-354-FULL",
+      "node_type": "Story",
+      "label": "Extension CLI mloop artifact-check 5x, Enrichissement Vibe-Check Check 27 & EvidencePack 2.0",
+      "metadata": {
+        "story_id": "MLOOP-354-FULL"
+      },
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Audit CLI complet d'un schéma d'architecture avec note 5-axes certifiée": {
+      "node_id": "TEST:Audit CLI complet d'un schéma d'architecture avec note 5-axes certifiée",
+      "node_type": "GherkinTest",
+      "label": "Audit CLI complet d'un schéma d'architecture avec note 5-axes certifiée",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Blocage du Vibe-Check Check 27 sur défaillance d'intégrité d'un livrable": {
+      "node_id": "TEST:Blocage du Vibe-Check Check 27 sur défaillance d'intégrité d'un livrable",
+      "node_type": "GherkinTest",
+      "label": "Blocage du Vibe-Check Check 27 sur défaillance d'intégrité d'un livrable",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Rejet CLI lors de l'analyse d'un schéma comportant une flèche inversée": {
+      "node_id": "TEST:Rejet CLI lors de l'analyse d'un schéma comportant une flèche inversée",
+      "node_type": "GherkinTest",
+      "label": "Rejet CLI lors de l'analyse d'un schéma comportant une flèche inversée",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    },
+    "TEST:Restitution d'un rapport JSON complet pour intégration pipeline CI/CD": {
+      "node_id": "TEST:Restitution d'un rapport JSON complet pour intégration pipeline CI/CD",
+      "node_type": "GherkinTest",
+      "label": "Restitution d'un rapport JSON complet pour intégration pipeline CI/CD",
+      "metadata": {},
+      "valid_from": null,
+      "deprecated_at": null
+    }
+  },
+  "edges": {
+    "EDGE_STORY_MLOOP-330-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-330-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "BR:RM-012",
+        "STORY:MLOOP-330-BE"
+      ],
+      "label": "Story Unit: Normalisation des Gabarits de Traçabilité Code ↔ Exigences & Schéma EvidencePack 2.0 (MLOOP-330-BE)",
+      "metadata": {
+        "story_id": "MLOOP-330-BE"
+      },
+      "status": "READY_FOR_QA",
+      "created_at": "2026-09-25T17:38:57.504298+00:00",
+      "updated_at": "2026-09-25T17:38:57.504298+00:00"
+    },
+    "EDGE_STORY_MLOOP-331-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-331-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0369",
+        "STORY:MLOOP-331-BE",
+        "TEST:Détection de symboles physiques non ancrés dans la matrice",
+        "TEST:Extraction complète des classes et méthodes d'un module Python",
+        "TEST:Génération d'un rapport de réconciliation exploitable par les linters",
+        "TEST:Prise en charge des fonctions asynchrones et tolérance des helpers privés"
+      ],
+      "label": "Story Unit: Moteur d'Extraction AST & Résolution Déterministe des Symboles de Code (MLOOP-331-BE)",
+      "metadata": {
+        "story_id": "MLOOP-331-BE"
+      },
+      "status": "READY_FOR_QA",
+      "created_at": "2026-09-25T17:38:57.504844+00:00",
+      "updated_at": "2026-09-25T17:38:57.504844+00:00"
+    },
+    "EDGE_STORY_MLOOP-332-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-332-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "STORY:MLOOP-332-BE",
+        "TEST:Préservation intégrale du sceau TDD et du certificat Fact-Check",
+        "TEST:Rejet lors de l'extraction d'une table Markdown corrompue",
+        "TEST:Synchronisation nominale d'un plan d'implémentation vers l'EvidencePack",
+        "TEST:Traçabilité transparente avec retour console normé"
+      ],
+      "label": "Story Unit: Pipeline d'Harmonisation Synchrone EvidencePack 2.0 & Archivage des Preuves (MLOOP-332-BE)",
+      "metadata": {
+        "story_id": "MLOOP-332-BE"
+      },
+      "status": "READY_FOR_DEV",
+      "created_at": "2026-09-25T17:38:57.506114+00:00",
+      "updated_at": "2026-09-25T17:38:57.506114+00:00"
+    },
+    "EDGE_STORY_MLOOP-333-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-333-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0394",
+        "STORY:MLOOP-333-BE"
+      ],
+      "label": "Story Unit: Sonde Vibe-Check Check 29 (Intégrité Traçabilité Code ↔ Exigences) & Commande CLI (MLOOP-333-BE)",
+      "metadata": {
+        "story_id": "MLOOP-333-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.506677+00:00",
+      "updated_at": "2026-09-25T17:38:57.506677+00:00"
+    },
+    "EDGE_STORY_MLOOP-334-FULL": {
+      "edge_id": "EDGE_STORY_MLOOP-334-FULL",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0370",
+        "ADR:ADR-0376",
+        "ADR:ADR-0394",
+        "STORY:MLOOP-334-FULL"
+      ],
+      "label": "Story Unit: Harnais de Validation Intégrale, Tests de Non-Régression & Parité Documentaire (MLOOP-334-FULL)",
+      "metadata": {
+        "story_id": "MLOOP-334-FULL"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.507742+00:00",
+      "updated_at": "2026-09-25T17:38:57.507742+00:00"
+    },
+    "EDGE_STORY_MLOOP-340-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-340-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0392",
+        "ADR:ADR-0395",
+        "STORY:MLOOP-340-BE",
+        "TEST:Idempotence lors d'exécutions multiples successives de la migration",
+        "TEST:Initialisation nominale du schéma et liaison entité-passage",
+        "TEST:Journalisation structurée de la migration et de la latence",
+        "TEST:Rejet lors de l'enregistrement d'une entité avec un type inconnu"
+      ],
+      "label": "Story Unit: Schéma Relationnel & Persistance SQLite du Wiki Graph Dual-Layer (Entities, Passages & Hyper-Edges) (MLOOP-340-BE)",
+      "metadata": {
+        "story_id": "MLOOP-340-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.508929+00:00",
+      "updated_at": "2026-09-25T17:38:57.508929+00:00"
+    },
+    "EDGE_STORY_MLOOP-341-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-341-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0392",
+        "ADR:ADR-0395",
+        "BR:RM-012",
+        "STORY:MLOOP-341-BE",
+        "TEST:Découpage sémantique d'un document d'architecture et liaison d'entités",
+        "TEST:Ré-indexation idempotente suite à modification mineure d'un fichier",
+        "TEST:Synthèse structurée des entités et passages moissonnés",
+        "TEST:Traitement sécurisé d'un fichier vide ou sans en-tête Markdown"
+      ],
+      "label": "Story Unit: Moteur d'Ingestion & Indexation Dual-Space (Passages Denses, Entités Métier & Hyper-Arêtes) (MLOOP-341-BE)",
+      "metadata": {
+        "story_id": "MLOOP-341-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.509470+00:00",
+      "updated_at": "2026-09-25T17:38:57.509470+00:00"
+    },
+    "EDGE_STORY_MLOOP-342-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-342-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0392",
+        "ADR:ADR-0395",
+        "STORY:MLOOP-342-BE",
+        "TEST:Arrêt adaptatif précoce dès que les preuves sont complètes",
+        "TEST:Interruption préventive en cas de requête dérivée redondante",
+        "TEST:Rapport d'efficience et journalisation des gains de passes",
+        "TEST:Épuisement du budget maximal sur une recherche complexe à plusieurs sauts"
+      ],
+      "label": "Story Unit: Boucle de Fact-Search Réflexif à Budget Borné (B <= 4) & Arrêt Anticipé Adaptatif (MLOOP-342-BE)",
+      "metadata": {
+        "story_id": "MLOOP-342-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.510474+00:00",
+      "updated_at": "2026-09-25T17:38:57.510474+00:00"
+    },
+    "EDGE_STORY_MLOOP-343-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-343-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0395",
+        "STORY:MLOOP-343-BE",
+        "TEST:Alerte visuelle en cas d'abstention forcée",
+        "TEST:Approbation nominale lorsque toutes les exigences sont étayées par des preuves",
+        "TEST:Rejet strict pour manque de fondement documentaire sur une règle critique",
+        "TEST:Ré-étalement dynamique en cas de variance de scoring effondrée"
+      ],
+      "label": "Story Unit: Mode Reject Souverain Anti-Hallucination & Régularisation de Variance de Scoring (MLOOP-343-BE)",
+      "metadata": {
+        "story_id": "MLOOP-343-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.511475+00:00",
+      "updated_at": "2026-09-25T17:38:57.511475+00:00"
+    },
+    "EDGE_STORY_MLOOP-344-FULL": {
+      "edge_id": "EDGE_STORY_MLOOP-344-FULL",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0392",
+        "ADR:ADR-0395",
+        "STORY:MLOOP-344-FULL",
+        "TEST:Détection par la sonde Check 30 d'un schéma corrompu ou incomplet",
+        "TEST:Export au format JSON strict pour orchestration agentique",
+        "TEST:Exécution CLI réussie d'une recherche avec affichage console",
+        "TEST:Échec CLI en mode Reject lorsqu'aucune preuve n'existe"
+      ],
+      "label": "Story Unit: Commande CLI mloop wiki-search, Intégration Grill-Me & Sonde Vibe-Check Check 30 (MLOOP-344-FULL)",
+      "metadata": {
+        "story_id": "MLOOP-344-FULL"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.512475+00:00",
+      "updated_at": "2026-09-25T17:38:57.512475+00:00"
+    },
+    "EDGE_STORY_MLOOP-350-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-350-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0396",
+        "STORY:MLOOP-350-BE",
+        "TEST:Audit d'un diagramme Archify IR comportant nœuds et connecteurs",
+        "TEST:Rejet lors de l'analyse d'un format de fichier binaire non supporté",
+        "TEST:Traitement résilient d'un document SVG syntaxiquement tronqué",
+        "TEST:Émission des métriques de synthèse dans le journal de diagnostic"
+      ],
+      "label": "Story Unit: Moteur d'Audit Déterministe d'Arbre d'Objets Natifs pour Livrables d'Architecture (MLOOP-350-BE)",
+      "metadata": {
+        "story_id": "MLOOP-350-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.513475+00:00",
+      "updated_at": "2026-09-25T17:38:57.513475+00:00"
+    },
+    "EDGE_STORY_MLOOP-351-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-351-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0392",
+        "ADR:ADR-0396",
+        "STORY:MLOOP-351-BE",
+        "TEST:Application du plafond déterministe de 50 points sur un collage raster",
+        "TEST:Certification d'un schéma d'architecture atteignant l'excellence sur les 5 axes",
+        "TEST:Restitution détaillée du diagramme en radar des 5 dimensions",
+        "TEST:Échec éliminatoire pour déficit sémantique malgré un rendu très soigné"
+      ],
+      "label": "Story Unit: Grille d'Audit Découplée 5-Axes Pénétrante (T20 + S30 + L15 + E25 + V10) (MLOOP-351-BE)",
+      "metadata": {
+        "story_id": "MLOOP-351-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.514475+00:00",
+      "updated_at": "2026-09-25T17:38:57.514475+00:00"
+    },
+    "EDGE_STORY_MLOOP-352-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-352-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0396",
+        "STORY:MLOOP-352-BE",
+        "TEST:Détection et rejet éliminatoire d'une flèche de dépendance inversée",
+        "TEST:Prise en compte légitime d'une relation déclarée explicitement bidirectionnelle",
+        "TEST:Rapport textuel précis des nœuds concernés par l'inversion",
+        "TEST:Validation d'un schéma d'architecture dont toutes les flèches respectent la spécification"
+      ],
+      "label": "Story Unit: Linter Matriciel d'Inversion Causale par Comparaison d'Adjacence (A_spec vs A_diag) (MLOOP-352-BE)",
+      "metadata": {
+        "story_id": "MLOOP-352-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.514475+00:00",
+      "updated_at": "2026-09-25T17:38:57.514475+00:00"
+    },
+    "EDGE_STORY_MLOOP-353-BE": {
+      "edge_id": "EDGE_STORY_MLOOP-353-BE",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0394",
+        "ADR:ADR-0396",
+        "STORY:MLOOP-353-BE",
+        "TEST:Bascule transparente sur le profil générique en cas de harnais inconnu",
+        "TEST:Empreinte SHA-256 du bundle de handoff pour traçabilité radicale",
+        "TEST:Génération d'un bundle optimisé pour le harnais Claude Code",
+        "TEST:Rejet de génération de handoff si la story n'a pas franchi la Gate 4"
+      ],
+      "label": "Story Unit: Adaptateur de Dev Handoff Multi-Harnais Dédié (Claude Code, OpenCode, Codex & Cursor) (MLOOP-353-BE)",
+      "metadata": {
+        "story_id": "MLOOP-353-BE"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.515980+00:00",
+      "updated_at": "2026-09-25T17:38:57.515980+00:00"
+    },
+    "EDGE_STORY_MLOOP-354-FULL": {
+      "edge_id": "EDGE_STORY_MLOOP-354-FULL",
+      "edge_type": "STORY_UNIT",
+      "node_ids": [
+        "ADR:ADR-0394",
+        "ADR:ADR-0396",
+        "STORY:MLOOP-354-FULL",
+        "TEST:Audit CLI complet d'un schéma d'architecture avec note 5-axes certifiée",
+        "TEST:Blocage du Vibe-Check Check 27 sur défaillance d'intégrité d'un livrable",
+        "TEST:Rejet CLI lors de l'analyse d'un schéma comportant une flèche inversée",
+        "TEST:Restitution d'un rapport JSON complet pour intégration pipeline CI/CD"
+      ],
+      "label": "Story Unit: Extension CLI mloop artifact-check 5x, Enrichissement Vibe-Check Check 27 & EvidencePack 2.0 (MLOOP-354-FULL)",
+      "metadata": {
+        "story_id": "MLOOP-354-FULL"
+      },
+      "status": "DRAFT",
+      "created_at": "2026-09-25T17:38:57.516985+00:00",
+      "updated_at": "2026-09-25T17:38:57.516985+00:00"
+    }
+  }
+}

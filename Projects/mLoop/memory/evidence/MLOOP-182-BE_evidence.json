@@ -1,0 +1,249 @@
+{
+  "story_id": "MLOOP-182-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-182-BE.md",
+  "timestamp": "2026-09-23T15:05:06.937585+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search MLOOP-010-BE_evidence.json",
+      "source_file": "MLOOP-010-BE_evidence.json",
+      "sha256": "4acd4407e273d0c1520b44b09be360f348dc58d16810273b314c6b67a43ebe2e",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : MLOOP-010-BE_evidence.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T15:05:06.835010+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-182-BE_fact_dossier.md",
+      "source_file": "MLOOP-182-BE_fact_dossier.md",
+      "sha256": "90d70b157705319f6a358c635267a8e07a5d71ad49f8484a7b4f8691aeeb06dc",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-182-BE_fact_dossier.md) : MLOOP-182-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T15:05:06.836011+00:00"
+    },
+    {
+      "query": "Fact-Search epic_evidence_impl_decisions.md",
+      "source_file": "epic_evidence_impl_decisions.md",
+      "sha256": "ae47c4a6a757a32b252a6c66d8e77cd158fbce87d44547a46a1f6d186260a5ec",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-182-BE_fact_dossier.md) : epic_evidence_impl_decisions.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T15:05:06.837011+00:00"
+    },
+    {
+      "query": "Fact-Search evidence_packs_legacy.md",
+      "source_file": "evidence_packs_legacy.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : evidence_packs_legacy.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T15:05:06.862049+00:00"
+    },
+    {
+      "query": "Fact-Search fact_dossier.md",
+      "source_file": "fact_dossier.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : fact_dossier.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T15:05:06.884574+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-182-BE_fact_dossier.md": "90d70b157705319f6a358c635267a8e07a5d71ad49f8484a7b4f8691aeeb06dc",
+    "epic_evidence_impl_decisions.md": "ae47c4a6a757a32b252a6c66d8e77cd158fbce87d44547a46a1f6d186260a5ec",
+    "MLOOP-010-BE_evidence.json": "4acd4407e273d0c1520b44b09be360f348dc58d16810273b314c6b67a43ebe2e"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : MLOOP-010-BE_evidence.json, MLOOP-182-BE_fact_dossier.md, epic_evidence_impl_decisions.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 1,
+      "multiplier": 0.73,
+      "score": 0.73,
+      "reason": "partial_richness (1/10)"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "le backfill ne touche **jamais** EPIC 1-9 — périmètre borné à EPIC 10→17 uniquement (18 est neuf, déjà conforme).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "le backfill de 182 **ne doit pas déclencher de blocage Gate 5** sur les packs existants — seul l'audit warning est toléré.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "le backfill structurel est **partiellement déjà fait** — 182 doit compléter (5 champs de parité riches) sans double régénération hasardeuse.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "impossible d'enrichir les packs legacy avec les 5 champs **avant** l'existence du schema (180).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-05",
+      "source_ref": "Dossier de Preuves",
+      "rule_summary": "le backfill doit injecter des citations granulaires D, pas un placeholder vide.",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "MLOOP-010-BE_evidence.json",
+    "MLOOP-182-BE_fact_dossier.md",
+    "epic_evidence_impl_decisions.md",
+    "evidence_packs_legacy.md",
+    "fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Backfill d'un pack EPIC-10→17",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Pack legacy EPIC 1-9 résiste au backfill",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Source absente pour un pack",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Interruption mid-backfill",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Fact-dossier corrompu",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rapport de backfill traçable",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-182-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-182-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.73,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [
+    {
+      "decision_id": "DEC-d78d5203b57b4d54",
+      "category": "testing",
+      "rationale": "Cycle TDD complet scellé (red exit=2 -> green exit=0) sur tests/test_evidence_backfill.py",
+      "alternatives_considered": [
+        "test unitaire isolé (rejeté: granularité par cycle complet retenue, Grill Déc. 2)"
+      ],
+      "timestamp": "2026-09-23T12:24:16.854304+00:00"
+    }
+  ],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "tdd_cycle": {
+    "red": {
+      "story_id": "MLOOP-182-BE",
+      "test_file": "tests/test_evidence_backfill.py",
+      "test_sha256": "f2b7ba5289b47fb2dd5e8d58d574c7f54bd0b3a72e9b9e400a0d3deb519243d3",
+      "exit_code": 2,
+      "failure_signature": "1 error in 0.16s",
+      "timestamp_utc": "2026-09-23T12:16:53.395754+00:00"
+    },
+    "green": {
+      "story_id": "MLOOP-182-BE",
+      "test_file": "tests/test_evidence_backfill.py",
+      "test_sha256": "80cb8032cfc60a72ade70076757ae8b44517b40e6044955eb5c28aef810e3479",
+      "source_file": "src/pipelines/evidence_backfill.py",
+      "source_sha256": "190ec386231bcaec5acf9f744ba57a8d0a1d5215fa577e8a6f4733f09f0da3fa",
+      "exit_code": 0,
+      "duration_seconds": 0.617,
+      "ast_passed": true,
+      "timestamp_utc": "2026-09-23T12:33:59.134644+00:00"
+    }
+  },
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:43.130501",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-182-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:43.130501",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 52.0,
+      "overall_trust": 83.2
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de scénario en cas de timeout API ou de coupure réseau inopinée.",
+      "Absence de protection contre la soumission multiple rapide (anti-rebond).",
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [
+      {
+        "pillar_target": "Pilier 3 : Résilience & Mode Dégradé",
+        "issue_addressed": "Manque de couverture sur la perte de réseau et les indisponibilités de service.",
+        "suggested_gherkin": "### Pilier 3 : Résilience\nÉtant donné une perte de connectivité réseau ou un timeout de l'API (503)\nQuand l'utilisateur déclenche l'action principale\nAlors le système affiche une notification d'avertissement 'Service temporairement indisponible'\nEt les données saisies sont préservées dans l'état local sans perte ni rechargement.",
+        "rationale": "Garantit que l'application ne crash pas en cas de coupure réseau inopinée et protège la saisie utilisateur."
+      },
+      {
+        "pillar_target": "Pilier 3 : Résilience (Concurrence)",
+        "issue_addressed": "Absence de protection contre la double-soumission rapide.",
+        "suggested_gherkin": "### Pilier 3 : Résilience (Anti-Rebond & Concurrence)\nÉtant donné un formulaire en cours de validation\nQuand l'utilisateur effectue un double-clic rapide sur le bouton de soumission\nAlors le bouton est immédiatement désactivé avec un indicateur de chargement\nEt une seule requête de traitement est émise vers l'API.",
+        "rationale": "Évite les écritures dupliquées et les transactions fantômes en base de données."
+      }
+    ],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

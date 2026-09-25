@@ -1,0 +1,138 @@
+{
+  "story_id": "MLOOP-243-FE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-243-FE.md",
+  "timestamp": "2026-09-25T02:01:34.619071+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0202-modularite-interne-agents.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.357638+00:00"
+    },
+    {
+      "query": "Fact-Search 0379-sandbox-confinement.md",
+      "source_file": "0379-sandbox-confinement.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : 0379-sandbox-confinement.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:34.395472+00:00"
+    },
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : SKILL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.453061+00:00"
+    },
+    {
+      "query": "Fact-Search epic_skills_eval_harness.md",
+      "source_file": "epic_skills_eval_harness.md",
+      "sha256": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_skills_eval_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.494657+00:00"
+    },
+    {
+      "query": "Fact-Search skills_eval_summary.json",
+      "source_file": "skills_eval_summary.json",
+      "sha256": "f42bf2c9e4c2489ae9aee3042e5188bf767af443d54354ea619932edb344a1da",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : skills_eval_summary.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:34.507445+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+    "epic_skills_eval_harness.md": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+    "skills_eval_summary.json": "f42bf2c9e4c2489ae9aee3042e5188bf767af443d54354ea619932edb344a1da"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, 0379-sandbox-confinement.md, SKILL.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.525,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "0379-sandbox-confinement.md",
+    "SKILL.md",
+    "epic_skills_eval_harness.md",
+    "skills_eval_summary.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Affichage nominal — 39 skills avec rapport valide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "État vide — rapport absent",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Clic sur une skill — radar mis à jour",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Filtre par verdict FAIL",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-243-FE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-243-FE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.525,
+  "status": "STALE_PENDING_REGENERATION",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

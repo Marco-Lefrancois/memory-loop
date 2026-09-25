@@ -1,0 +1,125 @@
+{
+  "story_id": "MLOOP-313-BE",
+  "jira_key": "MLOOP-313-BE",
+  "file_path": "backlog/stories/MLOOP-313-BE.md",
+  "timestamp": "2026-09-25T09:19:03.496120+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "source_file": "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "sha256": "3adeba417d696ca35dae0d3388fe2151720ac4ada18c304ae17f74581190cf41",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.464496+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-313-BE_fact_dossier.md",
+      "source_file": "MLOOP-313-BE_fact_dossier.md",
+      "sha256": "a85d0c60e8aeb89bde77f824a41de4b455becf089fc6822b6677fdf763df5fe9",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-313-BE_fact_dossier.md) : MLOOP-313-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T09:19:03.464496+00:00"
+    },
+    {
+      "query": "Fact-Search epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "source_file": "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "sha256": "1e721a09b9c9a7de866fc10fe39e359676f46451031fe7e4a5b74933568a0b33",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.477011+00:00"
+    },
+    {
+      "query": "Fact-Search sprint_backlog.md",
+      "source_file": "sprint_backlog.md",
+      "sha256": "55f38f60f6271d24fb8bd42282137448493e9bdae805d7229490be385270e57d",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : sprint_backlog.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T09:19:03.477011+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-313-BE_fact_dossier.md": "a85d0c60e8aeb89bde77f824a41de4b455becf089fc6822b6677fdf763df5fe9",
+    "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md": "3adeba417d696ca35dae0d3388fe2151720ac4ada18c304ae17f74581190cf41",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md": "1e721a09b9c9a7de866fc10fe39e359676f46451031fe7e4a5b74933568a0b33",
+    "sprint_backlog.md": "55f38f60f6271d24fb8bd42282137448493e9bdae805d7229490be385270e57d"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md, MLOOP-313-BE_fact_dossier.md, epic_fsm_anti_hardcoding_and_lifecycle_refactor.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.567,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md",
+    "MLOOP-313-BE_fact_dossier.md",
+    "epic_fsm_anti_hardcoding_and_lifecycle_refactor.md",
+    "sprint_backlog.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Extraction nominale des nouveaux statuts depuis une table Markdown de backlog",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Gestion tolérante des cellules corrompues dans les tableaux",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Purge automatique des répertoires scratch lors du passage à DONE",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Restitution ordonnée des colonnes du Drawer de backlog sans valeur null",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-313-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-313-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.567,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

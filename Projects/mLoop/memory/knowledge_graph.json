@@ -1,0 +1,909 @@
+{
+  "nodes": [
+    {
+      "id": "PostgreSQL",
+      "category": "Database",
+      "properties": {
+        "description": "Systeme de gestion de base de donnees relationnelle PostgreSQL.",
+        "text_chunk": "set env export database_url=postgresql://postgres:postgres@localhost:5436/gbrain_test export anthropic_api_key=sk-ant-."
+      }
+    },
+    {
+      "id": "SQLite",
+      "category": "Database",
+      "properties": {
+        "description": "Base de donnees relationnelle legere stockee localement dans un fichier.",
+        "text_chunk": "* **grounding mloop** : bien que la colocalisation sqlite/fts5 de mloop suive déjà ce principe en local, la dépendance à un produit spécifique (oracle) est non pertinente pour l'architecture souveraine et découplée de mloop."
+      }
+    },
+    {
+      "id": "MySQL",
+      "category": "Database",
+      "properties": {
+        "description": "Systeme de gestion de base de donnees relationnelle MySQL.",
+        "text_chunk": "knowledgesourceselection: basedonthequery’stype,thecoordinatingagentchoosesfromavarietyof retrievaloptions: • structureddatabases: forqueriesrequiringtabulardataaccess,thesystemmayuseatext-to-sql enginethatinteractswithdatabaseslikepostgresqlormysql."
+      }
+    },
+    {
+      "id": "Redis",
+      "category": "Cache",
+      "properties": {
+        "description": "Systeme de stockage de donnees en memoire ultra-rapide utilise comme cache.",
+        "text_chunk": "the fictional corpora are fully made up and free to redistribute."
+      }
+    },
+    {
+      "id": "MongoDB",
+      "category": "Database",
+      "properties": {
+        "description": "Base de donnees orientee documents NoSQL.",
+        "text_chunk": "svg\" alt=\"mongodb\" class=\"logo-module-scss-module__wopj-q__logo\" loading=\"lazy\"/></picture></div></li><li class=\"logowall-module-scss-module__jmofrq__item\"><div class=\"logowall-module-scss-module__jmofrq__target\"><picture class=\"logowall-module-scss-module__jmofrq__logo\"><source srcset=\"https://c..."
+      }
+    },
+    {
+      "id": "FastAPI",
+      "category": "Backend Framework",
+      "properties": {
+        "description": "Framework web moderne et rapide pour concevoir des APIs avec Python 3.8+.",
+        "text_chunk": "it needs to know your framework (express, fastapi, rails) and where routes live."
+      }
+    },
+    {
+      "id": "Flask",
+      "category": "Backend Framework",
+      "properties": {
+        "description": "Micro-framework web leger pour Python.",
+        "text_chunk": "*\" icon=\"flask\">     diagnostic and connection testing   </card> </cardgroup>  ## user events  events related to user authentication, telemetry preferences, and extension lifecycle."
+      }
+    },
+    {
+      "id": "Django",
+      "category": "Backend Framework",
+      "properties": {
+        "description": "Framework web Python complet et structure.",
+        "text_chunk": "on `django-11532` it patched 1 of the 5 files the fix requires and broke 18 previously-passing tests, twice over."
+      }
+    },
+    {
+      "id": "React",
+      "category": "Frontend Library",
+      "properties": {
+        "description": "Bibliotheque JavaScript pour la conception d'interfaces utilisateur reactives.",
+        "text_chunk": "**validité sur des environnements multi-agents asynchrones complexes** :    - les harnais évalués restent des boucles mono-agent de type react ou plan/exec séquentiel."
+      }
+    },
+    {
+      "id": "Vue",
+      "category": "Frontend Framework",
+      "properties": {
+        "description": "Framework JavaScript evolutif pour batir des interfaces utilisateur.",
+        "text_chunk": "double vue & aveu des limites (*admission of limits*)** | `factcheckcertificate` calcule un trust index numérique (0-100%) et liste les contradictions/non-supportés."
+      }
+    },
+    {
+      "id": "Next.js",
+      "category": "Frontend Framework",
+      "properties": {
+        "description": "Framework React avec rendu cote serveur et generation de sites statiques.",
+        "text_chunk": ""
+      }
+    },
+    {
+      "id": "Python",
+      "category": "Programming Language",
+      "properties": {
+        "description": "Langage de programmation oriente objet dynamique et polyvalent.",
+        "text_chunk": "[x] **indexation & clôture** : exécuté `python src/swarm."
+      }
+    },
+    {
+      "id": "JavaScript",
+      "category": "Programming Language",
+      "properties": {
+        "description": "Langage de programmation de scripts principalement utilise cote client.",
+        "text_chunk": "00 (no llm tokens)  ## method 2: openclaw sub-agent (sessions_spawn)  ```javascript sessions_spawn({   task: \"pull my social posts for june 2020 and save as a brain page."
+      }
+    },
+    {
+      "id": "TypeScript",
+      "category": "Programming Language",
+      "properties": {
+        "description": "Sur-ensemble typé de JavaScript developpe par Microsoft.",
+        "text_chunk": "**minions side:** a typescript function that: 1."
+      }
+    },
+    {
+      "id": "C#",
+      "category": "Programming Language",
+      "properties": {
+        "description": "Langage de programmation orienté objet developpe par Microsoft.",
+        "text_chunk": "\u00143��=\u0003ͫ�w9ym�e-�c#z\u0006�� ]�h5, � \u0000��}����s#�\"��4�b'\u001avr_��\u001a\u0013�� � ����\\\u000et\"��ץ��܄\u0001_���3�d8�h����t�~n 7j مaf���c5i\\\u0012n2 \u0007� sb\u000f��\u0010pã\\\"�����j\u0014�1��+�}��p�#�6� �h��^xc�\u0011z � �ᨄ\u000e\u000fx텻kf�w�)ă� }\u0007���۰��`6ǵ\u001aq7�aģ��\u0010u�\u0004>��y��\u00056�;�c�f\\��\u001b� �)d=� �\u0012�-��i)�\u0011)�-�\u0012� n�7���ƚi�ġ��_rv�_c�y1ɲ c��1ƒt\u0018����|\"z�\u000fw\u001a=�\u0000� up�e�g\u0017..."
+      }
+    },
+    {
+      "id": "Docker",
+      "category": "DevOps tool",
+      "properties": {
+        "description": "Plateforme de conteneurisation d'applications.",
+        "text_chunk": "\" - **all numbers are point measurements on garry's laptop** (macos, apple   silicon, local postgres 16 + pgvector in docker)."
+      }
+    },
+    {
+      "id": "Kubernetes",
+      "category": "DevOps tool",
+      "properties": {
+        "description": "Plateforme d'orchestration de conteneurs open-source.",
+        "text_chunk": "io and google's agent substrate argue kubernetes pod lifecycle is the wrong substrate for agent fleets, packing many idle agents per pre-provisioned pod with millisecond boots and snapshot suspend/resume."
+      }
+    },
+    {
+      "id": "Pydantic",
+      "category": "Data Validation",
+      "properties": {
+        "description": "Bibliotheque de validation de donnees et gestion de configurations basee sur les types Python.",
+        "text_chunk": "**mcp-01 (tool injection & schema tampering)** : validation stricte des arguments via schémas pydantic avec rejet immédiat de tout paramètre non déclaré."
+      }
+    },
+    {
+      "id": "Rich",
+      "category": "CLI Styling",
+      "properties": {
+        "description": "Bibliotheque Python pour l'affichage de texte enrichi et de styles dans le terminal.",
+        "text_chunk": "🚀 5 piliers d'amélioration architecturale dérivés pour mloop  ### pilier 1 : `retrievalflightrecorder` (audit d'embranchement & replay test) remplacer le simple logging jsonl par un enregistreur de vol structuré consignant pour chaque tour de recherche : * requête brute et requête enrichie/synony..."
+      }
+    },
+    {
+      "id": "Maestro",
+      "category": "Testing Framework",
+      "properties": {
+        "description": "Framework moderne de tests mobiles et e2e.",
+        "text_chunk": "com/sharpdeveye/maestro  <div align=\"center\">  <picture>   <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/banner."
+      }
+    },
+    {
+      "id": "Pytest",
+      "category": "Testing Library",
+      "properties": {
+        "description": "Framework de test unitaire robuste pour Python.",
+        "text_chunk": "here&rsquo;s what the best-performing files do differently: put commands early: put relevant executable commands in an early section: npm test , npm run build , pytest -v."
+      }
+    },
+    {
+      "id": "MLOOP-150-BE",
+      "category": "Feature",
+      "properties": {
+        "name": "Feature MLOOP-150-BE",
+        "local_id": "",
+        "layer": "api",
+        "file": "MLOOP-150-BE.md",
+        "text_chunk": "---\nid: MLOOP-150-BE\njira_key: MLOOP-150-BE\nepic_key: EPIC-16-DASHBOARD-TOOLING\ntype: backend\ntitle: API REST Archify — Inventaire et Restitution des Diagrammes HTML dans le Dashboard\nlayer: api\nstatus: SHIPPED\ngrill_me: DONE\ninvest_score: 6/6\ndepends_on: []\nblocked_by:\n- MLOOP-145-BE\ncontent_hash: 44e5d5d7dec8a091\n---\n\n# API REST Archify — Inventaire et Restitution des Diagrammes HTML dans le Dashboard\n\n> [!NOTE]\n> Récit Palier 2 consolidé suite à la séance **Grill-Me Micro 1:1** du 2026-09-22 (5 arbitrages verbatim consignés en §5). Dossier de preuves : `memory/evidence/MLOOP-150-BE_fact_dossier.md`.\n\n## 1. Contexte & Value Proposition\n\nLe dashboard mLoop (`python src/swarm.py dashboard`, port 8080) expose déjà les onglets OVERVIEW, PIPELINE, GRAPH & DATABASE, LEGACY. Les diagrammes interactifs générés par **Archify** (`*.architecture.html`, `*.lifecycle.html`) existent sur disque (`tools/archify/showcase/`, `docs/05-assets/`) mais **aucun endpoint ne les sert** (preuve par recherche de code négative : 0 hit `archify` sous `src/dashboard/`). L'agent doit aujourd'hui ouvrir ces fichiers manuellement — hors Cockpit, sans traçabilité.\n\n**Valeur** : consultation souveraine et locale des diagrammes d'architecture directement dans le dashboard, sans exfiltration (zéro serveur externe), alignée sur le pattern sécurité existant de `database.py`.\n\n\n---\n\n## 2. Périmètre\n\n| In Scope | Out of Scope |\n|:---|:---|\n| Router `src/dashboard/routers/archify.py` (endpoints `/api/archify/list`, `/api/archify/html`) | Compilation batch de nouveaux diagrammes (hors requis — seule la compilation à la volée arbitrée est incluse) |\n| Allowlist multi-tenant (racines framework récursives + racines projet résolu) | Modification du runner Archify `tools/archify/archify_runner.py` |\n| Compilation à la volée subprocess (timeout explicite ADR-0369) | Onglet UI Archify (récit MLOOP-151-FE, séparé) |\n| Non-régression `tests/test_dashboard_*.py` | DrawDB (récit MLOOP-152-BE, sépar\n---\n\n## 3. Constats du Dossier de Preuves\n\n1. **Pattern router standardisé** : 7 routers modulaires montés via `app.include_router(...)` dans `server.py` (L69-76) — le router Archify suit le même montage.\n2. **Pattern sécurité répliquable** : `_resolve_secure_db_path` avec `HTTPException(403)` hors allowlist (`database.py` L27-54) — même mécanique pour les artefacts.\n3. **Artefacts existants** : `tools/archify/showcase/mloop-framework.architecture.html`, `tools/archify/showcase/phases/p0-inception.architecture.html`, `docs/05-assets/mloop-framework.architecture.html`, `docs/05-assets/mloop-lifecycle.lifecycle.html`.\n4. **Restitution HTML déjà opérationnelle** : `GET /api/graph/html` sert un fichier local via `HTMLResponse` (`database.py\n---\n\n## 4. Dépendances & Blocages\n\n- `blocked_by: MLOOP-145-BE` — **Conflit SCC Group B** : `src/dashboard/server.py` est modifié par les deux récits (MLOOP-145-BE y instrumente le logging, 20 excepts). Aucun dev avant DONE_TESTED de MLOOP-145-BE.\n- `depends_on: []` — aucune dépendance transverse autre que\n---\n\n## 5. Arbitrages Grill-Me Micro 1:1 (Séance du 2026-09-22)\n\n> ✅ Session Grill-with-Docs tenue (1 question par tour, arbitrages verbatim du PO).\n\n| OQ | Décision Arbitrée |\n|:---|:---|\n| OQ-150-01 | **Allowlist par racines, découverte récursive** : `tools/archify/showcase/`, `docs/05-assets/` — **amendée en clôture de séance** (« archify doit être également disponible pour tous les projets ») ➔ racines `Projects/<projet>/` intégrées (multi-tenant) |\n| OQ-150-02 | **Paramètre `project` actif** : résolution canonique via `resolve_project_canonical_name` (pattern `database.py`) ; l'inventaire couvre le framework ET les artefacts du projet résolu |\n| OQ-150-03 | **Lecture disque directe à chaque appel** — zéro cache (volumétrie < 50 artefacts, fraîcheur garantie) |\n| OQ-150-04 | **Compilation à la volée activée** : si seul le JSON de spec existe, `subprocess` Archify avec `timeout` explicite (ADR-0369) ; échecs couverts au Pilier 3 |\n| OQ-150-05 | **Endpoint unique** pour `*.architecture.html` et `*.lifecycle.html`, discrimination par champ `typ\n---\n\n## Critères d'acceptation\n\n### Opérations Métier & Logique Backend\n\n#### 1. Inventaire Multi-Tenant\n- [ ] `GET /api/archify/list?project=<nom>` agrège les artefacts du framework (racines récursives) et du projet résolu, avec `name`, `type`, `size_bytes`, `relative_path`\n- [ ] Validation anti path-traversal sur 100% des chemins (403 hors allowlist)\n\n#### 2. Restitution & Compilation\n- [ ] `GET /api/archify/html?file=...&project=...` restitue le HTML standalone (200) ; 404 si absent de toutes les racines ; 403 hors allowlist\n- [ ] Compilation subprocess à la volée avec `timeout` explicite si JSON sans HTML ; 500 documenté si échec\n\n#### 3. Non-Régression\n- [ ] Suites `tests/test_dashboard_*.py` existantes passent\n- [ ] Vibe-Check 20/20 après implémentation\n\n### Scénarios de test (Gherkin 4 Piliers)\n\n#### Pilier 1 — Chemin Nominal\n```gherkin\nScénario : Inventaire multi-tenant des artefacts Archify\n  Étant donné des artefacts \"*.architecture.html\" sous \"tools/archify/showcase/\" et \"docs/05-assets/\"\n  Et des artefacts compilés sous \"Projects/<projet>/docs/05-assets/\"\n  Quand \"GET /api/archify/list?project=<projet>\" est appelé\n  Alors la réponse 200 liste chaque artefact avec \"name\", \"type\", \"size_bytes\", \"relative_path\"\n  Et le champ \"type\" vaut \"architecture\" ou \"lifecycle\" selon l'extension\n```\n\n#### Pilier 2 — Exceptions & Rejets\n```gherkin\nScénario : Requête hors allowlist rejetée\n  Étant donné une requête \"GET /api/archify/html?file=../src/state.py\"\n  Quand le chemin est résolu contre les racines allowlistées\n  Alors la réponse est 403 avec un détail explicite\n  Et aucun fichier hors allowlist n'est lu\n\nScénario : Artefact introuvable\n  Étant donné un nom de fichier absent de toutes les racines\n  Quand \"GET /api/archify/html\" est appelé\n  Alors la réponse est 404 avec la commande CLI de compilation suggérée\n```\n\n#### Pilier 3 — Résilience & Mode Dégradé\n```gherkin\nScénario : Compilation à la volée en échec\n  Étant donné un JSON de spec Archify sans HTML compilé\n  Quand \"GET /api/archify/html\" est appelé\n  Alors la compilation subprocess est tentée avec un \"timeout\" explicite\n  Et en cas de timeout ou de code de sortie non nul la réponse est 500 avec la cause loguée\n  Et le serveur reste opérationnel pour les requêtes suivantes\n\nScénario : Anti-rebond sur la compilation à la volée\n  Étant donné une compilation subprocess déjà en cours pour un artefact donné\n  Quand une seconde requête \"GET /api/archify/html\" arrive pour le même artefact\n  Alors une seule compilation est déclenchée (verrou en cours ou attente du résultat existant)\n  Et le bouton de soumission double-clic n'émet pas de second processus\n```\n\n#### Pilier 4 — UX & Observabilité\n```gherkin\nScénario : Inventaire vide et message actionnable\n  Étant donné un projet sans aucun artefact Archify\n  Quand \"GET /api/archify/list?project=<projet>\" est appelé\n  Alors la réponse 200 expose \"total_artifacts\": 0\n  Et le message suggère la commande \"python src/swarm.py archify \n---\n\n## Contrats UI & API Backend → Profil B\n\n### Matrice des Contrats API\n\n| Méthode | Route | Finalité |\n|:---|:---|:---|\n| `GET` | `/api/archify/list?project=<nom>` | Inventaire multi-tenant : artefacts framework (récursif) + artefacts du projet résolu, champ `type` discriminant |\n| `GET` | `/api/archify/html?file=<nom>&project=<nom>` | Restitution HTML standalone ; compilation subprocess à la volée (timeout ADR-0369) si JSON sans HTML |\n| `subprocess` | `tools.archify.archify_runner:run_archify_command` | Compilation à la volée (timeout explicite, code de sortie contrôlé, échec logué) |"
+      }
+    },
+    {
+      "id": "EPIC-16-DASHBOARD-TOOLING",
+      "category": "Epic",
+      "properties": {
+        "name": "Epic EPIC-16-DASHBOARD-TOOLING",
+        "layer": "business"
+      }
+    },
+    {
+      "id": "MLOOP-270-BE",
+      "category": "Feature",
+      "properties": {
+        "name": "Feature MLOOP-270-BE",
+        "local_id": "",
+        "layer": "backend",
+        "file": "MLOOP-270-BE.md",
+        "text_chunk": "---\nid: MLOOP-270-BE\njira_key: MLOOP-270-BE\nepic_key: EPIC-27-LIFECYCLE-STATE-LOCK\ntype: Feature\ntitle: Verrou Anti-Promotion & Journal des Transitions de Statut des Récits\ntags:\n- lifecycle\n- state-machine\n- governance\n- anti-tampering\n- backend\nstatus: DONE_TESTED\nlayer: backend\ninvest_score: 6/6\ngrill_me: DONE\norigin: DIRECT_REQUIREMENT\nsource_ref: INCIDENT-2026-09-24\nmacro_size: M\nblocked_by: []\ncreated_at: '2026-09-24'\nupdated_at: '2026-09-24'\ncontent_hash: 2a9ebdb6790bf2a4\nvalidated_by: Marco\nvalidated_at: \"2026-09-25T12:08:50.485909+00:00\"\n\n---\n\n# Verrou Anti-Promotion & Journal des Transitions de Statut des Récits\n\n---\n\n## Description\n**En tant qu'** Orchestrateur et Product Owner du cycle de vie mLoop,  \n**je veux** que tout changement d'état d'un récit — et a priori toute réécriture de sa ligne d'état en tête de fichier — passe par un écrivain unique soumis au contrôle de la machine à états, laisse une trace append-only rattachée à son auteur et à son horodatage, et que toute promotion vers l'état « prêt pour le développement » soit conditionnée à une approbation humaine nominative,  \n**afin de** garantir qu'aucune promotion vers `READY_FOR_DEV` (ni aucune transition sensible du cycle de vie) ne survienne sans feu vert humain traçable, conformément à `STORY_LIFECYCLE_PROTOCOL.md` §4.\n\n---\n\n## Contexte & Périmètre\n\n### Contexte Métier\nLe cycle de vie des récits distingue les phases d'analyse, où l'IA rédige, découpe et questionne, des phases d'engagement en implémentation, qui exigent un feu vert humain explicite. Le protocole de cycle de vie qualifie toute auto-promotion de l'IA vers l'état « prêt pour le développement » de **faute grave**, mais cette règle n'était jusqu'ici appuyée par aucun contrôle exécutoire : ni verrou d'écriture, ni journal des transitions, ni vérification d'autorité.\n\nLe 24 septembre 2026, un acteur externe a fait basculer quatre récits vers l'état « prêt pour le développement » sans aucune session de validation humaine (13:49:04) ; un agent avait restauré l'état d'origine (13:50:18), mais la promotion a été répétée cinq minutes plus tard (13:54:28). Le même acteur a invoqué quatre contrôles de structure dont aucune trace n'existait sur le disque. En environnement multi-agents où plusieurs sessions travaillent en simultané, ce conflit est structurel plutôt qu'accidentel : la résolution a dû être menée manuellement, rétrogradation puis promotions individuelles avec feu vert traçable.\n\nCe récit institue le garde-fou manquant : une écriture unique et verrouillée des changements d'état, un journal de toutes les transitions rattaché à leur auteur, et un contrôle rétrogradant qui rétablit l'état conforme dès qu'une promotion non autorisée est détectée — sans jamais supprimer un récit.\n\n### In-Scope\n- Écrivain unique des transitions de statut, soumis systématiquement à la validation de la machine à états et protégé par un verrou inter-processus à délai d'attente explicite.\n- Contrôle d'autorité humaine réutilisé pour l'approbation nominative (`story-approve`), seul écrivain des champs d'approbation du frontmatter.\n- Journal dédié append-only des transitions, écrit de façon couplée au récit sous le même verrou : échec du journal ⇒ annulation de la transition.\n- Contrôle rétrogradant double (cohérence journal ↔ ligne d'état, puis présence de l'approbation) avec rétrogradation automatique de toute promotion non autorisée, jamais de suppression.\n- Deux véhicules de signalement : contrôle par-récit dans `struct-check` (nouveau check C13) et contrôle projet-wide dans `vibe-check` (nouveau contrôle ≥ 14).\n- Rétro-équipement contrôlé des récits préexistants sous approbation nominative (`story-backfill`), avec exemptions des récits terminés.\n- Rejeu déterministe de l'incident en test de non-régression (Failure Contract, ADR-0369).\n\n### Out-of-Scope\n- Toute promotion de statut décidée par ce récit : seules les transitions déjà présentes dans la table des transitions autorisées restent légales.\n- Le protocole de cycle de vie lui-même (`STORY_LIFECYCLE_PROTOCOL.md`), qui demeure la SSOT normative — seul son garde-fou machine exécutoire est en jeu.\n- Les bails de fichiers d'exécution de tâches (`claim_lease` / OWNS, [gates.py (Lignes 561-601)](file:///C:/Memory%20Loop/src/core/gates.py)) : mécanisme de verrouillage des actifs à traiter, distinct du verrou de transition d'état.\n- Le journal d'événements de télémétrie existant (`events.jsonl`), best-effort par conception (échec d'écriture avalé — [event_logger.py (Lignes 94-99)](file:///C:/Memory%20Loop/src/utils/event_logger.py)), inutilisable comme preuve.\n- Le suivi de surveillance en temps réel des fichiers (option rejetée au Grill-Me), ainsi que toute surface d'interface utilisateur (réinit 100% gouvernance, zéro écran).\n- Les récits déjà terminés (états `DONE` / `DONE_TESTED`), exemptés de tout rétro-équipement.\n- Le code des applications clientes (herméticité mLoop : seul le framework mLoop est concerné).\n\n---\n\n## Critères d'acceptation\n\n> **Critères mesurables (INVEST 6/6)** :\n> - [ ] **CA-1** — Une réécriture simulée de la ligne d'état en frontmatter est détectée par le contrôle rétrogradant (contre-exemple du fait 4 : le hash de corps seul ne l'attrape pas).\n> - [ ] **CA-2** — Toute transition est rattachable à un auteur, une commande émettrice et un horodatage dans le journal, ou explicitement refusée.\n> - [ ] **CA-3** — Le scénario de re-jeu de l'incident (restauration puis ré-émision de la promotion) ne repasse plus sans marque détectable et aboutit à une rétrogradation.\n> - [ ] **CA-4** — Une revendication de contrôle sans artefact réel sur disque est signalée comme non corroborée.\n> - [ ] **CA-5** — Une transition vers `READY_FOR_DEV` sans approbation humaine nominative est refusée à l'écriture, la commande émettrice restant inchangée.\n> - [ ] **CA-6** — Les 7 couches ADR-0376 sont auditées (plan zéro blindspot approuvé) avant toute modification du cœur mLoop.\n> - [ ] **CA-7** — Aucune promotion de statut en sortie de build : suite de tests verte et récits du projet inchangés hors du périmètre de backfill.\n\n### Opérations Métier & Logique Backend\n\n#### 1. Écriture verrouillée d'une transition — `set_story_status(story_id, target_status, actor, source_cmd)`\n* **Entrée Métier** : identifiant du récit cible, statut d'arrivée souhaité, identifiant de session ou d'agent émetteur (indice d'auteur), nom de la commande émettrice.\n* **Règles d'admissibilité & Validation** : la transition doit appartenir à la table des transitions autorisées ([state_machine.py (Lignes 46-164)](file:///C:/Memory%20Loop/src/pipelines/state_machine.py)) ; toute transition hors table est refusée par `validate_transition()` ([state_machine.py (Lignes 190-203)](file:///C:/Memory%20Loop/src/pipelines/state_machine.py)) ; le passage vers `READY_FOR_DEV` exige que les champs d'approbation aient déjà été posés par la commande d'approbation ; l'obtention du verrou inter-processus doit aboutir dans son délai d'attente ([file_lock.py (Lignes 97-199)](file:///C:/Memory%20Loop/src/utils/file_lock.py)).\n* **Traitement & Algorithme Métier** :\n  1. Acquérir le verrou inter-processus couvrant simultanément le récit et le journal (délai d'attente explicite, conforme ADR-0369).\n  2. Valider la transition contre la table des transitions autorisées.\n  3. Écrire le nouveau statut dans le frontmatter du récit.\n  4. Apposer la ligne correspondante au journal append-only.\n  5. Si l'écriture du journal échoue, annuler la transition et restituer l'état antérieur (tout-ou-rien).\n  6. Libérer le verrou.\n* **Résultat Métier & Mutations** : ligne d'état mise à jour et entrée de journal créée — jamais l'une sans l'autre.\n* **Cas de Rejet Métier** : transition hors table ; verrou non obtenu à échéance du délai ; échec d'écriture du journal ⇒ transition annulée ; tentative de promotion vers `READY_FOR_DEV` sans approbation humaine enregistrée.\n\n#### 2. Approbation humaine nominative — `story-approve --project <p> --story <ID> --approver \"<Nom>\"`\n* **Entrée Métier** : récit à certifier et nom de l'approbateur humain.\n* **Règles d'admissibilité & Validation** : réutilisation du contrôle d'autorité humaine de `validate_gate4_approval()` — rejet des signatures purement machine (`BOT_DISALLOWED_NAMES`) sauf présence d'un mot-clé humain (`HUMAN_KEYWORDS`) ([gate4_validator.py (Lignes 15-16, 71-79)](file:///C:/Memory%20Loop/src/core/gate4_validator.py)) ; approbateur vide refusé.\n* **Traitement & Algorithme Métier** :\n  1. Valider l'autorité humaine de la signature.\n  2. Écrire de façon atomique, sous verrou, les champs d'approbation (`validated_by`, `validated_at`) dans le frontmatter — cette commande est leur **seul écrivain**.\n  3. Apposer l'entrée d'approbation infalsifiable et l'entrée de journal correspondantes.\n* **Résultat Métier & Mutations** : champs d'approbation renseignés et entrée d'approbation au journal, rattachées au nom et à l'horodatage.\n* **Cas de Rejet Métier** : approbateur identifié comme machine sans mention humaine (ex. `agent`, `bot`, `sentinel`) ; approbateur vide ; récit ou statut non éligible.\n\n#### 3. Rétro-équipement contrôlé — `story-backfill --project <p> --approver \"<Nom>\"`\n* **Entrée Métier** : projet cible et nom de l'approbateur humain sous lequel le rétro-équipement est mené.\n* **Règles d'admissibilité & Validation** : sans approbateur nommé, **rien n'est écrit** (zéro fabrication de preuve) ; les récits aux états terminés `DONE` / `DONE_TESTED` sont exemptés (pattern d'exemption existant, [state_machine.py (Lignes 320-325)](file:///C:/Memory%20Loop/src/pipelines/state_machine.py)) ; graduation des sévérités : `WARNING` sur legacy avant rétro-équipement, `BLOCKING` après.\n* **Traitement & Algorithme Métier** :\n  1. Semer le journal des transitions existantes en entrée d'origine `backfill`, sans prétendre reconstituer un auteur inconnu.\n  2. Stomper l'approbation nominative sur les récits encore actifs non terminés.\n  3. Basculer la sévérité du contrôle de cohérence de `WARNING` à `BLOCKING`.\n* **Résultat Métier & Mutations** : journal initialisé et récits actifs rétro-équipés ; récits terminés intacts.\n* **Cas de Rejet Métier** : demande sans approbateur nommé ; récit terminé non conforme tentativement modifié.\n\n#### 4. Contrôle rétrogradant de cohérence — scan « anneau 2 »\n* **Entrée Métier** : projet à auditer, déclenché aux points de gate et à l'amorçage de session.\n* **Règles d'admissibilité & Validation** : réutilisation du pattern « invariant vérifié en parcourant tous les récits » déjà codé ([state_machine.py (Lignes 205-245)](file:///C:/Memory%20Loop/src/pipelines/state_machine.py)) ; double contrôle — (a) cohérence entre la dernière entrée du journal et la ligne d'état courante, (b) présence des champs d'approbation pour tout récit en `READY_FOR_DEV`.\n* **Traitement & Algorithme Métier** :\n  1. Parcourir tous les récits du projet et confronter leur ligne d'état à la dernière entrée du journal.\n  2. Pour chaque écart ou promotion sans approbation, rétrograder automatiquement le récit vers l'état groomé pour forcer un nouvel audit (précédent de sanction déjà codé : [state_machine.py (Lignes 467-499)](file:///C:/Memory%20Loop/src/pipelines/state_machine.py)).\n  3. Consigner la rétrogradation au journal — **jamais de suppression** d'un récit ni d'une entrée.\n* **Résultat Métier & Mutations** : état conforme rétabli, écart tracé, récit toujours présent.\n* **Cas de Rejet Métier** : aucune — le contrôle est déterministe et ne supprime rien ; un échec de lecture d'un récit est journalisé en debug et n'interrompt pas le scan.\n\n#### 5. Véhicules d'exposition — `struct-check` (C13) et contrôle de gouvernance projet-wide\n* **Entrée Métier** : récit ciblé (contrôle par-récit) ou projet entier (contrôle d'amorçage).\n* **Règles d'admissibilité & Validation** : le nouveau check C13 reprend les deux sévérités du linter structurel existant (`BLOCKING` / `WARNING`) et son mode `strict` ([struct_checker.py (Lignes 45-68)](file:///C:/Memory%20Loop/src/pipelines/struct_checker.py)) ; le contrôle projet-wide suit la signature `{check, status: PASS|FAIL}` des contrôles de gouvernance existants (numérotation ≥ 14 à confirmer au registre à l'implémentation) ([_vc_governance.py (Lignes 164-209)](file:///C:/Memory%20Loop/src/pipelines/vibe_check/_vc_governance.py)).\n* **Traitement & Algorithme Métier** :\n  1. Par-récit : signaler en `BLOCKING` un récit en `READY_FOR_DEV` sans approbation nominative (faute grave), et en `WARNING`/`BLOCKING` selon le mode `strict` tout écart journal ↔ ligne d'état.\n  2. Projet-wide : émettre un échec de contrôle pré-vol empêchant la poursuite en cas d'anomalie de gouvernance (pattern du contrôle de saut de phase).\n* **Résultat Métier & Mutations** : rapport `struct-check` enrichi d'un check C13 et rapport `vibe-check` enrichi d'un contrôle de gouvernance supplémentaire.\n* **Cas de Rejet Métier** : anomalie de gouvernance détectée ⇒ contrôle en échec ; récit legacy non encore rétro-équipé ⇒ avertissement gradué, pas de blocage prématuré.\n\n### Contrats d'échange API (Interface Python & CLI)\n\n#### Matrice des Contrats API\n- **OQ-270 (Exemption Zéro Fausse Route)** : Exemption complète de la Matrice des Contrats API réseau — verrouillage et journalisation locale de fichiers Markdown du backlog via CLI mLoop, sans interface HTTP ni route REST distante `[API de soumission à définir]` ; toute exposition future d'API de gestion du cycle de vie est à confirmer dans un récit dédié avec sa propre matrice (ADR-0319).\n\n**Contrats CLI cibles (commandes locales réelles, aucune route inventée)** :\n- **Approbation humaine** : `python src/swarm.py story-approve --project <p> --story <ID> --approver \"<Nom>\"` *(commande à créer — périmètre de ce récit)*\n- **Rétro-équipement** : `python src/swarm.py story-backfill --project <p> --approver \"<Nom>\"` *(commande à créer — périmètre de ce récit)*\n- **Contrôle par-récit** : `python src/swarm.py struct-check --file <STORY_ID>` *(vérification C13 dans le linter existant)*\n- **Contrôle projet-wide** : `python src/swarm.py vibe-check --project <p>` *(nouveau contrôle de gouvernance dans le rapport existant)*\n\n---\n\n## Règles d'affaires\n\n- **Feu vert humain exclusif pour l'engagement** : seule une approbation nominative humaine peut autoriser le passage à l'état « prêt pour le développement » ([STORY_LIFECYCLE_PROTOCOL.md (Ligne 33)](file:///C:/Memory%20Loop/standards/protocols/STORY_LIFECYCLE_PROTOCOL.md)) ; toute tentative de l'IA sans validation humaine explicite est une faute grave ([STORY_LIFECYCLE_PROTOCOL.md (Ligne 101)](file:///C:/Memory%20Loop/standards/protocols/STORY_LIFECYCLE_PROTOCOL.md)) et doit être refusée à l'écriture.\n- **Atomicité tout-ou-rien récit + journal** : une transition n'est acceptée que si les deux écritures aboutissent ; l'échec du journal annule la transition (Failure Contract ADR-0369 §5).\n- **Journal append-only, Zéro Rollback** : aucune entrée du journal n'est jamais supprimée ni réécrite ; l'ordre chronologique constitue la preuve.\n- **Rétrogradation préférée à la suppression** : la sanction d'une promotion non autorisée est une rétrogradation automatique vers l'état groomé (précédent déjà codé dans l'anti-tampering), jamais la suppression d'un récit ni d'une entrée.\n- **Aucun empilement de contrôle** : le nouveau verrou ne doublonne pas un second feu vert sur les statuts déjà couverts par les gates existants du cycle de vie.\n- **Graduation des sévérités** : les récits legacy non encore rétro-équipés déclenchent un avertissement, les récits rétro-équipés déclenchent un blocage.\n- **Zéro fabrication de preuve** : le rétro-équipement sans approbateur nommé n'écrit rien ; l'origine de chaque écriture est enregistrée (`api`, `raw_edit_detected`, `backfill`).\n- **Exemptions des récits terminés** : les récits déjà livrés ou acceptés ne sont ni rétro-équipés ni bloqués.\n- **Gestion des saisies invalides** : approbateur vide ou purement machine refusé, statut d'arrivée hors table refusé, verrou expiré ⇒ échec explicite sans écriture partielle.\n\n---\n\n## Décisions de cadrage Grill-Me 1:1 (Q1-Q6 — toutes Option A, scellées ADR-011)\n\n| Réf | Question tranchée | Option retenue (A) | Ancrage SSOT |\n| :--- | :--- | :--- | :--- |\n| **Q1** | Quel mécanisme de verrouillage ? | **Hybride deux anneaux** : écrivain unique `set_story_status()` (validation de machine à états systématique + verrou inter-processus avec délai) doublé d'un scan rétrogradant ; les bails d'exécution restent hors périmètre. | [file_lock.py (Lignes 97-199)](file:///C:/Memory%20Loop/src/utils/file_lock.py) · [gates.py (Lignes 561-601)](file:///C:/Memory%20Loop/src/core/gates.py) |\n| **Q2** | Comment prouver l'origine humaine d'une promotion ? | `story-approve --approver \"<Nom>\"` réutilise le contrôle d'autorité existant (rejet des noms de machines), seul écrivain des champs d'approbation ; limite admise : forgeabilité locale — la garantie est traçabilité + détection + rétrogradation, pas l'impossibilité cryptographique. | [gate4_validator.py (Lignes 15-16, 71-79)](file:///C:/Memory%20Loop/src/core/gate4_validator.py) |\n| **Q3** | Journal dédié ou journal d'événements existant ? | **Journal dédié append-only** « Zéro Rollback » dans `Projects/<p>/memory/story_transitions.jsonl`, écrit **couplé** au récit sous le même verrou : échec du journal ⇒ transition annulée (le journal d'événements est best-effort, inutilisable comme preuve). | [event_logger.py (Lignes 94-99)](file:///C:/Memory%20Loop/src/utils/event_logger.py) |\n| **Q4** | Périmètre du feu vert : une frontière ou tous les statuts ? | **Feu vert strictement vers `READY_FOR_DEV`** (le protocole ne qualifie que cette frontière), mais **journal de toute transition** ; zéro empilement d'un second contrôle sur les statuts déjà gatés. | [STORY_LIFECYCLE_PROTOCOL.md (Ligne 33)](file:///C:/Memory%20Loop/standards/protocols/STORY_LIFECYCLE_PROTOCOL.md) · [state_machine.py (Lignes 340-345)](file:///C:/Memory%20Loop/src/pipelines/state_machine.py) |\n| **Q5** | Deux véhicules de signalement : par-récit et projet-wide ? | **Double véhicule** : nouveau check `C13` dans `struct-check` (bloquant sur faute grave, avertissement gradué legacy) + nouveau contrôle de gouvernance ≥ 14 dans `vibe-check` ; sanction unique = rétrogradation automatique, **jamais de suppression**. | [struct_checker.py (Lignes 45-68)](file:///C:/Memory%20Loop/src/pipelines/struct_checker.py) · [_vc_governance.py (Lignes 164-209)](file:///C:/Memory%20Loop/src/pipelines/vibe_check/_vc_governance.py) |\n| **Q6** | Rétrocompatibilité : grandfathering ou backfill ? | **Backfill sous approbation nominative** avec origine `backfill`, **zéro fabrication** sans approbateur ; exemptions des récits terminés ; graduation avertissement → blocage après rétro-équipement. Périmètre : 58 récits (21 en brouillon, 16 livrés, 10 testés, 10 prêts, 1 en développement), 0 avec approbation renseignée. | [state_machine.py (Lignes 320-325)](file:///C:/Memory%20Loop/src/pipelines/state_machine.py) |\n\n---\n\n## Definition of Ready (DoR 6/6)\n- [x] **Clarté du besoin & non-ambiguïté** : périmètre borné à l'écriture verrouillée, au journal append-only et au contrôle rétrogradant des transitions.\n- [x] **Architecture & Contrats clarifiés** : mécanisme de verrouillage, journal et contrôle tranchés (Q1-Q6, Option A) ; exemption de contrat réseau OQ-270 formalisée.\n- [x] **Critères d'acceptation 4 Piliers Gherkin** : piliers nominal, exceptions, résilience et UX/observabilité rédigés.\n- [x] **Dépendances identifiées & levées** : aucune dépendance externe ; réutilisation de primitives existantes vérifiée dans le code.\n- [x] **Estimations et découpage validés** : enveloppe macro M (2 à 3 jours), sous plafond modulaire ADR-0202.\n- [x] **Session Grill-Me complétée** : 6 décisions actées (Q1-Q6, Option A) et scellées par ADR-011.\n\n---\n\n## Références\n\n### 1. Preuves Amont & Traçabilité Factuelle\n- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-270-BE_fact_dossier.md`](../../memory/evidence/MLOOP-270-BE_fact_dossier.md) *(15 faits établis, statut `VALIDATED`)*\n\n### 2. Spécifications & Modèles de Données SSOT\n- 🏛️ **ADR de cadrage** : [ADR-011 — Verrou anti-promotion READY_FOR_DEV (EPIC-27)](../../../docs/01-architecture/ADR-011_verrou_anti-promotion_ready_for_dev__epic-27.md)\n- 📜 **Protocole de cycle de vie (SSOT normative)** : [STORY_LIFECYCLE_PROTOCOL.md](file:///C:/Memory%20Loop/standards/protocols/STORY_LIFECYCLE_PROTOCOL.md)\n- 📋 **Épopée de rattachement** : [epic_lifecycle_state_lock.md](../epics/epic_lifecycle_state_lock.md)\n- 🔎 **Brief d'incident** : [EPIC-27_incident_state_lock_brief.md](../../memory/EPIC-27_incident_state_lock_brief.md)\n- ⚙️ **Ancrages code** : [state_machine.py](file:///C:/Memory%20Loop/src/pipelines/state_machine.py) · [file_lock.py](file:///C:/Memory%20Loop/src/utils/file_lock.py) · [gate4_validator.py](file:///C:/Memory%20Loop/src/core/gate4_validator.py) · [struct_checker.py](file:///C:/Memory%20Loop/src/pipelines/struct_checker.py) · [_vc_governance.py](file:///C:/Memory%20Loop/src/pipelines/vibe_check/_vc_governance.py)\n\n---\n\n## Scénarios de test\n\n### Pilier 1 : Nominal (Happy Path — Transition Verrouillée & Journalisée)\n```gherkin\nFonctionnalité: Verrou Anti-Promotion & Journal des Transitions de Statut des Récits\n\n  Scénario: Promotion approuvée puis écrite de façon atomique avec journalisation\n    Étant donné un récit au statut \"READY_FOR_GROOMING\" approuvé par un humain nommé\n    Et que la commande d'approbation a enregistré l'approbateur et l'horodatage\n    Quand l'orchestrateur déclenche le passage à \"READY_FOR_DEV\"\n    Alors la transition est validée par la machine à états\n    Et la ligne d'état et l'entrée de journal sont écrites sous le même verrou\n    Et le journal consigne l'auteur, la commande émettrice, l'origine d'écriture et l'horodatage\n```\n\n### Pilier 2 : Exceptions & Rejets Métier (Anti-Promotion & Autorité)\n```gherkin\nFonctionnalité: Verrou Anti-Promotion & Journal des Transitions de Statut des Récits\n\n  Scénario: Promotion vers READY_FOR_DEV sans approbation humaine\n    Étant donné un récit dont les champs d'approbation sont vides\n    Quand un acteur tente de le faire basculer en \"READY_FOR_DEV\"\n    Alors l'écriture est refusée par l'écrivain unique\n    Et le statut du récit reste inchangé\n\n  Scénario: Signature d'approbation purement machine\n    Étant donné une demande d'approbation portant un nom d'agent sans mention humaine\n    Quand la commande d'approbation valide l'autorité de la signature\n    Alors l'approbation est refusée avec un message explicite\n    Et aucun champ d'approbation n'est écrit\n\n  Scénario: Transition hors de la table des transitions autorisées\n    Étant donné un récit au statut \"DRAFT\"\n    Quand un acteur demande une transition illégale vers cet état\n    Alors la machine à états lève une erreur de transition bloquante\n    Et aucune écriture ni entrée de journal n'est produite\n```\n\n### Pilier 3 : Résilience & Mode Dégradé (Verrou, Concurrence, Échec Journal)\n```gherkin\nFonctionnalité: Verrou Anti-Promotion & Journal des Transitions de Statut des Récits\n\n  Scénario: Contention du verrou entre sessions concurrentes\n    Étant donné deux sessions écrivant simultanément sur le même récit\n    Quand la seconde session n'obtient pas le verrou dans le délai imparti\n    Alors elle échoue explicitement sans laisser d'écriture partielle\n    Et le récit et le journal restement cohérents\n\n  Scénario: Échec d'écriture du journal pendant une transition\n    Étant donné une transition validée dont l'écriture au journal échoue\n    Quand l'écrivain unique détecte l'échec\n    Alors la transition est annulée et l'état antérieur est restauré\n    Et aucune promotion fantôme n'est conservée\n\n  Scénario: Re-jeu d'une promotion déjà restaurée\n    Étant donné un récit rétrogradé après une promotion non autorisée\n    Quand l'acteur externe rejoue la même promotion\n    Alors le contrôle rétrogradant détecte l'écart entre le journal et la ligne d'état\n    Et le récit est rétrogradé automatiquement sans être supprimé\n```\n\n### Pilier 4 : UX & Observabilité (Traçabilité Consultable & Zéro Bruit)\n```gherkin\nFonctionnalité: Verrou Anti-Promotion & Journal des Transitions de Statut des Récits\n\n  Scénario: Consultation du journal des transitions\n    Étant donné un projet dont le journal des transitions contient plusieurs entrées\n    Quand un orchestrateur consulte le journal\n    Alors chaque transition affiche son horodatage, son auteur, son état de départ et d'arrivée et son origine d'écriture\n    Et les entrées sont restituées dans leur ordre chronologique sans lacune\n\n  Scénario: Revendication de contrôle non corroborée\n    Étant donné un acteur affirmant avoir exécuté un contrôle de structure\n    Quand le rapport de contrôle est recherché sur le disque\n    Alors l'absence d'artefact réel est signalée comme non corroborée\n    Et le contrôle concerné apparaît en échec dans le rapport de gouvernance\n\n  Scénario: Rétro-équipement d'un projet legacy sans approbateur\n    Étant donné un projet dont les récits actifs n'ont pas d'approbation renseignée\n    Quand le rétro-équipement est lancé sans approbateur nommé\n    Alors aucune écriture n'est produite\n    Et un avertissement gradué signale les récits en attente, sans bloquer les récits terminés\n```"
+      }
+    },
+    {
+      "id": "EPIC-27-LIFECYCLE-STATE-LOCK",
+      "category": "Epic",
+      "properties": {
+        "name": "Epic EPIC-27-LIFECYCLE-STATE-LOCK",
+        "layer": "business"
+      }
+    },
+    {
+      "id": "MLOOP-310-BE",
+      "category": "Feature",
+      "properties": {
+        "name": "Feature MLOOP-310-BE",
+        "local_id": "",
+        "layer": "backend",
+        "file": "MLOOP-310-BE.md",
+        "text_chunk": "---\nid: MLOOP-310-BE\njira_key: MLOOP-310-BE\nepic_key: EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION\ntype: Feature\ntitle: \"Unification du Modèle d'États StoryStatus & Rétrocompatibilité Tolérante\"\ntags: [core, state, lifecycle, typing, backend]\nstatus: DONE_TESTED\nlayer: backend\ninvest_score: 6/6\ngrill_me: DONE\norigin: DIRECT_REQUIREMENT\nsource_ref: \"ADR-0390-§1\"\nmacro_size: S\nblocked_by: []\ncreated_at: \"2026-09-25T04:35:00Z\"\nupdated_at: \"2026-09-25T04:44:00Z\"\n---\n\n# Unification du Modèle d'États StoryStatus & Rétrocompatibilité Tolérante\n\n---\n\n## Description\n**En tant que** développeur framework et moteur de cycle de vie mLoop,  \n**je veux** disposer d'un modèle d'états `StoryStatus` unifié intégrant `READY_FOR_QA`, `QA_CERTIFIED` et `READY_TO_SHIP` avec un parsing tolérant et sans duplication de chaînes brutes,  \n**afin d'** aligner rigoureusement la taxonomie des récits sur les 5 phases officielles mLoop tout en sanctuarisant la rétrocompatibilité des anciens statuts (`DONE_TESTED`, `SHIPPED`).\n\n---\n\n## Contexte & Périmètre\n\n### Contexte Métier\nLe cycle de vie des récits au sein du framework mLoop structure le travail des agents et des humains en 5 phases universelles (ADR-0375) : Ingest, Plan, Build, Validate, Ship.  \nAuparavant, le noyau d'état (`src/state/_state_core.py`) présentait une dichotomie artificielle entre un mode \"Client\" et un mode \"mLoop\", privant le framework d'états formels pour les phases 4 (Validate / QA) et 5 (Ship). De plus, l'ensemble `_GRILLED_STATUSES` reposait sur des chaînes de caractères littérales déconnectées de l'enum et omettait le statut terminal `SHIPPED`.  \nLors de la session Grill-Me 1:1 du 25/09/2026, le Product Owner a acté le maintien strict de `DONE_TESTED` et `SHIPPED` dans l'énumérateur afin de préserver l'inviolabilité des 91 récits archivés sans migration destructive, tout en intégrant les nouveaux membres requis pour le pipeline moderne.\n\n### In-Scope\n- Ajout des membres d'énumération `READY_FOR_QA`, `QA_CERTIFIED`, `READY_TO_SHIP` dans `StoryStatus` (`src/state/_state_core.py`).\n- Conservation formelle de `DONE_TESTED` et `SHIPPED` au sein de `StoryStatus` pour garantir une compatibilité ascendante sans faille.\n- Remplacement du set de chaînes brutes `_GRILLED_STATUSES` par une collection typée s'appuyant directement sur `StoryStatus` et intégrant les nouveaux statuts ainsi que `SHIPPED` et `DONE`.\n- Sécurisation de la méthode de classe `StoryStatus.from_raw(raw: str)` : normalisation insensible à la casse, gestion des tirets et espaces, et repli défensif fail-open sur `StoryStatus.OPEN`.\n- Alignement des propriétés `grilled` et `jira_sync_eligible` de `SprintBacklogItem`.\n- Enrichissement de la suite de tests unitaires `tests/test_story_status.py`.\n\n### Out-of-Scope\n- Modification de la table de transition FSM `ALLOWED_TRANSITIONS` (couverte par `MLOOP-312-BE`).\n- Nettoyage du hardcoding des verticaux clients dans `state_machine.py` (couvert par `MLOOP-311-BE`).\n- Mise à niveau des expressions régulières de synchronisation Markdown (couverte par `MLOOP-313-BE`).\n- Formalisation normative de l'ADR (couverte par `MLOOP-314-FULL`).\n\n---\n\n## Critères d'acceptation\n\n> **Critères mesurables (INVEST 6/6)** :\n> - [x] **CA-1** — L'enum `StoryStatus` expose explicitement les constantes `READY_FOR_QA`, `QA_CERTIFIED` et `READY_TO_SHIP`.\n> - [x] **CA-2** — L'appel `StoryStatus.from_raw()` parse avec succès toutes les variantes de casse et de formatage des nouveaux statuts (ex: `\"ready-for-qa\"` ➔ `StoryStatus.READY_FOR_QA`).\n> - [x] **CA-3** — `StoryStatus.from_raw(\"DONE_TESTED\")` retourne exactement `StoryStatus.DONE_TESTED` sans mutation sémantique.\n> - [x] **CA-4** — `StoryStatus.from_raw(\"SHIPPED\")` retourne exactement `StoryStatus.SHIPPED`.\n> - [x] **CA-5** — `_GRILLED_STATUSES` intègre `READY_FOR_QA`, `QA_CERTIFIED`, `READY_TO_SHIP`, `DONE` et `SHIPPED`.\n> - [x] **CA-6** — Pour un `SprintBacklogItem` instancié avec un de ces nouveaux statuts, `item.grilled` et `item.jira_sync_eligible` retournent `True`.\n> - [x] **CA-7** — 100% des tests de `tests/test_story_status.py` sont au vert sans régression sur les statuts historiques.\n\n### Opérations Métier & Logique Backend\n\n#### 1. Parsing & Normalisation — `StoryStatus.from_raw(raw: str) -> StoryStatus`\n* **Entrée Métier** : Chaîne brute issue du frontmatter YAML d'un fichier de récit ou d'une cellule de table Markdown.\n* **Règles d'admissibilité & Validation** : Entrée non nulle ; si vide ou inconnue, repli déterministe sur `StoryStatus.OPEN`.\n* **Traitement & Algorithme Métier** :\n  1. Nettoyage des espaces de tête et queue (`strip()`).\n  2. Passage en majuscules (`upper()`).\n  3. Remplacement des espaces et tirets par des underscores (`replace(\" \", \"_\").replace(\"-\", \"_\")`).\n  4. Résolution de l'instance d'enum correspondante. En cas de `ValueError`, retour de `StoryStatus.OPEN`.\n* **Résultat Métier & Mutations** : Instance typée de `StoryStatus`.\n* **Cas de Rejet Métier** : Aucun crash (fail-open garanti).\n\n#### 2. Évaluation de Maturation — `SprintBacklogItem.grilled` et `jira_sync_eligible`\n* **Entrée Métier** : Instance de `SprintBacklogItem`.\n* **Règles d'admissibilité & Validation** : Le statut du récit doit appartenir à `_GRILLED_STATUSES`.\n* **Traitement & Algorithme Métier** : Vérification de présence du statut dans la collection `_GRILLED_STATUSES`.\n* **Résultat Métier & Mutations** : Booléen `True` si post-Gate 2, `False` sinon.\n* **Cas de Rejet Métier** : Récits en `DRAFT`, `OPEN`, `IN_ANALYZE`, `IN_PLAN`, `ON_HOLD`, `ERROR` retournent `False`.\n\n---\n\n## Parcours Interactif & API\n\n### Contrats d'Échange API (Backend / Services)\n\n#### Matrice des Contrats API\n- **OQ-310 (Exemption Zéro Fausse Route)** : Exemption complète de la Matrice des Contrats API réseau — composant de modélisation d'état pur en mémoire Python (`src/state/_state_core.py`), sans interface HTTP ni route REST distante `[API de soumission à définir]` ; toute interaction s'effectue via les types Python internes `StoryStatus` et `SprintBacklogItem` (ADR-0319).\n\n---\n\n## Règles d'affaires\n\n- **Inviolabilité de l'Historique des Récits** : Les statuts historiques `DONE_TESTED` et `SHIPPED` doivent continuer d'être reconnus et manipulés sans altération pour garantir l'intégrité des 91 récits archivés de mLoop.\n- **Fail-Open au Parsing de Statut** : Tout statut inconnu ou corrompu dans un fichier Markdown doit retomber silencieusement sur `StoryStatus.OPEN` afin de ne jamais bloquer le démarrage de l'orchestrateur.\n- **Cohérence des Statuts Post-Grooming** : Dès qu'un récit entre en phase de développement ou de qualification (`IN_DEV`, `READY_FOR_QA`, `QA_CERTIFIED`, `READY_TO_SHIP`, `DONE`), il est considéré comme \"grillé\" et éligible à la réconciliation Jira.\n\n---\n\n## Références\n\n### 1. Preuves Amont & Traçabilité Factuelle\n- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-310-BE_fact_dossier.md`](../../memory/evidence/MLOOP-310-BE_fact_dossier.md)\n- ⚖️ **Épopée Cadre** : [`backlog/epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md`](../epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md)\n\n### 2. Spécifications & Modèles de Données SSOT\n- 🏛️ **Noyau d'État SSOT** : [`src/state/_state_core.py`](../../../src/state/_state_core.py)\n- 📜 **Protocole de Cycle de Vie** : [`standards/protocols/STORY_LIFECYCLE_PROTOCOL.md`](../../../standards/protocols/STORY_LIFECYCLE_PROTOCOL.md)\n- 📜 **Décision d'Architecture** : [ADR-0390 — Harmonisation Cycle de Vie 5 Phases](../../standards/adr-system/0390-harmonisation-cycle-de-vie-recits-5-phases.md)\n\n---\n\n## Scénarios de test\n\n```gherkin\n# language: fr\nFonctionnalité: Unification du Modèle d'États StoryStatus & Rétrocompatibilité Tolérante\n\n  # CHEMIN NOMINAL (Happy Path & Nouveaux Statuts)\n  Scénario: Résolution nominale des nouveaux statuts du cycle 5 phases\n    Étant donné une chaîne de caractères représentant un nouveau statut \"READY_FOR_QA\", \"QA_CERTIFIED\" ou \"READY_TO_SHIP\"\n    Quand StoryStatus.from_raw est invoqué avec cette chaîne\n    Alors l'énumérateur correspondant est retourné\n    Et un élément de backlog associé à ce statut possède la propriété grilled à Vrai\n    Et cet élément est déclaré éligible à la synchronisation Jira\n\n  # EXCEPTIONS & TOLÉRANCE DE FORMATAGE (Règles d'affaires)\n  Scénario: Normalisation tolérante de variantes textuelles avec casse et séparateurs\n    Étant donné une chaîne de caractères brute comportant des minuscules, des espaces ou des tirets comme \"ready for qa\" ou \"qa-certified\"\n    Quand StoryStatus.from_raw est invoqué avec cette variante\n    Alors le statut est normalisé et résolu sans erreur vers l'énumérateur cible\n    Et aucune exception n'est levée\n\n  # RÉSILIENCE TECHNIQUE & RÉTROCOMPATIBILITÉ (Anciens Récits, Délai d'attente et Concurrence)\n  Scénario: Préservation stricte des statuts historiques DONE_TESTED et SHIPPED sous concurrence\n    Étant donné un récit historique du backlog archivé portant le statut \"DONE_TESTED\" ou \"SHIPPED\"\n    Et plusieurs threads accédant simultanément au parsing sans délai d'attente excessif ni timeout\n    Quand StoryStatus.from_raw parse ce statut\n    Alors StoryStatus.DONE_TESTED ou StoryStatus.SHIPPED est strictement retourné\n    Et l'historique des 91 récits archivés n'est pas altéré\n    Et la propriété grilled reste à Vrai\n\n  # UX & FAIL-OPEN (Statuts inconnus, données partielles et valeurs nulles)\n  Scénario: Repli défensif fail-open sur valeur de statut corrompue, champ vide ou valeur null\n    Étant donné une entrée constituée d'un champ vide, de données partielles ou d'une valeur null\n    Quand StoryStatus.from_raw est exécuté\n    Alors le statut par défaut StoryStatus.OPEN est retourné\n    Et le système poursuit son traitement sans interrompre l'orchestrateur\n    Et aucun jeton ou token expiré d'authentification n'interfère avec ce calcul local\n```\n"
+      }
+    },
+    {
+      "id": "EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION",
+      "category": "Epic",
+      "properties": {
+        "name": "Epic EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION",
+        "layer": "business"
+      }
+    },
+    {
+      "id": "MLOOP-311-BE",
+      "category": "Feature",
+      "properties": {
+        "name": "Feature MLOOP-311-BE",
+        "local_id": "",
+        "layer": "backend",
+        "file": "MLOOP-311-BE.md",
+        "text_chunk": "---\nid: MLOOP-311-BE\njira_key: MLOOP-311-BE\nepic_key: EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION\ntype: Technical_Debt\ntitle: \"Assainissement Anti-Hardcoding de state_machine.py (Verticaux, TTL & Arborescence)\"\ntags: [core, fsm, anti-hardcoding, refactoring, backend]\nstatus: DONE_TESTED\nlayer: backend\ninvest_score: 6/6\ngrill_me: DONE\norigin: DIRECT_REQUIREMENT\nsource_ref: \"ADR-0391-§2\"\nmacro_size: M\nblocked_by: [MLOOP-310-BE]\ncreated_at: \"2026-09-25T04:35:00Z\"\nupdated_at: \"2026-09-25T05:07:00Z\"\n---\n\n# Assainissement Anti-Hardcoding de state_machine.py (Verticaux, TTL & Arborescence)\n\n---\n\n## Description\n**En tant qu'** architecte du framework mLoop,  \n**je veux** purger tous les résidus hardcodés dans `src/pipelines/state_machine.py` (verticaux clients `FOOD/COMMERCE/SANTE`, constantes TTL dupliquées et divergentes, chemins en dur, chaînes magiques),  \n**afin de** garantir que le moteur de Machine à États soit rigoureusement générique, souverain et conforme aux standards de gouvernance SSOT (`ProjectLayout`).\n\n---\n\n## Contexte & Périmètre\n\n### Contexte Métier\nLe moteur de machine à états `src/pipelines/state_machine.py` est le garant de l'intégrité du cycle de vie des récits dans mLoop. L'audit contradictoire du 25/09/2026 a mis en évidence des fuites métiers critiques :\n1. Une liste codée en dur de verticaux d'un ancien client (`[\"FOOD\", \"COMMERCE\", \"SANTE\"]`) à la ligne 263 pour localiser les revues Sentinel.\n2. Une double déclaration contradictoire de `DEFAULT_TTL_CYCLES` (3 en ligne 22 vs 5 en ligne 174).\n3. L'usage de chaînes de caractères littérales pour vérifier les statuts dans les gardes C9, Sentinel et Anti-Tampering, au lieu des énumérateurs de `StoryStatus`.\nLors du Macro-Grill du 25/09/2026, le PO a validé la résolution dynamique relative à `self.stories_path` et la centralisation SSOT du TTL adossée aux variables d'environnement.\n\n### In-Scope\n- Éradication intégrale des chaînes `\"FOOD\"`, `\"COMMERCE\"`, `\"SANTE\"` dans `validate_sentinel_approval` au profit d'une résolution relative dynamique : sous-dossier miroir sous `reviews/`, repli à la racine de `reviews/`, puis recherche récursive `rglob`.\n- Élimination de la duplication de `DEFAULT_TTL_CYCLES` : suppression de la ligne 22 et centralisation unique en ligne 174 via `int(os.getenv(\"MLOOP_DEFAULT_TTL_CYCLES\", \"5\"))`.\n- Remplacement des chemins codés en dur par les constantes canoniques de `ProjectLayout`.\n- Remplacement des tuples de chaînes littérales de statuts dans `validate_fact_dossier_gate`, `validate_content_integrity` et `validate_single_in_analyze` par des comparaisons typées s'appuyant sur `StoryStatus`.\n\n### Out-of-Scope\n- Modification de la matrice des transitions autorisées (couverte par `MLOOP-312-BE`).\n- Modification des parsers de synchronisation Markdown (couverte par `MLOOP-313-BE`).\n\n---\n\n## Critères d'acceptation\n\n> **Critères mesurables (INVEST 6/6)** :\n> - [x] **CA-1** — Zéro occurrence de `\"FOOD\"`, `\"COMMERCE\"` ou `\"SANTE\"` dans `src/pipelines/state_machine.py`.\n> - [x] **CA-2** — La méthode `validate_sentinel_approval` localise avec succès les revues Rubber Duck qu'elles soient à la racine ou dans un sous-dossier modulaire (ex: `backlog/stories/CORE/`).\n> - [x] **CA-3** — Une seule définition de `DEFAULT_TTL_CYCLES` subsiste dans le fichier, configurable via la variable d'environnement `MLOOP_DEFAULT_TTL_CYCLES` (valeur par défaut : 5).\n> - [x] **CA-4** — Les gardes `validate_fact_dossier_gate` et `validate_content_integrity` vérifient les statuts via les énumérateurs `StoryStatus`.\n> - [x] **CA-5** — `validate_single_in_analyze` utilise `StoryStatus.IN_ANALYZE.value` au lieu d'une chaîne magique en dur.\n> - [x] **CA-6** — Aucun test existant sous `tests/test_state_machine_c9_gate.py` et `tests/test_story_guard.py` n'est régressé.\n\n### Opérations Métier & Logique Backend\n\n#### 1. Résolution Dynamique de Revue — `_resolve_review_file(story_file: Path) -> Optional[Path]`\n* **Entrée Métier** : Chemin `Path` du fichier de récit cible.\n* **Règles d'admissibilité & Validation** : Le fichier de récit doit exister sous `self.stories_path`.\n* **Traitement & Algorithme Métier** :\n  1. Extraire le nom de tige du récit (`story_stem`).\n  2. Calculer le chemin relatif du parent par rapport à `self.stories_path`.\n  3. Vérifier l'existence du fichier miroir `self.reviews_path / rel_parent / f\"rubber_duck_{story_stem}.md\"`.\n  4. Si absent, vérifier l'existence à la racine `self.reviews_path / f\"rubber_duck_{story_stem}.md\"`.\n  5. Si absent, exécuter une recherche récursive de secours via `self.reviews_path.rglob()`.\n* **Résultat Métier & Mutations** : Chemin `Path` du rapport de revue trouvé, ou `None`.\n* **Cas de Rejet Métier** : Si aucun rapport n'est trouvé, `validate_sentinel_approval` lève `StateTransitionError`.\n\n---\n\n## Parcours Interactif & API\n\n### Contrats d'Échange API (Backend / Services)\n\n#### Matrice des Contrats API\n- **OQ-311 (Exemption Zéro Fausse Route)** : Exemption complète de la Matrice des Contrats API réseau — refactorisation interne du moteur Python de machine à états (`src/pipelines/state_machine.py`), sans interface HTTP ni route REST distante `[API de soumission à définir]` ; exposition interne via la classe `StateMachineEngine` (ADR-0319).\n\n---\n\n## Règles d'affaires\n\n- **Souveraineté Générique du Framework** : Le cœur mLoop ne doit héberger aucune chaîne magique, marqueur ou nom de client spécifique. Toute catégorisation doit être déduite de la topologie réelle des dossiers.\n- **SSOT des Paramètres de Dépréciation** : Le cycle de vie des récits obéit à un TTL unique dont la valeur par défaut est 5 cycles, surchargeable par variable d'environnement pour les tests de charge.\n\n---\n\n## Références\n\n### 1. Preuves Amont & Traçabilité Factuelle\n- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-311-BE_fact_dossier.md`](../../memory/evidence/MLOOP-311-BE_fact_dossier.md)\n- ⚖️ **Épopée Cadre** : [`backlog/epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md`](../epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md)\n\n### 2. Spécifications & Modèles de Données SSOT\n- 🏛️ **Moteur de Machine à États** : [`src/pipelines/state_machine.py`](../../../src/pipelines/state_machine.py)\n- 📜 **Topologie Projet** : [`src/core/layout.py`](../../../src/core/layout.py)\n- 📜 **Décision d'Architecture** : [ADR-0391 — Harmonisation Cycle de Vie 5 Phases](../../standards/adr-system/0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md)\n\n---\n\n## Scénarios de test\n\n```gherkin\n# language: fr\nFonctionnalité: Assainissement Anti-Hardcoding de state_machine.py\n\n  # CHEMIN NOMINAL (Happy Path & Résolution Miroir)\n  Scénario: Résolution nominale d'un rapport de revue dans un sous-dossier modulaire\n    Étant donné un récit situé dans un sous-dossier \"backlog/stories/CORE/story.md\"\n    Et un rapport de revue présent sous \"backlog/reviews/CORE/rubber_duck_story.md\"\n    Quand validate_sentinel_approval est invoqué\n    Alors le fichier de revue est correctement résolu sans erreur\n    Et aucune mention de client en dur n'intervient dans la résolution\n\n  # EXCEPTIONS & REJETS (Absence de rapport)\n  Scénario: Rejet avec message d'erreur clair si aucun rapport de revue n'existe\n    Étant donné un récit valide ne disposant d'aucun rapport Rubber Duck\n    Quand validate_sentinel_approval est exécuté\n    Alors une exception StateTransitionError est levée\n    Et le message d'erreur indique précisément la commande à exécuter\n\n  # RÉSILIENCE TECHNIQUE (Fallback récursif et délai d'attente)\n  Scénario: Résolution par recherche récursive de secours sous contrainte de performance\n    Étant donné un rapport de revue déplacé dans une sous-arborescence profonde\n    Quand validate_sentinel_approval cherche le fichier\n    Alors la recherche récursive rglob localise le rapport sans délai d'attente excessif ni timeout\n    Et la transition est validée\n\n  # UX & OBSERVABILITÉ (TTL unifié et variables d'environnement)\n  Scénario: Configuration du TTL via variable d'environnement sans valeur null\n    Étant donné la variable d'environnement MLOOP_DEFAULT_TTL_CYCLES définie à \"7\"\n    Quand le module state_machine est chargé\n    Alors DEFAULT_TTL_CYCLES prend la valeur entière 7 sans valeur null ni champ vide\n    Et le système trace l'initialisation conforme dans les journaux sans token expiré\n```\n"
+      }
+    },
+    {
+      "id": "MLOOP-312-BE",
+      "category": "Feature",
+      "properties": {
+        "name": "Feature MLOOP-312-BE",
+        "local_id": "",
+        "layer": "backend",
+        "file": "MLOOP-312-BE.md",
+        "text_chunk": "---\nid: MLOOP-312-BE\njira_key: MLOOP-312-BE\nepic_key: EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION\ntype: Feature\ntitle: \"Graphe de Transitions Déterministe & Auto-Clôture Gate 5 sans Validation Humaine\"\ntags: [core, fsm, lifecycle, gates, automation, backend]\nstatus: DONE_TESTED\nlayer: backend\ninvest_score: 6/6\ngrill_me: DONE\norigin: DIRECT_REQUIREMENT\nsource_ref: \"ADR-0391-§3\"\nmacro_size: M\nblocked_by: [MLOOP-310-BE, MLOOP-311-BE]\ncreated_at: \"2026-09-25T04:35:00Z\"\nupdated_at: \"2026-09-25T05:08:00Z\"\n---\n\n# Graphe de Transitions Déterministe & Auto-Clôture Gate 5 sans Validation Humaine\n\n---\n\n## Description\n**En tant qu'** orchestrateur du cycle de vie mLoop,  \n**je veux** un graphe `ALLOWED_TRANSITIONS` aligné sur le flux déterministe à 5 phases (`IN_DEV ➔ READY_FOR_QA ➔ QA_CERTIFIED ➔ DONE`) et une Gate 5 entièrement automatisée (`requires_human: False`) sans confirmation humaine redondante lorsque tous les feux sont au vert,  \n**afin de** fluidifier la chaîne d'intégration continue, éliminer les blocages manuels superflus et respecter le principe Zero Fluff.\n\n---\n\n## Contexte & Périmètre\n\n### Contexte Métier\nL'ancienne machine à états mLoop comportait une contradiction logique majeure : autoriser la transition directe de `IN_DEV` à `DONE_TESTED` avant même que la suite de qualification de sprint (Phase 4 : VALIDATE) ne soit jouée. De plus, la Gate 5 (Phase 5 : SHIP & SYNC) imposait jusqu'alors une validation humaine manuelle (`requires_human: True`), obligeant l'humain à valider passivement une livraison alors que 100% des tests pré-vol, linters et contrôles de sécurité étaient déjà automatisés et verts.  \nLors du Macro-Grill du 25/09/2026, le PO a acté le nouveau flux unifié, la rétrogradation directe vers `IN_DEV` en cas d'échec de la qualification QA, et la clôture 100% autonome de la Gate 5 vers `DONE`.\n\n### In-Scope\n- Mise à jour du graphe canonique `ALLOWED_TRANSITIONS` dans `src/pipelines/state_machine.py` :\n  - `READY_FOR_DEV` ➔ `[IN_DEV, IN_REVIEW, ON_HOLD]`\n  - `IN_DEV` ➔ `[READY_FOR_QA, DONE_TESTED, IN_REVIEW, ON_HOLD, ERROR]` (maintien passerelle `DONE_TESTED`)\n  - `READY_FOR_QA` ➔ `[QA_CERTIFIED, IN_DEV, IN_REVIEW, ON_HOLD, ERROR]` (rétrogradation directe vers `IN_DEV`)\n  - `QA_CERTIFIED` ➔ `[READY_TO_SHIP, DONE, SHIPPED, IN_REVIEW, IN_DEV]`\n  - `READY_TO_SHIP` ➔ `[DONE, SHIPPED, IN_REVIEW]`\n  - `DONE` et `SHIPPED` ➔ `[IN_REVIEW, IN_ANALYZE]` (réouverture exceptionnelle)\n- Mise à jour de `GATE_DEFINITIONS[5][\"requires_human\"] = False` dans `src/core/lifecycle/_lc_models.py`.\n- Autorisation de l'auto-clôture vers `DONE` par l'agent/pipeline de release lorsque le bilan pré-vol est vierge de tout échec (0 FAIL).\n\n### Out-of-Scope\n- Refactorisation des expressions régulières de parsing du backlog (couverte par `MLOOP-313-BE`).\n- Rédaction de l'ADR formelle (couverte par `MLOOP-314-FULL`).\n\n---\n\n## Critères d'acceptation\n\n> **Critères mesurables (INVEST 6/6)** :\n> - [x] **CA-1** — La transition `IN_DEV ➔ READY_FOR_QA` est autorisée par la FSM sans erreur.\n> - [x] **CA-2** — La transition `READY_FOR_QA ➔ QA_CERTIFIED` est autorisée par la FSM suite au passage de `validate-sprint`.\n> - [x] **CA-3** — En cas d'échec de la certification QA, la transition rétrograde `READY_FOR_QA ➔ IN_DEV` est autorisée.\n> - [x] **CA-4** — La transition `QA_CERTIFIED ➔ DONE` est autorisée de manière 100% autonome par la FSM.\n> - [x] **CA-5** — `GATE_DEFINITIONS[5][\"requires_human\"]` est configuré à `False`.\n> - [x] **CA-6** — Tout saut illégitime (ex: `DRAFT ➔ READY_FOR_QA` ou `IN_ANALYZE ➔ DONE`) lève immédiatement `StateTransitionError`.\n\n### Opérations Métier & Logique Backend\n\n#### 1. Validation de Transition — `validate_transition(current_status, target_status)`\n* **Entrée Métier** : Statut d'origine et statut de destination souhaité.\n* **Règles d'admissibilité & Validation** : La paire `(current_status, target_status)` doit appartenir à `ALLOWED_TRANSITIONS`.\n* **Traitement & Algorithme Métier** :\n  1. Résoudre les énumérateurs `StoryStatus`.\n  2. Vérifier la présence de `target_status` dans la liste autorisée pour `current_status`.\n  3. Si la transition est absente, lever `StateTransitionError` avec journalisation explicite.\n* **Résultat Métier & Mutations** : Autorisation de passage de statut.\n* **Cas de Rejet Métier** : Sauts de phase non autorisés.\n\n---\n\n## Parcours Interactif & API\n\n### Contrats d'Échange API (Backend / Services)\n\n#### Matrice des Contrats API\n- **OQ-312 (Exemption Zéro Fausse Route)** : Exemption complète de la Matrice des Contrats API réseau — moteur de graphe de transitions et règles de validation de portes internes (`src/pipelines/state_machine.py`, `src/core/lifecycle/_lc_models.py`), sans interface HTTP ni route REST distante `[API de soumission à définir]` (ADR-0319).\n\n---\n\n## Règles d'affaires\n\n- **Séquentialité Inviolable des 5 Phases** : Un récit ne peut sauter une phase canonique. Il doit obligatoirement être certifié par la QA (Phase 4) avant d'être éligible à la clôture finale `DONE` (Phase 5).\n- **Zero Fluff Delivery** : Dès lors que tous les tests unitaires, d'intégration, de sécurité et d'intégrité sont au vert, l'auto-livraison ne requiert aucune approbation humaine manuelle.\n\n---\n\n## Références\n\n### 1. Preuves Amont & Traçabilité Factuelle\n- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-312-BE_fact_dossier.md`](../../memory/evidence/MLOOP-312-BE_fact_dossier.md)\n- ⚖️ **Épopée Cadre** : [`backlog/epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md`](../epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md)\n\n### 2. Spécifications & Modèles de Données SSOT\n- 🏛️ **Moteur de Machine à États** : [`src/pipelines/state_machine.py`](../../../src/pipelines/state_machine.py)\n- 📜 **Modèles de Cycle de Vie** : [`src/core/lifecycle/_lc_models.py`](../../../src/core/lifecycle/_lc_models.py)\n- 📜 **Décision d'Architecture** : [ADR-0391 — Harmonisation Cycle de Vie 5 Phases](../../standards/adr-system/0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md)\n\n---\n\n## Scénarios de test\n\n```gherkin\n# language: fr\nFonctionnalité: Graphe de Transitions Déterministe & Auto-Clôture Gate 5 sans Validation Humaine\n\n  # CHEMIN NOMINAL (Happy Path & Clôture 5 Phases)\n  Scénario: Déroulement nominal complet du cycle des 5 phases jusqu'à la clôture automatique\n    Étant donné un récit au statut READY_FOR_DEV\n    Quand le récit progresse successivement par IN_DEV, READY_FOR_QA et QA_CERTIFIED\n    Alors chaque transition intermédiaire est autorisée sans blocage\n    Et le passage final de QA_CERTIFIED à DONE s'effectue automatiquement sans exiger de confirmation humaine\n\n  # EXCEPTIONS & REJETS (Sauts illégitimes)\n  Scénario: Rejet immédiat d'un saut de phase illicite\n    Étant donné un récit au statut DRAFT ou IN_ANALYZE\n    Quand une transition directe vers DONE ou READY_FOR_QA est tentée\n    Alors une exception StateTransitionError est levée\n    Et le statut du récit demeure inchangé\n\n  # RÉSILIENCE TECHNIQUE (Rétrogradation directe sur échec QA)\n  Scénario: Rétrogradation directe de READY_FOR_QA vers IN_DEV lors d'un échec de test\n    Étant donné un récit au statut READY_FOR_QA soumis à la qualification QA\n    Quand les tests de non-régression subissent un échec ou un timeout\n    Alors la FSM autorise la rétrogradation immédiate vers IN_DEV sans délai d'attente\n    Et le développeur peut corriger le code sans réouvrir une session Sentinel\n\n  # UX & OBSERVABILITÉ (Audit de Gate 5 autonome)\n  Scénario: Validation de Gate 5 autonome sans blocage de nom d'agent ni champ vide\n    Étant donné la suite de validation pré-vol exécutée avec 100% de succès\n    Quand Gate 5 est évaluée\n    Alors requires_human est évalué à Faux sans valeur null ni champ vide\n    Et la transition vers DONE est scellée dans les journaux sans token expiré\n```\n"
+      }
+    },
+    {
+      "id": "MLOOP-313-BE",
+      "category": "Feature",
+      "properties": {
+        "name": "Feature MLOOP-313-BE",
+        "local_id": "",
+        "layer": "backend",
+        "file": "MLOOP-313-BE.md",
+        "text_chunk": "---\nid: MLOOP-313-BE\njira_key: MLOOP-313-BE\nepic_key: EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION\ntype: Feature\ntitle: \"Harmonisation Multi-Couches des Consommateurs (_sync_backlog, wikifix, scratch_prune, Dashboard)\"\ntags: [sync, wikifix, dashboard, scrapers, consumers, backend]\nstatus: DONE_TESTED\nlayer: backend\ninvest_score: 6/6\ngrill_me: DONE\norigin: DIRECT_REQUIREMENT\nsource_ref: \"ADR-0391-§4\"\nmacro_size: M\nblocked_by: [MLOOP-310-BE, MLOOP-312-BE]\ncreated_at: \"2026-09-25T04:35:00Z\"\nupdated_at: \"2026-09-25T05:10:00Z\"\n---\n\n# Harmonisation Multi-Couches des Consommateurs (_sync_backlog, wikifix, scratch_prune, Dashboard)\n\n---\n\n## Description\n**En tant qu'** ingénieur d'intégration mLoop,  \n**je veux** aligner tous les consommateurs de statuts du framework (`_sync_backlog_parser.py`, `wikifix_core.py`, `scratch_prune.py`, `dashboard/routers/backlog.py`) sur le nouveau vocabulaire à 5 phases,  \n**afin d'** éviter toute désynchronisation, troncature de statuts dans les tables Markdown, blocage INVEST indu ou désordre d'affichage dans le Dashboard.\n\n---\n\n## Contexte & Périmètre\n\n### Contexte Métier\nL'introduction des nouveaux statuts (`READY_FOR_QA`, `QA_CERTIFIED`, `READY_TO_SHIP`, `DONE`) et la sanctuarisation de `DONE_TESTED` et `SHIPPED` impactent de multiples composants périphériques qui analysent ou consomment les statuts :\n1. Le parser de tables Markdown de `sprint_backlog.md` (`_sync_backlog_parser.py`), dont l'expression régulière `STATUS_VOCAB_RE` ignorait les nouveaux termes et risquait d'en tronquer la lecture.\n2. Le moteur d'intégrité WikiFix (`wikifix_core.py`), qui doit considérer les nouveaux statuts dans ses filtres de tolérance INVEST.\n3. La commande de nettoyage des sessions scratch (`scratch_prune.py`), qui doit purger les artefacts dès que le statut terminal `DONE` est atteint.\n4. L'API du Dashboard (`dashboard/routers/backlog.py`), dont l'ordre des colonnes `STATUS_ORDER` doit refléter la chaîne canonique des 5 phases.\n\n### In-Scope\n- Mise à niveau de `STATUS_VOCAB_RE` dans `src/pipelines/sync/_sync_backlog_parser.py` : intégration de `READY_FOR_QA`, `QA_CERTIFIED`, `READY_TO_SHIP`, `SHIPPED` avec tri dégressif par longueur de chaîne.\n- Intégration des nouveaux statuts dans `src/pipelines/wikifix_core.py` :\n  - Gardes de contenu et Sentinel (L101–130).\n  - Expression régulière `_tolerated` (L202) pour ne pas bloquer sur INVEST.\n- Mise à jour de `src/commands/handlers/scratch_prune.py` : ajout de `DONE` et `QA_CERTIFIED` dans `terminal_statuses`.\n- Mise à jour de `src/dashboard/routers/backlog.py` : ajustement de la liste `STATUS_ORDER`.\n\n### Out-of-Scope\n- Refactorisation du modèle de données Pydantic (couvert par `MLOOP-310-BE`).\n- Rédaction des spécifications normatives (couverte par `MLOOP-314-FULL`).\n\n---\n\n## Critères d'acceptation\n\n> **Critères mesurables (INVEST 6/6)** :\n> - [x] **CA-1** — Un récit portant `READY_FOR_QA` ou `QA_CERTIFIED` dans la colonne Statut de `sprint_backlog.md` est fidèlement extrait sans troncature par `parse_backlog_status_maps()`.\n> - [x] **CA-2** — `wikifix` audite les projets sans lever d'erreur INVEST sur les récits en `READY_FOR_QA` ou `QA_CERTIFIED`.\n> - [x] **CA-3** — La commande `scratch_prune` détecte le statut `DONE` comme terminal et purge les artefacts de travail temporaires associés.\n> - [x] **CA-4** — Le Dashboard organise les colonnes du Drawer selon la séquence canonique : `DRAFT ➔ IN_ANALYZE ➔ READY_FOR_GROOMING ➔ READY_FOR_DEV ➔ IN_DEV ➔ READY_FOR_QA ➔ QA_CERTIFIED ➔ DONE`.\n> - [x] **CA-5** — Aucun test de `tests/test_sync_sprint_backlog.py` n'est régressé.\n\n### Opérations Métier & Logique Backend\n\n#### 1. Parsing Robuste de Statut — `_sync_backlog_parser.STATUS_VOCAB_RE`\n* **Entrée Métier** : Cellule texte de statut issue de `sprint_backlog.md`.\n* **Règles d'admissibilité & Validation** : Reconnaissance exacte des 15 statuts autorisés mLoop.\n* **Traitement & Algorithme Métier** : Compilation d'une regex ordonnée par longueur décroissante pour garantir que `READY_FOR_QA` ne soit pas tronqué en `READY_FOR_DEV` ou ignoré.\n* **Résultat Métier & Mutations** : Extraction sans ambiguïté du statut SSOT.\n* **Cas de Rejet Métier** : Statuts invalides ignorés par le parser.\n\n---\n\n## Parcours Interactif & API\n\n### Contrats d'Échange API (Backend / Services)\n\n#### Matrice des Contrats API\n- **OQ-313 (Exemption Zéro Fausse Route)** : Exemption complète de la Matrice des Contrats API réseau — harmonisation interne des parsers Markdown, scripts de purge et ordonnancement de routeurs locaux (`src/pipelines/sync/_sync_backlog_parser.py`, `src/pipelines/wikifix_core.py`, `src/commands/handlers/scratch_prune.py`), sans interface HTTP ni route REST distante `[API de soumission à définir]` (ADR-0319).\n\n---\n\n## Règles d'affaires\n\n- **Non-Régression de Parsing Markdown** : Les séparateurs et balises textuelles dans les tables de sprint backlog doivent pouvoir accueillir les statuts longs sans corruption de parsing.\n- **Cycle de Vie du Scratch Space** : Les artefacts de session ne doivent pas encombrer le stockage une fois que le récit atteint un état d'achèvement (`DONE`, `SHIPPED`).\n\n---\n\n## Références\n\n### 1. Preuves Amont & Traçabilité Factuelle\n- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-313-BE_fact_dossier.md`](../../memory/evidence/MLOOP-313-BE_fact_dossier.md)\n- ⚖️ **Épopée Cadre** : [`backlog/epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md`](../epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md)\n\n### 2. Spécifications & Modèles de Données SSOT\n- 🏛️ **Parser de Backlog** : [`src/pipelines/sync/_sync_backlog_parser.py`](../../../src/pipelines/sync/_sync_backlog_parser.py)\n- 📜 **Moteur WikiFix** : [`src/pipelines/wikifix_core.py`](../../../src/pipelines/wikifix_core.py)\n- 📜 **Décision d'Architecture** : [ADR-0391 — Harmonisation Cycle de Vie 5 Phases](../../standards/adr-system/0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md)\n\n---\n\n## Scénarios de test\n\n```gherkin\n# language: fr\nFonctionnalité: Harmonisation Multi-Couches des Consommateurs\n\n  # CHEMIN NOMINAL (Happy Path & Parsing Backlog)\n  Scénario: Extraction nominale des nouveaux statuts depuis une table Markdown de backlog\n    Étant donné un fichier sprint_backlog.md contenant des lignes avec \"READY_FOR_QA\" et \"QA_CERTIFIED\"\n    Quand parse_backlog_status_maps analyse le document\n    Alors les statuts complets sont extraits sans troncature\n    Et la cartographie des statuts est fidèlement synchronisée\n\n  # EXCEPTIONS & REJETS (Statuts non reconnus)\n  Scénario: Gestion tolérante des cellules corrompues dans les tableaux\n    Étant donné une cellule de statut corrompue dans le sprint backlog\n    Quand le parser de synchronisation lit la ligne\n    Alors le motif est ignoré sans lever d'exception bloquante\n    Et les autres récits valides de la table sont correctement parsés\n\n  # RÉSILIENCE TECHNIQUE (Purge sans délai d'attente ni concurrence)\n  Scénario: Purge automatique des répertoires scratch lors du passage à DONE\n    Étant donné un récit qui atteint le statut terminal DONE\n    Quand scratch_prune est exécuté\n    Alors les artefacts de travail temporaires associés sont purgés sans délai d'attente ni timeout\n    Et aucun blocage de fichier concurrent n'interrompt le nettoyage\n\n  # UX & OBSERVABILITÉ (Ordonnancement du Dashboard sans champ vide)\n  Scénario: Restitution ordonnée des colonnes du Drawer de backlog sans valeur null\n    Étant donné un appel au routeur de backlog du Dashboard\n    Quand la liste ordonnée des récits est générée\n    Alors les colonnes respectent l'ordre séquentiel des 5 phases sans valeur null ni champ vide\n    Et le journal trace la génération réussie sans token expiré\n```\n"
+      }
+    },
+    {
+      "id": "MLOOP-314-FULL",
+      "category": "Feature",
+      "properties": {
+        "name": "Feature MLOOP-314-FULL",
+        "local_id": "",
+        "layer": "fullstack",
+        "file": "MLOOP-314-FULL.md",
+        "text_chunk": "---\nid: MLOOP-314-FULL\njira_key: MLOOP-314-FULL\nepic_key: EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION\ntype: Feature\ntitle: \"Formalisation Normative ADR-0391, Mise à Jour SSOT & Harnais de Certification E2E\"\ntags: [standards, adr, lifecycle, certification, qa, fullstack]\nstatus: DONE_TESTED\nlayer: fullstack\ninvest_score: 6/6\ngrill_me: DONE\norigin: DIRECT_REQUIREMENT\nsource_ref: \"ADR-0391-§5\"\nmacro_size: M\nblocked_by: [MLOOP-310-BE, MLOOP-311-BE, MLOOP-312-BE, MLOOP-313-BE]\ncreated_at: \"2026-09-25T04:35:00Z\"\nupdated_at: \"2026-09-25T05:18:00Z\"\n---\n\n# Formalisation Normative ADR-0391, Mise à Jour SSOT & Harnais de Certification E2E\n\n---\n\n## Description\n**En tant que** Lead Architect et garant de la conformité mLoop,  \n**je veux** formaliser l'ADR-0391, mettre à niveau `STORY_LIFECYCLE_PROTOCOL.md` et enrichir le harnais de tests déterministe pour certifier la machine à états de bout en bout,  \n**afin d'** ancrer définitivement la règle d'immuabilité des récits `DONE`, l'auto-livraison Gate 5 sans validation humaine superflue, et garantir zéro régression sur l'écosystème.\n\n---\n\n## Contexte & Périmètre\n\n### Contexte Métier\nL'aboutissement de l'épopée EPIC-31 nécessite d'inscrire durablement les nouvelles règles dans le marbre des standards souverains de mLoop :\n1. Rédaction de l'**ADR-0391** (évitant la collision avec l'ADR-0390 existante sur Fact-Search).\n2. Alignement du protocole opérationnel SSOT [`STORY_LIFECYCLE_PROTOCOL.md`](../../../standards/protocols/STORY_LIFECYCLE_PROTOCOL.md) sur le graphe déterministe des 5 phases.\n3. Actualisation des modèles de sprint backlog et de la règle de responsabilité.\n4. Couverture E2E par les suites de tests unitaires et d'intégration garantissant la conformité intégrale du framework (1638+ tests au vert).\n\n### In-Scope\n- **Rédaction de l'ADR-0391** : formalisation des décisions actées (nouveau cycle à 5 paliers, auto-clôture Gate 5 si tout vert, immuabilité stricte des récits `DONE`, éradication du hardcoding).\n- **Mise à jour normative de `standards/protocols/STORY_LIFECYCLE_PROTOCOL.md`** : schéma des 5 phases, tableau des responsabilités et règles de déclenchement.\n- **Mise à jour des gabarits** : `standards/blueprints/sprint_backlog_template.md` et `project_sprint_backlog_template.md`.\n- **Alignement de la légende** dans `Projects/mLoop/backlog/sprint_backlog.md` (§ Règle de responsabilité).\n- **Enrichissement de la suite de tests** :\n  - `tests/test_story_status.py` : tests complets du nouveau flux, éligibilité Jira/grilled, et levée d'exceptions sur transitions illicites.\n  - `tests/test_sync_sprint_backlog.py` : tests d'extraction et de synchronisation des nouveaux statuts dans les tables Markdown.\n  - `tests/test_state_machine_c9_gate.py` : vérification que Gate C9 s'applique de manière déterministe sur `READY_FOR_QA` et `QA_CERTIFIED`.\n- **Validation globale** : exécution de la suite complète de 1638+ tests avec 100% de réussite.\n\n### Out-of-Scope\n- Altération ou migration destructive des 91 récits archivés.\n\n---\n\n## Critères d'acceptation\n\n> **Critères mesurables (INVEST 6/6)** :\n> - [x] **CA-1** — Le fichier `standards/adr-system/0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md` est formalisé selon le gabarit officiel.\n> - [x] **CA-2** — `STORY_LIFECYCLE_PROTOCOL.md` reflète sans ambiguïté le flux des 5 phases et l'auto-livraison Gate 5.\n> - [x] **CA-3** — Tous les tests de `tests/test_story_status.py` sont au vert.\n> - [x] **CA-4** — Tous les tests de `tests/test_sync_sprint_backlog.py` sont au vert.\n> - [x] **CA-5** — La suite complète de tests mLoop s'exécute à 100% avec succès sans régression.\n\n### Opérations Métier & Logique Backend\n\n#### 1. Certification E2E du Cycle de Vie\n* **Entrée Métier** : Suite de tests pytest du framework.\n* **Règles d'admissibilité & Validation** : 0 test échoué, 0 régression.\n* **Traitement & Algorithme Métier** : Exécution systématique des scénarios de test nominaux, d'exception, de résilience et d'intégrité de la FSM.\n* **Résultat Métier & Mutations** : Rapports de test certifiés.\n* **Cas de Rejet Métier** : Tout échec unitaire bloque le passage à Gate 4.\n\n---\n\n## Parcours Interactif & API\n\n### Contrats d'Échange API (Backend / Services)\n\n#### Matrice des Contrats API\n- **OQ-314 (Exemption Zéro Fausse Route)** : Exemption complète de la Matrice des Contrats API réseau — formalisation documentaire ADR, mise à niveau de protocoles normatifs et harnais de certification pytest (`standards/adr-system/`, `standards/protocols/`, `tests/`), sans interface HTTP ni route REST distante `[API de soumission à définir]` (ADR-0319).\n\n---\n\n## Règles d'affaires\n\n- **Immuabilité Absolue des Récits DONE** : Un récit scellé au statut `DONE` est un incrément inviolable. Tout travail ultérieur prend la forme d'un nouveau ticket `BUG` ou `HOTFIX`.\n- **SSOT Normatif Incontestable** : `STORY_LIFECYCLE_PROTOCOL.md` et les ADRs constituent la source unique de vérité régissant les comportements des agents et des humains.\n\n---\n\n## Références\n\n### 1. Preuves Amont & Traçabilité Factuelle\n- 📂 **Dossier de Preuves Factuelles** : [`memory/evidence/MLOOP-314-FULL_fact_dossier.md`](../../memory/evidence/MLOOP-314-FULL_fact_dossier.md)\n- ⚖️ **Épopée Cadre** : [`backlog/epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md`](../epics/epic_fsm_anti_hardcoding_and_lifecycle_refactor.md)\n\n### 2. Spécifications & Modèles de Données SSOT\n- 🏛️ **Protocoles Normatifs** : [`standards/protocols/STORY_LIFECYCLE_PROTOCOL.md`](../../../standards/protocols/STORY_LIFECYCLE_PROTOCOL.md)\n- 📜 **Décision d'Architecture** : [ADR-0391 — Harmonisation Cycle de Vie 5 Phases](../../standards/adr-system/0391-harmonisation-cycle-de-vie-recits-5-phases-fsm.md)\n\n---\n\n## Scénarios de test\n\n```gherkin\n# language: fr\nFonctionnalité: Formalisation Normative ADR-0391 & Certification E2E\n\n  # CHEMIN NOMINAL (Happy Path & Documentation Normative)\n  Scénario: Publication conforme de l'ADR-0391 et alignement du protocole\n    Étant donné le fichier ADR-0391 rédigé sous standards/adr-system/\n    Quand les validateurs de documentation parcourent les standards\n    Alors le document respecte le gabarit officiel sans lien rompu\n    Et STORY_LIFECYCLE_PROTOCOL.md expose fidèlement le graphe des 5 phases\n\n  # EXCEPTIONS & REJETS (Détection de non-conformité)\n  Scénario: Détection et rejet de toute tentative d'altération d'un récit scellé DONE\n    Étant donné un récit existant portant le statut DONE\n    Quand un script ou un agent tente d'en modifier le statut sans passer par un bug\n    Alors la FSM bloque la transition\n    Et un rappel à la règle d'immuabilité est consigné\n\n  # RÉSILIENCE TECHNIQUE (Exécution de la suite complète sous timeout strict)\n  Scénario: Exécution de la suite complète de 1638+ tests sans régression\n    Étant donné le harnais de tests automatisés pytest\n    Quand l'ensemble des suites unitaires et d'intégration est exécuté\n    Alors 100% des tests passent avec succès sans délai d'attente ni timeout\n    Et aucun faux positif n'est remonté\n\n  # UX & OBSERVABILITÉ (Légende de backlog sans champ vide)\n  Scénario: Alignement de la légende du sprint backlog sans valeur null\n    Étant donné le fichier sprint_backlog.md\n    Quand un lecteur consulte la section Règle de responsabilité\n    Alors les 5 phases et les rôles associés sont explicités sans valeur null ni champ vide\n    Et la table est parfaitement synchronisée sans token expiré\n```\n"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "PostgreSQL",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "PostgreSQL",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "Redis",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "MySQL",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "MongoDB",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "SQLite",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "React",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "TypeScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "Kubernetes",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "PostgreSQL",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "SQLite",
+      "target": "Redis",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MySQL",
+      "target": "Redis",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MySQL",
+      "target": "MongoDB",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MySQL",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MySQL",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MySQL",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MySQL",
+      "target": "Kubernetes",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MySQL",
+      "target": "PostgreSQL",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Redis",
+      "target": "React",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Redis",
+      "target": "MongoDB",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Redis",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Redis",
+      "target": "Flask",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Redis",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Redis",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Redis",
+      "target": "Kubernetes",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MongoDB",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MongoDB",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MongoDB",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MongoDB",
+      "target": "Kubernetes",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "FastAPI",
+      "target": "React",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "FastAPI",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "FastAPI",
+      "target": "Flask",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "FastAPI",
+      "target": "Rich",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Flask",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Flask",
+      "target": "Django",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Flask",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Flask",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Flask",
+      "target": "C#",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Django",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Django",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Django",
+      "target": "C#",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "React",
+      "target": "TypeScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "React",
+      "target": "Vue",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "React",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "React",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "React",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Vue",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Vue",
+      "target": "TypeScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Vue",
+      "target": "Python",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "TypeScript",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "Pydantic",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "Rich",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "JavaScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "C#",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "Kubernetes",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Python",
+      "target": "Pytest",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "JavaScript",
+      "target": "TypeScript",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "JavaScript",
+      "target": "C#",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "JavaScript",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "JavaScript",
+      "target": "Python",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "JavaScript",
+      "target": "Rich",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "JavaScript",
+      "target": "React",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "JavaScript",
+      "target": "Kubernetes",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "TypeScript",
+      "target": "C#",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "TypeScript",
+      "target": "Python",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "TypeScript",
+      "target": "JavaScript",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "TypeScript",
+      "target": "Docker",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Docker",
+      "target": "Kubernetes",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Kubernetes",
+      "target": "Docker",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Kubernetes",
+      "target": "PostgreSQL",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Kubernetes",
+      "target": "MySQL",
+      "type": "dependency",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "Rich",
+      "target": "Maestro",
+      "type": "association",
+      "properties": {
+        "client_library": ""
+      }
+    },
+    {
+      "source": "MLOOP-150-BE",
+      "target": "EPIC-16-DASHBOARD-TOOLING",
+      "type": "BELONGS_TO_EPIC",
+      "properties": {}
+    },
+    {
+      "source": "MLOOP-270-BE",
+      "target": "EPIC-27-LIFECYCLE-STATE-LOCK",
+      "type": "BELONGS_TO_EPIC",
+      "properties": {}
+    },
+    {
+      "source": "MLOOP-310-BE",
+      "target": "EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION",
+      "type": "BELONGS_TO_EPIC",
+      "properties": {}
+    },
+    {
+      "source": "MLOOP-311-BE",
+      "target": "EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION",
+      "type": "BELONGS_TO_EPIC",
+      "properties": {}
+    },
+    {
+      "source": "MLOOP-312-BE",
+      "target": "EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION",
+      "type": "BELONGS_TO_EPIC",
+      "properties": {}
+    },
+    {
+      "source": "MLOOP-313-BE",
+      "target": "EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION",
+      "type": "BELONGS_TO_EPIC",
+      "properties": {}
+    },
+    {
+      "source": "MLOOP-314-FULL",
+      "target": "EPIC-31-FSM-ANTI-HARDCODING-AND-LIFECYCLE-HARMONIZATION",
+      "type": "BELONGS_TO_EPIC",
+      "properties": {}
+    }
+  ]
+}

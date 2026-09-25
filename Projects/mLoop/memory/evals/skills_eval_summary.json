@@ -1,0 +1,2034 @@
+{
+  "total_skills": 39,
+  "average_score": 94.6,
+  "pass_threshold": 80.0,
+  "passed": 39,
+  "warning": 0,
+  "failed": 0,
+  "results": [
+    {
+      "skill_name": "api-and-interface-design",
+      "file_path": ".agents\\skills\\api-and-interface-design\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 50,
+        "body_tokens": 961,
+        "line_count": 61,
+        "byte_size": 3592
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\api-and-interface-design\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-APIANDINTE-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-APIANDINTE-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-APIANDINTE-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "archify",
+      "file_path": ".agents\\skills\\archify\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 93.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 59,
+        "body_tokens": 1164,
+        "line_count": 73,
+        "byte_size": 4427
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\archify\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-ARCHIFY-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-ARCHIFY-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-ARCHIFY-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "azure-devops-lifecycle",
+      "file_path": ".agents\\skills\\azure-devops-lifecycle\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 92.0,
+      "scores_breakdown": {
+        "trigger_clarity": 15.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 74,
+        "body_tokens": 2201,
+        "line_count": 134,
+        "byte_size": 8285
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Ajouter une clause de déclenchement explicite ('Use when...') dans la description."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\azure-devops-lifecycle\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-AZUREDEVOP-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-AZUREDEVOP-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-AZUREDEVOP-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "blindspot-scan",
+      "file_path": ".agents\\skills\\blindspot-scan\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 85.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 15.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 59,
+        "body_tokens": 897,
+        "line_count": 47,
+        "byte_size": 3372
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle.",
+        "Spécifier le comportement attendu en cas d'erreur, d'outil absent ou de données manquantes."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\blindspot-scan\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-BLINDSPOTS-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-BLINDSPOTS-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-BLINDSPOTS-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "browser-testing-with-devtools",
+      "file_path": ".agents\\skills\\browser-testing-with-devtools\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 57,
+        "body_tokens": 924,
+        "line_count": 60,
+        "byte_size": 3443
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\browser-testing-with-devtools\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-BROWSERTES-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-BROWSERTES-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-BROWSERTES-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "calibrate",
+      "file_path": ".agents\\skills\\calibrate\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 82.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 15.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 55,
+        "body_tokens": 604,
+        "line_count": 37,
+        "byte_size": 2311
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Formaliser des règles prescriptives et garde-fous explicites.",
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "code-simplification",
+      "file_path": ".agents\\skills\\code-simplification\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 56,
+        "body_tokens": 883,
+        "line_count": 59,
+        "byte_size": 3296
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\code-simplification\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-CODESIMPLI-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-CODESIMPLI-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-CODESIMPLI-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "constraint-driven-development",
+      "file_path": ".agents\\skills\\constraint-driven-development\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 52,
+        "body_tokens": 941,
+        "line_count": 60,
+        "byte_size": 3503
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\constraint-driven-development\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-CONSTRAINT-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-CONSTRAINT-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-CONSTRAINT-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "context-engineering",
+      "file_path": ".agents\\skills\\context-engineering\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 48,
+        "body_tokens": 897,
+        "line_count": 58,
+        "byte_size": 3347
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\context-engineering\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-CONTEXTENG-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-CONTEXTENG-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-CONTEXTENG-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "debugging-and-error-recovery",
+      "file_path": ".agents\\skills\\debugging-and-error-recovery\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 90.4,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 13.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 87,
+        "body_tokens": 2849,
+        "line_count": 300,
+        "byte_size": 10913
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Ancrer le skill sur les chemins canoniques du dépôt (standards/, Projects/, memory/)."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\debugging-and-error-recovery\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-DEBUGGINGA-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-DEBUGGINGA-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-DEBUGGINGA-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "design-taste",
+      "file_path": ".agents\\skills\\design-taste\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 85.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 15.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 50,
+        "body_tokens": 1444,
+        "line_count": 90,
+        "byte_size": 5493
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle.",
+        "Spécifier le comportement attendu en cas d'erreur, d'outil absent ou de données manquantes."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\design-taste\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-DESIGNTAST-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-DESIGNTAST-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-DESIGNTAST-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "doubt-driven-development",
+      "file_path": ".agents\\skills\\doubt-driven-development\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 51,
+        "body_tokens": 971,
+        "line_count": 63,
+        "byte_size": 3617
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\doubt-driven-development\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-DOUBTDRIVE-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-DOUBTDRIVE-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-DOUBTDRIVE-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "github-ops",
+      "file_path": ".agents\\skills\\github-ops\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 92.0,
+      "scores_breakdown": {
+        "trigger_clarity": 15.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 69,
+        "body_tokens": 1716,
+        "line_count": 144,
+        "byte_size": 6474
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Ajouter une clause de déclenchement explicite ('Use when...') dans la description."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\github-ops\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-GITHUBOPS-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-GITHUBOPS-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-GITHUBOPS-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "graph-engineering",
+      "file_path": ".agents\\skills\\graph-engineering\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 56,
+        "body_tokens": 503,
+        "line_count": 36,
+        "byte_size": 1926
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\graph-engineering\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-GRAPHENGIN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-GRAPHENGIN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-GRAPHENGIN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "grill",
+      "file_path": ".agents\\skills\\grill\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 94,
+        "body_tokens": 3879,
+        "line_count": 182,
+        "byte_size": 14791
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\grill\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-GRILL-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-GRILL-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-GRILL-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "handoff",
+      "file_path": ".agents\\skills\\handoff\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 82.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 15.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 50,
+        "body_tokens": 758,
+        "line_count": 35,
+        "byte_size": 2886
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Formaliser des règles prescriptives et garde-fous explicites.",
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "herdr-orchestration",
+      "file_path": ".agents\\skills\\herdr-orchestration\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 92.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 15.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 64,
+        "body_tokens": 1192,
+        "line_count": 78,
+        "byte_size": 4520
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Structurer le corps du skill avec des étapes séquentielles ordonnées (1, 2, 3)."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\herdr-orchestration\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-HERDRORCHE-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-HERDRORCHE-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-HERDRORCHE-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "impeccable",
+      "file_path": ".agents\\skills\\impeccable\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 85.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 15.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 65,
+        "body_tokens": 1497,
+        "line_count": 73,
+        "byte_size": 5703
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Structurer le corps du skill avec des étapes séquentielles ordonnées (1, 2, 3).",
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\impeccable\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-IMPECCABLE-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-IMPECCABLE-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-IMPECCABLE-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "incremental-implementation",
+      "file_path": ".agents\\skills\\incremental-implementation\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 85.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 15.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 92,
+        "body_tokens": 2576,
+        "line_count": 252,
+        "byte_size": 9834
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle.",
+        "Spécifier le comportement attendu en cas d'erreur, d'outil absent ou de données manquantes."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\incremental-implementation\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-INCREMENTA-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-INCREMENTA-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-INCREMENTA-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "markitdown",
+      "file_path": ".agents\\skills\\markitdown\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 92.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 15.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 69,
+        "body_tokens": 610,
+        "line_count": 28,
+        "byte_size": 2290
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Formaliser des règles prescriptives et garde-fous explicites."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\markitdown\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-MARKITDOWN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-MARKITDOWN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-MARKITDOWN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "obsidian-canvas",
+      "file_path": ".agents\\skills\\obsidian-canvas\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 92.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 69,
+        "body_tokens": 796,
+        "line_count": 76,
+        "byte_size": 3018
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "performance-optimization",
+      "file_path": ".agents\\skills\\performance-optimization\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 79,
+        "body_tokens": 1169,
+        "line_count": 84,
+        "byte_size": 4400
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\performance-optimization\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-PERFORMANC-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-PERFORMANC-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-PERFORMANC-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "plan",
+      "file_path": ".agents\\skills\\plan\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 67,
+        "body_tokens": 2646,
+        "line_count": 132,
+        "byte_size": 10048
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\plan\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-PLAN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-PLAN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-PLAN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "planning-and-task-breakdown",
+      "file_path": ".agents\\skills\\planning-and-task-breakdown\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 85.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 15.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 64,
+        "body_tokens": 2832,
+        "line_count": 257,
+        "byte_size": 10564
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle.",
+        "Spécifier le comportement attendu en cas d'erreur, d'outil absent ou de données manquantes."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\planning-and-task-breakdown\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-PLANNINGAN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-PLANNINGAN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-PLANNINGAN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "router",
+      "file_path": ".agents\\skills\\router\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 51,
+        "body_tokens": 1960,
+        "line_count": 78,
+        "byte_size": 7428
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "rubber-duck",
+      "file_path": ".agents\\skills\\rubber-duck\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 55,
+        "body_tokens": 1131,
+        "line_count": 51,
+        "byte_size": 4282
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "security-and-hardening",
+      "file_path": ".agents\\skills\\security-and-hardening\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 93.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 50,
+        "body_tokens": 1187,
+        "line_count": 85,
+        "byte_size": 4437
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\security-and-hardening\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-SECURITYAN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SECURITYAN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SECURITYAN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "sentinel",
+      "file_path": ".agents\\skills\\sentinel\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 69,
+        "body_tokens": 1359,
+        "line_count": 76,
+        "byte_size": 5176
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "shipping-and-launch",
+      "file_path": ".agents\\skills\\shipping-and-launch\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 50,
+        "body_tokens": 881,
+        "line_count": 59,
+        "byte_size": 3289
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\shipping-and-launch\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-SHIPPINGAN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SHIPPINGAN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SHIPPINGAN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "source-driven-development",
+      "file_path": ".agents\\skills\\source-driven-development\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 83,
+        "body_tokens": 2776,
+        "line_count": 219,
+        "byte_size": 10348
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\source-driven-development\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-SOURCEDRIV-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SOURCEDRIV-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SOURCEDRIV-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "spec-driven-development",
+      "file_path": ".agents\\skills\\spec-driven-development\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 93.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 116,
+        "body_tokens": 3376,
+        "line_count": 251,
+        "byte_size": 12595
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\spec-driven-development\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-SPECDRIVEN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SPECDRIVEN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SPECDRIVEN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "svg-ocr",
+      "file_path": ".agents\\skills\\svg-ocr\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 59,
+        "body_tokens": 1358,
+        "line_count": 104,
+        "byte_size": 5166
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\svg-ocr\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-SVGOCR-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SVGOCR-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SVGOCR-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "svg-optimize",
+      "file_path": ".agents\\skills\\svg-optimize\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 93.6,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 17.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 54,
+        "body_tokens": 528,
+        "line_count": 34,
+        "byte_size": 2014
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\svg-optimize\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-SVGOPTIMIZ-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SVGOPTIMIZ-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-SVGOPTIMIZ-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "test-driven-development",
+      "file_path": ".agents\\skills\\test-driven-development\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 47,
+        "body_tokens": 832,
+        "line_count": 59,
+        "byte_size": 3104
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\test-driven-development\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-TESTDRIVEN-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-TESTDRIVEN-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-TESTDRIVEN-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "triage",
+      "file_path": ".agents\\skills\\triage\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 53,
+        "body_tokens": 834,
+        "line_count": 30,
+        "byte_size": 3184
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\triage\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-TRIAGE-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-TRIAGE-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-TRIAGE-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "visual-excalidraw",
+      "file_path": ".agents\\skills\\visual-excalidraw\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 64,
+        "body_tokens": 932,
+        "line_count": 55,
+        "byte_size": 3534
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "visual-mermaid",
+      "file_path": ".agents\\skills\\visual-mermaid\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 80.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 5.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 59,
+        "body_tokens": 1082,
+        "line_count": 87,
+        "byte_size": 4172
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Ancrer le skill sur les chemins canoniques du dépôt (standards/, Projects/, memory/).",
+        "Mentionner les sources de vérité terrain et exigences de traçabilité factuelle."
+      ],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    },
+    {
+      "skill_name": "wait-what",
+      "file_path": ".agents\\skills\\wait-what\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 92.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 15.0,
+        "golden_dataset": 100.0
+      },
+      "token_stats": {
+        "description_tokens": 61,
+        "body_tokens": 337,
+        "line_count": 19,
+        "byte_size": 1271
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [
+        "Spécifier le comportement attendu en cas d'erreur, d'outil absent ou de données manquantes."
+      ],
+      "golden_dataset_detail": {
+        "cases_file": "C:\\Memory Loop\\Projects\\mLoop\\memory\\evals\\skills\\wait-what\\cases.json",
+        "total_cases": 3,
+        "passed_cases": 3,
+        "score": 100.0,
+        "status": "PASS",
+        "cases_detail": [
+          {
+            "id": "TC-WAITWHAT-01",
+            "type": "nominal",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-WAITWHAT-02",
+            "type": "limite",
+            "passed": true,
+            "flaws": []
+          },
+          {
+            "id": "TC-WAITWHAT-03",
+            "type": "adversarial",
+            "passed": true,
+            "flaws": []
+          }
+        ]
+      }
+    },
+    {
+      "skill_name": "zero-blindspot-spec",
+      "file_path": ".agents\\skills\\zero-blindspot-spec\\SKILL.md",
+      "verdict": "PASS",
+      "total_score": 100.0,
+      "scores_breakdown": {
+        "trigger_clarity": 25.0,
+        "rule_determinism": 25.0,
+        "ground_truth_anchoring": 25.0,
+        "resilience_and_confinement": 25.0,
+        "golden_dataset": null
+      },
+      "token_stats": {
+        "description_tokens": 105,
+        "body_tokens": 2240,
+        "line_count": 131,
+        "byte_size": 9011
+      },
+      "deterministic_checks": {
+        "frontmatter_valid": true,
+        "max_lines_300": true,
+        "max_bytes_15k": true,
+        "zero_local_hardcoded_paths": true,
+        "description_budget": true,
+        "disable_invocation_policy": true
+      },
+      "blocking_flaws": [],
+      "recommendations": [],
+      "golden_dataset_detail": {
+        "status": "EXCLUDED",
+        "reason": "HEAVY_META_SKILL (statique seule)"
+      }
+    }
+  ],
+  "certified_at": "2026-09-25T18:38:38.742952+00:00"
+}

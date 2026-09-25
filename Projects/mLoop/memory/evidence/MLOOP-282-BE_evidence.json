@@ -1,0 +1,139 @@
+{
+  "story_id": "MLOOP-282-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-282-BE.md",
+  "timestamp": "2026-09-25T02:01:36.736718+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0202-modularite-interne-agents.md",
+      "source_file": "0202-modularite-interne-agents.md",
+      "sha256": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0202-modularite-interne-agents.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.507860+00:00"
+    },
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.563503+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "source_file": "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "sha256": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.616747+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-282-BE_fact_dossier.md",
+      "source_file": "MLOOP-282-BE_fact_dossier.md",
+      "sha256": "98a880d82d3bb1be148b6b2b10afa0df7a21482889f16e677d3a32a68f606a11",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-282-BE_fact_dossier.md) : MLOOP-282-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:36.616747+00:00"
+    },
+    {
+      "query": "Fact-Search epic_adr_clean_architecture.md",
+      "source_file": "epic_adr_clean_architecture.md",
+      "sha256": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:36.642987+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-282-BE_fact_dossier.md": "98a880d82d3bb1be148b6b2b10afa0df7a21482889f16e677d3a32a68f606a11",
+    "0202-modularite-interne-agents.md": "670b0754488fea26fb0cf86e51fe8e81000ffa23efc1f6fa92dac4943cab1169",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+    "epic_adr_clean_architecture.md": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0202-modularite-interne-agents.md, 0320-grill-me-frontier-design-tree-alignment.md, ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.56,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0202-modularite-interne-agents.md",
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+    "MLOOP-282-BE_fact_dossier.md",
+    "epic_adr_clean_architecture.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Conformité stricte au plafond modulaire de 300 lignes",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Maintien des anciens imports via le shim src/pipelines/grill_engine.py",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Absence de dépendances cycliques entre sous-modules",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Traçabilité structurée des opérations dans les logs",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-282-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-282-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.56,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

@@ -1,0 +1,171 @@
+{
+  "story_id": "MLOOP-165-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-165-BE.md",
+  "timestamp": "2026-09-23T12:35:58.051848+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-165-BE_fact_dossier.md) : AGENTS.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.591774+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-165-BE_fact_dossier.md",
+      "source_file": "MLOOP-165-BE_fact_dossier.md",
+      "sha256": "624f69e3b2ebe0eeaf1a56096e0504b72840f16d8c8042a293c305308e171c3d",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-165-BE_fact_dossier.md) : MLOOP-165-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.591774+00:00"
+    },
+    {
+      "query": "Fact-Search Projects/BoireFrere_Segment2/directives/business.md",
+      "source_file": "Projects/BoireFrere_Segment2/directives/business.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-165-BE_fact_dossier.md) : Projects/BoireFrere_Segment2/directives/business.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.605767+00:00"
+    },
+    {
+      "query": "Fact-Search epic_project_directives_ssot_enforcement.md",
+      "source_file": "epic_project_directives_ssot_enforcement.md",
+      "sha256": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_project_directives_ssot_enforcement.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:47.606823+00:00"
+    },
+    {
+      "query": "Fact-Search src/pipelines/vibe_check.py",
+      "source_file": "src/pipelines/vibe_check.py",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-165-BE_fact_dossier.md) : src/pipelines/vibe_check.py",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-22T14:26:47.617347+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-165-BE_fact_dossier.md": "624f69e3b2ebe0eeaf1a56096e0504b72840f16d8c8042a293c305308e171c3d",
+    "epic_project_directives_ssot_enforcement.md": "dc8a7e7fcfe3485d9958545bd041c287254fc97761040408e7bd2ffd59a15bb4"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : AGENTS.md, MLOOP-165-BE_fact_dossier.md, Projects/BoireFrere_Segment2/directives/business.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue",
+      "dépend de la sémantique tri-état du récit 163 pour émettre un WARNING non bloquant."
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 1,
+      "multiplier": 0.73,
+      "score": 0.0,
+      "reason": "partial_richness (1/10)"
+    }
+  },
+  "facts_verified": [
+    {
+      "fact_id": "F-01",
+      "source_ref": "vibe_check.py:357-398` (Check 10)",
+      "rule_summary": "Il vérifie la **lisibilité** des maquettes, PAS l'**ancrage** d'un récit frontend à une maquette. Gap réel.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-02",
+      "source_ref": "AGENTS.md` (interdictions absolues)",
+      "rule_summary": "Le Contrat Visuel est un principe framework de premier rang, pas une spécificité projet.",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-03",
+      "source_ref": "directives/business.md:26",
+      "rule_summary": "Un récit frontend sans ancrage visuel est un signal d'alerte — motive le check mécanique (Mécanisme A).",
+      "status": "VERIFIED"
+    },
+    {
+      "fact_id": "F-04",
+      "source_ref": "Story template (`layer` ADR-0366)",
+      "rule_summary": "backend",
+      "status": "VERIFIED"
+    }
+  ],
+  "sources_consulted": [
+    "AGENTS.md",
+    "MLOOP-165-BE_fact_dossier.md",
+    "Projects/BoireFrere_Segment2/directives/business.md",
+    "epic_project_directives_ssot_enforcement.md",
+    "src/pipelines/vibe_check.py"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Récit d'interface correctement ancré",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Récit d'interface sans ancrage maquette",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Récit de service non concerné",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Reconnaissance des différentes sources d'ancrage",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-165-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-165-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "HIGH",
+  "confidence_score": 1.0,
+  "status": "VALIDATED",
+  "implementation_decisions": [],
+  "verbatim_extracts": [
+    {
+      "source_file": "memory/evidence/MLOOP-165-BE_fact_dossier.md",
+      "lines": [
+        43,
+        43
+      ],
+      "quote": "Tout récit […] ne découlant pas directement d'un écran […] est réputé non requis.",
+      "established_fact": "Un récit frontend sans ancrage visuel est un signal d'alerte — motive le check mécanique (Mécanisme A). (source d'origine: directives/business.md:26)"
+    }
+  ],
+  "declarative_contracts": []
+}

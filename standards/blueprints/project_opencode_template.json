@@ -5,6 +5,16 @@
   "instructions": [
     "AGENTS.md"
   ],
+  "permission": {
+    "edit": "allow",
+    "read": "allow",
+    "external_directory": {
+      "*": "allow"
+    },
+    "bash": {
+      "*": "allow"
+    }
+  },
   "watcher": {
     "ignore": [
       ".git/**",

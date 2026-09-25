@@ -1,0 +1,203 @@
+{
+  "story_id": "MLOOP-173-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-173-BE.md",
+  "timestamp": "2026-09-23T20:34:14.473250+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search AGENTS.md",
+      "source_file": "AGENTS.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : AGENTS.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T20:34:14.363941+00:00"
+    },
+    {
+      "query": "Fact-Search EPIC17_grill_macro_fact_dossier.md",
+      "source_file": "EPIC17_grill_macro_fact_dossier.md",
+      "sha256": "2f2e4236a7f8c4fe4b63f498e0a31a68c3124860d1bc954bbdba6e4a7002b1dd",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : EPIC17_grill_macro_fact_dossier.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T20:34:14.363941+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-173-BE_fact_dossier.md",
+      "source_file": "MLOOP-173-BE_fact_dossier.md",
+      "sha256": "6ed6a160f8eb46966f95390c2d3d98a2a3c2ace7a769d59507a50a0cc1c155fe",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-173-BE_fact_dossier.md) : MLOOP-173-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-23T20:34:14.363941+00:00"
+    },
+    {
+      "query": "Fact-Search MODULAR_EXTRACTION_PROTOCOL.md",
+      "source_file": "MODULAR_EXTRACTION_PROTOCOL.md",
+      "sha256": "9fcb2680b16db15e9295ec27fe8d03f9ddb67b1036586ecc1755bb636fe89891",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : MODULAR_EXTRACTION_PROTOCOL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T20:34:14.387154+00:00"
+    },
+    {
+      "query": "Fact-Search epic17_prioritization_matrix.md",
+      "source_file": "epic17_prioritization_matrix.md",
+      "sha256": "692242810352c5e81b0e067721c17d7b6c3abc660861e766d3fbdf54a5c32e98",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic17_prioritization_matrix.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T20:34:14.387154+00:00"
+    },
+    {
+      "query": "Fact-Search implementation_plan_MLOOP-173-BE.md",
+      "source_file": "implementation_plan_MLOOP-173-BE.md",
+      "sha256": "71142a7cfa1ce543fd2748728d5447bed259b41e1dcc980bf3061c7d740d4828",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : implementation_plan_MLOOP-173-BE.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-23T20:34:14.393088+00:00"
+    },
+    {
+      "query": "Fact-Search source_1.md",
+      "source_file": "source_1.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_1.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T20:34:14.405634+00:00"
+    },
+    {
+      "query": "Fact-Search source_2.md",
+      "source_file": "source_2.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : source_2.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-23T20:34:14.416719+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-173-BE_fact_dossier.md": "6ed6a160f8eb46966f95390c2d3d98a2a3c2ace7a769d59507a50a0cc1c155fe",
+    "EPIC17_grill_macro_fact_dossier.md": "2f2e4236a7f8c4fe4b63f498e0a31a68c3124860d1bc954bbdba6e4a7002b1dd",
+    "MODULAR_EXTRACTION_PROTOCOL.md": "9fcb2680b16db15e9295ec27fe8d03f9ddb67b1036586ecc1755bb636fe89891",
+    "epic17_prioritization_matrix.md": "692242810352c5e81b0e067721c17d7b6c3abc660861e766d3fbdf54a5c32e98",
+    "implementation_plan_MLOOP-173-BE.md": "71142a7cfa1ce543fd2748728d5447bed259b41e1dcc980bf3061c7d740d4828"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : AGENTS.md, EPIC17_grill_macro_fact_dossier.md, MLOOP-173-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.546,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "AGENTS.md",
+    "EPIC17_grill_macro_fact_dossier.md",
+    "MLOOP-173-BE_fact_dossier.md",
+    "MODULAR_EXTRACTION_PROTOCOL.md",
+    "epic17_prioritization_matrix.md",
+    "implementation_plan_MLOOP-173-BE.md",
+    "source_1.md",
+    "source_2.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Extraction modulaire conforme au contrat Singleton",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Échec du smoke check déclenche le rollback sous arbitrage humain",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Instance unique préservée malgré imports multiples et effets de bord d'import",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Transparence totale pour le développeur consommateur",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-173-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-173-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.546,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": [],
+  "project_name": "mLoop",
+  "last_updated": "2026-09-24T11:11:42.121302",
+  "devil_advocate_review": {
+    "story_id": "MLOOP-173-BE",
+    "project_name": "mLoop",
+    "timestamp": "2026-09-24T11:11:42.121302",
+    "status": "ACTION_REQUIRED",
+    "scores": {
+      "business_discernment": 100.0,
+      "ecosystem_coherence": 100.0,
+      "technical_rigor": 76.0,
+      "overall_trust": 91.6
+    },
+    "critical_flaws": [],
+    "silent_failures": [
+      "Absence de gestion de l'expiration de session en cours de formulaire.",
+      "Absence de validation des saisies extrêmes ou champs incomplets.",
+      "[ADR-0319] Récit layer:backend sans Matrice des Contrats API, mais couvert par une question ouverte de traçabilité — route à confirmer avant passage en développement."
+    ],
+    "coherence_issues": [],
+    "remediation_patches": [],
+    "recommendations": [
+      "Compléter les scénarios de test pour couvrir les modes de défaillance silencieuse relevés."
+    ]
+  }
+}

@@ -1,0 +1,540 @@
+{
+  "epic": "EPIC-7-AGENTIC-OBSERVABILITY",
+  "project": "mLoop",
+  "phase": "STAGE_3_BUILD",
+  "gate_active": "Gate 3 (DoD)",
+  "governance_mode": "Dogfooding Souverain (Local-First)",
+  "authors": [
+    "Marco (Architecte Propriétaire)",
+    "Lead Architect (Antigravity)",
+    "Co-Architecte Framework Agentique (agentic_co_architect)"
+  ],
+  "last_updated": "2026-09-19T10:04:00+00:00",
+  "epistemic_status": "VERIFIED_DETERMINISTIC",
+  "standards_referenced": [
+    "ADR-0202",
+    "ADR-0339",
+    "ADR-0369",
+    "ADR-0375",
+    "ADR-0378",
+    "ADR-0379",
+    "ADR-0380"
+  ],
+  "source_files_sha256": {
+    "src/agents/circuit_breaker.py": "f9c07bc643e633ffe63a880e776d623704d7b81e74c62e0ba46965f93fde2756",
+    "tests/test_ping_pong_guard.py": "390b3aff579fb87d8cababcdb18cb41c41abd7dc04350ea224e9f5ad2b60ebae",
+    "src/state.py": "84e7d8d4ddf0d6e813893ccade389bf518cb4da7cb0e213c076cc8744b674c83",
+    "src/engine/artifacts/boundary_wrapper.py": "624947d8bacf33c6d3e2f7444d812a96a97ffaab6c149fc4e96a492951064afc",
+    "tests/test_boundary_wrapper.py": "b752514490e5824977fa1b27db0b33d0b04657fc31b35d56ba9193361774f09c",
+    "src/engine/artifacts/bus.py": "a7b8e4119ada528ba3321348217e349a0a979cf94691289207312fade554a2cd",
+    "src/utils/event_logger.py": "3b40d3e8cf07446ac4a82d571a08393c035e810e9216de1a03a5b3e87f1408a0",
+    "tests/test_event_logger_openinference.py": "aaa1e2e91d069e49ba9d31c5ff7d17bc0b671d2621bdba925d3b20febe86d004"
+  },
+  "code_blocks": [
+    {
+      "block_id": "CEL-070-001",
+      "story_id": "MLOOP-070-BE",
+      "component": "LoopState.hitl_required",
+      "file_path": "src/state.py",
+      "line_range": "369-370",
+      "symbol": "LoopState.hitl_required",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier / Pilier 3 - Résilience",
+      "adr_reference": "ADR-0380 §2.1",
+      "business_rule": "Interruption HITL Non Négociable — le drapeau hitl_required est activé dès la coupure d'un disjoncteur.",
+      "formal_invariants": "hitl_required est un booléen strict (défaut False). Mute à True lors de toute détection de récursion non bornée sans altérer l'état fonctionnel.",
+      "test_proof": {
+        "test_file": "tests/test_ping_pong_guard.py",
+        "test_name": "test_loop_state_hitl_flag_and_journal_mutation",
+        "assertion": "assert state.hitl_required is True"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-070-002",
+      "story_id": "MLOOP-070-BE",
+      "component": "PingPongRecursionError",
+      "file_path": "src/agents/circuit_breaker.py",
+      "line_range": "18-32",
+      "symbol": "class PingPongRecursionError(LoopStateError)",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier",
+      "adr_reference": "ADR-0380 §2.1",
+      "business_rule": "Seuil de Récursion Infranchissable — levée d'une exception dédiée et typée lors d'un cycle stérile >= 3.",
+      "formal_invariants": "Hérite de LoopStateError. Transporte cycle_depth (int >= 3) et l'historique complet des handoffs pour inspection médico-légale sans perte d'information.",
+      "test_proof": {
+        "test_file": "tests/test_ping_pong_guard.py",
+        "test_name": "test_alternating_ping_pong_cycle_trips_and_raises",
+        "assertion": "pytest.raises(PingPongRecursionError) with cycle_depth == 3"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-070-003",
+      "story_id": "MLOOP-070-BE",
+      "component": "PingPongGuard.__init__",
+      "file_path": "src/agents/circuit_breaker.py",
+      "line_range": "77-104",
+      "symbol": "PingPongGuard.__init__",
+      "gherkin_pillar": "Pilier 1 - Chemin Nominal",
+      "adr_reference": "ADR-0380 §2.1 & ADR-0202",
+      "business_rule": "Initialisation déterministe avec seuil de 3 handoffs consécutifs et restriction aux rôles de la topologie swarm autorisée.",
+      "formal_invariants": "max_consecutive_handoffs == 3 par défaut ; allowed_roles normalisé en minuscules ; consecutive_sterile_handoffs == 0 à l'amorçage.",
+      "test_proof": {
+        "test_file": "tests/test_ping_pong_guard.py",
+        "test_name": "test_linear_delegation_under_threshold",
+        "assertion": "guard = PingPongGuard(max_consecutive_handoffs=3) -> initialisation sans effets de bord"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-070-004",
+      "story_id": "MLOOP-070-BE",
+      "component": "PingPongGuard.record_handoff",
+      "file_path": "src/agents/circuit_breaker.py",
+      "line_range": "106-149",
+      "symbol": "PingPongGuard.record_handoff",
+      "gherkin_pillar": "Pilier 1 - Chemin Nominal & Pilier 2 - Exceptions",
+      "adr_reference": "ADR-0380 §2.1",
+      "business_rule": "Validation stricte des rôles d'agents en entrée. Incrémentation du compteur stérile si produced_artifact est False, réinitialisation immédiate si True.",
+      "formal_invariants": "Rejette chaînes vides, types non-string et rôles inconnus (ValueError). Ajoute un événement immuable horodaté UTC dans handoff_history.",
+      "test_proof": {
+        "test_file": "tests/test_ping_pong_guard.py",
+        "test_name": "test_linear_delegation_under_threshold, test_invalid_agent_roles_rejected, test_handoff_with_produced_artifact_resets_immediately",
+        "assertion": "assert c1 == 1, assert c2 == 2, assert c_prod == 0, pytest.raises(ValueError)"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-070-005",
+      "story_id": "MLOOP-070-BE",
+      "component": "PingPongGuard.check_recursion",
+      "file_path": "src/agents/circuit_breaker.py",
+      "line_range": "151-187",
+      "symbol": "PingPongGuard.check_recursion",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0380 §2.1",
+      "business_rule": "Détection immédiate de récursion dès que consecutive_sterile_handoffs >= max_consecutive_handoffs. Consigne le journal et émet l'événement d'observabilité.",
+      "formal_invariants": "Si seuil atteint : journalise 'circuit_breaker:ping_pong_detected', passe state.hitl_required à True, tente un log événementiel 'circuit_breaker_tripped' et lève PingPongRecursionError.",
+      "test_proof": {
+        "test_file": "tests/test_ping_pong_guard.py",
+        "test_name": "test_alternating_ping_pong_cycle_trips_and_raises, test_loop_state_hitl_flag_and_journal_mutation",
+        "assertion": "assert 'circuit_breaker:ping_pong_detected' in journal, assert state.hitl_required is True"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-070-006",
+      "story_id": "MLOOP-070-BE",
+      "component": "PingPongGuard.record_artifact_production",
+      "file_path": "src/agents/circuit_breaker.py",
+      "line_range": "189-200",
+      "symbol": "PingPongGuard.record_artifact_production",
+      "gherkin_pillar": "Pilier 3 - Résilience Technique & Mode Dégradé",
+      "adr_reference": "ADR-0380 §2.1",
+      "business_rule": "Tolérance sur Production Réelle — l'écriture d'un fichier physique sur disque réinitialise immédiatement le compteur de handoffs stériles.",
+      "formal_invariants": "consecutive_sterile_handoffs est forcé à 0. Une entrée traçable d'action 'artifact_produced' est injectée dans l'historique.",
+      "test_proof": {
+        "test_file": "tests/test_ping_pong_guard.py",
+        "test_name": "test_artifact_production_explicit_reset",
+        "assertion": "assert guard.consecutive_sterile_handoffs == 0, assert not guard.get_status()['is_tripped']"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-070-007",
+      "story_id": "MLOOP-070-BE",
+      "component": "PingPongGuard.get_status",
+      "file_path": "src/agents/circuit_breaker.py",
+      "line_range": "202-214",
+      "symbol": "PingPongGuard.get_status",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité (Cockpit 2.0)",
+      "adr_reference": "ADR-0380 §2.1 & MLOOP-074-FULL",
+      "business_rule": "Exposition d'une charge utile de statut JSON-sérialisable pour alimenter le Handoff Runway et la vue Swarm du Cockpit 2.0.",
+      "formal_invariants": "Retourne un dictionnaire sans mutation d'état contenant consecutive_sterile_handoffs, max_consecutive_handoffs, is_tripped, recent_history (max 10) et total_handoffs.",
+      "test_proof": {
+        "test_file": "tests/test_ping_pong_guard.py",
+        "test_name": "test_runway_telemetry_payload_conformance",
+        "assertion": "assert status['consecutive_sterile_handoffs'] == 2, assert status['is_tripped'] is False"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-071-001",
+      "story_id": "MLOOP-071-BE",
+      "component": "ArtifactBusProtocol & BoundaryToolTimeoutError",
+      "file_path": "src/engine/artifacts/boundary_wrapper.py",
+      "line_range": "25-54",
+      "symbol": "class ArtifactBusProtocol(Protocol), class BoundaryToolTimeoutError(TimeoutError)",
+      "gherkin_pillar": "Pilier 2 - Rejets Métier & Contrat de Rupture",
+      "adr_reference": "ADR-0369 Standard 1 & 3, ADR-0380 §2.2",
+      "business_rule": "Typage structurel par Protocol pour injection du bus et exception typée lors d'un dépassement de deadline d'outil.",
+      "formal_invariants": "ArtifactBusProtocol définit store, get_slice et offload_if_exceeds sans couplage d'implémentation. BoundaryToolTimeoutError hérite de TimeoutError.",
+      "test_proof": {
+        "test_file": "tests/test_boundary_wrapper.py",
+        "test_name": "test_boundary_trace_timeout_raises_typed_error",
+        "assertion": "pytest.raises(BoundaryToolTimeoutError) avec message explicite de délai"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-071-002",
+      "story_id": "MLOOP-071-BE",
+      "component": "offload_if_exceeds",
+      "file_path": "src/engine/artifacts/boundary_wrapper.py",
+      "line_range": "57-138",
+      "symbol": "offload_if_exceeds",
+      "gherkin_pillar": "Pilier 1 - Nominal (Happy Path) & Pilier 2 - Rejets",
+      "adr_reference": "ADR-0380 §2.2, ADR-0369 Standard 4 & 5",
+      "business_rule": "Interception et déportation automatique de toute sortie excédant 2000 caractères ou 30 lignes vers l'OpaqueArtifactBus.",
+      "formal_invariants": "Si len(output) <= 2000 et lines <= 30 -> retour brut (is_offloaded=False). Si dépassement -> persisté sous SHA-256 et retour d'un descripteur compact.",
+      "test_proof": {
+        "test_file": "tests/test_boundary_wrapper.py",
+        "test_name": "test_offload_thresholds_parametrize, test_boundary_trace_small_output_passes_transparently",
+        "assertion": "@pytest.mark.parametrize sur frontières 1999/2000/2001 chars et 29/30/31 lines"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-071-003",
+      "story_id": "MLOOP-071-BE",
+      "component": "get_artifact_slice",
+      "file_path": "src/engine/artifacts/boundary_wrapper.py",
+      "line_range": "141-155",
+      "symbol": "get_artifact_slice",
+      "gherkin_pillar": "Pilier 3 - Résilience Technique & Mode Dégradé",
+      "adr_reference": "ADR-0380 §2.2, ADR-0369 Standard 2",
+      "business_rule": "Extraction fenêtrée d'une tranche de lignes d'un artefact sans jamais charger la totalité du fichier en mémoire vive.",
+      "formal_invariants": "start_line >= 1 et end_line >= start_line exigés (ValueError). Utilise streaming avec bloc with open(...) pour libération garantie du descripteur.",
+      "test_proof": {
+        "test_file": "tests/test_boundary_wrapper.py",
+        "test_name": "test_get_artifact_slice_extracts_exact_lines, test_get_artifact_slice_invalid_bounds_raises",
+        "assertion": "assert len(slice_lines) == 16, assert slice_lines[0] == 'LOG_ENTRY_ROW_0010'"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-071-004",
+      "story_id": "MLOOP-071-BE",
+      "component": "boundary_trace",
+      "file_path": "src/engine/artifacts/boundary_wrapper.py",
+      "line_range": "158-207",
+      "symbol": "boundary_trace",
+      "gherkin_pillar": "Pilier 1 - Nominal & Pilier 2 - Rejets",
+      "adr_reference": "ADR-0380 §2.2, ADR-0369 Standard 1 & 3",
+      "business_rule": "Décorateur d'interception à la frontière d'exécution d'un outil MCP ou commande CLI avec deadline d'exécution optionnelle.",
+      "formal_invariants": "Préserve les métadonnées de fonction via functools.wraps ; exécute dans ThreadPoolExecutor si timeout configuré ; traite la sortie via offload_if_exceeds.",
+      "test_proof": {
+        "test_file": "tests/test_boundary_wrapper.py",
+        "test_name": "test_boundary_trace_large_output_auto_offload, test_boundary_trace_preserves_function_signature",
+        "assertion": "assert 'mloop://artifacts/' in result, assert fn.__name__ == 'inspect_system'"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-071-005",
+      "story_id": "MLOOP-071-BE",
+      "component": "OpaqueArtifactBus.to_prompt_descriptor",
+      "file_path": "src/engine/artifacts/bus.py",
+      "line_range": "176-189",
+      "symbol": "OpaqueArtifactBus.to_prompt_descriptor",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0380 §2.2, ADR-0369 Standard 4",
+      "business_rule": "Protection contre les lignes uniques géantes dans le descripteur compact pour empêcher toute fuite de token.",
+      "formal_invariants": "Tronque chaque ligne de prévisualisation à 200 caractères et plafonne le corps total de prévisualisation à 1000 caractères avec avertissement explicite.",
+      "test_proof": {
+        "test_file": "tests/test_boundary_wrapper.py",
+        "test_name": "test_boundary_trace_emits_event_on_offload",
+        "assertion": "assert payload['tokens_saved'] > 500, assert len(descriptor) < len(raw)"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-072-001",
+      "story_id": "MLOOP-072-BE",
+      "component": "EventLogger._normalize_span_kind",
+      "file_path": "src/utils/event_logger.py",
+      "line_range": "31-45",
+      "symbol": "EventLogger._normalize_span_kind",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier",
+      "adr_reference": "ADR-0380 §2.4 / OpenInference Taxonomy",
+      "business_rule": "Normalisation déterministe vers {AGENT, TOOL, LLM, CHAIN} avec repli résilient sur CHAIN et archivage du type original.",
+      "formal_invariants": "Mappage insensible à la casse ; repli automatique sans exception ; conservation de original_event_type dans details.",
+      "test_proof": {
+        "test_file": "tests/test_event_logger_openinference.py",
+        "test_name": "test_event_logger_fallback_unknown_type_to_chain, test_event_logger_mapping_legacy_tool_call",
+        "assertion": "assert payload['openinference.span.kind'] == 'CHAIN', assert payload['details']['original_event_type'] == 'circuit_breaker_tripped'"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-072-002",
+      "story_id": "MLOOP-072-BE",
+      "component": "EventLogger.log_event",
+      "file_path": "src/utils/event_logger.py",
+      "line_range": "47-105",
+      "symbol": "EventLogger.log_event",
+      "gherkin_pillar": "Pilier 1 - Nominal (Happy Path)",
+      "adr_reference": "ADR-0380 §2.4 / OTel GenAI Semantic Conventions",
+      "business_rule": "Émission locale de spans structurés compatibles OTel GenAI (trace_id 32 chars, span_id 16 chars, usage tokens).",
+      "formal_invariants": "Format W3C respecté, gen_ai.system='mloop', gen_ai.agent.name, gen_ai.request.model, écriture thread-safe locale en JSONL.",
+      "test_proof": {
+        "test_file": "tests/test_event_logger_openinference.py",
+        "test_name": "test_event_logger_nominal_tool_span, test_event_logger_trace_context_propagation",
+        "assertion": "assert len(payload['trace_id']) == 32, assert child['parent_span_id'] == parent['span_id']"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-072-003",
+      "story_id": "MLOOP-072-BE",
+      "component": "EventLogger.query_events",
+      "file_path": "src/utils/event_logger.py",
+      "line_range": "107-147",
+      "symbol": "EventLogger.query_events",
+      "gherkin_pillar": "Pilier 3 - Résilience / Pilier 4 - UX & Observabilité",
+      "adr_reference": "ADR-0380 §2.4 / Sovereign Querying",
+      "business_rule": "Requêtage local antéchronologique des spans JSONL avec filtrage et résilience aux corruptions.",
+      "formal_invariants": "Lecture inversée bornée par limit ; lignes corrompues ignorées sans planter ; zéro socket sortante.",
+      "test_proof": {
+        "test_file": "tests/test_event_logger_openinference.py",
+        "test_name": "test_event_logger_resilience_corrupted_jsonl_lines, test_event_logger_query_filtering_and_reverse_order",
+        "assertion": "assert len(events) == 2, assert agent_spans[0]['gen_ai.agent.name'] == 'Sentinel'"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-072-004",
+      "story_id": "MLOOP-072-BE",
+      "component": "EventLogger._lock concurrency",
+      "file_path": "src/utils/event_logger.py",
+      "line_range": "27, 95-103",
+      "symbol": "EventLogger._lock",
+      "gherkin_pillar": "Pilier 3 - Résilience Technique",
+      "adr_reference": "ADR-0369 Standard 2 & 5",
+      "business_rule": "Protection des E/S fichiers par verrou threading.Lock réentrant pour parer à l'entrelacement de lignes JSONL.",
+      "formal_invariants": "Écritures multi-threads sérialisées sans corruption de payload JSON sur disque.",
+      "test_proof": {
+        "test_file": "tests/test_event_logger_openinference.py",
+        "test_name": "test_event_logger_concurrent_writes_thread_safety",
+        "assertion": "assert len(errors) == 0, assert len(raw_lines) == 100"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-073-001",
+      "story_id": "MLOOP-073-FE",
+      "component": "ContextGaugeEngine.evaluate_context",
+      "file_path": "src/dashboard/routers/overview.py",
+      "line_range": "38-95",
+      "symbol": "ContextGaugeEngine.evaluate_context",
+      "gherkin_pillar": "Pilier 1 - Smart Zone / Pilier 2 - Caution Zone / Pilier 3 - Dumb Zone",
+      "adr_reference": "ADR-0324 & ADR-0380 §2.3",
+      "business_rule": "Diagnostic déterministe de saturation cognitive en 3 zones d'attention (Smart 0-40%, Caution 40-60%, Dumb Zone >60%).",
+      "formal_invariants": "Attribution stricte des codes zones (SMART/CAUTION/DUMB), des couleurs (emerald/amber/rose), du drapeau critique (True si >60%) et des textes de badges conformes aux seuils de l'ADR-0324.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_context_gauge.py",
+        "test_name": "test_smart_zone_nominal_calculation, test_caution_zone_calculation, test_dumb_zone_critical_calculation",
+        "assertion": "assert res['zone'] == 'SMART', assert res['percentage'] == 20, assert res['zone'] == 'CAUTION', assert res['percentage'] == 43, assert res['is_critical'] is True"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-073-002",
+      "story_id": "MLOOP-073-FE",
+      "component": "ContextGaugeEngine.get_project_context_usage",
+      "file_path": "src/dashboard/routers/overview.py",
+      "line_range": "97-154",
+      "symbol": "ContextGaugeEngine.get_project_context_usage",
+      "gherkin_pillar": "Pilier 3 - Résilience Technique & Pilier 4 - Multi-Projets",
+      "adr_reference": "ADR-0369 Standard 2 & ADR-0380 §2.3",
+      "business_rule": "Extraction non-bloquante de l'empreinte de contexte active via token_ledger.jsonl et events.jsonl avec context managers stricts.",
+      "formal_invariants": "Contexte 'with' systématique ; journalisation en exc_info sans interruption du dashboard ; fallback sain 12500 tokens.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_context_gauge.py",
+        "test_name": "test_context_health_project_resolution",
+        "assertion": "assert 'tokens_used' in data, assert data['window_size'] == 128000"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-073-003",
+      "story_id": "MLOOP-073-FE",
+      "component": "OverviewRouter.get_context_health",
+      "file_path": "src/dashboard/routers/overview.py",
+      "line_range": "208-228",
+      "symbol": "get_context_health",
+      "gherkin_pillar": "Pilier 1 à 4 - Exposition API REST",
+      "adr_reference": "ADR-0380 §2.3 & MLOOP-073-FE",
+      "business_rule": "Routeur FastAPI /api/overview/context-health pour la télémétrie contextuelle en temps réel avec support du paramètre tokens pour simulation.",
+      "formal_invariants": "Résolution canonique du nom de projet, injection possible de tokens/window pour les tests et le calibrage en ligne.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_context_gauge.py",
+        "test_name": "test_smart_zone_endpoint, test_caution_zone_endpoint, test_dumb_zone_endpoint",
+        "assertion": "assert resp.status_code == 200, assert '🟢 SMART ZONE : 20%' in data['badge_text'], assert '🔴 DUMB ZONE : 66%' in data['badge_text']"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-073-004",
+      "story_id": "MLOOP-073-FE",
+      "component": "CockpitHeader.header-context-gauge",
+      "file_path": "src/dashboard/static/index.html",
+      "line_range": "122-127, 740-785",
+      "symbol": "#header-context-gauge / updateContextGauge",
+      "gherkin_pillar": "Pilier 1 à 4 - Interface Bento Grid & Transition Visuelle",
+      "adr_reference": "ADR-0324 & ADR-0340",
+      "business_rule": "Badge dynamique réactif dans le header Cockpit, transition CSS 300ms, animation clignotante en Dumb Zone, infobulle détaillée et actualisation live 5s.",
+      "formal_invariants": "Actualisation instantanée lors de onProjectChange() et switchTab(), feedback toast interactif au clic (showContextGaugeInfo).",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_context_gauge.py",
+        "test_name": "test_smart_zone_endpoint, test_dumb_zone_endpoint",
+        "assertion": "assert data['is_critical'] is True, assert data['zone_color'] in ('emerald', 'amber', 'rose')"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-074-001",
+      "story_id": "MLOOP-074-FULL",
+      "component": "SwarmRouter.get_swarm_handoffs",
+      "file_path": "src/dashboard/routers/swarm.py",
+      "line_range": "73-157",
+      "symbol": "get_swarm_handoffs",
+      "gherkin_pillar": "Pilier 1 - Chemin Nominal (Runway Actif & Ping-Pong Conforme)",
+      "adr_reference": "ADR-0380 §2.1 & MLOOP-074-FULL",
+      "business_rule": "Routeur FastAPI /api/swarm/handoffs exposant l'historique chronologique des passages de témoin inter-agents et le statut télémétrique du PingPongGuard.",
+      "formal_invariants": "Résolution canonique du nom de projet, extraction ordonnée de recent_history, statut badge conforme/alerte, gestion gracieuse si historique vide.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_swarm_runway.py",
+        "test_name": "test_swarm_handoffs_nominal_endpoint",
+        "assertion": "assert resp.status_code == 200, assert 'ping_pong_guard' in data, assert data['ping_pong_guard']['max_consecutive_handoffs'] == 3"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-074-002",
+      "story_id": "MLOOP-074-FULL",
+      "component": "SwarmRouter.loop_detection_alert",
+      "file_path": "src/dashboard/routers/swarm.py",
+      "line_range": "90-103, 135-144",
+      "symbol": "get_swarm_handoffs (is_loop detection)",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Seuils (Alerte Boucle Détectée)",
+      "adr_reference": "ADR-0380 §2.1",
+      "business_rule": "Bascule immédiate au statut écarlate (rose) avec marquage explicite is_loop: true sur le dernier transfert lorsque PingPongGuard disjoncte.",
+      "formal_invariants": "is_tripped == true entraîne status_color == 'rose', libellé 'ALERTE BOUCLE DÉTECTÉE' et marquage de l'étape fautive.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_swarm_runway.py",
+        "test_name": "test_swarm_handoffs_tripped_loop_detection",
+        "assertion": "assert data['ping_pong_guard']['is_tripped'] is True, assert 'ALERTE BOUCLE DÉTECTÉE' in data['ping_pong_guard']['status_badge']"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-074-003",
+      "story_id": "MLOOP-074-FULL",
+      "component": "DreamRsiRouter.diff_empty_state",
+      "file_path": "src/dashboard/routers/dream_rsi.py",
+      "line_range": "100-145",
+      "symbol": "get_dream_rsi_diff (empty state)",
+      "gherkin_pillar": "Pilier 3 - Résilience & Mode Dégradé (Absence d'Épisodes)",
+      "adr_reference": "ADR-0372",
+      "business_rule": "Rendu gracieux et résilient du comparateur différentiel /api/dream-rsi/diff si aucun épisode n'a été préalablement archivé pour le projet cible.",
+      "formal_invariants": "Retourne has_episodes: false, comparison: [], gain_vs_pi0: 0.0 et message informatif sans déclencher d'exception.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_swarm_runway.py",
+        "test_name": "test_dream_rsi_diff_empty_state_resilience",
+        "assertion": "assert resp.status_code == 200, assert data['has_episodes'] is False, assert len(data['comparison']) == 0"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-074-004",
+      "story_id": "MLOOP-074-FULL",
+      "component": "DreamRsiRouter.diff_nominal_comparison",
+      "file_path": "src/dashboard/routers/dream_rsi.py",
+      "line_range": "146-194",
+      "symbol": "get_dream_rsi_diff (nominal comparison)",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité (Comparateur Contrefactuel pi0 vs pi*)",
+      "adr_reference": "ADR-0372",
+      "business_rule": "Génération de la matrice comparative contrefactuelle double colonne pi0 vs pi* avec isolation du goulot et calcul du gain en tokens.",
+      "formal_invariants": "Explicite eliminated_bottleneck_reason, tokens_saved et gain_vs_pi0 avec alignement par step_index.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_swarm_runway.py",
+        "test_name": "test_dream_rsi_diff_nominal_comparison",
+        "assertion": "assert resp.status_code == 200, assert 'comparison' in data, assert 'gain_vs_pi0' in data"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-075-001",
+      "story_id": "MLOOP-075-FULL",
+      "component": "DatabaseRouter.get_graph_html_and_metadata",
+      "file_path": "src/dashboard/routers/database.py",
+      "line_range": "82-160",
+      "symbol": "get_graph_html / get_graph_metadata",
+      "gherkin_pillar": "Pilier 1 - Chemin Nominal (Graphe Graphify & Métadonnées)",
+      "adr_reference": "ADR-0379 & MLOOP-075-FULL",
+      "business_rule": "Restitution du visualiseur interactif graph.html et synthèse des métadonnées structurelles (nœuds, liens, god-nodes).",
+      "formal_invariants": "Résolution canonique du projet, détection heuristique des nœuds de degré maximal, headers MIME text/html conformes.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_graph_database.py",
+        "test_name": "test_graph_metadata_nominal, test_graph_html_nominal_if_present",
+        "assertion": "assert resp.status_code == 200, assert data['has_graph'] in (True, False), assert isinstance(data['god_nodes'], list)"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-075-002",
+      "story_id": "MLOOP-075-FULL",
+      "component": "DatabaseRouter.get_graph_html_missing_404",
+      "file_path": "src/dashboard/routers/database.py",
+      "line_range": "100-112",
+      "symbol": "get_graph_html (fallback 404)",
+      "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier (Projet Sans Graphe)",
+      "adr_reference": "ADR-0379",
+      "business_rule": "Retour 404 explicite sans plantage serveur lorsqu'un projet ne possède pas de graphe compilé sur disque.",
+      "formal_invariants": "Lève HTTPException 404 avec message d'instruction vers 'python src/swarm.py graph-run'.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_graph_database.py",
+        "test_name": "test_graph_html_missing_returns_404",
+        "assertion": "assert resp.status_code == 404, assert 'non trouvé' in data['detail'].lower()"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-075-003",
+      "story_id": "MLOOP-075-FULL",
+      "component": "DatabaseRouter._resolve_secure_db_path",
+      "file_path": "src/dashboard/routers/database.py",
+      "line_range": "46-76",
+      "symbol": "_resolve_secure_db_path / _open_readonly_connection",
+      "gherkin_pillar": "Pilier 3 - Résilience & Sécurité SQLite (Read-Only & Confinement)",
+      "adr_reference": "ADR-0380 & ADR-0369",
+      "business_rule": "Confinement souverain absolu aux répertoires memory/. Rejet 403 strict des traversées de répertoires, validation regex du nom de table et mode SQLite URI mode=ro.",
+      "formal_invariants": "Interdit tout accès hors memory/, toute écriture (ro) et sanitize le nom de table (TABLE_NAME_PATTERN).",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_graph_database.py",
+        "test_name": "test_database_tables_rejects_path_traversal, test_database_tables_rejects_non_whitelisted_db, test_database_records_rejects_sql_injection",
+        "assertion": "assert resp.status_code in (400, 403, 404)"
+      },
+      "verification_status": "VERIFIED_PASS"
+    },
+    {
+      "block_id": "CEL-075-004",
+      "story_id": "MLOOP-075-FULL",
+      "component": "DatabaseRouter.get_database_records",
+      "file_path": "src/dashboard/routers/database.py",
+      "line_range": "228-276",
+      "symbol": "get_database_tables / get_database_records",
+      "gherkin_pillar": "Pilier 4 - UX & Observabilité (Inspection des Tables & Pagination)",
+      "adr_reference": "ADR-0379",
+      "business_rule": "Exploration tabulaire paginée et dynamique des bases SQLite locales avec comptage d'enregistrements et métadonnées de colonnes.",
+      "formal_invariants": "Pagination offset/limit sécurisée, total_pages calculé avec ceil, typage dictionnaire standardisé.",
+      "test_proof": {
+        "test_file": "tests/test_dashboard_graph_database.py",
+        "test_name": "test_database_tables_inspection_nominal, test_database_records_pagination_nominal",
+        "assertion": "assert resp.status_code == 200, assert 'standards_nodes' in table_names, assert data['current_page'] == 1"
+      },
+      "verification_status": "VERIFIED_PASS"
+    }
+  ]
+}
+

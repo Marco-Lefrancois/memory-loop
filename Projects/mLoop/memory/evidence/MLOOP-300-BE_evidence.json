@@ -1,0 +1,111 @@
+{
+  "story_id": "MLOOP-300-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-300-BE.md",
+  "timestamp": "2026-09-25T12:08:56.765329+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md",
+      "source_file": "0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md",
+      "sha256": "cb01a868f762479642561724ef235f71a2568609c848f77fc05e41629f56eb02",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:56.671102+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-016_epic-30_harnais_fidelite_visuelle_et_integrite_artefacts_topologiques.md",
+      "source_file": "ADR-016_epic-30_harnais_fidelite_visuelle_et_integrite_artefacts_topologiques.md",
+      "sha256": "050565771d267fbc42d5b04a46e04a01353e9e83f1f6a3355f8e8240645f3613",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-016_epic-30_harnais_fidelite_visuelle_et_integrite_artefacts_topologiques.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T12:08:56.717999+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-300-BE_fact_dossier.md",
+      "source_file": "MLOOP-300-BE_fact_dossier.md",
+      "sha256": "9282b85e8b02cc3cbb93e0c49cdcdd769a8c4ff4bda12d8ad5f6ef831087f95c",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-300-BE_fact_dossier.md) : MLOOP-300-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T12:08:56.719000+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-300-BE_fact_dossier.md": "9282b85e8b02cc3cbb93e0c49cdcdd769a8c4ff4bda12d8ad5f6ef831087f95c",
+    "0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md": "cb01a868f762479642561724ef235f71a2568609c848f77fc05e41629f56eb02",
+    "ADR-016_epic-30_harnais_fidelite_visuelle_et_integrite_artefacts_topologiques.md": "050565771d267fbc42d5b04a46e04a01353e9e83f1f6a3355f8e8240645f3613"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md, ADR-016_epic-30_harnais_fidelite_visuelle_et_integrite_artefacts_topologiques.md, MLOOP-300-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.581,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0392-harnais-fidelite-visuelle-integrite-artefacts-topologiques.md",
+    "ADR-016_epic-30_harnais_fidelite_visuelle_et_integrite_artefacts_topologiques.md",
+    "MLOOP-300-BE_fact_dossier.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Validation avec succès d'un schéma d'architecture vectoriel éditable",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet binaire immédiat d'un schéma usurpé par un collage d'image PNG",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Rejet propre d'un livrable corrompu ou syntaxiquement invalide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Journalisation structurée des métriques d'intégrité de l'artefact",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-300-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-300-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.581,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

@@ -41,7 +41,7 @@ Ceci est le **Cerveau** (Backend d'État & Méta-Orchestrateur) du cycle de vie 
 ### 1.4 Matrice des Synchronisations mLoop
 | Cible | Rôle & Artefacts | Commande Canonique |
 | :--- | :--- | :--- |
-| 🌐 **1. Dépôt Git Distant** | Synchronisation physique Markdown (Stories, ADRs, EvidencePacks) | `git -C "Projects/<nom_projet>" add .` ➔ `commit` ➔ `push` |
+| 🌐 **1. Dépôt Git Distant** | Projets clients uniquement (Azure DevOps) : `git -C "Projects/<client>" add .` ➔ `commit` ➔ `push`. **Projet mLoop (interne)** : L'unique dépôt Git est la racine `Memory Loop` (`main`). `Projects/mLoop` n'a PAS de `.git` et ne doit JAMAIS faire l'objet d'un push. |
 | 📋 **2. Jira Cloud** | Synchronisation bidirectionnelle tickets, champs & critères INVEST | `python src/swarm.py jira_sync --project <nom_projet>` |
 | 🧠 **3. Base Sémantique & Graphe** | Mise à jour index Graphify et SQLite FTS5 (WikiFix + Sync) | `python src/swarm.py sync --project <nom_projet>` |
 | 🩺 **4. Skill Doctor** | Audit jetons et détection du *Context Rot* dans `.agents/skills/` (ADR-0362) | `python src/swarm.py doctor --skills` |

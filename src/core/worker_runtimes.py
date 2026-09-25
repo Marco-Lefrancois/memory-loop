@@ -6,7 +6,7 @@ Chaque runtime CLI de worker (opencode, cline, pi, omp, ...) est décrit par une
 spécification déclarative `WorkerRuntimeSpec` :
 
 - `one_shot_flags` : arguments activant l'exécution one-shot auto-approvée
-  (opencode : `--yolo` ; cline 3.x : natif, aucun flag requis) ;
+  (opencode : `--auto`, `--agent`, `worker` ; cline 3.x : `--auto-approve`, `true`) ;
 - `model_flag` : nom du flag de sélection modèle (valeur ajoutée à la suite) ;
 - `default_model` : modèle par défaut (route LiteLLM nmedia_cloud) appliqué si
   aucun `--model` explicite n'est fourni (ex: Cline → glm-5.3-flash) ;
@@ -108,18 +108,18 @@ def _resolve_npm_windows_binary(bin_name: str) -> Optional[str]:
 
 
 WORKER_RUNTIMES: Dict[str, WorkerRuntimeSpec] = {
-    # OpenCode — sémantique historique intangible (one-shot --yolo, pas de
-    # modèle par défaut : la sélection reste pilotée par TASK_MODEL_MAP).
+    # OpenCode — mode auto-approbation natif (--auto, ADR-0389) et persona dédiée
+    # worker (--agent worker) pour charger les permissions edit: allow / bash: allow.
     "opencode": WorkerRuntimeSpec(
         kind="opencode",
-        one_shot_flags=["--yolo"],
+        one_shot_flags=["--auto", "--agent", "worker"],
         resolve_windows_binary=lambda: _resolve_npm_windows_binary("opencode"),
     ),
-    # Cline 3.x — one-shot auto-apprové par défaut (`--auto-approve: true`,
-    # aucun équivalent de --yolo n'existe ; ground truth cline 3.0.62).
+    # Cline 3.x — auto-approbation explicite (--auto-approve true, ADR-0389)
+    # pour garantir l'absence d'invites d'outils en session PTY interactif.
     "cline": WorkerRuntimeSpec(
         kind="cline",
-        one_shot_flags=[],
+        one_shot_flags=["--auto-approve", "true"],
         default_model=DEFAULT_CLINE_MODEL,
         resolve_windows_binary=lambda: _resolve_npm_windows_binary("cline"),
     ),

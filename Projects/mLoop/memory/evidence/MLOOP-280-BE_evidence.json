@@ -1,0 +1,152 @@
+{
+  "story_id": "MLOOP-280-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-280-BE.md",
+  "timestamp": "2026-09-25T02:01:35.782938+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0320-grill-me-frontier-design-tree-alignment.md",
+      "source_file": "0320-grill-me-frontier-design-tree-alignment.md",
+      "sha256": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0320-grill-me-frontier-design-tree-alignment.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:35.542697+00:00"
+    },
+    {
+      "query": "Fact-Search ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "source_file": "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "sha256": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:35.592929+00:00"
+    },
+    {
+      "query": "Fact-Search MLOOP-280-BE_fact_dossier.md",
+      "source_file": "MLOOP-280-BE_fact_dossier.md",
+      "sha256": "ae2db6548d341714fafdb4a6ee8376ec5374913a797b09554e0abaa6f12559d2",
+      "section": "SSOT Reference",
+      "matched_fact": "Source SSOT canonique scellée dans le Dossier de Preuves (MLOOP-280-BE_fact_dossier.md) : MLOOP-280-BE_fact_dossier.md",
+      "verification_method": "ssot_dossier_grounded",
+      "source_type": "documentation",
+      "confidence": "HIGH",
+      "confidence_score": 1.0,
+      "timestamp": "2026-09-25T02:01:35.592929+00:00"
+    },
+    {
+      "query": "Fact-Search epic_adr_clean_architecture.md",
+      "source_file": "epic_adr_clean_architecture.md",
+      "sha256": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_adr_clean_architecture.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:35.622979+00:00"
+    },
+    {
+      "query": "Fact-Search project_adr_template.md",
+      "source_file": "project_adr_template.md",
+      "sha256": "3826727596031af4d2cf20afcfcd10360752618120e119ea141a9cd45a0809df",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : project_adr_template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:35.622979+00:00"
+    },
+    {
+      "query": "Fact-Search template.md",
+      "source_file": "template.md",
+      "sha256": "NOT_CALCULATED_LOCAL_ONLY",
+      "section": "SSOT Reference",
+      "matched_fact": "Source citée mais introuvable physiquement sur disque : template.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "LOW",
+      "confidence_score": 0.25,
+      "timestamp": "2026-09-25T02:01:35.652862+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "MLOOP-280-BE_fact_dossier.md": "ae2db6548d341714fafdb4a6ee8376ec5374913a797b09554e0abaa6f12559d2",
+    "0320-grill-me-frontier-design-tree-alignment.md": "c192c0bde9620a1947c9f744d436dae86bfab1fc5e31895328ab67d7c2921b64",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md": "0c2dd511ef10107a58c4eda22e7be0f52fcad46018a1b098de677baba12953e8",
+    "epic_adr_clean_architecture.md": "ae4d5ba1fcc6da2c2ecf0e6715ae12c96ba5549c195b03cad0bfc34aeaee3987",
+    "project_adr_template.md": "3826727596031af4d2cf20afcfcd10360752618120e119ea141a9cd45a0809df"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0320-grill-me-frontier-design-tree-alignment.md, ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md, MLOOP-280-BE_fact_dossier.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.553,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0320-grill-me-frontier-design-tree-alignment.md",
+    "ADR-012_epic-28_assainissement_generateur_adr_clean_architecture.md",
+    "MLOOP-280-BE_fact_dossier.md",
+    "epic_adr_clean_architecture.md",
+    "project_adr_template.md",
+    "template.md"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Chargement nominal du blueprint canonique standards/blueprints/project_adr_template.md",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Prise en compte de la surcharge locale d'un projet client",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Défaillance d'accès au système de fichiers et repli mémoire",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Substitution tolérante avec valeurs par défaut",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-280-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-280-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.553,
+  "status": "VALIDATED",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}

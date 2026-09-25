@@ -4,6 +4,7 @@
 - **Date** : 2026-08-12
 - **Auteurs** : Équipe mLoop Swarm & Co-Architecte Agentique
 - **Périmètre** : Framework Backend mLoop, Multiplexage PTY, Daemon Rust Persistant, Socket API Agentique, Unattended Mode
+- **Amendement ADR-0389 (25 sept. 2026)** : Substitution de `opencode --yolo` par `opencode --auto --agent worker` et ajout de `cline --auto-approve true`.
 
 ---
 

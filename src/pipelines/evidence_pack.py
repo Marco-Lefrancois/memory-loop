@@ -74,6 +74,16 @@ class ConflictResolution(TypedDict, total=False):
     authority: str  # "code" | "mockup" | "spec"
 
 
+class CodeTraceabilityEntry(TypedDict, total=False):
+    """Entrée de traçabilité Code ↔ Exigences (ADR-0394 / OpenSpec Ready)."""
+
+    ast_symbol: str  # chemin/fichier.ext::Symbole (ex: "src/core/auth.py::TokenVerifier.verify_expiration")
+    requirement_ref: str  # Règle Métier RM-XXX ou catégorie autorisée (INFRA, TECH-FOUNDATION)
+    gherkin_scenario: str  # Scénario Gherkin associé (Pilier 1-4)
+    rationale: str  # Justification technique/métier (minimum 10 caractères)
+    test_symbol: Optional[str]  # Test unitaire associé (ex: "tests/test_auth.py::test_expired")
+
+
 class EvidencePackEngine:
     """
     Générateur & Gestionnaire d'Artefacts EvidencePack (memory/evidence/US-XX_evidence.json).
@@ -144,6 +154,43 @@ class EvidencePackEngine:
                 f"[MLOOP-180-BE] VerbatimExtract : 'lines' invalides [start={start}, end={end}] "
                 "— start doit être ≤ end et les deux doivent être des entiers."
             )
+
+    # ── MLOOP-330-BE : Validation Traçabilité Code ↔ Exigences (ADR-0394) ────
+    @staticmethod
+    def _validate_code_traceability_entry(entry: "CodeTraceabilityEntry") -> None:
+        """
+        Valide qu'une entrée de traçabilité est conforme (ADR-0394 / OpenSpec Ready).
+
+        Raises:
+            ValueError: si ast_symbol mal qualifié, requirement_ref vide, ou rationale trop court.
+        """
+        ast_symbol = str(entry.get("ast_symbol", "")).strip()
+        if not ast_symbol or "::" not in ast_symbol:
+            raise ValueError(
+                f"[ADR-0394] CodeTraceabilityEntry : le champ 'ast_symbol' ({ast_symbol!r}) doit être qualifié sous forme 'chemin/fichier.ext::Symbole'."
+            )
+
+        req_ref = str(entry.get("requirement_ref", "")).strip()
+        if not req_ref or len(req_ref) < 2:
+            raise ValueError(
+                f"[ADR-0394] CodeTraceabilityEntry : le champ 'requirement_ref' ne peut pas être vide ({req_ref!r})."
+            )
+
+        rationale = str(entry.get("rationale", "")).strip()
+        if not rationale or len(rationale) < 10:
+            raise ValueError(
+                f"[ADR-0394] CodeTraceabilityEntry : la justification 'rationale' doit comporter au moins 10 caractères ({rationale!r})."
+            )
+
+    def validate_code_traceability(
+        self, entries: List["CodeTraceabilityEntry"]
+    ) -> bool:
+        """
+        Valide l'ensemble des entrées d'une matrice de traçabilité Code ↔ Exigences.
+        """
+        for entry in entries:
+            self._validate_code_traceability_entry(entry)
+        return True
 
     def _resolve_source_sha256(self, src_name: str) -> Optional[str]:
         """Calcule l'empreinte SHA-256 d'une source trouvée sur disque."""
@@ -802,6 +849,8 @@ class EvidencePackEngine:
             "implementation_decisions": implementation_decisions,
             "declarative_contracts": declarative_contracts,
             "conflict_matrix": conflict_matrix,
+            # ── MLOOP-330-BE : Traçabilité Code ↔ Exigences (ADR-0394) ───────────
+            "code_traceability_matrix": _preserved_fields.get("code_traceability_matrix", []),
         }
 
         if preserved_fact_check_cert is not None:
@@ -821,6 +870,40 @@ class EvidencePackEngine:
         )
         ZeroFluffConsole.success(f"Artefact EvidencePack consigné sous : {target_json}")
         return target_json
+
+    # ── MLOOP-330-BE : Sérialisation Matrice de Traçabilité Code ↔ Exigences ──
+    def set_code_traceability(
+        self, story_id: str, entries: List["CodeTraceabilityEntry"]
+    ) -> Path:
+        """
+        Assigne et sérialise la matrice de traçabilité dans l'EvidencePack sidecar.
+        """
+        self.validate_code_traceability(entries)
+        clean_sid = story_id.replace(" ", "_")
+        target_json = self.evidence_dir / f"{clean_sid}_evidence.json"
+
+        pack_data: Dict[str, Any] = {}
+        if target_json.exists():
+            try:
+                pack_data = json.loads(target_json.read_text(encoding="utf-8"))
+            except Exception as e:
+                logger.debug(
+                    "Lecture du pack existant échouée lors de set_code_traceability",
+                    exc_info=True,
+                    extra={"story_id": story_id, "error": str(e)},
+                )
+
+        if not pack_data:
+            pack_data = {
+                "story_id": clean_sid,
+                "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                "status": "IN_DEV",
+            }
+
+        pack_data["code_traceability_matrix"] = list(entries)
+        pack_data["updated_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+        return self.save_evidence_pack(pack_data)
 
     # NOTE (ADR-0326) : Aucune méthode de ce moteur ne doit générer de bloc
     # textuel destiné à être injecté dans le fichier Story .md. L'EvidencePack

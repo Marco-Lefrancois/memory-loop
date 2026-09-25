@@ -1,0 +1,67 @@
+{
+  "story_id": "MLOOP-109-BE",
+  "jira_key": "\"\"",
+  "file_path": "backlog/stories/MLOOP-109-BE.md",
+  "timestamp": "2026-09-23T12:35:58.025198+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search worker_MLOOP-109-BE_validation.md",
+      "source_file": "worker_MLOOP-109-BE_validation.md",
+      "sha256": "2804db7b5af413d3147026d7d675f3f43de53018b40816455301ea2538dd3d35",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : worker_MLOOP-109-BE_validation.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-22T14:26:46.830627+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "worker_MLOOP-109-BE_validation.md": "2804db7b5af413d3147026d7d675f3f43de53018b40816455301ea2538dd3d35"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : worker_MLOOP-109-BE_validation.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue",
+      "NO_SOURCE_AVAILABLE : aucun fact_dossier, plan ni section Règles d'affaires exploitable pour ce récit (backfill MLOOP-182-BE)."
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.0,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "worker_MLOOP-109-BE_validation.md"
+  ],
+  "external_references": [],
+  "alerts": [
+    {
+      "type": "IMPORTANT",
+      "text": "*Ces questions constituent l'ordre du jour obligatoire de la session contradictoire Grill-Me 1:1.*"
+    }
+  ],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-109-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-109-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.75,
+  "status": "STALE_PENDING_REGENERATION",
+  "implementation_decisions": [],
+  "verbatim_extracts": [],
+  "declarative_contracts": []
+}

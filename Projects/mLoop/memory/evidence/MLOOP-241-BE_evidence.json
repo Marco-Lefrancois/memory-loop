@@ -1,0 +1,153 @@
+{
+  "story_id": "MLOOP-241-BE",
+  "jira_key": "''",
+  "file_path": "backlog/stories/MLOOP-241-BE.md",
+  "timestamp": "2026-09-25T02:01:33.597210+00:00",
+  "fact_search_status": "VERIFIED",
+  "fact_search_proofs": [
+    {
+      "query": "Fact-Search 0308-mcp-prompts-and-evals-engine.md",
+      "source_file": "0308-mcp-prompts-and-evals-engine.md",
+      "sha256": "c1bdc548813756721a6b438145065b7b34afac7f1ac71975956b9b826d98eb25",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0308-mcp-prompts-and-evals-engine.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.234699+00:00"
+    },
+    {
+      "query": "Fact-Search 0348-wikiskill-tri-layer-evolution.md",
+      "source_file": "0348-wikiskill-tri-layer-evolution.md",
+      "sha256": "c64098e87ccfc1695120efe4b56de0bba8f95ae4006d7db04088d3ffb8728bf4",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : 0348-wikiskill-tri-layer-evolution.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.306414+00:00"
+    },
+    {
+      "query": "Fact-Search SKILL.md",
+      "source_file": "SKILL.md",
+      "sha256": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : SKILL.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.369756+00:00"
+    },
+    {
+      "query": "Fact-Search cases.json",
+      "source_file": "cases.json",
+      "sha256": "185c43ce7491505278b45ac58e4cad511aafe59f136d66bcf3d0a05b75dbf610",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : cases.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.393029+00:00"
+    },
+    {
+      "query": "Fact-Search epic_skills_eval_harness.md",
+      "source_file": "epic_skills_eval_harness.md",
+      "sha256": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : epic_skills_eval_harness.md",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.429330+00:00"
+    },
+    {
+      "query": "Fact-Search skill_eval_case_schema.json",
+      "source_file": "skill_eval_case_schema.json",
+      "sha256": "267b674a6f7ef030f39c1172a8695ae0373fd65b07cfb1a4c08397c59ec4f403",
+      "section": "SSOT Reference",
+      "matched_fact": "Référence documentaire trouvée sur disque (existence vérifiée) : skill_eval_case_schema.json",
+      "verification_method": "file_existence_only",
+      "source_type": "documentation",
+      "confidence": "MEDIUM",
+      "confidence_score": 0.75,
+      "timestamp": "2026-09-25T02:01:33.507826+00:00"
+    }
+  ],
+  "source_hashes_sha256": {
+    "0308-mcp-prompts-and-evals-engine.md": "c1bdc548813756721a6b438145065b7b34afac7f1ac71975956b9b826d98eb25",
+    "0348-wikiskill-tri-layer-evolution.md": "c64098e87ccfc1695120efe4b56de0bba8f95ae4006d7db04088d3ffb8728bf4",
+    "SKILL.md": "a58adb33ea42d81af39c7589468d8c3d33d09767fd065f46a10b555fabb58b6c",
+    "cases.json": "185c43ce7491505278b45ac58e4cad511aafe59f136d66bcf3d0a05b75dbf610",
+    "epic_skills_eval_harness.md": "970fef537f3b35c9d6bc0dbb594fb69cdcceac133057b90b1b91b567949ed1a5",
+    "skill_eval_case_schema.json": "267b674a6f7ef030f39c1172a8695ae0373fd65b07cfb1a4c08397c59ec4f403"
+  },
+  "epistemic_audit": {
+    "what_it_actually_proves": [
+      "Spécification adossée aux sources vérifiées : 0308-mcp-prompts-and-evals-engine.md, 0348-wikiskill-tri-layer-evolution.md, SKILL.md"
+    ],
+    "what_it_does_not_prove": [
+      "Aucune question ouverte non résolue"
+    ],
+    "claim_boundaries": "Périmètre fonctionnel restreint aux 4 Piliers Gherkin du récit",
+    "richness_penalty": {
+      "richness": 0,
+      "multiplier": 0.7,
+      "score": 0.525,
+      "reason": "no_citations"
+    }
+  },
+  "facts_verified": [],
+  "sources_consulted": [
+    "0308-mcp-prompts-and-evals-engine.md",
+    "0348-wikiskill-tri-layer-evolution.md",
+    "SKILL.md",
+    "cases.json",
+    "epic_skills_eval_harness.md",
+    "skill_eval_case_schema.json"
+  ],
+  "external_references": [],
+  "alerts": [],
+  "open_questions": [],
+  "visual_contract": [],
+  "socle_factuel_validated_by_human": false,
+  "socle_factuel_validated_at": null,
+  "verification_harness": [
+    {
+      "scenario_title": "Génération des squelettes cases.json pour toutes les skills",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Validation du schéma — cas invalide",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Parité skill count",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    },
+    {
+      "scenario_title": "Cas adversarial détecte trigger pollution",
+      "status": "VERIFIED",
+      "verifier": "Sentinel_ReadOnly"
+    }
+  ],
+  "next_actions": [
+    "python src/swarm.py grill --project mLoop --story MLOOP-241-BE",
+    "python src/swarm.py rubber-duck --project mLoop --file MLOOP-241-BE.md",
+    "python src/swarm.py sync --project mLoop"
+  ],
+  "confidence": "MEDIUM",
+  "confidence_score": 0.525,
+  "status": "STALE_PENDING_REGENERATION",
+  "verbatim_extracts": [],
+  "implementation_decisions": [],
+  "declarative_contracts": [],
+  "conflict_matrix": []
+}
