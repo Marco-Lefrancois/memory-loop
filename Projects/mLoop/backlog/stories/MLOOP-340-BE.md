@@ -3,7 +3,8 @@ id: MLOOP-340-BE
 jira_key: ''
 epic_key: EPIC-34-WFM-COGNITIVE-WIKI-GRAPH
 type: Enabler
-title: Schéma Relationnel & Persistance SQLite du Wiki Graph Dual-Layer (Entities, Passages & Hyper-Edges)
+title: Schéma Relationnel & Persistance SQLite du Wiki Graph Dual-Layer (Entities,
+  Passages & Hyper-Edges)
 tags:
 - core
 - memory
@@ -11,7 +12,7 @@ tags:
 - graph
 - sqlite
 - backend
-status: READY_FOR_DEV
+status: READY_FOR_QA
 grill_me: DONE
 invest_score: 6/6
 layer: backend
@@ -20,7 +21,8 @@ created_at: '2026-09-25'
 validated_by: Marco
 validated_at: '2026-09-25T14:12:15Z'
 dossier_ref: memory/evidence/MLOOP-340-BE_fact_dossier.md
-ttl_cycles: 3
+ttl_cycles: 0
+ttl_exhausted_at: '2026-09-25T21:06:10.794872+00:00'
 ---
 
 # Schéma Relationnel & Persistance SQLite du Wiki Graph Dual-Layer (Entities, Passages & Hyper-Edges)
@@ -106,6 +108,8 @@ Dans l'architecture de mémoire de mLoop, les connaissances du projet (décision
 | `initialize_wiki_graph_schema` | `src.state.wiki_graph_db:initialize_wiki_graph_schema` | Initialisation des tables SQLite du Wiki Graph | `(db_path: Path) -> bool` |
 | `upsert_wiki_entity` | `src.state.wiki_graph_db:upsert_wiki_entity` | Enregistrement idempotent d'une entité | `(entity: dict) -> str` |
 | `link_entity_to_passage` | `src.state.wiki_graph_db:link_entity_to_passage` | Liaison transversale entité-passage | `(entity_id: str, passage_id: str, link_type: str) -> bool` |
+
+> OQ-340-1 : Ce récit définit des fonctions Python internes (module `src.state.wiki_graph_db`), pas des endpoints HTTP/REST. La "Route / Point d'Entrée" référence le chemin de module Python qualifié (`module:function`), conforme au standard Zéro Fausse Route (ADR-0319) pour les APIs internes. **[API de soumission à définir]** — Aucune route HTTP/REST n'est exposée par ce module.
 
 - **Admission of Limits & Résilience Système** :
   - **Absence de réseau / Timeout** : 100% local SQLite in-process, zéro latence réseau.

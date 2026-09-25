@@ -41,9 +41,9 @@
 
 | État | Récit | Clé Jira | Composant | Titre | Grill-me | Statut | Responsable |
 | :---: | :--- | :---: | :--- | :--- | :---: | :--- | :--- |
-| [ ] | **MLOOP-340-BE** | - | Core/Memory | Schéma Relationnel & Persistance SQLite du Wiki Graph Dual-Layer ($\mathcal{E}_w, \mathcal{R}_w, \mathcal{D}$) | `✅ DONE` | 🟢 `READY_FOR_DEV` | 👤 Humain (Gate 2 Marco, 2026-09-25) |
-| [ ] | **MLOOP-341-BE** | - | Pipelines/Ingest | Moteur d'Ingestion & Indexation Dual-Space (Passages Denses, Entités Métier & Hyper-Arêtes) | `✅ DONE` | 🟢 `READY_FOR_DEV` | 👤 Humain (Gate 2 Marco, 2026-09-25) |
-| [ ] | **MLOOP-342-BE** | - | Search/Reflection | Boucle de Fact-Search Réflexif à Budget Borné ($B \le 4$) & Arrêt Anticipé Adaptatif | `PENDING` | ⚪ `DRAFT` | ⚪ À faire |
+| [x] | **MLOOP-340-BE** | - | Core/Memory | Schéma Relationnel & Persistance SQLite du Wiki Graph Dual-Layer ($\mathcal{E}_w, \mathcal{R}_w, \mathcal{D}$) | `✅ DONE` | 🟡 `READY_FOR_QA` | ✅ Sentinel PASS (2026-09-25) |
+| [x] | **MLOOP-341-BE** | - | Pipelines/Ingest | Moteur d'Ingestion & Indexation Dual-Space (Passages Denses, Entités Métier & Hyper-Arêtes) | `✅ DONE` | 🟡 `READY_FOR_QA` | ✅ Sentinel PASS (2026-09-25) |
+| [ ] | **MLOOP-342-BE** | - | Search/Reflection | Boucle de Fact-Search Réflexif à Budget Borné ($B \le 3$) & Arrêt Anticipé Adaptatif | `✅ DONE` | 🟡 `READY_FOR_GROOMING` | 🤖 IA (DoR 6/6 certifié - En attente Gate 2 Marco) |
 | [ ] | **MLOOP-343-BE** | - | QA/Grounding | Mode Reject Souverain Anti-Hallucination & Régularisation de Variance de Scoring | `PENDING` | ⚪ `DRAFT` | ⚪ À faire |
 | [ ] | **MLOOP-344-FULL**| - | CLI/VibeCheck | Commande CLI `mloop wiki-search`, Intégration Grill-Me & Sonde Vibe-Check Check 30 | `PENDING` | ⚪ `DRAFT` | ⚪ À faire |
 
