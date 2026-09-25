@@ -34,22 +34,22 @@ Le cycle de vie d'un récit est régi par une hiérarchie stricte d'autorité et
                        DONE (Clôture Définitive Immuable)
 ```
 
-### 1.2 Tableau des Statuts & Autorités
+### 1.2 Tableau des Statuts, Autorités & Livrables Associés
 
-| Statut | Phase | Autorité | Gabarit Associé | Description |
-| :--- | :---: | :--- | :---: | :--- |
-| `DRAFT` / `OPEN` | **1 : INGEST** | **IA / Cadrage** | `story_draft_template.md` | Ébauche initiale issue d'un T-Shirt Size, SOW ou découpage (`grill_me: PENDING`, `invest_score: 0/6`). |
-| `IN_ANALYZE` | **2 : PLAN** | **IA / Humain** | `story_draft_template.md` ➔ `story_template.md` | Session contradictoire Grill-Me 1:1 active sur le récit (mono-récit strict par projet). |
-| `READY_FOR_GROOMING` | **2 : PLAN** | **IA** | `story_template.md` | État maximal atteignable par l'IA. Certifie les 4 piliers Gherkin, le DoR 6/6, et l'audit Sentinel PASS. |
-| `READY_FOR_DEV` | **2 : PLAN** | **Humain uniquement** | `story_template.md` | **Interdiction formelle à l'IA.** État certifiant que le récit est arbitré, complet, et prêt pour l'implémentation physique. |
-| `IN_DEV` | **3 : BUILD** | **IA / Humain** | — | L'implémentation physique est en cours. Les modifications de code sont actives sous `src/`. |
-| `READY_FOR_QA` | **4 : VALIDATE** | **IA** | — | Code complet et tests unitaires verts. Récit prêt pour la qualification globale du sprint (`validate-sprint`). |
-| `QA_CERTIFIED` | **4 : VALIDATE** | **IA / QA** | — | Suite de tests d'intégration, linters et audits passés avec 100% de succès (Gate 4 approuvée). |
-| `READY_TO_SHIP` | **5 : SHIP** | **IA** | — | Livrables pré-vol vérifiés, documentation consolidée, prêt pour synchronisation et publication. |
-| `DONE` | **5 : SHIP** | **IA / Système** | — | **Clôture définitive immuable.** Gate 5 auto-validée sans intervention humaine dès lors que tout est vert. |
-| `DONE_TESTED` | *Legacy* | **IA** | — | *Passerelle historique tolérée (équivalent fonctionnel READY_FOR_QA post-tests unitaires).* |
-| `SHIPPED` | *Legacy* | **IA / Humain** | — | *Passerelle historique tolérée (équivalent fonctionnel DONE synchronisé).* |
-| `IN_REVIEW` | *Transverse* | **IA / Humain** | `story_template.md` | Retravail / Révision d'un récit pré-implémentation suite à de nouveaux arbitrages. |
+| Statut | Phase | Autorité | Gabarit / Contrat | Livrable Associé (Preuve sur disque) | Description |
+| :--- | :---: | :--- | :---: | :--- | :--- |
+| `DRAFT` / `OPEN` | **1 : INGEST** | **IA / Cadrage** | `story_draft_template.md` | `backlog/stories/<ID>.md` (Palier 1) | Ébauche initiale issue d'un T-Shirt, SOW ou découpage (`grill_me: PENDING`, `invest_score: 0/6`). |
+| `IN_ANALYZE` | **2 : PLAN** | **IA / Humain** | `story_draft_template.md` | `memory/evidence/<ID>_fact_dossier.md` | Session contradictoire Grill-Me 1:1 active sur le récit (mono-récit strict par projet). |
+| `READY_FOR_GROOMING` | **2 : PLAN** | **IA** | `story_template.md` | Récit Palier 2 + `*_evidence.json` + `rubber_duck_<ID>.md` (PASS) | État maximal atteignable par l'IA. DoR 6/6, 4 piliers Gherkin, audit Sentinel PASS. |
+| `READY_FOR_DEV` | **2 : PLAN** | **Humain uniquement** | `story_template.md` | Récit Palier 2 validé (`content_hash` scellé) | **Interdiction formelle à l'IA.** Arbitrage humain validant l'engagement physique. |
+| `IN_DEV` | **3 : BUILD** | **IA / Humain** | — | Code source sous `src/` + tests unitaires sous `tests/` | Implémentation physique active et tournoi de développement TDD Red-Green. |
+| `READY_FOR_QA` | **4 : VALIDATE** | **IA** | — | Code complet + tests unitaires locaux 100% verts | Fin du build. Récit prêt pour la qualification globale du sprint (`validate-sprint`). |
+| `QA_CERTIFIED` | **4 : VALIDATE** | **IA / QA** | — | `qa_certification_report.json` + Linters 0 violation | Suite `validate-sprint` et intégration passées avec 100% de succès (Gate 4 certifiée). |
+| `READY_TO_SHIP` | **5 : SHIP** | **IA** | — | `source_manifest.json` consolidé + documentation SSOT à jour | Livrables pré-vol vérifiés (0 FAIL), prêt pour auto-livraison et clôture. |
+| `DONE` | **5 : SHIP** | **IA / Système** | — | **Commit Git scellé + Gate 5 validée dans `lifecycle_state.json`** | **Clôture définitive immuable.** Auto-clôture 100% autonome dès lors que tout est vert. |
+| `DONE_TESTED` | *Legacy* | **IA** | — | Code source + tests unitaires verts | *Passerelle historique tolérée (équivalent fonctionnel READY_FOR_QA).* |
+| `SHIPPED` | *Legacy* | **IA / Humain** | — | Code poussé sur Git distant + Jira synchronisé | *Passerelle historique tolérée (équivalent fonctionnel DONE).* |
+| `IN_REVIEW` | *Transverse* | **IA / Humain** | `story_template.md` | Récit annoté avec nouvelles contraintes | Retravail / Révision d'un récit pré-implémentation (anti-tampering suspendu). |
 
 ---
 
