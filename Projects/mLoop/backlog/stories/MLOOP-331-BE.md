@@ -10,7 +10,7 @@ tags:
 - traceability
 - evidencepack
 - senior-python
-status: READY_FOR_DEV
+status: READY_FOR_QA
 layer: backend
 invest_score: 6/6
 macrostructure: workbench

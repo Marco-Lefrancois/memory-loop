@@ -1,17 +1,23 @@
 ---
 id: MLOOP-332-BE
-jira_key: ""
+jira_key: ''
 epic_key: EPIC-33-REQUIREMENT-TO-CODE-TRACEABILITY-AND-CODE-EVIDENCE
 type: Feature
-title: "Pipeline d'Harmonisation Synchrone EvidencePack 2.0 & Archivage des Preuves"
-tags: [core, pipelines, evidencepack, openspec, synchronization, sha256]
-status: READY_FOR_DEV
+title: Pipeline d'Harmonisation Synchrone EvidencePack 2.0 & Archivage des Preuves
+tags:
+- core
+- pipelines
+- evidencepack
+- openspec
+- synchronization
+- sha256
+status: READY_FOR_QA
 layer: backend
 invest_score: 6/6
-macrostructure: "workbench"
+macrostructure: workbench
 validated_by: Marco
-validated_at: "2026-09-25T17:51:58.042995+00:00"
-
+validated_at: '2026-09-25T17:51:58.042995+00:00'
+ttl_cycles: 4
 ---
 # Pipeline d'Harmonisation Synchrone EvidencePack 2.0 & Archivage des Preuves
 
