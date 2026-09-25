@@ -2,20 +2,20 @@
 """
 skill_eval.py — Moteur d'Évaluation des Compétences Agentiques mLoop.
 Aligne sur le standard Google Agents CLI Eval (Harness Engineering & Outcome-Based Evals).
-Matrice 5 dimensions : Contraintes physiques Système 1 + Rubrique 100 pts Système 2.
-Conforme ADR-0202 (<= 300 lignes) et ADR-0369 (Python Senior).
+Matrice 5 dimensions : Contraintes physiques Système 1 + Rubrique 100 pts + Golden Dataset.
+Conforme ADR-0202 (<= 300 lignes), ADR-0369 (Python Senior) et ADR-0389.
 """
 
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
 
-from src.cli import ZeroFluffConsole
 from src.utils.logger import get_logger
+from src.pipelines._skill_eval_golden import evaluate_golden_dataset, resolve_cases_file
+from src.pipelines._skill_eval_report import persist_reports
 
 logger = get_logger("pipelines.skill_eval")
 
@@ -40,11 +40,12 @@ class SkillEvalResult:
     file_path: str
     verdict: str  # "PASS", "WARNING", "FAIL"
     total_score: float
-    scores_breakdown: Dict[str, float]
+    scores_breakdown: Dict[str, Any]
     token_stats: Dict[str, int]
     deterministic_checks: Dict[str, bool]
     blocking_flaws: List[str] = field(default_factory=list)
     recommendations: List[str] = field(default_factory=list)
+    golden_dataset_detail: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -78,34 +79,28 @@ class SkillEvalEngine:
         desc = metadata.get("description", "")
         skill_name = metadata.get("name", skill_file.parent.name)
 
-        # 1. Frontmatter valide avec nom et description
         checks["frontmatter_valid"] = bool(metadata.get("name") and desc)
         if not checks["frontmatter_valid"]:
             flaws.append("[DÉTERMINISTE] Frontmatter YAML incomplet (name ou description manquante).")
 
-        # 2. Concision modulaire ADR-0202 (<= 300 lignes physiques)
         checks["max_lines_300"] = len(lines) <= 300
         if not checks["max_lines_300"]:
             flaws.append(f"[DÉTERMINISTE] Dépassement ADR-0202 : {len(lines)} lignes (plafond : 300).")
 
-        # 3. Poids physique <= 15 Ko (ADR-0202)
         checks["max_bytes_15k"] = byte_size <= 15_360
         if not checks["max_bytes_15k"]:
             flaws.append(f"[DÉTERMINISTE] Poids excessif : {byte_size} octets (plafond : 15 Ko).")
 
-        # 4. Zéro hyperliens locaux absolus en dur
         has_absolute_paths = bool(re.search(r"file:///[a-zA-Z]:", content, re.IGNORECASE))
         checks["zero_local_hardcoded_paths"] = not has_absolute_paths
         if not checks["zero_local_hardcoded_paths"]:
             flaws.append("[DÉTERMINISTE] Présence d'hyperliens absolus locaux 'file:///C:' au lieu de chemins relatifs.")
 
-        # 5. Budget de jetons de la description (<= 150 jetons)
         desc_tokens = cls.estimate_tokens(desc)
         checks["description_budget"] = desc_tokens <= 150
         if not checks["description_budget"]:
             flaws.append(f"[BUDGET JETONS] Description trop verbeuse : {desc_tokens} jetons (max recommandé : 150).")
 
-        # 6. Politique de désactivation auto-invocation pour méta-skills lourds
         dis_inv = metadata.get("disable-model-invocation", "false").lower() == "true"
         if skill_name in HEAVY_META_SKILLS:
             checks["disable_invocation_policy"] = dis_inv
@@ -176,8 +171,10 @@ class SkillEvalEngine:
         }
         return total_score, breakdown, recs
 
-    def evaluate_skill(self, skill_file: Path) -> SkillEvalResult:
-        """Évalue une compétence unique."""
+    def evaluate_skill(
+        self, skill_file: Path, cases_path: Optional[Path | str] = None
+    ) -> SkillEvalResult:
+        """Évalue une compétence unique avec couplage Golden Dataset Système 1."""
         content = skill_file.read_text(encoding="utf-8", errors="ignore")
         metadata: Dict[str, str] = {}
         if content.startswith("---"):
@@ -189,15 +186,39 @@ class SkillEvalEngine:
                         metadata[k.strip()] = v.strip().strip("\"'")
 
         skill_name = metadata.get("name", skill_file.parent.name)
+        is_heavy = skill_name in HEAVY_META_SKILLS
         det_checks, flaws = self._run_deterministic_checks(content, metadata, skill_file)
-        score, breakdown, recs = self._compute_rubric_scores(content, metadata, det_checks)
+        rubric_score, breakdown, recs = self._compute_rubric_scores(content, metadata, det_checks)
+
+        # Résolution et évaluation du Golden Dataset (ADR-0389)
+        resolved_cases = cases_path if isinstance(cases_path, Path) else (
+            Path(cases_path) if cases_path else resolve_cases_file(skill_name, self.workspace_root)
+        )
+        golden_score, golden_detail, golden_flaws, golden_recs = evaluate_golden_dataset(
+            skill_name=skill_name,
+            manifest_content=content,
+            metadata=metadata,
+            cases_path=resolved_cases,
+            is_heavy_meta=is_heavy,
+        )
+
+        flaws.extend(golden_flaws)
+        recs.extend(golden_recs)
+
+        # Calcul du score final pondéré (80% Rubrique + 20% Golden Dataset, ou 100% Statique pour méta-skills)
+        if is_heavy or golden_score is None:
+            final_score = rubric_score
+            breakdown["golden_dataset"] = None
+        else:
+            final_score = round(0.8 * rubric_score + 0.2 * golden_score, 1)
+            breakdown["golden_dataset"] = golden_score
 
         # Détermination du verdict
         if flaws:
             verdict = "FAIL"
-        elif score >= self.pass_threshold:
+        elif final_score >= self.pass_threshold:
             verdict = "PASS"
-        elif score >= 65.0:
+        elif final_score >= 65.0:
             verdict = "WARNING"
         else:
             verdict = "FAIL"
@@ -209,17 +230,33 @@ class SkillEvalEngine:
             "byte_size": len(content.encode("utf-8")),
         }
 
+        rel_path = skill_file.relative_to(self.workspace_root) if skill_file.is_relative_to(self.workspace_root) else skill_file
+
         return SkillEvalResult(
             skill_name=skill_name,
-            file_path=str(skill_file.relative_to(self.workspace_root) if skill_file.is_relative_to(self.workspace_root) else skill_file),
+            file_path=str(rel_path),
             verdict=verdict,
-            total_score=score,
+            total_score=final_score,
             scores_breakdown=breakdown,
             token_stats=token_stats,
             deterministic_checks=det_checks,
             blocking_flaws=flaws,
             recommendations=recs,
+            golden_dataset_detail=golden_detail,
         )
+
+    def evaluate_with_golden_dataset(
+        self, skill_name: str, cases_path: Optional[Path | str] = None
+    ) -> SkillEvalResult:
+        """Évalue une compétence spécifique par son nom avec injection du Golden Dataset."""
+        skill_file = self.skills_dir / skill_name / "SKILL.md"
+        if not skill_file.exists():
+            candidates = list(self.skills_dir.glob(f"*{skill_name}*/SKILL.md"))
+            if candidates:
+                skill_file = candidates[0]
+            else:
+                raise FileNotFoundError(f"Compétence '{skill_name}' introuvable sous {self.skills_dir}")
+        return self.evaluate_skill(skill_file, cases_path=cases_path)
 
     def evaluate_all_skills(self, skills_dir: Optional[Path] = None) -> Dict[str, Any]:
         """Évalue l'ensemble des compétences sous .agents/skills/."""
@@ -253,42 +290,7 @@ class SkillEvalEngine:
         }
 
     def save_reports(self, summary: Dict[str, Any], output_dir: Optional[Path] = None) -> Tuple[Path, Path]:
-        """Génère les rapports JSON et Markdown exécutifs sous memory/evals/."""
+        """Génère les rapports JSON et Markdown exécutifs sous memory/evals/ (ADR-0389)."""
         out_dir = Path(output_dir) if output_dir else (self.workspace_root / "Projects" / "mLoop" / "memory" / "evals")
-        out_dir.mkdir(parents=True, exist_ok=True)
-        json_path = out_dir / "skills_eval_report.json"
-        json_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
-
-        lines = [
-            "# 🧪 Rapport Exécutif d'Évaluation des Compétences (.agents/skills/*)",
-            "",
-            f"- **Score Moyen Global :** **{summary['average_score']} / 100** (Seuil requis : {summary['pass_threshold']})",
-            f"- **Volume Audité :** {summary['total_skills']} compétences",
-            f"- **Statut :** ✅ {summary['passed']} PASS · ⚠️ {summary['warning']} WARNING · 🛑 {summary['failed']} FAIL",
-            "",
-            "## 📊 Matrice d'Évaluation Complète",
-            "",
-            "| Compétence | Statut | Note (/100) | Déclencheur (/25) | Règles (/25) | Ancrage (/25) | Résilience (/25) | Lignes |",
-            "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
-        ]
-
-        for r in summary["results"]:
-            icon = "✅ PASS" if r["verdict"] == "PASS" else ("⚠️ WARN" if r["verdict"] == "WARNING" else "🛑 FAIL")
-            b = r["scores_breakdown"]
-            lines.append(
-                f"| `{r['skill_name']}` | {icon} | **{r['total_score']}** | {b['trigger_clarity']} | {b['rule_determinism']} | {b['ground_truth_anchoring']} | {b['resilience_and_confinement']} | {r['token_stats']['line_count']} |"
-            )
-
-        lines.extend(["", "## 🛑 Défauts Bloquants & Actions Correctives", ""])
-        for r in summary["results"]:
-            if r["blocking_flaws"] or (r["verdict"] != "PASS" and r["recommendations"]):
-                lines.append(f"### `{r['skill_name']}` ({r['verdict']} — {r['total_score']}/100)")
-                for flaw in r["blocking_flaws"]:
-                    lines.append(f"- 🛑 **Bloquant** : {flaw}")
-                for rec in r["recommendations"]:
-                    lines.append(f"- 💡 **Action** : {rec}")
-                lines.append("")
-
-        md_path = out_dir / "skills_eval_report.md"
-        md_path.write_text("\n".join(lines), encoding="utf-8")
-        return json_path, md_path
+        s_json, s_md, _l_json, _l_md = persist_reports(summary, out_dir)
+        return s_json, s_md
