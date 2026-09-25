@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mLoop — Cockpit de Santé des Compétences Agentiques</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --border-focus: #374151;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #10b981;
+      --primary-dim: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-dim: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-dim: rgba(239, 68, 68, 0.15);
+      --blue: #3b82f6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+      font-size: 14px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-pass { background: var(--primary-dim); color: var(--primary); border: 1px solid var(--primary); }
+    .badge-warn { background: var(--warning-dim); color: var(--warning); border: 1px solid var(--warning); }
+    .badge-fail { background: var(--danger-dim); color: var(--danger); border: 1px solid var(--danger); }
+    .kpi-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .kpi-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+    .kpi-card .val { font-size: 26px; font-weight: 800; margin-top: 4px; }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      width: 280px;
+    }
+    .search-input:focus { outline: none; border-color: var(--primary); }
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      color: var(--text);
+      border-color: var(--primary);
+      background: var(--primary-dim);
+    }
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 1024px) {
+      .layout-grid { grid-template-columns: 1fr; }
+    }
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow-x: auto;
+      max-height: 700px;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th {
+      background: #172033;
+      padding: 12px 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    tr:hover { background: rgba(255,255,255,0.03); cursor: pointer; }
+    tr.selected { background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--primary); }
+    .skill-name { font-weight: 600; font-family: monospace; }
+    .detail-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .radar-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 8px 0;
+    }
+    .detail-section h4 {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .tag-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+    .tag-list li { background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; }
+    .alert-banner {
+      background: var(--warning-dim);
+      border: 1px solid var(--warning);
+      color: #fbbf24;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🧭 Cockpit de Santé des Compétences Agentiques <span class="badge badge-pass">mLoop v2.0</span></h1>
+    <div id="timestamp" style="font-size: 12px; color: var(--text-muted);">Synchronisation en direct</div>
+  </header>
+
+  <div id="alertBanner" class="alert-banner">
+    ⚠️ <strong>Alerte :</strong> <span id="alertText">Certaines compétences présentent des défauts bloquants.</span>
+  </div>
+
+  <div class="kpi-bar">
+    <div class="kpi-card">
+      <div class="label">Compétences Auditées</div>
+      <div class="val" id="kpiTotal">39</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Score Moyen Global</div>
+      <div class="val" id="kpiAvg" style="color: var(--primary);">--/100</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Conformes (PASS)</div>
+      <div class="val" id="kpiPass" style="color: var(--primary);">--</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Vigilance (WARN)</div>
+      <div class="val" id="kpiWarn" style="color: var(--warning);">--</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">À Réviser (FAIL)</div>
+      <div class="val" id="kpiFail" style="color: var(--danger);">--</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" class="search-input" placeholder="Filtrer par nom de compétence...">
+    <div style="display: flex; gap: 8px;">
+      <button class="filter-btn active" data-filter="ALL">Toutes (<span id="cntAll">39</span>)</button>
+      <button class="filter-btn" data-filter="PASS">PASS (<span id="cntPass">0</span>)</button>
+      <button class="filter-btn" data-filter="WARNING">WARNING (<span id="cntWarn">0</span>)</button>
+      <button class="filter-btn" data-filter="FAIL">FAIL (<span id="cntFail">0</span>)</button>
+    </div>
+  </div>
+
+  <div class="layout-grid">
+    <div class="table-container">
+      <table id="skillsTable">
+        <thead>
+          <tr>
+            <th>Compétence</th>
+            <th>Statut</th>
+            <th>Score</th>
+            <th>Déclencheur</th>
+            <th>Règles</th>
+            <th>Ancrage</th>
+            <th>Résilience</th>
+            <th>Golden</th>
+            <th>Lignes</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">Chargement des données d'évaluation...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="detail-card" id="detailCard">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 id="detailName" style="font-size: 16px; font-family: monospace;">Sélectionnez une compétence</h3>
+        <span id="detailBadge" class="badge">--</span>
+      </div>
+      <div class="radar-container">
+        <svg id="radarSvg" width="220" height="220" viewBox="0 0 220 220"></svg>
+      </div>
+      <div class="detail-section">
+        <h4>Métriques Clés</h4>
+        <div id="detailMetrics" style="font-size: 12px; color: var(--text-muted); display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
+      </div>
+      <div class="detail-section">
+        <h4>Défauts Bloquants</h4>
+        <ul id="detailFlaws" class="tag-list" style="color: var(--danger);"></ul>
+      </div>
+      <div class="detail-section">
+        <h4>Recommandations</h4>
+        <ul id="detailRecs" class="tag-list" style="color: var(--text-muted);"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let globalData = null;
+    let selectedSkill = null;
+    let currentFilter = 'ALL';
+
+    async function loadData() {
+      try {
+        const res = await fetch('/api/skills/evals');
+        if (res.ok) {
+          globalData = await res.json();
+          renderDashboard();
+        } else {
+          showError("Erreur HTTP " + res.status + " lors du chargement des données.");
+        }
+      } catch (err) {
+        showError("Impossible de contacter /api/skills/evals. Vérifiez que le serveur FastAPI est démarré.");
+      }
+    }
+
+    function showError(msg) {
+      document.getElementById('tableBody').innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--danger); padding: 30px;">⚠️ ${msg}</td></tr>`;
+    }
+
+    function renderDashboard() {
+      if (!globalData || !globalData.results) return;
+
+      document.getElementById('timestamp').textContent = 'Certifié le ' + (globalData.certified_at || 'récemment');
+      document.getElementById('kpiTotal').textContent = globalData.total_skills;
+      document.getElementById('kpiAvg').textContent = globalData.average_score + '/100';
+      document.getElementById('kpiPass').textContent = globalData.passed;
+      document.getElementById('kpiWarn').textContent = globalData.warning;
+      document.getElementById('kpiFail').textContent = globalData.failed;
+
+      document.getElementById('cntAll').textContent = globalData.total_skills;
+      document.getElementById('cntPass').textContent = globalData.passed;
+      document.getElementById('cntWarn').textContent = globalData.warning;
+      document.getElementById('cntFail').textContent = globalData.failed;
+
+      if (globalData.failed > 0) {
+        document.getElementById('alertBanner').style.display = 'flex';
+        document.getElementById('alertText').textContent = `${globalData.failed} compétence(s) en échec nécessitent une action d'optimisation (Flywheel).`;
+      }
+
+      renderTable();
+      if (globalData.results.length > 0 && !selectedSkill) {
+        selectSkill(globalData.results[0]);
+      }
+    }
+
+    function renderTable() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtered = (globalData.results || []).filter(r => {
+        const matchesFilter = (currentFilter === 'ALL') || (r.verdict === currentFilter);
+        const matchesQuery = !q || r.skill_name.toLowerCase().includes(q);
+        return matchesFilter && matchesQuery;
+      });
+
+      const tbody = document.getElementById('tableBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">Aucune compétence ne correspond aux filtres.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => {
+        const b = r.scores_breakdown || {};
+        const isSel = selectedSkill && selectedSkill.skill_name === r.skill_name;
+        const badgeCls = r.verdict === 'PASS' ? 'badge-pass' : (r.verdict === 'WARNING' ? 'badge-warn' : 'badge-fail');
+        const goldenStr = (b.golden_dataset !== null && b.golden_dataset !== undefined) ? b.golden_dataset.toFixed(1) : 'N/A';
+        return `
+          <tr class="${isSel ? 'selected' : ''}" onclick="selectSkillByName('${r.skill_name}')">
+            <td class="skill-name">${r.skill_name}</td>
+            <td><span class="badge ${badgeCls}">${r.verdict}</span></td>
+            <td><strong>${r.total_score}</strong></td>
+            <td>${b.trigger_clarity || 0}/25</td>
+            <td>${b.rule_determinism || 0}/25</td>
+            <td>${b.ground_truth_anchoring || 0}/25</td>
+            <td>${b.resilience_and_confinement || 0}/25</td>
+            <td>${goldenStr}</td>
+            <td>${(r.token_stats && r.token_stats.line_count) || '-'}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function selectSkillByName(name) {
+      const sk = (globalData.results || []).find(r => r.skill_name === name);
+      if (sk) selectSkill(sk);
+    }
+
+    function selectSkill(sk) {
+      selectedSkill = sk;
+      document.getElementById('detailName').textContent = sk.skill_name;
+      const badge = document.getElementById('detailBadge');
+      badge.textContent = sk.verdict + ' (' + sk.total_score + '/100)';
+      badge.className = 'badge ' + (sk.verdict === 'PASS' ? 'badge-pass' : (sk.verdict === 'WARNING' ? 'badge-warn' : 'badge-fail'));
+
+      const b = sk.scores_breakdown || {};
+      const t = sk.token_stats || {};
+      document.getElementById('detailMetrics').innerHTML = `
+        <div>Jetons Desc : <strong>${t.description_tokens || 0}</strong></div>
+        <div>Lignes physiques : <strong>${t.line_count || 0}</strong></div>
+        <div>Taille fichier : <strong>${Math.round((t.byte_size || 0)/1024)} Ko</strong></div>
+        <div>Golden Dataset : <strong>${b.golden_dataset !== null && b.golden_dataset !== undefined ? b.golden_dataset + '/100' : 'N/A'}</strong></div>
+      `;
+
+      const flawsEl = document.getElementById('detailFlaws');
+      const flaws = sk.blocking_flaws || [];
+      flawsEl.innerHTML = flaws.length > 0
+        ? flaws.map(f => `<li>🛑 ${f}</li>`).join('')
+        : '<li style="color: var(--primary);">✅ Aucun défaut bloquant</li>';
+
+      const recsEl = document.getElementById('detailRecs');
+      const recs = sk.recommendations || [];
+      recsEl.innerHTML = recs.length > 0
+        ? recs.map(r => `<li>💡 ${r}</li>`).join('')
+        : '<li style="color: var(--text-muted);">Aucune recommandation requise.</li>';
+
+      drawRadar([
+        { label: 'Trigger', value: (b.trigger_clarity || 0) / 25 },
+        { label: 'Règles', value: (b.rule_determinism || 0) / 25 },
+        { label: 'Ancrage', value: (b.ground_truth_anchoring || 0) / 25 },
+        { label: 'Résilience', value: (b.resilience_and_confinement || 0) / 25 }
+      ]);
+
+      renderTable();
+    }
+
+    function drawRadar(axes) {
+      const svg = document.getElementById('radarSvg');
+      const cx = 110, cy = 110, r = 80;
+      const n = axes.length;
+      let gridSvg = '';
+
+      for (let level = 1; level <= 4; level++) {
+        const radius = (r / 4) * level;
+        const pts = [];
+        for (let i = 0; i < n; i++) {
+          const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+          pts.push((cx + radius * Math.cos(angle)).toFixed(1) + ',' + (cy + radius * Math.sin(angle)).toFixed(1));
+        }
+        gridSvg += `<polygon points="${pts.join(' ')}" fill="none" stroke="#1f2937" stroke-width="1"/>`;
+      }
+
+      for (let i = 0; i < n; i++) {
+        const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+        const x2 = cx + r * Math.cos(angle);
+        const y2 = cy + r * Math.sin(angle);
+        gridSvg += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#1f2937" stroke-width="1"/>`;
+        const lx = cx + (r + 16) * Math.cos(angle);
+        const ly = cy + (r + 16) * Math.sin(angle);
+        gridSvg += `<text x="${lx}" y="${ly + 4}" fill="#9ca3af" font-size="10" text-anchor="middle">${axes[i].label}</text>`;
+      }
+
+      const polyPts = axes.map((a, i) => {
+        const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
+        const valR = Math.max(0.05, Math.min(1.0, a.value)) * r;
+        return (cx + valR * Math.cos(angle)).toFixed(1) + ',' + (cy + valR * Math.sin(angle)).toFixed(1);
+      });
+
+      const polySvg = `<polygon points="${polyPts.join(' ')}" fill="rgba(16, 185, 129, 0.3)" stroke="#10b981" stroke-width="2"/>`;
+      svg.innerHTML = gridSvg + polySvg;
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderTable();
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', () => {
+      renderTable();
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

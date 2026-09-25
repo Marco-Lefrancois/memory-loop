@@ -24,10 +24,12 @@ def handle_dashboard(
     port = getattr(args, "port", 8080)
     no_browser = getattr(args, "no_browser", False)
     proj_name = getattr(args, "project", None) or (state.project_name if state else None)
+    target_path = "/skills-health" if getattr(args, "skills", False) else "/"
 
     serve_dashboard(
         port=port,
         project=proj_name,
         open_browser=not no_browser,
+        path=target_path,
     )
     return 0

@@ -23,6 +23,7 @@ def serve_dashboard(
     host: str = "127.0.0.1",
     project: Optional[str] = None,
     open_browser: bool = True,
+    path: str = "/",
 ) -> None:
     """
     Démarre le serveur FastAPI d'observabilité en local et ouvre le dashboard dans le navigateur.
@@ -30,7 +31,8 @@ def serve_dashboard(
     if project:
         os.environ["MLOOP_ACTIVE_PROJECT"] = project
 
-    url = f"http://{host}:{port}"
+    target_path = path if path.startswith("/") else f"/{path}"
+    url = f"http://{host}:{port}{target_path if target_path != '/' else ''}"
 
     ZeroFluffConsole.section("Tableau de Bord Souverain d'Observabilité mLoop")
     ZeroFluffConsole.info(f"Serveur local Uvicorn/FastAPI démarré sur : {url}")
