@@ -22,18 +22,26 @@ REQUIRED_GHERKIN_PILLARS: Set[str] = {
 }
 
 
-def _classify_pillar(pillar_raw: str) -> Optional[str]:
-    """Classifie un nom de pilier brut en constantes normalisées."""
+def _classify_pillars(pillar_raw: str) -> Set[str]:
+    """Classifie un libellé de pilier brut (y compris composites) en constantes normalisées.
+
+    Un même bloc peut couvrir plusieurs piliers (ex : « Pilier 2 ... / Pilier 4 ... »).
+    Chaque critère est évalué indépendamment et TOUS les piliers matchés sont retenus,
+    conformément à la sémantique certifiée le 2026-09-19 (4 `if` indépendants).
+    Le refactor c28b322 avait introduit un early-return (premier match gagne) qui
+    perdait le Pilier 4 des blocs composites ; ce correctif restaure le comportement.
+    """
     p = pillar_raw.upper()
+    matched: Set[str] = set()
     if any(k in p for k in ("PILIER_1", "PILIER 1", "NOMINAL")):
-        return "PILIER_1_CHEMIN_NOMINAL"
+        matched.add("PILIER_1_CHEMIN_NOMINAL")
     if any(k in p for k in ("PILIER_2", "PILIER 2", "EXCEPTION", "REJET")):
-        return "PILIER_2_EXCEPTIONS_REJETS"
+        matched.add("PILIER_2_EXCEPTIONS_REJETS")
     if any(k in p for k in ("PILIER_3", "PILIER 3", "RESILIEN", "RÉSIL", "DEGRADE")):
-        return "PILIER_3_RESILIENCE_MODE_DEGRADE"
+        matched.add("PILIER_3_RESILIENCE_MODE_DEGRADE")
     if any(k in p for k in ("PILIER_4", "PILIER 4", "UX", "OBSERVABIL")):
-        return "PILIER_4_UX_OBSERVABILITE"
-    return None
+        matched.add("PILIER_4_UX_OBSERVABILITE")
+    return matched
 
 
 def _parse_ledger(data: Any) -> tuple[List[Dict[str, Any]], Set[str]]:
@@ -110,9 +118,7 @@ def triangulate_cel(
 
     covered: Set[str] = set()
     for b in blocks:
-        pillar = _classify_pillar(str(b.get("gherkin_pillar", "")))
-        if pillar:
-            covered.add(pillar)
+        covered.update(_classify_pillars(str(b.get("gherkin_pillar", ""))))
 
     missing = sorted(list(REQUIRED_GHERKIN_PILLARS - covered))
     return CelTriangulationResult(

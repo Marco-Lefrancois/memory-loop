@@ -8,6 +8,7 @@ Couvre l'intégralité des fonctionnalités :
 - Intégration du handler CLI handle_validate_sprint
 - Auto-audit AST du module qa_certifier.py (0 violation)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -19,6 +20,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from src.core.ast_checker import check_file_ast
+from src.pipelines.cel_triangulation import triangulate_cel
 from src.pipelines.qa_certifier import (
     QaCertifierEngine,
     PytestExecutionResult,
@@ -86,6 +88,7 @@ SAMPLE_CEL_INCOMPLETE = {
 
 # ─── TESTS UNITAIRES QaCertifierEngine ───────────────────────────────────────
 
+
 def test_qa_certifier_module_ast_conformance():
     """Le module qa_certifier.py doit respecter à 100% ADR-0202 (<=300L, <=15Ko) et ADR-0369."""
     target = Path("src/pipelines/qa_certifier.py")
@@ -106,15 +109,17 @@ def test_certify_sprint_nominal_all_passed():
             json.dump(SAMPLE_CEL_COMPLETE, f)
 
         # Mock runner pytest
-        mock_runner = MagicMock(return_value=PytestExecutionResult(
-            all_passed=True,
-            total_tests=15,
-            passed_tests=15,
-            failed_tests=0,
-            duration_seconds=1.25,
-            coverage_percent=92.5,
-            details="15 passed",
-        ))
+        mock_runner = MagicMock(
+            return_value=PytestExecutionResult(
+                all_passed=True,
+                total_tests=15,
+                passed_tests=15,
+                failed_tests=0,
+                duration_seconds=1.25,
+                coverage_percent=92.5,
+                details="15 passed",
+            )
+        )
 
         engine = QaCertifierEngine(
             project_path=base,
@@ -125,7 +130,9 @@ def test_certify_sprint_nominal_all_passed():
         # Créer un faux fichier src conforme
         src_dir = base / "src"
         src_dir.mkdir(parents=True, exist_ok=True)
-        (src_dir / "module.py").write_text("def add(a: int, b: int) -> int:\n    return a + b\n", encoding="utf-8")
+        (src_dir / "module.py").write_text(
+            "def add(a: int, b: int) -> int:\n    return a + b\n", encoding="utf-8"
+        )
 
         report = engine.certify_sprint(save_reports=True)
 
@@ -150,15 +157,17 @@ def test_certify_sprint_fails_on_pytest_failure():
     """Rejet si le banc de tests comporte des échecs."""
     with tempfile.TemporaryDirectory() as tmp_dir:
         base = Path(tmp_dir)
-        mock_runner = MagicMock(return_value=PytestExecutionResult(
-            all_passed=False,
-            total_tests=10,
-            passed_tests=8,
-            failed_tests=2,
-            duration_seconds=0.8,
-            coverage_percent=80.0,
-            details="2 failed, 8 passed",
-        ))
+        mock_runner = MagicMock(
+            return_value=PytestExecutionResult(
+                all_passed=False,
+                total_tests=10,
+                passed_tests=8,
+                failed_tests=2,
+                duration_seconds=0.8,
+                coverage_percent=80.0,
+                details="2 failed, 8 passed",
+            )
+        )
 
         engine = QaCertifierEngine(
             project_path=base,
@@ -175,9 +184,11 @@ def test_certify_sprint_fails_on_ast_violations():
     """Rejet si le code source comporte des violations AST (ADR-0202/ADR-0369)."""
     with tempfile.TemporaryDirectory() as tmp_dir:
         base = Path(tmp_dir)
-        mock_runner = MagicMock(return_value=PytestExecutionResult(
-            all_passed=True, total_tests=5, passed_tests=5, failed_tests=0, duration_seconds=0.1
-        ))
+        mock_runner = MagicMock(
+            return_value=PytestExecutionResult(
+                all_passed=True, total_tests=5, passed_tests=5, failed_tests=0, duration_seconds=0.1
+            )
+        )
 
         src_dir = base / "src"
         src_dir.mkdir(parents=True, exist_ok=True)
@@ -208,9 +219,11 @@ def test_certify_sprint_fails_on_missing_gherkin_pillars():
         with open(cel_file, "w", encoding="utf-8") as f:
             json.dump(SAMPLE_CEL_INCOMPLETE, f)
 
-        mock_runner = MagicMock(return_value=PytestExecutionResult(
-            all_passed=True, total_tests=5, passed_tests=5, failed_tests=0, duration_seconds=0.1
-        ))
+        mock_runner = MagicMock(
+            return_value=PytestExecutionResult(
+                all_passed=True, total_tests=5, passed_tests=5, failed_tests=0, duration_seconds=0.1
+            )
+        )
 
         engine = QaCertifierEngine(
             project_path=base,
@@ -229,9 +242,11 @@ def test_certify_sprint_fails_on_missing_cel_file():
     """Rejet explicite si le fichier CEL est introuvable."""
     with tempfile.TemporaryDirectory() as tmp_dir:
         base = Path(tmp_dir)
-        mock_runner = MagicMock(return_value=PytestExecutionResult(
-            all_passed=True, total_tests=5, passed_tests=5, failed_tests=0, duration_seconds=0.1
-        ))
+        mock_runner = MagicMock(
+            return_value=PytestExecutionResult(
+                all_passed=True, total_tests=5, passed_tests=5, failed_tests=0, duration_seconds=0.1
+            )
+        )
 
         engine = QaCertifierEngine(
             project_path=base,
@@ -245,6 +260,50 @@ def test_certify_sprint_fails_on_missing_cel_file():
         assert any("introuvable" in r.lower() for r in report.blocking_reasons)
 
 
+def test_triangulate_cel_composite_pillar_covers_all_matches():
+    """RÉGRESSION (refactor c28b322) : un gherkin_pillar composite doit couvrir TOUS les piliers cités.
+
+    Cas réel : le bloc CEL-092-001 du ledger EPIC-9 porte
+    « Pilier 2 - Exceptions & Rejets Métier / Pilier 4 - UX & Observabilité ».
+    La sémantique certifiée le 2026-09-19 (4 `if` indépendants) couvrait P2 ET P4 ;
+    l'extraction en `_classify_pillar` (early-return, premier match gagne) classait
+    le bloc en P2 exclusif et perdait le Pilier 4 → certification REJETÉE à tort.
+    """
+    composite_ledger = {
+        "project": "mLoop",
+        "code_blocks": [
+            {
+                "block_id": "C-01",
+                "gherkin_pillar": "PILIER_1_CHEMIN_NOMINAL",
+                "file_path": "src/a.py",
+            },
+            {
+                "block_id": "C-02",
+                "gherkin_pillar": "Pilier 3 - Résilience & Mode Dégradé",
+                "file_path": "src/b.py",
+            },
+            {
+                "block_id": "C-03",
+                "gherkin_pillar": "Pilier 2 - Exceptions & Rejets Métier / Pilier 4 - UX & Observabilité",
+                "file_path": "src/c.py",
+            },
+        ],
+    }
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        ev_dir = Path(tmp_dir)
+        cel_file = ev_dir / "EPIC-9_code_evidence_ledger.json"
+        with open(cel_file, "w", encoding="utf-8") as f:
+            json.dump(composite_ledger, f)
+
+        result = triangulate_cel(Path(tmp_dir), "mLoop", evidence_dir=ev_dir)
+
+    # Le bloc composite doit couvrir à la fois son pilier 2 ET son pilier 4.
+    assert "PILIER_2_EXCEPTIONS_REJETS" in result.covered_pillars
+    assert "PILIER_4_UX_OBSERVABILITE" in result.covered_pillars
+    assert result.missing_pillars == []
+    assert result.is_complete is True
+
+
 def test_format_qa_markdown_renders_all_sections():
     """Le formateur Markdown doit générer toutes les sections normatives."""
     report = QaCertificationReport(
@@ -252,12 +311,21 @@ def test_format_qa_markdown_renders_all_sections():
         certified_at="2026-09-19T12:00:00Z",
         is_certified=True,
         pytest_result=PytestExecutionResult(
-            all_passed=True, total_tests=20, passed_tests=20, failed_tests=0, duration_seconds=2.0, coverage_percent=95.0
+            all_passed=True,
+            total_tests=20,
+            passed_tests=20,
+            failed_tests=0,
+            duration_seconds=2.0,
+            coverage_percent=95.0,
         ),
         ast_summary=AstAuditSummary(files_audited=10, total_violations=0, passed=True),
         cel_result=CelTriangulationResult(
-            cel_found=True, ledger_path="memory/evidence/cel.json", total_blocks=4,
-            covered_pillars=list(REQUIRED_GHERKIN_PILLARS), missing_pillars=[], is_complete=True
+            cel_found=True,
+            ledger_path="memory/evidence/cel.json",
+            total_blocks=4,
+            covered_pillars=list(REQUIRED_GHERKIN_PILLARS),
+            missing_pillars=[],
+            is_complete=True,
         ),
         blocking_reasons=[],
     )
@@ -276,7 +344,9 @@ def test_handle_validate_sprint_cli_integration(monkeypatch):
         base = Path(tmp_dir)
         ev_dir = base / "memory" / "evidence"
         ev_dir.mkdir(parents=True, exist_ok=True)
-        (ev_dir / "EPIC-7_code_evidence_ledger.json").write_text(json.dumps(SAMPLE_CEL_COMPLETE), encoding="utf-8")
+        (ev_dir / "EPIC-7_code_evidence_ledger.json").write_text(
+            json.dumps(SAMPLE_CEL_COMPLETE), encoding="utf-8"
+        )
 
         # Mock certify_sprint pour retourner succès
         mock_report_pass = MagicMock(is_certified=True)
