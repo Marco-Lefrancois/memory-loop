@@ -9,15 +9,15 @@ TOOLING_ECOSYSTEM_COMMANDS: dict[str, dict] = {
     # ── OpenCode CLI Runtime (MLOOP-220-BE) ────────────────
     "opencode": {
         "handler": "opencode:handle_opencode",
-        "help": "Pilotage souverain du runtime OpenCode CLI (init, run, status)",
+        "help": "Pilotage souverain du runtime OpenCode CLI (init, run, status, sync)",
         "args": [
             {
                 "name": "action",
                 "type": str,
                 "nargs": "?",
                 "default": "status",
-                "choices": ["init", "run", "status"],
-                "help": "Sous-commande OpenCode : init, run, status (défaut: status)",
+                "choices": ["init", "run", "status", "sync"],
+                "help": "Sous-commande OpenCode : init, run, status, sync (défaut: status)",
             },
             {
                 "name": "--prompt",
@@ -29,6 +29,11 @@ TOOLING_ECOSYSTEM_COMMANDS: dict[str, dict] = {
                 "name": "--headless",
                 "action": "store_true",
                 "help": "Exécution non-interactive d'OpenCode",
+            },
+            {
+                "name": "--dry-run",
+                "action": "store_true",
+                "help": "Prévisualise la synchronisation OpenCode sans modifier le disque",
             },
         ],
     },
