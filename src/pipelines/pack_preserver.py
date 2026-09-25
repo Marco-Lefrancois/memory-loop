@@ -7,6 +7,7 @@ directement dans `<SID>_evidence.json`. `EvidencePackEngine.extract_evidence()`
 reconstruit le pack à chaque `sync` : sans préservation, les captures et le sceau
 Red/Green `tdd_cycle` seraient écrasés à chaque synchronisation.
 """
+
 from __future__ import annotations
 
 import json
@@ -70,3 +71,64 @@ def load_preserved_fields(existing_pack_path: Path) -> Dict[str, Any]:
         if isinstance(value, dict) and value:
             preserved[field] = value
     return preserved
+
+
+class PackPreserver:
+    """
+    Fusion atomique non-destructrice d'un EvidencePack.
+    Préserve les blocs protégés (tdd_cycle, fact_check_certificate, verbatim_extracts, etc.)
+    tout en fusionnant les nouvelles données de traçabilité.
+    """
+
+    @staticmethod
+    def merge(existing_pack: Dict[str, Any], new_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Fusionne new_data dans existing_pack en préservant les champs protégés.
+
+        Args:
+            existing_pack: Pack EvidencePack existant (peut être vide)
+            new_data: Nouvelles données à fusionner (code_traceability_matrix, source_hashes, etc.)
+
+        Returns:
+            Pack fusionné avec préservation des champs protégés
+        """
+        if not existing_pack:
+            return new_data.copy()
+
+        merged = existing_pack.copy()
+
+        # Préserver les champs de liste protégés (ne pas écraser s'ils existent dans existing)
+        for field in (
+            "verbatim_extracts",
+            "implementation_decisions",
+            "declarative_contracts",
+            "conflict_matrix",
+            "code_traceability_matrix",
+        ):
+            if field in existing_pack and existing_pack[field]:
+                # Garder l'existant, ne pas écraser avec new_data (qui peut être vide)
+                pass
+            elif field in new_data and new_data[field]:
+                merged[field] = new_data[field]
+
+        # Préserver les champs objet protégés
+        for field in ("tdd_cycle", "fact_check_certificate"):
+            if field in existing_pack and existing_pack[field]:
+                merged[field] = existing_pack[field]
+            elif field in new_data and new_data[field]:
+                merged[field] = new_data[field]
+
+        # Fusionner les autres champs de new_data (source_hashes, updated_at, etc.)
+        for key, value in new_data.items():
+            if key not in (
+                "verbatim_extracts",
+                "implementation_decisions",
+                "declarative_contracts",
+                "conflict_matrix",
+                "code_traceability_matrix",
+                "tdd_cycle",
+                "fact_check_certificate",
+            ):
+                merged[key] = value
+
+        return merged

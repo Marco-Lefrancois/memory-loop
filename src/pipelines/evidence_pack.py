@@ -3,10 +3,15 @@ import re
 import datetime
 import hashlib
 from pathlib import Path
-from typing import Dict, Any, List, Literal, Optional, TypedDict
+from typing import TYPE_CHECKING, Dict, Any, List, Literal, Optional, TypedDict
 
 from src.cli import ZeroFluffConsole
-from src.pipelines.pack_preserver import load_preserved_fields
+from src.pipelines.pack_preserver import load_preserved_fields, PackPreserver
+from src.pipelines.evidence_synchronizer import EvidenceSynchronizer
+from src.pipelines.evidence_types import CodeTraceabilityEntry
+
+if TYPE_CHECKING:
+    from src.pipelines.plan_evidence_parser import PlanEvidenceParser
 from src.utils.logger import get_logger
 
 logger = get_logger("pipelines.evidence_pack")
@@ -72,16 +77,6 @@ class ConflictResolution(TypedDict, total=False):
     code_reality: str
     resolution: str
     authority: str  # "code" | "mockup" | "spec"
-
-
-class CodeTraceabilityEntry(TypedDict, total=False):
-    """Entrée de traçabilité Code ↔ Exigences (ADR-0394 / OpenSpec Ready)."""
-
-    ast_symbol: str  # chemin/fichier.ext::Symbole (ex: "src/core/auth.py::TokenVerifier.verify_expiration")
-    requirement_ref: str  # Règle Métier RM-XXX ou catégorie autorisée (INFRA, TECH-FOUNDATION)
-    gherkin_scenario: str  # Scénario Gherkin associé (Pilier 1-4)
-    rationale: str  # Justification technique/métier (minimum 10 caractères)
-    test_symbol: Optional[str]  # Test unitaire associé (ex: "tests/test_auth.py::test_expired")
 
 
 class EvidencePackEngine:
@@ -182,9 +177,7 @@ class EvidencePackEngine:
                 f"[ADR-0394] CodeTraceabilityEntry : la justification 'rationale' doit comporter au moins 10 caractères ({rationale!r})."
             )
 
-    def validate_code_traceability(
-        self, entries: List["CodeTraceabilityEntry"]
-    ) -> bool:
+    def validate_code_traceability(self, entries: List["CodeTraceabilityEntry"]) -> bool:
         """
         Valide l'ensemble des entrées d'une matrice de traçabilité Code ↔ Exigences.
         """
@@ -872,9 +865,7 @@ class EvidencePackEngine:
         return target_json
 
     # ── MLOOP-330-BE : Sérialisation Matrice de Traçabilité Code ↔ Exigences ──
-    def set_code_traceability(
-        self, story_id: str, entries: List["CodeTraceabilityEntry"]
-    ) -> Path:
+    def set_code_traceability(self, story_id: str, entries: List["CodeTraceabilityEntry"]) -> Path:
         """
         Assigne et sérialise la matrice de traçabilité dans l'EvidencePack sidecar.
         """
@@ -905,13 +896,27 @@ class EvidencePackEngine:
 
         return self.save_evidence_pack(pack_data)
 
-    # NOTE (ADR-0326) : Aucune méthode de ce moteur ne doit générer de bloc
-    # textuel destiné à être injecté dans le fichier Story .md. L'EvidencePack
-    # JSON (memory/evidence/<STORY_ID>_evidence.json) est la seule source de
-    # vérité pour les preuves Fact-Search ; les récits ne font que le
-    # référencer par lien (section "## 📑 Notes de Traçabilité & Références
-    # Fact-Search (IA Only)" rédigée manuellement dans le récit, cf.
-    # standards/protocols/FACT_SEARCH_PROTOCOL.md). L'ancienne méthode
-    # format_traceability_section() (injection en dur du bloc "🛡️ Suite
-    # Mémoire & Audit (IA)") a été supprimée : elle violait ce principe et
-    # produisait un contenu figé, non désiré dans le corps des récits.
+
+# NOTE (ADR-0326) : Aucune méthode de ce moteur ne doit générer de bloc
+# textuel destiné à être injecté dans le fichier Story .md. L'EvidencePack
+# JSON (memory/evidence/<STORY_ID>_evidence.json) est la seule source de
+# vérité pour les preuves Fact-Search ; les récits ne font que le
+# référencer par lien (section "## 📑 Notes de Traçabilité & Références
+# Fact-Search (IA Only)" rédigée manuellement dans le récit, cf.
+# standards/protocols/FACT_SEARCH_PROTOCOL.md). L'ancienne méthode
+# format_traceability_section() (injection en dur du bloc "🛡️ Suite
+# Mémoire & Audit (IA)") a été supprimée : elle violait ce principe et
+# produisait un contenu figé, non désiré dans le corps des récits.
+
+# ── Exports pour rétrocompatibilité et API publique (ADR-0394) ────────────────
+__all__ = [
+    "EvidencePackEngine",
+    "PlanEvidenceParser",
+    "EvidenceSynchronizer",
+    "CodeTraceabilityEntry",
+    "VerbatimExtract",
+    "ImplementationDecision",
+    "DeclarativeContract",
+    "ConflictResolution",
+    "DecisionCategory",
+]
